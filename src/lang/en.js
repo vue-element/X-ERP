@@ -1,0 +1,31 @@
+export default {
+  route: {
+    market: 'Market',
+    smartCommunity: 'Smart Community',
+    businessOpportunity: 'Business Opportunity',
+    bidManage: 'Bid Manage',
+    financial: 'Financial',
+    contractInfo: 'Contract Information',
+    contractInvoice: 'Contract Invoice',
+    contractReceivedPayment: 'Contract Received Payment',
+    contractPayment: 'Contract Payment',
+    progressManage: 'Progress Manage',
+    progressAnalysis: 'Progress Analysis',
+    cost: 'Cost',
+    supplier: 'Supplier',
+    price: 'Price',
+    paymentContract: 'Payment Contract',
+    purchaseContract: 'Purchase Contract',
+    storageManage: 'Storage Manage',
+    balance: 'Balance',
+    dashboard: 'Dashboard',
+    errorPages: 'Error Pages',
+    page401: '401',
+    page404: '404',
+    excel: 'Excel',
+    exportExcel: 'Export Excel',
+    selectExcel: 'Export Selected',
+    uploadExcel: 'Upload Excel',
+    i18n: 'I18n'
+  }
+}
