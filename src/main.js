@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import vueResource from 'vue-resource'
 import Element from 'element-ui'
-import http from './api/http'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -18,7 +17,6 @@ Vue.use(vueResource)
 Vue.use(Element)
 
 Vue.config.productionTip = false
-Vue.prototype.$api = http
 // axios.defaults.withCredentials = true; 	//设置cookie可配置
 Vue.prototype.$post = post
 Vue.prototype.$get = get
