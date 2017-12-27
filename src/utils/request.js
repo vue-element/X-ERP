@@ -7,29 +7,29 @@ import qs from 'qs'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://10.51.22.62:8080', // api的base_url
+  baseURL: 'http://10.51.22.50:8080', // api的base_url
   timeout: 5000 // 请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(
   config => {
-  // var token = getToken()
   // Do something before request is sent
-  if (store.getters.token) {
-    config.headers = {
-      // 'Content-Type':	'application/json;charset=utf-8',
-      'Content-Type':	'application/x-www-form-urlencoded;charset=utf-8',
-      'X-Token': getToken()
+    if (store.getters.token) {
+      var token = getToken()
+      config.headers = {
+        // 'Content-Type':	'application/json;charset=utf-8',
+        'Content-Type':	'application/x-www-form-urlencoded;charset=utf-8',
+        'X-Token': token
+      }
     }
-  }
-  console.log(config)
-  return config
-},error => {
+    console.log(config)
+    return config
+  }, error => {
   // Do something with request error
-  console.log(error) // for debug
-  Promise.reject(error)
-})
+    console.log(error) // for debug
+    Promise.reject(error)
+  })
 
 // respone拦截器
 service.interceptors.response.use(
@@ -72,41 +72,24 @@ service.interceptors.response.use(
   })
 export default service
 
-/**
- * get 请求方法
- * @param url
- * @param params
- * @returns {Promise}
- */
-
+// get 请求方法
 export function get(url, params = {}) {
-  return new Promise((resolve, reject) => {
-    service.get(url, {
-      params: params
-    })
-    .then(response => {
-      resolve(response)
-    },err => {
-      reject(err)
-    })
-  })
-}
- 
-/**
- * post 请求方法
- * @param url
- * @param data
- * @returns {Promise}
- */
-export function post(url, data = {}) {
-
-  console.log(data)
   return new Promise((resolve, reject) => {
-    // console.log(data)
-    // console.log(url)
-    service.post(url, data)
-    .then(response => {
-      // console.log(response)
+    service.get(url, {
+      params: params
+    }).then(respone => {
+      resolve(respone)
+    }, err => {
+      reject(err)
+    })
+  })
+}
+
+// post 请求方法
+export function post(url, data = {}) {
+  data = qs.stringify(data)
+  return new Promise((resolve, reject) => {
+    service.post(url, data).then(response => {
       resolve(response)
     }, err => {
       reject(err)

@@ -1,28 +1,35 @@
 <template>
   <div class="login-container">
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <h3 class="title">系统登录</h3>
+      <div class="title">
+        <h3>X-ERP项目管理系统</h3>
+        <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
+      </div>
 
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user" />
         </span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
         </span>
         <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
           placeholder="密码" />
-        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+        <span class="show-pwd" @click="showPwd"></span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      <div class="login-btn">
+        <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+        <div class="keep-pw">
+          <input type="checkbox">
+          <label>记住密码</label>
+        </div>
+      </div>
 
-      <div class="tips">账号:admin 密码随便填</div>
-      <div class="tips">账号:editor  密码随便填</div>
+      <!-- <div class="tips">账号:admin 密码随便填</div>
+      <div class="tips">账号:editor  密码随便填</div> -->
     </el-form>
   </div>
 </template>
@@ -98,14 +105,14 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
   @import "src/styles/mixin.scss";
-  $bg:#2d3a4b;
+  // $bg:#2d3a4b;
   $dark_gray:#889aa4;
   $light_gray:#eee;
-
   .login-container {
     @include relative;
     height: 100vh;
-    background-color: $bg;
+    // background-color: $bg;
+    background: url('../../../static/img/login-bg.jpg');
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
@@ -151,9 +158,9 @@ export default {
       position: absolute;
       left: 0;
       right: 0;
-      width: 400px;
+      width: 540px;
       padding: 35px 35px 15px 35px;
-      margin: 120px auto;
+      margin: 320px auto;
     }
     .el-form-item {
       border: 1px solid rgba(255, 255, 255, 0.1);

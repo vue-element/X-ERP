@@ -9,7 +9,7 @@
     name: 'APP'
   }
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss">
 @import '../static/css/iconfont.css';
 
 /*#app {

@@ -4,59 +4,113 @@
 @import './element-ui.scss';
 @import './sidebar.scss';
 @import './btn.scss';
-
-body {
-  height: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-}
-
-label {
-  font-weight: 700;
-}
-
-html {
-  height: 100%;
-  box-sizing: border-box;
-}
-
-#app{
-  height: 100%;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-.no-padding {
-  padding: 0px !important;
-}
-
-.padding-content {
-  padding: 4px 0;
-}
-
-a:focus,
-a:active {
-  outline: none;
-}
-
+body,
+div,
+span,
+header,
+footer,
+nav,
+section,
+aside,
+article,
+ul,
+dl,
+dt,
+dd,
+li,
 a,
-a:focus,
-a:hover {
-  cursor: pointer;
-  color: inherit;
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i,
+b,
+textarea,
+button,
+input,
+select,
+figure,
+figcaption,
+img {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-style: normal;
   text-decoration: none;
+  border: none;
+  font-weight: normal;
+  font-family: "Microsoft Yahei";
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  &:hover {
+    outline: none;
+  }
 }
 
-div:focus{
-  outline: none;
- }
+/* 表单元素共用样式 */
+input[type=button],
+input[type=submit],
+input[type=search],
+input[type=reset] {
+  -webkit-appearance: none
+}
 
+input, button, textarea {
+  outline: none;
+}
+
+textarea {
+  -webkit-appearance: none;
+  resize: none;
+}
+
+input:-ms-input-placeholder {
+  color: #c1c1c1;
+}
+input::-webkit-input-placeholder {
+  color: #c1c1c1;
+}
+textarea:-ms-input-placeholder {
+  color: #c1c1c1;
+}
+textarea::-webkit-input-placeholder {
+  color: #c1c1c1;
+}
+
+/*很关键：将默认的select选择框样式清除*/
+select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+select::-ms-expand {
+  display: none;
+}
+
+body, html {
+  width: 100%
+}
+html {
+  font-size: 16px;
+}
+
+a {
+  color: #000;
+}
+
+.clear {
+  clear: both;
+}
 .fr {
   float: right;
 }
@@ -64,27 +118,6 @@ div:focus{
 .fl {
   float: left;
 }
-
-.pr-5 {
-  padding-right: 5px;
-}
-
-.pl-5 {
-  padding-left: 5px;
-}
-
-.block {
-  display: block;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.inlineBlock {
-  display: block;
-}
-
 .clearfix {
   &:after {
     visibility: hidden;
@@ -95,23 +128,6 @@ div:focus{
     height: 0;
   }
 }
-
-code {
-  background: #eef1f6;
-  padding: 15px 16px;
-  margin-bottom: 20px;
-  display: block;
-  line-height: 36px;
-  font-size: 14px;
-  a {
-    color: #337ab7;
-    cursor: pointer;
-    &:hover {
-      color: rgb(32, 160, 255);
-    }
-  }
-}
-
 .warn-content{
   background: rgba(66,185,131,.1);
   border-radius: 2px;
@@ -124,73 +140,6 @@ code {
     font-weight: 600;
   }
 }
-
-//main-container全局样式
-.app-container {
-  padding: 20px;
-}
-
-.components-container {
-  margin: 30px 50px;
-  position: relative;
-}
-
-.pagination-container {
-  margin-top: 30px;
-}
-
-.editor-container .CodeMirror {
-  height: 100%!important;
-}
-
-.text-center {
-  text-align: center
-}
-
-.sub-navbar {
-  height: 50px;
-  line-height: 50px;
-  position: relative;
-  width: 100%;
-  text-align: right;
-  padding-right: 20px;
-  transition: 600ms ease position;
-  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
-  .subtitle {
-    font-size: 20px;
-    color: #fff;
-  }
-  &.draft {
-    background: #d0d0d0;
-  }
-  &.deleted {
-    background: #d0d0d0;
-  }
-}
-
-.link-type,
-.link-type:focus {
-  color: #337ab7;
-  cursor: pointer;
-  &:hover {
-    color: rgb(32, 160, 255);
-  }
-}
-
-.filter-container {
-  padding-bottom: 10px;
-  .filter-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
-  }
-}
-
-//refine vue-multiselect plugin
-.multiselect {
-  line-height: 16px;
-}
-
-.multiselect--active {
-  z-index: 1000 !important;
+.el-table .cell {
+  white-space: nowrap
 }
