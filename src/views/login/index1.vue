@@ -6,7 +6,7 @@
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
 
-      <el-form-item prop="username" :class="(isActive ? 'inputActive' : '')" @click="toggleActive">
+      <el-form-item prop="username">
         <span class="iconfont icon-username"></span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
       </el-form-item>
@@ -26,6 +26,28 @@
     </el-form>
   </div>
 </template>
+<!-- <template>
+  <div class="login-container">
+    <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+      <h3 class="title">系统登录</h3>
+
+      <el-form-item prop="username">
+        <span class="svg-container svg-container_login"></span>
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱" />
+      </el-form-item>
+
+      <el-form-item prop="password">
+        <span class="svg-container"></span>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+          placeholder="密码" />
+        <span class="show-pwd" @click="showPwd"></span>
+      </el-form-item>
+
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+    </el-form>
+
+  </div>
+</template> -->
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
@@ -58,18 +80,13 @@ export default {
       },
 
       loading: false,
-      showDialog: false,
-      isActive: true
+      showDialog: false
     }
   },
   methods: {
     // handleUsername() {
-    //   alert(1)
-    //   this.inputActive = true
-    // },
-    toggleActive() {
-      alert(1)
-    },
+    //
+    // }
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -102,8 +119,8 @@ export default {
   .login-container {
     @include relative;
     height: 100vh;
-    // background-color: #2d3a4b;
-    background: url('../../../static/img/login-bg.jpg');
+    background-color: #2d3a4b;
+    // background: url('../../../static/img/login-bg.jpg');
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
@@ -119,8 +136,7 @@ export default {
       left: 0;
       right: 0;
       width: 404px;
-      margin:0 auto;
-      margin-top: 387px;
+      margin: 387px auto;
     }
     .title {
       width: 100%;
@@ -164,7 +180,7 @@ export default {
         line-height: 30px;
         margin: 10px 0;
         margin-left: 2px;
-        border-left: 3px solid #161621;
+        border-left: 3px solid #35d5ba;
         vertical-align: middle;
         input{
           height: 20px;
@@ -176,12 +192,6 @@ export default {
           padding: 0 20px;
           @include boxSizing;
         }
-      }
-    }
-    .el-form-item.inputActive{
-      border: solid 2px #35d5ba;
-      .el-input{
-        border-left: 3px solid #35d5ba;
       }
     }
     .login-btn{

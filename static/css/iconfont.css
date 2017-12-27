@@ -15,18 +15,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-download:before { content: "\e639"; }
+.icon-password:before { content: "\e620"; }
 
-.icon-add:before { content: "\e6e0"; }
-
-.icon-import:before { content: "\e60a"; }
-
-.icon-edit:before { content: "\e651"; }
-
-.icon-inquire:before { content: "\e611"; }
-
-.icon-export:before { content: "\e665"; }
-
-.icon-delete:before { content: "\e600"; }
-
-.icon-detail:before { content: "\e601"; }
+.icon-username:before { content: "\e600"; }
