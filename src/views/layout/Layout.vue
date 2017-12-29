@@ -45,9 +45,6 @@ export default {
 	  height: 100%;
 	  width: 100%;
 	}
-	#app .sidebar-container {
-		top: 50px;
-	}
 	.main-container {
 		margin-top: 50px;
 		background-color: #d2d2d2;

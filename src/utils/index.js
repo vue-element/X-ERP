@@ -266,6 +266,21 @@ export function deepClone(source) {
   return targetObj
 }
 
-// export function resize() {
-//   var height = window.innerHeight
-// }
+export function winHeight() {
+  var winHeight = 0
+  if (window.innerHeight) {
+    winHeight = window.innerHeight
+  } else if ((document.body) && (document.body.clientHeight)) {
+    winHeight = document.body.clientHeight
+  }
+  return winHeight
+}
+export function winWidth() {
+  var winWidth = 0
+  if (window.innerWidth) {
+    winWidth = window.innerWidth
+  } else if ((document.body) && (document.body.clientWidth)) {
+    winWidth = document.body.clientWidth
+  }
+  return winWidth
+}

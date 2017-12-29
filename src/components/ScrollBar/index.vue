@@ -48,10 +48,12 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  margin-top: 50px;
   background-color: $menuBg;
   .scroll-wrapper {
     position: absolute;
      width: 100%!important;
+     padding-bottom: 50px;
   }
 }
 </style>

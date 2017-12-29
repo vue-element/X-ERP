@@ -28,7 +28,7 @@
       <span>数据导出</span>
     </li>
   </ul>
-  <el-table :data="tableData" style="width: 100%" class="basic-form" height="870" >
+  <el-table :data="tableData" style="width: 100%" class="basic-form" :height="height" >
    <el-table-column align="center" prop="0" fixed label="序号">
      <template slot-scope="scope">
        {{scope.$index}}
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { winHeight } from '@/utils'
 // import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunity',
@@ -148,13 +149,20 @@ export default {
       }, {
         1: '2017000000'
       }],
-      currentPage: 2
+      currentPage: 2,
+      height: 100
     }
   },
   created() {
-
+    this.resize()
+    window.addEventListener('resize', () => {
+      this.resize()
+    })
   },
   methods: {
+    resize() {
+      this.height = winHeight() - 210
+    }
   },
   computed: {
   }
@@ -164,6 +172,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+
 .app-container {
   padding: 0 10px;
   @include boxSizing;

@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
+// import utils from '@/utils/index'
 
 import 'normalize.css/normalize.css'// A modern alternative to CSS resets
 import 'element-ui/lib/theme-chalk/index.css'
@@ -20,6 +21,8 @@ Vue.config.productionTip = false
 // axios.defaults.withCredentials = true; 	//设置cookie可配置
 Vue.prototype.$post = post
 Vue.prototype.$get = get
+
+// var winHeight = utils.winSize.
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
