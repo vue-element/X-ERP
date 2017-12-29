@@ -1,61 +1,42 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-
-    <breadcrumb class="breadcrumb-container"></breadcrumb>
-
-    <div class="right-menu">
-      <div style="float:left;">
-        <!-- <svg-icon icon-class="drag"/> -->
-        <a>欢迎你～ </a>
-        <a>成本管理部</a>
-        <a>罗艺</a>
-      </div>
-      <el-tooltip effect="dark" content="全屏" placement="bottom">
-        <screenfull class="screenfull right-menu-item"></screenfull>
-      </el-tooltip>
-
-      <el-tooltip effect="dark" content="换肤" placement="bottom">
-        <theme-picker class="theme-switch right-menu-item"></theme-picker>
-      </el-tooltip>
-
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
-        <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
-          <i class="el-icon-caret-bottom"></i>
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              首页
-            </el-dropdown-item>
-          </router-link>
-          <a target='_blank' href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>
-              项目地址
-            </el-dropdown-item>
-          </a>
-          <el-dropdown-item divided>
-            <span @click="logout" style="display:block;">退出登录</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </el-menu>
+  <div class="navbar-container">
+    <div class="project-name">X-ERP项目管理系统</div>
+    <el-menu class="navbar" mode="horizontal">
+      <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+      <ul class="right-menu">
+        <li>欢迎您～</li>
+        <li class="department">成本管理部</li>
+        <li class="department">
+          <span class="username">罗艺</span>
+          <i class="iconfont icon-username"></i>
+        </li>
+        <li>
+          <span class="help">帮助</span>
+          <i class="iconfont icon-help"></i>
+        </li>
+        <li>
+          <span class="setting">设置</span>
+          <i class="iconfont icon-setting"></i>
+        </li>
+        <li @click="logout">
+          <span class="logout">退出</span>
+          <i class="iconfont icon-logout"></i>
+        </li>
+      </ul>
+    </el-menu>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ThemePicker from '@/components/ThemePicker'
 import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ThemePicker,
     Screenfull
   },
   computed: {
@@ -88,9 +69,32 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.navbar {
+.navbar-container{
   height: 50px;
   line-height: 50px;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1002;
+}
+.project-name{
+  width: 210px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.9px;
+  color: #fff;
+  background-color: #35d5ba;
+  float: left;
+}
+.navbar {
+  float: right;
+  height: 50px;
+  line-height: 50px;
+  border-bottom: 0;
   border-radius: 0px !important;
   .hamburger-container {
     line-height: 58px;
@@ -98,56 +102,22 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .breadcrumb-container{
-    float: left;
-  }
   .errLog-container {
     display: inline-block;
     vertical-align: top;
   }
   .right-menu {
     float: right;
-    height: 100%;
+    height: 50px;
+    line-height: 50px;
     &:focus{
      outline: none;
     }
-    .right-menu-item {
+    li{
       display: inline-block;
-      margin: 0 8px;
-    }
-    .screenfull {
-      height: 20px;
-    }
-    .international{
-      vertical-align: top;
-      .international-icon{
-        font-size: 20px;
-        cursor: pointer;
-        vertical-align: -5px;
-      }
-    }
-    .theme-switch {
-      vertical-align: 15px;
-    }
-    .avatar-container {
-      height: 50px;
       margin-right: 30px;
-      .avatar-wrapper {
-        cursor: pointer;
-        margin-top: 5px;
-        position: relative;
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-        .el-icon-caret-bottom {
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
-      }
+      font-size: 16px;
+      color: #828282;
     }
   }
 }

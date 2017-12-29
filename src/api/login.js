@@ -19,10 +19,17 @@ export function logout() {
   })
 }
 
+// export function getUserInfo(token) {
+//   return request({
+//     url: '/user/info',
+//     method: 'get',
+//     params: { token }
+//   })
+// }
 export function getUserInfo(token) {
-  return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+  return new Promise((resolve, reject) => {
+    resolve({
+      data: { username: 'admin', name: 'admin', 'role': ['admin'] }
+    })
   })
 }

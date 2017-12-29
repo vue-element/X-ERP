@@ -4,12 +4,13 @@
       <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
         {{tag.title}}
         <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
+        <!-- <span class='iconfont icon-jiaocha' @click.prevent.stop='closeSelectedTag(tag)'></span> -->
       </router-link>
     </scroll-pane>
     <ul class='contextmenu' v-show="visible" :style="{left:left+'px',top:top+'px'}">
-      <li @click="closeSelectedTag(selectedTag)">Close</li>
-      <li @click="closeOthersTags">Close Others</li>
-      <li @click="closeAllTags">Close All</li>
+      <li @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li @click="closeOthersTags">关闭其他</li>
+      <li @click="closeAllTags">关闭所有</li>
     </ul>
   </div>
 </template>
@@ -101,8 +102,8 @@ export default {
     openMenu(tag, e) {
       this.visible = true
       this.selectedTag = tag
-      this.left = e.clientX
-      this.top = e.clientY
+      this.left = e.clientX - 230
+      this.top = e.clientY - 40
     },
     closeMenu() {
       this.visible = false
@@ -114,29 +115,31 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
   .tags-view-wrapper {
-    background: #fff;
-    height: 34px;
-    border-bottom: 1px solid #d8dce5;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+    position: fixed;
+    z-index: 101;
+    height: 40px;
+    width: auto;
+    left: 220px;
+    right: 10px;
+    top: 50px;
+    border-top: 10px solid #d2d2d2;
+    background: #f8f8f8;
     .tags-view-item {
       display: inline-block;
       position: relative;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
-      &:first-of-type {
-        margin-left: 15px;
-      }
+      height: 37px;
+      line-height: 37px;
+      color: #828282;
+      background: #f8f8f8;
+      padding: 0 20px;
+      font-size: 16px;
+      font-weight: 500;
+      border-top: 3px solid #f8f8f8;
+      // margin:0 6px;
       &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
+        background-color: #fff;
+        color: #35d5ba;
+        border-top: 3px solid #42b983;
         &::before {
           content: '';
           background: #fff;
@@ -181,7 +184,9 @@ export default {
     .el-icon-close {
       width: 16px;
       height: 16px;
-      vertical-align: 2px;
+      font-size: 20px;
+      vertical-align: 1px;
+      margin-left: 8px;
       border-radius: 50%;
       text-align: center;
       transition: all .3s cubic-bezier(.645, .045, .355, 1);

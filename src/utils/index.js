@@ -265,3 +265,7 @@ export function deepClone(source) {
   }
   return targetObj
 }
+
+// export function resize() {
+//   var height = window.innerHeight
+// }

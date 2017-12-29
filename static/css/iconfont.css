@@ -14,7 +14,32 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-jiaocha:before { content: "\e6b3"; }
 
-.icon-password:before { content: "\e620"; }
+.icon-home:before { content: "\e63a"; }
 
-.icon-username:before { content: "\e600"; }
+.icon-edit:before { content: "\e67a"; }
+
+.icon-search:before { content: "\e72c"; }
+
+.icon-password:before { content: "\e663"; }
+
+.icon-check:before { content: "\e605"; }
+
+.icon-checkon:before { content: "\e606"; }
+
+.icon-delete:before { content: "\e60d"; }
+
+.icon-money:before { content: "\e607"; }
+
+.icon-person:before { content: "\e610"; }
+
+.icon-username:before { content: "\e777"; }
+
+.icon-setting:before { content: "\e618"; }
+
+.icon-help:before { content: "\e600"; }
+
+.icon-export:before { content: "\e601"; }
+
+.icon-add:before { content: "\e60e"; }

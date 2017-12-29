@@ -5,21 +5,21 @@
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
-
-      <el-form-item prop="username" :class="(isActive ? 'inputActive' : '')" @click="toggleActive">
+      <el-form-item prop="username" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
+        <el-input name="username" type="text" @click.native="usernameClick" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
         <span class="iconfont icon-password"></span>
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
+        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
       </el-form-item>
 
       <div class="login-btn">
         <el-button type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
         <div class="keep-pw">
-          <input type="checkbox">
+          <!-- <el-checkbox v-model="checked">一周内自动登录</el-checkbox> -->
+          <i :class="'iconfont ' + (isKeepPw ? 'icon-checkon' : 'icon-check')" @click="keepPassword"></i>
           <label>记住密码</label>
         </div>
       </div>
@@ -29,6 +29,9 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
+import Cookies from 'js-cookie'
+import { mapActions, mapGetters } from 'vuex'
+import { setToken } from '@/utils/auth'
 
 export default {
   name: 'login',
@@ -49,47 +52,86 @@ export default {
     }
     return {
       loginForm: {
-        // username: 'admin',
-        // password: '1111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-
       loading: false,
       showDialog: false,
-      isActive: true
+      usernameActive: false,
+      passwordActive: false,
+      isKeepPw: false
+    }
+  },
+  created() {
+    var username = Cookies.get('username')
+    var password = Cookies.get('password')
+    if (username && password) {
+      this.isKeepPw = true
+      this.loginForm.username = username
+      this.loginForm.password = password
+    } else {
+      this.loginForm.username = ''
+      this.loginForm.password = ''
     }
   },
   methods: {
-    // handleUsername() {
-    //   alert(1)
-    //   this.inputActive = true
-    // },
-    toggleActive() {
-      alert(1)
+    usernameClick() {
+      this.usernameActive = true
+      this.passwordActive = false
+    },
+    passwordClick() {
+      this.passwordActive = true
+      this.usernameActive = false
+    },
+    keepPassword() {
+      this.isKeepPw = !this.isKeepPw
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: '/' })
-            // this.showDialog = true
-          }).catch(() => {
-            this.loading = false
-          })
+
+          this.setToken('11111')
+          setToken('1111')
+          // this.setRoles(['admin'])
+          // return
+          var username = this.loginForm.username
+          var password = this.loginForm.password
+          if (this.isKeepPw === true) {
+            Cookies.set('username', username, { expires: 7 })
+            Cookies.set('password', password, { expires: 7 })
+          } else {
+            Cookies.remove('username', '')
+            Cookies.remove('password', '')
+          }
+          this.$router.push({ path: '/' })
+          // this.loading = true
+          // this.$post(url, this.loginForm).then((res) => {
+          //   this.loading = false
+          //   this.setToken(res.token)
+          //   this.$router.push({ path: '/' })
+          // }).catch(() => {
+          //   this.loading = false
+          // })
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    }
+    },
+    ...mapActions([
+      'setToken',
+      'setRoles'
+    ])
   },
-  created() {
-    // window.addEventListener('hashchange', this.afterQRScan)
+  computed: {
+    ...mapGetters({
+      token: 'token'
+    })
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -102,7 +144,6 @@ export default {
   .login-container {
     @include relative;
     height: 100vh;
-    // background-color: #2d3a4b;
     background: url('../../../static/img/login-bg.jpg');
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
@@ -120,7 +161,8 @@ export default {
       right: 0;
       width: 404px;
       margin:0 auto;
-      margin-top: 387px;
+      // margin-top: 387px;
+      margin-top: 35vh;
     }
     .title {
       width: 100%;
@@ -178,7 +220,7 @@ export default {
         }
       }
     }
-    .el-form-item.inputActive{
+    .el-form-item.isActive{
       border: solid 2px #35d5ba;
       .el-input{
         border-left: 3px solid #35d5ba;
@@ -208,13 +250,13 @@ export default {
         margin: 16px 0;
         color: rgba(255, 255, 255, 0.5);
         opacity: 0.5;
-        input {
+        i{
           display: inline-block;
           width: 16px;
           height: 16px;
-          border-radius: 2px;
-          border: solid 2px #a0a0a0;
+          font-size: 18px!important;
           vertical-align: middle;
+          margin-top: -2px;
         }
         label {
           display: inline-block;

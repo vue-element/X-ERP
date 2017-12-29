@@ -3,11 +3,11 @@
   .main-container {
     min-height: 100%;
     transition: margin-left 0.28s;
-    margin-left: 180px;
+    margin-left: 210px;
   } // 侧边栏
   .sidebar-container {
     transition: width 0.28s;
-    width: 180px!important;
+    width: 210px!important;
     height: 100%;
     position: fixed;
     top: 0;
@@ -61,7 +61,7 @@
           text-align: left;
           text-indent: 20px;
           top: 0px;
-          background-color: $subMenuBg!important;
+          background-color: #1f2d3d!important;
           opacity: 1;
         }
       }
@@ -88,13 +88,13 @@
   }
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
-    min-width: 180px!important;
-    background-color: $subMenuBg!important;
+    min-width: 210px!important;
+    background-color: #1f2d3d!important;
     &:hover {
-      background-color: $menuHover!important;
+      background-color: #001528!important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu{
-    min-width: 180px!important;
+    min-width: 210px!important;
   }
 }

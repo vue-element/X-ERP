@@ -5,49 +5,28 @@
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
-
-      <el-form-item prop="username">
+      <el-form-item prop="username" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
+        <el-input name="username" type="text" @click.native="usernameClick" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
         <span class="iconfont icon-password"></span>
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
+        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
       </el-form-item>
 
       <div class="login-btn">
         <el-button type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
         <div class="keep-pw">
-          <input type="checkbox">
+          <!-- <el-checkbox v-model="checked">一周内自动登录</el-checkbox> -->
+          <!-- <input type="checkbox"> -->
+          <i :class="'iconfont ' + (isKeepPw ? 'icon-checkon' : 'icon-check')" @click="keepPassword"></i>
           <label>记住密码</label>
         </div>
       </div>
     </el-form>
   </div>
 </template>
-<!-- <template>
-  <div class="login-container">
-    <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <h3 class="title">系统登录</h3>
-
-      <el-form-item prop="username">
-        <span class="svg-container svg-container_login"></span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱" />
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <span class="svg-container"></span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="密码" />
-        <span class="show-pwd" @click="showPwd"></span>
-      </el-form-item>
-
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
-    </el-form>
-
-  </div>
-</template> -->
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
@@ -71,23 +50,39 @@ export default {
     }
     return {
       loginForm: {
-        // username: 'admin',
-        // password: '1111111'
+        username: 'admin',
+        password: '1111111'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-
       loading: false,
-      showDialog: false
+      showDialog: false,
+      usernameActive: false,
+      passwordActive: false,
+      isKeepPw: false
     }
   },
   methods: {
-    // handleUsername() {
-    //
-    // }
+    usernameClick() {
+      this.usernameActive = true
+      this.passwordActive = false
+    },
+    passwordClick() {
+      this.passwordActive = true
+      this.usernameActive = false
+    },
+    keepPassword() {
+      this.isKeepPw = !this.isKeepPw
+    },
     handleLogin() {
+      // alert(1)
+      // var name = this.loginForm.username
+      // var password = this.loginForm.password
+      // if (this.isKeepPw = true) {
+      //   this.setCookie(name, password, 1)
+      // }
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -119,8 +114,7 @@ export default {
   .login-container {
     @include relative;
     height: 100vh;
-    background-color: #2d3a4b;
-    // background: url('../../../static/img/login-bg.jpg');
+    background: url('../../../static/img/login-bg.jpg');
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
@@ -136,7 +130,9 @@ export default {
       left: 0;
       right: 0;
       width: 404px;
-      margin: 387px auto;
+      margin:0 auto;
+      // margin-top: 387px;
+      margin-top: 35vh;
     }
     .title {
       width: 100%;
@@ -180,7 +176,7 @@ export default {
         line-height: 30px;
         margin: 10px 0;
         margin-left: 2px;
-        border-left: 3px solid #35d5ba;
+        border-left: 3px solid #161621;
         vertical-align: middle;
         input{
           height: 20px;
@@ -192,6 +188,12 @@ export default {
           padding: 0 20px;
           @include boxSizing;
         }
+      }
+    }
+    .el-form-item.isActive{
+      border: solid 2px #35d5ba;
+      .el-input{
+        border-left: 3px solid #35d5ba;
       }
     }
     .login-btn{
@@ -218,13 +220,13 @@ export default {
         margin: 16px 0;
         color: rgba(255, 255, 255, 0.5);
         opacity: 0.5;
-        input {
+        i{
           display: inline-block;
           width: 16px;
           height: 16px;
-          border-radius: 2px;
-          border: solid 2px #a0a0a0;
+          font-size: 18px!important;
           vertical-align: middle;
+          margin-top: -2px;
         }
         label {
           display: inline-block;

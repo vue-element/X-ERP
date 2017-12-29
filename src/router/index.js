@@ -53,7 +53,8 @@ export const asyncRouterMap = [
     name: 'market',
     meta: {
       title: '市场管理',
-      icon: 'component'
+      icon: 'component',
+      role: ['sc']
     },
     children: [
       { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
@@ -68,7 +69,8 @@ export const asyncRouterMap = [
     name: 'financial',
     meta: {
       title: '财务管理',
-      icon: 'financial'
+      icon: 'financial',
+      role: ['cw']
     },
     children: [
       { path: 'contract-info', component: _import('financial/contractInfo'), name: 'contractInfo', meta: { title: '合同信息管理' }},
@@ -86,7 +88,8 @@ export const asyncRouterMap = [
     name: 'cost',
     meta: {
       title: '成本管理',
-      icon: 'component'
+      icon: 'component',
+      role: ['cw']
     },
     children: [
       { path: 'supplier', component: _import('cost/supplier'), name: 'supplier', meta: { title: '供应商管理' }},
