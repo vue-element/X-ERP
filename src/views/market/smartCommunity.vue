@@ -144,10 +144,10 @@ export default {
         1: '2017000000'
       }, {
         1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
+      // }, {
+      //   1: '2017000000'
+      // }, {
+      //   1: '2017000000'
       }],
       currentPage: 2,
       height: 100
@@ -162,6 +162,7 @@ export default {
   methods: {
     resize() {
       this.height = winHeight() - 210
+      // this.height = 0
     }
   },
   computed: {

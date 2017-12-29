@@ -102,8 +102,8 @@ export default {
     openMenu(tag, e) {
       this.visible = true
       this.selectedTag = tag
-      this.left = e.clientX - 230
-      this.top = e.clientY - 40
+      this.left = e.clientX - 210
+      this.top = e.clientY - 30
     },
     closeMenu() {
       this.visible = false
@@ -114,16 +114,17 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
+  position: fixed;
+  z-index: 101;
+  height: 40px;
+  width: auto;
+  left: 220px;
+  right: 10px;
+  top: 50px;
+  border-top: 10px solid #d2d2d2;
+  background: #f8f8f8;
   .tags-view-wrapper {
-    position: fixed;
-    z-index: 101;
     height: 40px;
-    width: auto;
-    left: 220px;
-    right: 10px;
-    top: 50px;
-    border-top: 10px solid #d2d2d2;
-    background: #f8f8f8;
     .tags-view-item {
       display: inline-block;
       position: relative;
@@ -179,13 +180,17 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 //reset element css of el-icon-close
+.tags-view-container{
+  height: 40px;
+}
 .tags-view-wrapper {
+  // height: 40px;
   .tags-view-item {
     .el-icon-close {
       width: 16px;
       height: 16px;
-      font-size: 20px;
-      vertical-align: 1px;
+      // font-size: 20px;
+      vertical-align: 2px;
       margin-left: 8px;
       border-radius: 50%;
       text-align: center;

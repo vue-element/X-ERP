@@ -4,10 +4,8 @@
 		<div class="show-container">
 			<sidebar class="sidebar-container"></sidebar>
 			<div class="main-container">
-				<div class="inner-main">
-					<tags-view></tags-view>
-					<app-main></app-main>
-				</div>
+				<tags-view></tags-view>
+				<app-main></app-main>
 			</div>
 		</div>
 	</div>
@@ -15,7 +13,6 @@
 
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
-
 export default {
   name: 'layout',
   components: {
@@ -45,18 +42,13 @@ export default {
 	  height: 100%;
 	  width: 100%;
 	}
-	.main-container {
-		margin-top: 50px;
-		background-color: #d2d2d2;
-	}
-	.inner-main {
+	.main-container{
 		position: fixed;
 		top: 50px;
 		left: 210px;
 		right: 0px;
 		bottom: 0px;
 		border:10px solid #d2d2d2;
-
 	}
 	.app-main {
 		position: absolute;
@@ -69,5 +61,14 @@ export default {
 		@include boxSizing;
 		@include scrolling;
 	}
-
+	.hideSidebar .main-container {
+		left: 0;
+	}
+	.hideSidebar .tags-view-container{
+		left: 46px;
+	}
+	#app .tags-view-container .tags-view-wrapper {
+    -webkit-transition: margin-left 0.28s;
+    transition: margin-left 0.28s;
+	}
 </style>

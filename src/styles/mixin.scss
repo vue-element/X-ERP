@@ -81,7 +81,7 @@
   box-sizing: border-box;
 }
 
-@mixin scrolling () {
+@mixin scrolling {
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
