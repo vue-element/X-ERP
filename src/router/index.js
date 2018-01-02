@@ -34,7 +34,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index'),
       name: 'dashboard',
-      meta: { title: '首页', icon: 'dashboard', noCache: true }
+      meta: { title: '首页', icon: 'dashboard', noCache: true, icon: 'home' }
     }]
   }
 ]
@@ -53,7 +53,7 @@ export const asyncRouterMap = [
     name: 'market',
     meta: {
       title: '市场管理',
-      icon: 'component',
+      icon: 'person',
       role: ['sc']
     },
     children: [
@@ -69,7 +69,7 @@ export const asyncRouterMap = [
     name: 'financial',
     meta: {
       title: '财务管理',
-      icon: 'financial',
+      icon: 'money',
       role: ['cw']
     },
     children: [

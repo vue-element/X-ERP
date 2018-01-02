@@ -94,6 +94,9 @@
       background-color: #001528!important;
     }
   }
+  .el-submenu .el-menu-item.is-active {
+    background-color: #35d5ba!important;
+  }
   .el-menu--collapse .el-menu .el-submenu{
     min-width: 210px!important;
   }

@@ -1,29 +1,27 @@
 <template>
   <div class="navbar-container">
     <div class="project-name">X-ERP项目管理系统</div>
-    <el-menu class="navbar" mode="horizontal">
-      <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-      <ul class="right-menu">
-        <li>欢迎您～</li>
-        <li class="department">成本管理部</li>
-        <li class="department">
-          <span class="username">罗艺</span>
-          <i class="iconfont icon-username"></i>
-        </li>
-        <li>
-          <span class="help">帮助</span>
-          <i class="iconfont icon-help"></i>
-        </li>
-        <li>
-          <span class="setting">设置</span>
-          <i class="iconfont icon-setting"></i>
-        </li>
-        <li @click="logout">
-          <span class="logout">退出</span>
-          <i class="iconfont icon-logout"></i>
-        </li>
-      </ul>
-    </el-menu>
+    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+    <ul class="navbar" mode="horizontal">
+      <li>欢迎您～</li>
+      <li class="department">成本管理部</li>
+      <li class="department">
+        <span class="username">罗艺</span>
+        <i class="iconfont icon-username"></i>
+      </li>
+      <li>
+        <span class="help">帮助</span>
+        <i class="iconfont icon-help"></i>
+      </li>
+      <li>
+        <span class="setting">设置</span>
+        <i class="iconfont icon-setting"></i>
+      </li>
+      <li @click="logout">
+        <span class="logout">退出</span>
+        <i class="iconfont icon-logout"></i>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -90,35 +88,30 @@ export default {
   background-color: #35d5ba;
   float: left;
 }
+.hamburger-container {
+  line-height: 58px;
+  height: 50px;
+  float: left;
+  padding: 0 10px;
+}
 .navbar {
   float: right;
   height: 50px;
   line-height: 50px;
   border-bottom: 0;
   border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 58px;
-    height: 50px;
-    float: left;
-    padding: 0 10px;
+  &:focus{
+   outline: none;
   }
   .errLog-container {
     display: inline-block;
     vertical-align: top;
   }
-  .right-menu {
-    float: right;
-    height: 50px;
-    line-height: 50px;
-    &:focus{
-     outline: none;
-    }
-    li{
-      display: inline-block;
-      margin-right: 30px;
-      font-size: 16px;
-      color: #828282;
-    }
+  li{
+    display: inline-block;
+    margin-right: 30px;
+    font-size: 16px;
+    color: #828282;
   }
 }
 </style>
