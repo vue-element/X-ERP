@@ -89,6 +89,8 @@
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
     min-width: 210px!important;
+    height: 40px;
+    line-height: 40px;
     background-color: #1f2d3d!important;
     &:hover {
       background-color: #001528!important;

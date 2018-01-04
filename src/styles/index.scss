@@ -143,3 +143,74 @@ a {
 .el-table .cell {
   white-space: nowrap
 }
+// 页面的增删改查区
+.form-attached {
+  margin: 0 15px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  color: #828282;
+  ul.crud-btn {
+    li {
+      display: inline-block;
+      margin-right: 35px;
+      i {
+        display: inline-block;
+        margin-right: 6px;
+      }
+    }
+  }
+  .data-export {
+    i {
+      display: inline-block;
+      margin-right: 6px;
+    }
+  }
+}
+// form模块区
+.form-container {
+  border-top: 5px solid #d2d2d2;
+  color: #000;
+  .form-inner {
+    border: 1px solid #d2d2d2;
+    margin: 16px 0;
+    padding: 10px 20px;
+    @include borderRadius(4px);
+    h4 {
+      height: 20px;
+      padding: 10px 0;
+      p {
+        border-left: 5px solid #35d5ba;
+        padding-left: 15px;
+      }
+    }
+  }
+  table {
+    width: 100%;
+    margin-right: 40px;
+    border-left: 1px solid #828282;
+    border-bottom: 1px solid #828282;
+    tr {
+      td {
+        width: 110px;
+        height: 28px;
+        text-align: center;
+        font-size: 14px;
+        border-top: 1px solid #828282;
+        border-right: 1px solid #828282;
+      }
+    }
+  }
+}
+.con-search-btn {
+  margin: 20px auto;
+  width: 130px;
+  height: 30px;
+  line-height: 30px;
+  @include borderRadius(4px);
+  background-color: #35d5ba;
+  border: 1px solid #35d5ba;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+}

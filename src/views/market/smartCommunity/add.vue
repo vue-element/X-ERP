@@ -28,75 +28,9 @@
       <span>数据导出</span>
     </li>
   </ul>
-  <div v-show="false">
-    <el-table :data="tableData" style="width: 100%" class="basic-form" :height="height">
-      <el-table-column align="center" prop="0" fixed label="序号">
-        <template slot-scope="scope">
-         {{scope.$index}}
-</template>
-     </el-table-column>
-     <el-table-column align="center" prop="1" fixed label="公司名称"></el-table-column>
-     <el-table-column align="center" prop="2" fixed label="办事处"></el-table-column>
-     <el-table-column align="center" prop="3" fixed label="地区"></el-table-column>
-     <el-table-column align="center" prop="4" fixed label="项目名称"></el-table-column>
-     <el-table-column align="center" prop="5" label="建筑业态" sortable></el-table-column>
-     <el-table-column align="center" prop="6" label="总建筑面积" sortable></el-table-column>
-     <el-table-column align="center" prop="7" label="总收藏面积"></el-table-column>
-     <el-table-column align="center" prop="8" label="总户数"></el-table-column>
-     <el-table-column align="center" prop="9" label="车位总数"></el-table-column>
-     <el-table-column align="center" prop="10" label="合约模式"></el-table-column>
-    </el-table>
-    <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
-    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="50"></el-pagination>
-  </div>
-  <!-- 查询功能 -->
-  <div class="search-container form-module" v-show="false">
-    <div class="search-form">
-      <h4>
-        <p>查询条件</p>
-      </h4>
-      <el-form ref="form" :model="form">
-        <el-row type="flex" class="row-bg" justify="space-between">
-          <el-form-item label="活动名称" :span="6">
-            <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-          </el-form-item>
-          <el-form-item label="区域" :span="6">
-            <el-select v-model="form.region" placeholder="请选择区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="合约模式" :span="6">
-            <el-select v-model="form.region" placeholder="请选择合约模式">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row type="flex" class="row-bg" justify="space-between">
-          <el-form-item label="客户信息" :span="6">
-            <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
-          </el-form-item>
-          <el-form-item label="城市" :span="6">
-            <el-select v-model="form.city" placeholder="请选择城市">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="首期入伙时间" :span="6">
-            <el-select v-model="form.region" placeholder="请选择合约模式">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <div class="search-btn">查  询</div>
-    </div>
-  </div>
   <!-- 社区建设单项目信息表 -->
-  <div class="search-container project-msg"  v-show="true">
-    <div class="search-form">
+  <div class="form-container project-msg">
+    <div class="form-inner">
       <div class='project-msg basic-info'>
         <h4>
           <p>项目基础信息</p>
@@ -401,108 +335,12 @@ import {
 } from '@/utils'
 // import { fetchList } from '@/api/article'
 export default {
-  name: 'smartCommunity',
+  name: 'smartCommunity-add',
   data() {
     return {
-      ruleForm: {
-        type: []
-      },
       form: {
         region: ''
       },
-      tableData: [{
-        1: '2017001176',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-        // }, {
-        //   1: '2017000000'
-        // }, {
-        //   1: '2017000000'
-      }],
-      currentPage: 2,
       height: 100
     }
   },
@@ -530,165 +368,143 @@ export default {
     @include boxSizing;
 }
 .form-attached {
-    margin: 0 15px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 16px;
-    color: #828282;
-    ul.crud-btn {
-        li {
-            display: inline-block;
-            margin-right: 35px;
-            i {
-                display: inline-block;
-                margin-right: 6px;
-            }
-        }
+  margin: 0 15px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  color: #828282;
+  ul.crud-btn {
+    li {
+      display: inline-block;
+      margin-right: 35px;
+      i {
+        display: inline-block;
+        margin-right: 6px;
+      }
     }
-    .data-export {
-        i {
-            display: inline-block;
-            margin-right: 6px;
-        }
+  }
+  .data-export {
+    i {
+      display: inline-block;
+      margin-right: 6px;
     }
+  }
 }
 .basic-form {
-    .el-table__fixed-body-wrapper {
-        margin: 28px 0;
-    }
+  .el-table__fixed-body-wrapper {
+    margin: 28px 0;
+  }
 }
-.search-container {
-    border-top: 5px solid #d2d2d2;
-    color: #000;
-    .search-form {
-        border: 1px solid #d2d2d2;
-        margin: 16px 0;
-        padding: 0 20px;
-        @include borderRadius(4px);
-        h4 {
-            height: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid #d2d2d2;
-            p {
-                border-left: 5px solid #35d5ba;
-                padding-left: 15px;
-            }
-        }
-        .el-form {
-            .el-row {
-                .el-form-item {
-                    margin: 0;
-                    padding: 0;
-                    margin-top: 20px;
-                    @include flex;
-                }
-            }
-        }
-        .search-btn {
-            margin: 20px auto;
-            width: 130px;
-            height: 30px;
-            line-height: 30px;
-            @include borderRadius(4px);
-            background-color: #35d5ba;
-            border: 1px solid #35d5ba;
-            text-align: center;
-            color: #fff;
-            font-size: 14px;
-        }
+.form-container {
+  border-top: 5px solid #d2d2d2;
+  color: #000;
+  .form-inner {
+    border: 1px solid #d2d2d2;
+    margin: 16px 0;
+    padding: 0 20px;
+    @include borderRadius(4px);
+    h4 {
+      height: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #d2d2d2;
+      p {
+        border-left: 5px solid #35d5ba;
+        padding-left: 15px;
+      }
     }
+  }
 }
 // 社区建设单项目信息表
 .project-msg {
-  margin-bottom: 30px;
-    .basic-info {
-        .el-row {
-            .basic-item {
-                margin-top: 20px;
-                label {
-                    display: inline-block;
-                    color: #000;
-                    width: 30%;
-                    line-height: 16px;
-                    word-wrap: wrap;
-                    margin-right: 2%;
-                    font-size: 14px;
-                }
-                input {
-                    width: 62%;
-                    height: 32px;
-                    border: 1px solid #828282;
-                    @include borderRadius(4px);
-                    text-indent: 12px;
-                }
-            }
-            .customer-info {
-                label {
-                    width: 13%;
-                }
-                input {
-                    width: 82%;
-                }
-            }
-            .radio-sel {
-              @include flex;
-              font-size: 14px;
-              label {
-                width: 26%;
-                max-width: 100px;
-                line-height: 30px;
-              }
-              ul {
-                @include flex;
-                justify-content: space-around;
-                width: 62%;
-                height: 30px;
-                background-color: #f8f8f8;
-                @include borderRadius(4px);
-                li {
-                  height: 30px;
-                  line-height: 30px;
-                  input {
-                    display: inline-block;
-                    vertical-align: center;
-                    width: auto;
-                    height: auto;
-                    margin-right: 4px;
-                  }
-                  span {
-                    display: inline-block;
-                    vertical-align: center;
-                  }
-                }
-              }
-            }
+  margin-bottom: 20px;
+  .basic-info {
+    .el-row {
+      .basic-item {
+        margin-top: 20px;
+        label {
+          display: inline-block;
+          color: #000;
+          width: 30%;
+          line-height: 16px;
+          word-wrap: wrap;
+          margin-right: 2%;
+          font-size: 14px;
         }
+        input {
+          width: 62%;
+          height: 32px;
+          border: 1px solid #828282;
+          @include borderRadius(4px);
+          text-indent: 12px;
+        }
+      }
+      .customer-info {
+        label {
+          width: 13%;
+        }
+        input {
+          width: 82%;
+        }
+      }
+      .radio-sel {
+        @include flex;
+        font-size: 14px;
+        label {
+          width: 26%;
+          max-width: 100px;
+          line-height: 30px;
+        }
+        ul {
+          @include flex;
+          justify-content: space-around;
+          width: 62%;
+          height: 30px;
+          background-color: #f8f8f8;
+          @include borderRadius(4px);
+          li {
+            height: 30px;
+            line-height: 30px;
+            input {
+              display: inline-block;
+              vertical-align: center;
+              width: auto;
+              height: auto;
+              margin-right: 4px;
+            }
+            span {
+              display: inline-block;
+              vertical-align: center;
+            }
+          }
+        }
+      }
     }
-    .element-table {
-        table {
-            width: 100%;
-            margin-top: 20px;
-            margin-right: 40px;
-            border-left: 1px solid #828282;
-            border-bottom: 1px solid #828282;
-            tr {
-                td {
-                    width: 110px;
-                    height: 28px;
-                    text-align: center;
-                    font-size: 14px;
-                    border-top: 1px solid #828282;
-                    border-right: 1px solid #828282;
-                }
-            }
+  }
+  .element-table {
+    table {
+      width: 100%;
+      margin-top: 20px;
+      margin-right: 40px;
+      border-left: 1px solid #828282;
+      border-bottom: 1px solid #828282;
+      tr {
+        td {
+          width: 110px;
+          height: 28px;
+          text-align: center;
+          font-size: 14px;
+          border-top: 1px solid #828282;
+          border-right: 1px solid #828282;
         }
-        .element-fr {
-            tr {
-                td {
-                    width: 217px;
-                }
-            }
-        }
+      }
     }
+    .element-fr {
+      tr {
+        td {
+          width: 217px;
+        }
+      }
+    }
+  }
 }
 </style>

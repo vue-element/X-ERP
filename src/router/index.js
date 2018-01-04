@@ -34,7 +34,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index'),
       name: 'dashboard',
-      meta: { title: '首页', icon: 'dashboard', noCache: true, icon: 'home' }
+      meta: { title: '首页', icon: 'home', noCache: true }
     }]
   }
 ]
@@ -57,8 +57,12 @@ export const asyncRouterMap = [
       role: ['sc']
     },
     children: [
-      { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: 'business-opportunity', component: _import('market/businessOpportunity'), name: 'businessOpportunity', meta: { title: '商机管理' }},
+      // { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
+      { path: 'smartCommunity/index', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
+      { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
+      { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
+      { path: 'business-opportunity/add', component: _import('market/businessOpportunity/add'), name: 'businessOpportunity-add', meta: { title: '商机管理' }},
+      { path: 'business-opportunity/search', component: _import('market/businessOpportunity/search'), name: 'businessOpportunity-search', meta: { title: '商机管理' }},
       { path: 'bid-manage', component: _import('market/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' }}
     ]
   },
