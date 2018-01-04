@@ -21,159 +21,362 @@ meta : {
 }
 **/
 // constantRouterMap 代表那些不需要动态判断权限的路由，如登录页，404，等通用页面。
-export const constantRouterMap = [
-  { path: '/login', component: _import('login/index'), hidden: true },
-  { path: 'dashboard', component: _import('dashboard/index'), hidden: true },
-  { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
-  { path: '/404', component: _import('errorPage/404'), hidden: true },
-  { path: '/401', component: _import('errorPage/401'), hidden: true },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'dashboard',
-    children: [{
-      path: 'dashboard',
-      component: _import('dashboard/index'),
-      name: 'dashboard',
-      meta: { title: '首页', icon: 'home', noCache: true }
-    }]
-  }
+export const constantRouterMap = [{
+		path: '/login',
+		component: _import('login/index'),
+		hidden: true
+	},
+	{
+		path: 'dashboard',
+		component: _import('dashboard/index'),
+		hidden: true
+	},
+	{
+		path: '/authredirect',
+		component: _import('login/authredirect'),
+		hidden: true
+	},
+	{
+		path: '/404',
+		component: _import('errorPage/404'),
+		hidden: true
+	},
+	{
+		path: '/401',
+		component: _import('errorPage/401'),
+		hidden: true
+	},
+	{
+		path: '',
+		component: Layout,
+		redirect: 'dashboard',
+		children: [{
+			path: 'dashboard',
+			component: _import('dashboard/index'),
+			name: 'dashboard',
+			meta: {
+				title: '首页',
+				icon: 'home',
+				noCache: true
+			}
+		}]
+	}
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
+	// mode: 'history', //后端支持可开
+	scrollBehavior: () => ({
+		y: 0
+	}),
+	routes: constantRouterMap
 })
 // asyncRouterMap 代表那些需求动态判断权限并通过 addRouters 动态添加的页面。具体的会在 权限判断 页面介绍。
-export const asyncRouterMap = [
-  {
-    path: '/market',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'market',
-    meta: {
-      title: '市场管理',
-      icon: 'person',
-      role: ['sc']
-    },
-    children: [
-      // { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: '/smartCommunity', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' },
-        children: [
-          { path: 'list', component: _import('market/smartCommunity/components/list'), name: 'smartCommunityList', meta: { title: '智慧社区数据库' }},
-          { path: 'add', component: _import('market/smartCommunity/components/add'), name: 'smartCommunityAdd', meta: { title: '智慧社区数据库' }},
-          { path: 'search', component: _import('market/smartCommunity/components/search'), name: 'smartCommunitySearch', meta: { title: '智慧社区数据库' }}
-        ]
-    },
-      // { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
-      // { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
-      { path: 'business-opportunity/add', component: _import('market/businessOpportunity/add'), name: 'businessOpportunity-add', meta: { title: '商机管理' }},
-      { path: 'business-opportunity/search', component: _import('market/businessOpportunity/search'), name: 'businessOpportunity-search', meta: { title: '商机管理' }},
-      { path: '/bid-manage', component: _import('market/bidManage/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' },
-        children: [
-          { path: 'primary-material', component: _import('market/bidManage/Form/primaryMaterial'), name: 'primaryMaterial', meta: { title: '主材标价表' }},
-          { path: 'auxiliary-material', component: _import('market/bidManage/Form/auxiliaryMaterial'), name: 'auxiliaryMaterial', meta: { title: '辅材标价表' }},
-          { path: 'manualSummary', component: _import('market/bidManage/Form/manualSummary'), name: 'manualSummary', meta: { title: '人工汇总表' }},
-          { path: 'priceSummary', component: _import('market/bidManage/Form/priceSummary'), name: 'priceSummary', meta: { title: '报价汇总表' }}
-        ]
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'financial',
-    meta: {
-      title: '财务管理',
-      icon: 'money',
-      role: ['cw']
-    },
-    children: [
-      { path: 'contract-info', component: _import('financial/contractInfo'), name: 'contractInfo', meta: { title: '合同信息管理' }},
-      { path: 'contract-invoice', component: _import('financial/contractInvoice'), name: 'contractInvoice', meta: { title: '合同开票管理' }},
-      { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
-      { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},
-      { path: 'progress-manage', component: _import('financial/progressManage'), name: 'progressManage', meta: { title: '项目进度管理' }},
-      { path: 'progress-analysis', component: _import('financial/progressAnalysis'), name: 'progressAnalysis', meta: { title: '项目进度分析' }}
-    ]
-  },
-  {
-    path: '/cost',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'cost',
-    meta: {
-      title: '成本管理',
-      icon: 'component',
-      role: ['cw']
-    },
-    children: [
-      { path: 'supplier', component: _import('cost/supplier'), name: 'supplier', meta: { title: '供应商管理' }},
-      { path: 'price', component: _import('cost/price'), name: 'price', meta: { title: '价格体系管理' }},
-      { path: 'payment-contract', component: _import('cost/paymentContract'), name: 'paymentContract', meta: { title: '付款合同管理' }},
-      { path: 'purchase-contract', component: _import('cost/purchaseContract'), name: 'purchaseContract', meta: { title: '采购合同管理' }},
-      { path: 'storage-manage', component: _import('cost/storageManage'), name: 'storageManage', meta: { title: '出入库管理' }},
-      { path: 'balance', component: _import('cost/balance'), name: 'balance', meta: { title: '付款结算管理' }}
-    ]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    // hidden: true,
-    redirect: '/permission/index',
-    meta: { role: ['admin'] },
-    children: [{
-      path: 'index',
-      component: _import('permission/index'),
-      name: 'permission',
-      meta: {
-        title: '权限测试页',
-        icon: 'lock',
-        role: ['admin']
-      }
-    }]
-  },
+export const asyncRouterMap = [{
+		path: '/market',
+		component: Layout,
+		redirect: 'noredirect',
+		name: 'market',
+		meta: {
+			title: '市场管理',
+			icon: 'person',
+			role: ['sc']
+		},
+		children: [
+			// { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
+			{
+				path: 'smartCommunity',
+				component: _import('market/smartCommunity/index'),
+				name: 'smartCommunity',
+				meta: {
+					title: '智慧社区数据库'
+				}
+			},
+			// { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
+			// { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
+			{
+				path: 'business-opportunity/add',
+				component: _import('market/businessOpportunity/add'),
+				name: 'businessOpportunity-add',
+				meta: {
+					title: '商机管理'
+				}
+			},
+			{
+				path: 'business-opportunity/search',
+				component: _import('market/businessOpportunity/search'),
+				name: 'businessOpportunity-search',
+				meta: {
+					title: '商机管理'
+				}
+			},
+			{
+				path: '/bid-manage',
+				component: _import('market/bidManage/bidManage'),
+				name: 'bidManage',
+				meta: {
+					title: '投标报价管理'
+				},
+				children: [{
+						path: 'primary-material',
+						component: _import('market/bidManage/Form/primaryMaterial'),
+						name: 'primaryMaterial',
+						meta: {
+							title: '主材标价表'
+						}
+					},
+					{
+						path: 'auxiliary-material',
+						component: _import('market/bidManage/Form/auxiliaryMaterial'),
+						name: 'auxiliaryMaterial',
+						meta: {
+							title: '辅材标价表'
+						}
+					},
+					{
+						path: 'manualSummary',
+						component: _import('market/bidManage/Form/manualSummary'),
+						name: 'manualSummary',
+						meta: {
+							title: '人工汇总表'
+						}
+					},
+					{
+						path: 'priceSummary',
+						component: _import('market/bidManage/Form/priceSummary'),
+						name: 'priceSummary',
+						meta: {
+							title: '报价汇总表'
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		path: '/financial',
+		component: Layout,
+		redirect: 'noredirect',
+		name: 'financial',
+		meta: {
+			title: '财务管理',
+			icon: 'money',
+			role: ['cw']
+		},
+		children: [{
+				path: 'contract-info',
+				component: _import('financial/contractInfo'),
+				name: 'contractInfo',
+				meta: {
+					title: '合同信息管理'
+				}
+			},
+			{
+				path: 'contract-invoice',
+				component: _import('financial/contractInvoice'),
+				name: 'contractInvoice',
+				meta: {
+					title: '合同开票管理'
+				}
+			},
+			{
+				path: 'contract-received-payment',
+				component: _import('financial/contractReceivedPayment'),
+				name: 'contractReceivedPayment',
+				meta: {
+					title: '合同回款管理'
+				}
+			},
+			{
+				path: 'contract-payment',
+				component: _import('financial/contractPayment'),
+				name: 'contractPayment',
+				meta: {
+					title: '合同付款管理'
+				}
+			},
+			{
+				path: 'progress-manage',
+				component: _import('financial/progressManage'),
+				name: 'progressManage',
+				meta: {
+					title: '项目进度管理'
+				}
+			},
+			{
+				path: 'progress-analysis',
+				component: _import('financial/progressAnalysis'),
+				name: 'progressAnalysis',
+				meta: {
+					title: '项目进度分析'
+				}
+			}
+		]
+	},
+	{
+		path: '/cost',
+		component: Layout,
+		redirect: 'noredirect',
+		name: 'cost',
+		meta: {
+			title: '成本管理',
+			icon: 'component',
+			role: ['cw']
+		},
+		children: [{
+				path: 'supplier',
+				component: _import('cost/supplier'),
+				name: 'supplier',
+				meta: {
+					title: '供应商管理'
+				}
+			},
+			{
+				path: 'price',
+				component: _import('cost/price'),
+				name: 'price',
+				meta: {
+					title: '价格体系管理'
+				}
+			},
+			{
+				path: 'payment-contract',
+				component: _import('cost/paymentContract'),
+				name: 'paymentContract',
+				meta: {
+					title: '付款合同管理'
+				}
+			},
+			{
+				path: 'purchase-contract',
+				component: _import('cost/purchaseContract'),
+				name: 'purchaseContract',
+				meta: {
+					title: '采购合同管理'
+				}
+			},
+			{
+				path: 'storage-manage',
+				component: _import('cost/storageManage'),
+				name: 'storageManage',
+				meta: {
+					title: '出入库管理'
+				}
+			},
+			{
+				path: 'balance',
+				component: _import('cost/balance'),
+				name: 'balance',
+				meta: {
+					title: '付款结算管理'
+				}
+			}
+		]
+	},
+	{
+		path: '/permission',
+		component: Layout,
+		// hidden: true,
+		redirect: '/permission/index',
+		meta: {
+			role: ['admin']
+		},
+		children: [{
+			path: 'index',
+			component: _import('permission/index'),
+			name: 'permission',
+			meta: {
+				title: '权限测试页',
+				icon: 'lock',
+				role: ['admin']
+			}
+		}]
+	},
 
-  {
-    path: '/error',
-    component: Layout,
-    // hidden: true,
-    redirect: 'noredirect',
-    name: 'errorPages',
-    meta: {
-      title: '错误页面',
-      icon: '404'
-    },
-    children: [
-      { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: '401', noCache: true }},
-      { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: '404', noCache: true }}
-    ]
-  },
-  {
-    path: '/excel',
-    component: Layout,
-    // hidden: true,
-    redirect: '/excel/export-excel',
-    name: 'excel',
-    meta: {
-      title: 'excel',
-      icon: 'excel'
-    },
-    children: [
-      { path: 'export-excel', component: _import('excel/exportExcel'), name: 'exportExcel', meta: { title: 'export excel' }},
-      { path: 'export-selected-excel', component: _import('excel/selectExcel'), name: 'selectExcel', meta: { title: 'select excel' }},
-      { path: 'upload-excel', component: _import('excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'upload excel' }}
-    ]
-  },
+	{
+		path: '/error',
+		component: Layout,
+		// hidden: true,
+		redirect: 'noredirect',
+		name: 'errorPages',
+		meta: {
+			title: '错误页面',
+			icon: '404'
+		},
+		children: [{
+				path: '401',
+				component: _import('errorPage/401'),
+				name: 'page401',
+				meta: {
+					title: '401',
+					noCache: true
+				}
+			},
+			{
+				path: '404',
+				component: _import('errorPage/404'),
+				name: 'page404',
+				meta: {
+					title: '404',
+					noCache: true
+				}
+			}
+		]
+	},
+	{
+		path: '/excel',
+		component: Layout,
+		// hidden: true,
+		redirect: '/excel/export-excel',
+		name: 'excel',
+		meta: {
+			title: 'excel',
+			icon: 'excel'
+		},
+		children: [{
+				path: 'export-excel',
+				component: _import('excel/exportExcel'),
+				name: 'exportExcel',
+				meta: {
+					title: 'export excel'
+				}
+			},
+			{
+				path: 'export-selected-excel',
+				component: _import('excel/selectExcel'),
+				name: 'selectExcel',
+				meta: {
+					title: 'select excel'
+				}
+			},
+			{
+				path: 'upload-excel',
+				component: _import('excel/uploadExcel'),
+				name: 'uploadExcel',
+				meta: {
+					title: 'upload excel'
+				}
+			}
+		]
+	},
 
-  {
-    path: '/i18n',
-    component: Layout,
-    // hidden: true,
-    children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: '国际化', icon: 'international' }}]
-  },
+	{
+		path: '/i18n',
+		component: Layout,
+		// hidden: true,
+		children: [{
+			path: 'index',
+			component: _import('i18n-demo/index'),
+			name: 'i18n',
+			meta: {
+				title: '国际化',
+				icon: 'international'
+			}
+		}]
+	},
 
-  { path: '*', redirect: '/404', hidden: true }
+	{
+		path: '*',
+		redirect: '/404',
+		hidden: true
+	}
 ]

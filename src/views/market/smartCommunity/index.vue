@@ -2,18 +2,18 @@
 <div class="app-container">
   <ul class="form-attached clearfix">
     <ul class="crud-btn fl">
-      <router-link to="search">
+      <li @click="toggleTab('search')">
         <i class="iconfont icon-search"></i>
         <span>查询</span>
-      </router-link>
+      </li>
       <li>
         <i class="iconfont icon-seeAll"></i>
         <span>查看明细</span>
       </li>
-      <router-link to="add">
+      <li @click="toggleTab('add')">
         <i class="iconfont icon-add"></i>
         <span>新增</span>
-      </router-link>
+      </li>
       <li>
         <i class="iconfont icon-edit"></i>
         <span>修改</span>
@@ -28,19 +28,30 @@
       <span>数据导出</span>
     </li>
   </ul>
-  <router-view></router-view>
+  <AddComponent v-show="tab === 'add'"></AddComponent>
+  <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent>
+  <SearchComponent v-show="tab === 'search'" @search="search"></SearchComponent>
 </div>
 </template>
 
 <script>
-import {
-  winHeight
-} from '@/utils'
+import { winHeight } from '@/utils'
+import AddComponent from './components/add'
+import ListComponent from './components/list'
+import SearchComponent from './components/search'
+
 // import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunity',
+  components: {
+    AddComponent,
+    ListComponent,
+    SearchComponent
+  },
   data() {
     return {
+      searchData: {},
+      tab: 'list',
       ruleForm: {
         type: []
       },
@@ -153,6 +164,15 @@ export default {
     resize() {
       this.height = winHeight() - 210
       // this.height = 0
+    },
+    toggleTab (tab) {
+      this.tab = tab
+    },
+    search (searchData) {
+      console.log(111)
+      console.log(searchData)
+      this.tab = 'list'
+      this.searchData = searchData
     }
   },
   computed: {}
