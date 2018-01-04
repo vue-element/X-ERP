@@ -40,7 +40,7 @@
           </el-form-item>
         </el-row>
       </el-form>
-      <div class="con-search-btn">查  询</div>
+      <div class="con-search-btn" @click="search">查  询</div>
     </div>
   </div>
 </div>
@@ -63,6 +63,10 @@ export default {
   created() {
   },
   methods: {
+    search () {
+      console.log('search')
+      this.$emit('search', this.form)
+    }
   },
   computed: {}
 }

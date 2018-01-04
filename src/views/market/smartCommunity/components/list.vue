@@ -29,6 +29,7 @@ import { winHeight } from '@/utils'
 // import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunityList',
+  props: ['searchData'],
   data() {
     return {
       tableData: [{
@@ -133,10 +134,18 @@ export default {
       this.resize()
     })
   },
+  watch: {
+    searchData (val, oldVal) {
+      this.search()
+    }
+  },
   methods: {
     resize() {
       this.height = winHeight() - 210
       // this.height = 0
+    },
+    search () {
+      console.log('list search')
     }
   },
   computed: {}
