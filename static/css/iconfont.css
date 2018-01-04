@@ -38,6 +38,8 @@
 
 .icon-setting:before { content: "\e618"; }
 
+.icon-seeAll:before { content: "\e746"; }
+
 .icon-help:before { content: "\e600"; }
 
 .icon-export:before { content: "\e601"; }

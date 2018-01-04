@@ -36,12 +36,12 @@
         <h4>
           <p>基础信息</p>
         </h4>
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl" cellspacing="0" width="100">
           <tr>
-            <td class="title">创建人</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
-            <td>商机名称</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td class="title" width="18%">创建人</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td width="18%">商机名称</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
           </tr>
           <tr>
             <td>单据日期</td>
@@ -68,12 +68,12 @@
         <h4>
           <p>客户信息</p>
         </h4>
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl" cellspacing="0" width="100%">
           <tr>
-            <td>客户名称</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
-            <td>客户类别</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td width="18%">客户名称</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td width="18%">客户类别</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
           </tr>
           <tr>
             <td>业态</td>
@@ -106,12 +106,12 @@
         <h4>
           <p>项目实施</p>
         </h4>
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl" cellspacing="0" width="100%">
           <tr>
-            <td>项目关键信息描述</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
-            <td>业务分类</td>
-            <td><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td width="18%">项目关键信息描述</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
+            <td width="18%">业务分类</td>
+            <td width="32%"><input v-show="inputable" type="text" v-model="msg.q"></td>
           </tr>
           <tr>
             <td>投标日期</td>
@@ -137,12 +137,12 @@
         <h4>
           <p>人员信息</p>
         </h4>
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl" cellspacing="0"  width="100%">
           <tr>
-            <td>业务线负责人</td>
-            <td></td>
-            <td>电话</td>
-            <td></td>
+            <td width="18%">业务线负责人</td>
+            <td width="32%"></td>
+            <td width="18%">电话</td>
+            <td width="32%"></td>
           </tr>
           <tr>
             <td>项目具体跟进人</td>
@@ -156,12 +156,12 @@
         <h4>
           <p>进度状况</p>
         </h4>
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl" cellspacing="0" width="100%">
           <tr>
-            <td>商机跟进状态</td>
-            <td></td>
-            <td>商机执行状态</td>
-            <td></td>
+            <td width="18%">商机跟进状态</td>
+            <td width="32%"></td>
+            <td width="18%">商机执行状态</td>
+            <td width="32%"></td>
           </tr>
           <tr>
             <td>合同原始金额（元）</td>
@@ -252,6 +252,7 @@ export default {
 .form-module table{
   tr {
     td {
+      // width: auto;
       input {
         display: inline-block;
         height:  90%;

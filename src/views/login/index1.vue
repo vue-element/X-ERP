@@ -5,7 +5,7 @@
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
-      <el-form-item prop="username" :class="(usernameActive ? 'isActive' : '')">
+      <el-form-item prop="name" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
         <el-input name="username" type="text" @click.native="usernameClick" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
       </el-form-item>
@@ -19,7 +19,6 @@
         <el-button type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
         <div class="keep-pw">
           <!-- <el-checkbox v-model="checked">一周内自动登录</el-checkbox> -->
-          <!-- <input type="checkbox"> -->
           <i :class="'iconfont ' + (isKeepPw ? 'icon-checkon' : 'icon-check')" @click="keepPassword"></i>
           <label>记住密码</label>
         </div>
@@ -30,6 +29,9 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
+import Cookies from 'js-cookie'
+import { mapActions, mapGetters } from 'vuex'
+import { setToken } from '@/utils/auth'
 
 export default {
   name: 'login',
@@ -50,8 +52,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -62,6 +64,18 @@ export default {
       usernameActive: false,
       passwordActive: false,
       isKeepPw: false
+    }
+  },
+  created() {
+    var username = Cookies.get('username')
+    var password = Cookies.get('password')
+    if (username && password) {
+      this.isKeepPw = true
+      this.loginForm.username = username
+      this.loginForm.password = password
+    } else {
+      this.loginForm.username = ''
+      this.loginForm.password = ''
     }
   },
   methods: {
@@ -77,31 +91,47 @@ export default {
       this.isKeepPw = !this.isKeepPw
     },
     handleLogin() {
-      // alert(1)
-      // var name = this.loginForm.username
-      // var password = this.loginForm.password
-      // if (this.isKeepPw = true) {
-      //   this.setCookie(name, password, 1)
-      // }
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: '/' })
-            // this.showDialog = true
-          }).catch(() => {
-            this.loading = false
-          })
+
+          this.setToken('11111')
+          setToken('1111')
+          // this.setRoles(['admin'])
+          // return
+          var username = this.loginForm.username
+          var password = this.loginForm.password
+          if (this.isKeepPw === true) {
+            Cookies.set('username', username, { expires: 7 })
+            Cookies.set('password', password, { expires: 7 })
+          } else {
+            Cookies.remove('username', '')
+            Cookies.remove('password', '')
+          }
+          this.$router.push({ path: '/' })
+          // this.loading = true
+          // this.$post(url, this.loginForm).then((res) => {
+          //   this.loading = false
+          //   this.setToken(res.token)
+          //   this.$router.push({ path: '/' })
+          // }).catch(() => {
+          //   this.loading = false
+          // })
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    }
+    },
+    ...mapActions([
+      'setToken',
+      'setRoles'
+    ])
   },
-  created() {
-    // window.addEventListener('hashchange', this.afterQRScan)
+  computed: {
+    ...mapGetters({
+      token: 'token'
+    })
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -179,14 +209,15 @@ export default {
         border-left: 3px solid #161621;
         vertical-align: middle;
         input{
-          height: 20px;
-          line-height: 20px;
+          height: 30px;
+          line-height: 30px;
           font-size: 16px;
           color: #fff;
           letter-spacing: 0.6px;
-          margin: 5px 0;
+          // margin: 5px 0;
           padding: 0 20px;
           @include boxSizing;
+          border: none;
         }
       }
     }

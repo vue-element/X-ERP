@@ -226,11 +226,23 @@
     }
     .el-date-editor {
       padding: 3px 5px;
-      .el-range__icon,.el-range-input,.el-range-separator{
+      .el-range__icon,
+      .el-range-input,
+      .el-range-separator,
+      .el-icon-circle-close {
         height: 22px;
         line-height: 22px;
         vertical-align: top;
         font-size: 14px;
+      }
+      .el-input__icon {
+        width:18px;
+      }
+      .el-range-input {
+        width: 70px;
+      }
+      .el-range-separator{
+        width: auto;
       }
     }
   }

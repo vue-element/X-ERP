@@ -23,6 +23,7 @@ meta : {
 // constantRouterMap 代表那些不需要动态判断权限的路由，如登录页，404，等通用页面。
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
+  { path: 'dashboard', component: _import('dashboard/index'), hidden: true },
   { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
   { path: '/404', component: _import('errorPage/404'), hidden: true },
   { path: '/401', component: _import('errorPage/401'), hidden: true },
@@ -58,12 +59,25 @@ export const asyncRouterMap = [
     },
     children: [
       // { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: 'smartCommunity/index', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
-      { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
+      { path: '/smartCommunity', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' },
+        children: [
+          { path: 'list', component: _import('market/smartCommunity/components/list'), name: 'smartCommunityList', meta: { title: '智慧社区数据库' }},
+          { path: 'add', component: _import('market/smartCommunity/components/add'), name: 'smartCommunityAdd', meta: { title: '智慧社区数据库' }},
+          { path: 'search', component: _import('market/smartCommunity/components/search'), name: 'smartCommunitySearch', meta: { title: '智慧社区数据库' }}
+        ]
+    },
+      // { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
+      // { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
       { path: 'business-opportunity/add', component: _import('market/businessOpportunity/add'), name: 'businessOpportunity-add', meta: { title: '商机管理' }},
       { path: 'business-opportunity/search', component: _import('market/businessOpportunity/search'), name: 'businessOpportunity-search', meta: { title: '商机管理' }},
-      { path: 'bid-manage', component: _import('market/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' }}
+      { path: '/bid-manage', component: _import('market/bidManage/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' },
+        children: [
+          { path: 'primary-material', component: _import('market/bidManage/Form/primaryMaterial'), name: 'primaryMaterial', meta: { title: '主材标价表' }},
+          { path: 'auxiliary-material', component: _import('market/bidManage/Form/auxiliaryMaterial'), name: 'auxiliaryMaterial', meta: { title: '辅材标价表' }},
+          { path: 'manualSummary', component: _import('market/bidManage/Form/manualSummary'), name: 'manualSummary', meta: { title: '人工汇总表' }},
+          { path: 'priceSummary', component: _import('market/bidManage/Form/priceSummary'), name: 'priceSummary', meta: { title: '报价汇总表' }}
+        ]
+      }
     ]
   },
   {

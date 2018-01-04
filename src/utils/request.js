@@ -7,7 +7,7 @@ import qs from 'qs'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://10.51.22.50:8080', // api的base_url
+  baseURL: 'http://10.51.39.106:8080', // api的base_url
   timeout: 5000 // 请求超时时间
 })
 

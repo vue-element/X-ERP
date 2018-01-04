@@ -61,8 +61,9 @@
             </el-form-item>
           </el-row>
           <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="客户信息">
-              <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
+            <el-form-item label="修改日期">
+              <el-date-picker v-model="value" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" default-value="2010-10-01">
+              </el-date-picker>
             </el-form-item>
             <el-form-item label="业务分类">
               <el-select v-model="form.city" placeholder="请选择城市">
@@ -105,8 +106,8 @@
           </el-row>
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="所属年月">
-              <el-date-picker v-model="value9" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" default-value="2010-10-01">
-             </el-date-picker>
+              <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
+              </el-date-picker>
             </el-form-item>
             <el-form-item label="商机编码">
               <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
@@ -148,7 +149,7 @@ export default {
         region: '',
         name: ''
       },
-      value9: '',
+      value: '',
       height: 100
     }
   },
@@ -181,12 +182,10 @@ export default {
   font-size: 14px;
   .el-row {
     .el-form-item,.money-item {
-      // width: 25%;
       margin: 0;
       padding: 0;
       margin-top: 20px;
       width: 23%;
-      // min-width: 300px;
       @include flex;
     }
     .money-item {
@@ -198,6 +197,7 @@ export default {
         padding:0 15px;
         input {
           width: 40%;
+          text-align: center;
         }
         span {
           width: 20%;
@@ -207,8 +207,6 @@ export default {
     }
   }
 }
-
-
 </style>
 <style lang="scss">
 .business-search{
@@ -216,16 +214,40 @@ export default {
     .el-form-item{
       .el-form-item__label{
         width: 100px;
+        padding: 0;
+        text-align: left;
       }
       .el-form-item__content,
       .el-input__inner {
-        width: 200px
+        width: 200px;
       }
     }
     .el-form-item:first-child {
       .el-form-item__label{
-        width: 70px;
+        width: 80px;
       }
+    }
+  }
+  .el-date-editor {
+    padding: 3px;
+    .el-range__icon,
+    .el-range-input,
+    .el-range-separator,
+    .el-icon-circle-close {
+      height: 22px;
+      line-height: 22px;
+      vertical-align: top;
+      padding: 0 1px;
+      font-size: 12px!important;
+    }
+    .el-input__icon {
+      width:16px;
+    }
+    .el-range-input {
+      width: 66px!important;
+    }
+    .el-range-separator{
+      padding: 0 2px;
     }
   }
 }

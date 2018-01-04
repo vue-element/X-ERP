@@ -5,9 +5,9 @@
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
-      <el-form-item prop="username" :class="(usernameActive ? 'isActive' : '')">
+      <el-form-item prop="name" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="username" type="text" @click.native="usernameClick" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" />
+        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" />
       </el-form-item>
 
       <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
@@ -37,6 +37,7 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
+      // console.log(value)
       if (!isvalidUsername(value)) {
         callback(new Error('请输入正确的用户名'))
       } else {
@@ -44,7 +45,7 @@ export default {
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.length < 5) {
         callback(new Error('密码不能小于6位'))
       } else {
         callback()
@@ -52,11 +53,11 @@ export default {
     }
     return {
       loginForm: {
-        username: '',
+        name: '',
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        name: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
@@ -67,14 +68,14 @@ export default {
     }
   },
   created() {
-    var username = Cookies.get('username')
+    var name = Cookies.get('name')
     var password = Cookies.get('password')
-    if (username && password) {
+    if (name && password) {
       this.isKeepPw = true
-      this.loginForm.username = username
+      this.loginForm.name = name
       this.loginForm.password = password
     } else {
-      this.loginForm.username = ''
+      this.loginForm.name = ''
       this.loginForm.password = ''
     }
   },
@@ -92,31 +93,33 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        console.log('valid', valid)
+        this.setToken('11111')
+        setToken('11111')
+        this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
-
-          this.setToken('11111')
-          setToken('1111')
-          // this.setRoles(['admin'])
-          // return
-          var username = this.loginForm.username
-          var password = this.loginForm.password
-          if (this.isKeepPw === true) {
-            Cookies.set('username', username, { expires: 7 })
-            Cookies.set('password', password, { expires: 7 })
-          } else {
-            Cookies.remove('username', '')
-            Cookies.remove('password', '')
-          }
-          this.$router.push({ path: '/' })
-          // this.loading = true
-          // this.$post(url, this.loginForm).then((res) => {
-          //   this.loading = false
-          //   this.setToken(res.token)
-          //   this.$router.push({ path: '/' })
-          // }).catch(() => {
-          //   this.loading = false
-          // })
+          this.$post('/login', this.loginForm).then((res) => {
+            // this.$router.push({ path: '/' })
+            console.log('res', res)
+            this.loading = false
+            this.setToken('11111')
+            setToken('11111')
+            if (res.success === true) {
+              var username = this.loginForm.username
+              var password = this.loginForm.password
+              if (this.isKeepPw === true) {
+                Cookies.set('username', username, { expires: 7 })
+                Cookies.set('password', password, { expires: 7 })
+              } else {
+                Cookies.remove('username', '')
+                Cookies.remove('password', '')
+              }
+              this.$router.push({ path: '/' })
+            }
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -199,6 +202,10 @@ export default {
         color: #fff;
         vertical-align: middle;
       }
+      .el-form-item__content {
+        width: auto;
+        height: auto;
+      }
       .el-input{
         display: inline-block;
         width: 330px;
@@ -209,14 +216,15 @@ export default {
         border-left: 3px solid #161621;
         vertical-align: middle;
         input{
-          height: 20px;
-          line-height: 20px;
+          height: 30px;
+          line-height: 30px;
           font-size: 16px;
           color: #fff;
           letter-spacing: 0.6px;
-          margin: 5px 0;
+          // margin: 5px 0;
           padding: 0 20px;
           @include boxSizing;
+          border: none;
         }
       }
     }
