@@ -71,7 +71,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .bid-wrapper {
-  padding: 0 20px;
   .costing-form-tags{
     width: 100%;
   	height: 40px;
@@ -96,7 +95,6 @@ export default {
     }
   }
 }
-
 </style>
 
 <style rel="stylesheet/scss" lang="scss">
@@ -107,7 +105,7 @@ export default {
       height: 28px!important;
       vertical-align: top;
       border: 0;
-      color: #000!important;
+      color: #828282!important;
       @include placeholderColor(#828282);
       text-align: center;
     }
@@ -119,7 +117,7 @@ export default {
     @include placeholderColor(#35d5ba);
   }
   li.is-active i.el-select__caret {
-    color: #35d5ba;
+    color: #35d5ba!important;
   }
   .table-header {
     width: 100%;

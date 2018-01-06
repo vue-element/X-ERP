@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     visitedViews() {
-      console.log('1', this.$store.state.tagsView.visitedViews)
+      // console.log('1', this.$store.state.tagsView.visitedViews)
       return this.$store.state.tagsView.visitedViews
     }
   },
@@ -104,7 +104,7 @@ export default {
     openMenu(tag, e) {
       this.visible = true
       this.selectedTag = tag
-      this.left = e.clientX - 210
+      this.left = e.clientX - 240
       this.top = e.clientY - 30
     },
     closeMenu() {
@@ -134,8 +134,8 @@ export default {
       line-height: 37px;
       color: #828282;
       background: #f8f8f8;
-      padding: 0 20px;
-      font-size: 16px;
+      padding: 0 12px;
+      font-size: 14px;
       font-weight: 500;
       border-top: 3px solid #f8f8f8;
       // margin:0 6px;

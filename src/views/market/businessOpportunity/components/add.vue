@@ -1,35 +1,7 @@
 <template>
 <div class="business-container">
-  <ul class="form-attached clearfix">
-    <ul class="crud-btn fl">
-      <li>
-        <i class="iconfont icon-search"></i>
-        <span>查询</span>
-      </li>
-      <li>
-        <i class="iconfont icon-seeAll"></i>
-        <span>查看明细</span>
-      </li>
-      <li>
-        <i class="iconfont icon-add"></i>
-        <span>新增</span>
-      </li>
-      <li>
-        <i class="iconfont icon-edit"></i>
-        <span>修改</span>
-      </li>
-      <li>
-        <i class="iconfont icon-delete"></i>
-        <span>删除</span>
-      </li>
-    </ul>
-    <li class="fr data-export">
-      <i class="iconfont icon-export"></i>
-      <span>数据导出</span>
-    </li>
-  </ul>
   <!-- 社区建设单项目信息表 -->
-  <div class="form-container project-msg"  v-show="true">
+  <div class="form-container project-msg" ref="ele">
     <div class="form-inner">
       <!-- 基本信息 -->
       <div class="form-module">
@@ -191,6 +163,7 @@
           <textarea placeholder="输入..."></textarea>
         </div>
       </div>
+      <div class="con-search-btn">查  询</div>
     </div>
   </div>
 </div>
@@ -221,10 +194,15 @@ export default {
       this.resize()
     })
   },
+  mounted() {
+    this.$refs.ele.style.height = winHeight() - 180 + 'px'
+    window.addEventListener('resize', () => {
+      this.$refs.ele.style.height = winHeight() - 180 + 'px'
+    })
+  },
   methods: {
     resize() {
       this.height = winHeight() - 210
-      // this.height = 0
     }
   },
   computed: {}
@@ -232,11 +210,11 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style  rel="stylesheet/scss" lang="scss" scoped>@import "src/styles/mixin.scss";
-
-.business-container {
-    padding: 0 10px;
-    @include boxSizing;
+<style  rel="stylesheet/scss" lang="scss" scoped>
+@import "src/styles/mixin.scss";
+.form-container {
+  overflow-y: auto;
+  @include noScroll;
 }
 .approval-opinion {
     textarea {

@@ -32,9 +32,9 @@
       </div>
     </div>
   </div>
-  <div class="compotent-tab" >
+  <div class="compotent-tab">
     <AddComponent v-show="tab === 'add'" @add="add"></AddComponent>
-    <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent>
+    <!-- <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent> -->
     <SearchComponent v-show="tab === 'search'" @search="search"></SearchComponent>
   </div>
 </div>
@@ -43,15 +43,14 @@
 <script>
 import { winHeight } from '@/utils'
 import AddComponent from './components/add'
-import ListComponent from './components/list'
+// import ListComponent from './components/list'
 import SearchComponent from './components/search'
-
 // import { fetchList } from '@/api/article'
 export default {
-  name: 'smartCommunity',
+  name: 'businessOpportunity',
   components: {
     AddComponent,
-    ListComponent,
+    // ListComponent,
     SearchComponent
   },
   data() {
@@ -69,12 +68,6 @@ export default {
       this.resize()
     })
   },
-  mounted() {
-    this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    window.addEventListener('resize', () => {
-      this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    })
-  },
   methods: {
     resize() {
       this.height = winHeight() - 210
@@ -83,8 +76,8 @@ export default {
       this.tab = tab
     },
     search(searchData) {
-      // console.log(111)
-      // console.log(searchData)
+      console.log(111)
+      console.log(searchData)
       this.tab = 'list'
       this.searchData = searchData
     },
@@ -146,12 +139,5 @@ export default {
 }
 .compotent-tab {
   margin-top: 50px;
-  // border: 1px solid #d2d2d2;
-  // margin-bottom: 16px;
-  // padding: 0 20px;
-  // @include borderRadius(4px);
-  // @include noScroll;
-  // @include boxSizing;
-  // overflow-y: scroll;
 }
 </style>

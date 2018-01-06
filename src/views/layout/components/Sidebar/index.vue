@@ -14,7 +14,7 @@ import ScrollBar from '@/components/ScrollBar'
 export default {
   components: { SidebarItem, ScrollBar },
   created() {
-    console.log(this.permission_routers)
+    // console.log(this.permission_routers)
   },
   computed: {
     ...mapGetters([

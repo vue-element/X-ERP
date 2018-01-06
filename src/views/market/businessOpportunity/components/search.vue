@@ -1,33 +1,5 @@
 <template>
 <div class="business-container business-search">
-  <ul class="form-attached clearfix">
-    <ul class="crud-btn fl">
-      <li>
-        <i class="iconfont icon-search"></i>
-        <span>查询</span>
-      </li>
-      <li>
-        <i class="iconfont icon-seeAll"></i>
-        <span>查看明细</span>
-      </li>
-      <li>
-        <i class="iconfont icon-add"></i>
-        <span>新增</span>
-      </li>
-      <li>
-        <i class="iconfont icon-edit"></i>
-        <span>修改</span>
-      </li>
-      <li>
-        <i class="iconfont icon-delete"></i>
-        <span>删除</span>
-      </li>
-    </ul>
-    <li class="fr data-export">
-      <i class="iconfont icon-export"></i>
-      <span>数据导出</span>
-    </li>
-  </ul>
   <!-- 社区建设单项目信息表 -->
   <div class="form-container project-msg"  v-show="true">
     <div class="form-inner">
@@ -172,11 +144,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-
-.business-container {
-  padding: 0 10px;
-  @include boxSizing;
-}
 .el-form {
   color: #000;
   font-size: 14px;

@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     ayy(item) {
-      console.log(item.children[0].name)
+      // console.log(item.children[0].name)
     }
   }
 }
