@@ -69,12 +69,6 @@ export default {
       this.resize()
     })
   },
-  mounted() {
-    this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    window.addEventListener('resize', () => {
-      this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    })
-  },
   methods: {
     resize() {
       this.height = winHeight() - 210

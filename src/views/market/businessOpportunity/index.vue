@@ -34,7 +34,7 @@
   </div>
   <div class="compotent-tab">
     <AddComponent v-show="tab === 'add'" @add="add"></AddComponent>
-    <!-- <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent> -->
+    <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent>
     <SearchComponent v-show="tab === 'search'" @search="search"></SearchComponent>
   </div>
 </div>
@@ -43,14 +43,14 @@
 <script>
 import { winHeight } from '@/utils'
 import AddComponent from './components/add'
-// import ListComponent from './components/list'
+import ListComponent from './components/list'
 import SearchComponent from './components/search'
 // import { fetchList } from '@/api/article'
 export default {
   name: 'businessOpportunity',
   components: {
     AddComponent,
-    // ListComponent,
+    ListComponent,
     SearchComponent
   },
   data() {

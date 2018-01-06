@@ -5,36 +5,48 @@
   </h4>
   <el-form ref="form" :model="form">
     <el-row type="flex" justify="space-between">
-      <el-form-item label="活动名称">
-        <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-      </el-form-item>
-      <el-form-item label="区域">
-        <el-select v-model="form.region" placeholder="请选择区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="合约模式">
-        <el-select v-model="form.region" placeholder="请选择合约模式">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
+      <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
+        </el-form-item>
+        </el-col>
+        <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="区域">
+          <el-select v-model="form.region" placeholder="请选择区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="合约模式">
+          <el-select v-model="form.region" placeholder="请选择合约模式">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
     </el-row>
     <el-row type="flex" justify="space-between">
-      <el-form-item label="客户信息" :span="6">
-        <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
-      </el-form-item>
-      <el-form-item label="城市" :span="6">
-        <el-select v-model="form.city" placeholder="请选择城市">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="首期入伙时间" :span="6">
-        <el-date-picker v-model="value9" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" default-value="2010-10-01" size="mini">
-        </el-date-picker>
-      </el-form-item>
+      <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="客户信息" :span="6">
+          <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
+        </el-form-item>
+        </el-col>
+        <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="城市" :span="6">
+          <el-select v-model="form.city" placeholder="请选择城市">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        </el-col>
+        <el-col :lg="8" :sm="12" :xs="12">
+        <el-form-item label="首期入伙时间" :span="6">
+          <el-date-picker v-model="value9" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" default-value="2010-10-01" size="mini">
+          </el-date-picker>
+        </el-form-item>
+        </el-col>
     </el-row>
   </el-form>
   <div class="con-search-btn" @click="search">查  询</div>

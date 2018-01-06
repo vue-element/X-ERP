@@ -48,18 +48,9 @@ export default new Router({
 export const asyncRouterMap = [
   { path: '/market', component: Layout, redirect: 'noredirect', name: 'market', meta: { title: '市场管理', icon: 'person', role: ['sc'] },
     children: [
-      { path: 'smartCommunity', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      // { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
-      // { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
-      { path: 'businessOpportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
-      { path: '/bid-manage', component: _import('market/bidManage/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' },
-        children: [
-          { path: 'primary-material', component: _import('market/bidManage/Form/primaryMaterial'), name: 'primaryMaterial', meta: { title: '主材标价表' }},
-          { path: 'auxiliary-material', component: _import('market/bidManage/Form/auxiliaryMaterial'), name: 'auxiliaryMaterial', meta: { title: '辅材标价表' }},
-          { path: 'manualSummary', component: _import('market/bidManage/Form/manualSummary'), name: 'manualSummary', meta: { title: '人工汇总表' }},
-          { path: 'priceSummary', component: _import('market/bidManage/Form/priceSummary'), name: 'priceSummary', meta: { title: '报价汇总表' }}
-        ]
-      }
+      { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
+      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
+      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
     ]
   },
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
