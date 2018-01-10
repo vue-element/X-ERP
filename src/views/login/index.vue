@@ -93,19 +93,21 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log('valid', valid)
-        this.setToken('11111')
-        setToken('11111')
-        this.$router.push({ path: '/' })
+        // console.log('valid', valid)
+        // this.setToken('11111')
+        // setToken('11111')
+        // this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
           this.$post('/login', this.loginForm).then((res) => {
             // this.$router.push({ path: '/' })
-            console.log('res', res)
-            this.loading = false
-            this.setToken('11111')
-            setToken('11111')
-            if (res.success === true) {
+            // console.log('res', res.data.success)
+            // this.loading = false
+            // this.setToken('11111')
+            // setToken('11111')
+            if (res.data.success === true) {
+              this.setToken('11111')
+              setToken('11111')
               var username = this.loginForm.username
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
@@ -225,6 +227,7 @@ export default {
           padding: 0 20px;
           @include boxSizing;
           border: none;
+          outline: none;
         }
       }
     }

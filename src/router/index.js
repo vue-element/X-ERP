@@ -74,7 +74,7 @@ export const asyncRouterMap = [
     ]
   },
   { path: '/permission', component: Layout,
-    // hidden: true,
+    hidden: true,
     redirect: '/permission/index',
     meta: {
       role: ['admin']
@@ -93,7 +93,7 @@ export const asyncRouterMap = [
   {
     path: '/error',
     component: Layout,
-    // hidden: true,
+    hidden: true,
     redirect: 'noredirect',
     name: 'errorPages',
     meta: {
@@ -107,7 +107,7 @@ export const asyncRouterMap = [
   },
   { path: '/excel',
     component: Layout,
-    // hidden: true,
+    hidden: true,
     redirect: '/excel/export-excel',
     name: 'excel',
     meta: {
@@ -120,8 +120,9 @@ export const asyncRouterMap = [
       { path: 'upload-excel', component: _import('excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'upload excel' }}
     ]
   },
-  { path: '/i18n', component: Layout,
-    // hidden: true,
+  { path: '/i18n',
+    component: Layout,
+    hidden: true,
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: '国际化', icon: 'international' }}]
   },
   { path: '*', redirect: '/404', hidden: true }

@@ -33,9 +33,9 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-show="tab === 'add'" @add="add"></AddComponent>
-    <ListComponent v-show="tab === 'list'" :searchData="searchData"></ListComponent>
-    <SearchComponent v-show="tab === 'search'" @search="search"></SearchComponent>
+    <AddComponent v-if="tab === 'add'" @add="add"></AddComponent>
+    <ListComponent v-if="tab === 'list'" :searchData="searchData"></ListComponent>
+    <SearchComponent v-if="tab === 'search'" @search="search"></SearchComponent>
   </div>
 </div>
 </template>
@@ -45,6 +45,7 @@ import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
+// import request from '@/utils/request'
 
 // import { fetchList } from '@/api/article'
 export default {
@@ -77,14 +78,16 @@ export default {
       this.tab = tab
     },
     search(searchData) {
-      // console.log(111)
-      // console.log(searchData)
       this.tab = 'list'
       this.searchData = searchData
     },
     add(searchData) {
-      this.tab = 'list'
+      // this.tab = 'list'
+      // console.log('searchData', searchData)
       this.searchData = searchData
+      this.$post('/project/save', searchData).then((res) => {
+        // console.log('res', res)
+      })
     }
   },
   computed: {}

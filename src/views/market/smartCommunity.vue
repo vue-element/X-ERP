@@ -622,14 +622,14 @@ export default {
                     text-indent: 12px;
                 }
             }
-            .customer-info {
-                label {
-                    width: 13%;
-                }
-                input {
-                    width: 82%;
-                }
-            }
+            // .customer-info {
+            //     label {
+            //         width: 13%;
+            //     }
+            //     input {
+            //         width: 82%;
+            //     }
+            // }
             .radio-sel {
               @include flex;
               font-size: 14px;

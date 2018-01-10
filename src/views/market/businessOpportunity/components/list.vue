@@ -1,6 +1,7 @@
 <template>
-<div class="smartCommunity-list">
-  <el-table :data="tableData" style="width: 100%" class="basic-form" :height="height">
+<div class="smartCommunity-list">>
+  <el-table class="basic-form" style="width: 100%"  :data="tableData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+    <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
        {{scope.$index}}
@@ -24,7 +25,6 @@
 
 <script>
 import { winHeight } from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunityList',
   props: ['searchData'],
@@ -141,6 +141,18 @@ export default {
     resize() {
       this.height = winHeight() - 210
       // this.height = 0
+    },
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
     },
     search() {
       console.log('list search')

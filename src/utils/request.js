@@ -2,12 +2,12 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import qs from 'qs'
+// import qs from 'qs'
 
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://10.51.39.106:8080', // api的base_url
+  baseURL: 'http://10.51.22.56:8080', // api的base_url
   timeout: 5000 // 请求超时时间
 })
 
@@ -18,12 +18,12 @@ service.interceptors.request.use(
     if (store.getters.token) {
       var token = getToken()
       config.headers = {
-        // 'Content-Type':	'application/json;charset=utf-8',
-        'Content-Type':	'application/x-www-form-urlencoded;charset=utf-8',
+        'Content-Type':	'application/json;charset=utf-8',
+        // 'Content-Type':	'application/x-www-form-urlencoded;charset=utf-8',
         'X-Token': token
       }
     }
-    console.log(config)
+
     return config
   }, error => {
   // Do something with request error
@@ -87,7 +87,6 @@ export function get(url, params = {}) {
 
 // post 请求方法
 export function post(url, data = {}) {
-  data = qs.stringify(data)
   return new Promise((resolve, reject) => {
     service.post(url, data).then(response => {
       resolve(response)

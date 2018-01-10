@@ -1,6 +1,8 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table :data="tableData" style="width: 100%" class="basic-form" :height="height">
+  <!-- <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable"> -->
+  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+    <el-table-column type="selection"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
        {{scope.$index}}
@@ -8,14 +10,14 @@
    </el-table-column>
    <el-table-column align="center" prop="1" fixed label="公司名称"></el-table-column>
    <el-table-column align="center" prop="2" fixed label="办事处"></el-table-column>
-   <el-table-column align="center" prop="3" fixed label="地区"></el-table-column>
-   <el-table-column align="center" prop="4" fixed label="项目名称"></el-table-column>
-   <el-table-column align="center" prop="5" label="建筑业态" sortable></el-table-column>
-   <el-table-column align="center" prop="6" label="总建筑面积" sortable></el-table-column>
-   <el-table-column align="center" prop="7" label="总收藏面积"></el-table-column>
-   <el-table-column align="center" prop="8" label="总户数"></el-table-column>
-   <el-table-column align="center" prop="9" label="车位总数"></el-table-column>
-   <el-table-column align="center" prop="10" label="合约模式"></el-table-column>
+   <el-table-column align="center" prop="region.name" fixed label="地区"></el-table-column>
+   <el-table-column align="center" prop="name" fixed label="项目名称"></el-table-column>
+   <el-table-column align="center" prop="archFormat" label="建筑业态" sortable></el-table-column>
+   <el-table-column align="center" prop="builtArea" label="总建筑面积" sortable></el-table-column>
+   <el-table-column align="center" prop="chargeArea" label="总收费面积"></el-table-column>
+   <el-table-column align="center" prop="roomNum" label="总户数"></el-table-column>
+   <el-table-column align="center" prop="parkingNum" label="车位总数"></el-table-column>
+   <el-table-column align="center" prop="contractMode" label="合约模式"></el-table-column>
   </el-table>
   <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
   :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="50"></el-pagination>
@@ -30,7 +32,7 @@ export default {
   props: ['searchData'],
   data() {
     return {
-      tableData: [{
+      projectData: [{
         1: '2017001176',
         2: '弱电维保-中海华庭',
         3: '中海房地产',
@@ -131,6 +133,10 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
+    // this.$get('/project').then((res) => {
+    //   console.log('res', res.data)
+    // })
+    this.getProjectData()
   },
   watch: {
     searchData(val, oldVal) {
@@ -142,8 +148,26 @@ export default {
       this.height = winHeight() - 210
       // this.height = 0
     },
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
     search() {
-      console.log('list search')
+      // console.log('list search')
+    },
+    getProjectData() {
+      this.$get('/project').then((res) => {
+        console.log('res', res.data.content)
+        this.projectData = res.data.content
+      })
     }
   },
   computed: {}
