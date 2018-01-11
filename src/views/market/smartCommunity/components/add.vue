@@ -31,8 +31,7 @@
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
           <label>城市:</label>
-          <!-- <input type="text" v-model="mainMsg.city"> -->
-          <el-cascader :options="cityList" :show-all-levels="false"></el-cascader>
+          <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
         </div>
       </el-col>
     </el-row>
@@ -215,7 +214,7 @@
             <td>入口数量(个)</td>
             <td><input type="text" v-model="carObj.a"></td>
             <td>出口数量(个)</td>
-            <td><input type="text" v-model="carObj.b"></td>
+            <td><input type="text" v-model="carObj.a1"></td>
           </tr>
           <tr>
             <td>地库车行口</td>
@@ -237,7 +236,7 @@
             <td>入口数量(个)</td>
             <td><input type="text" v-model="personObj.a"></td>
             <td>出口数量(个)</td>
-            <td><input type="text" v-model="personObj.a"></td>
+            <td><input type="text" v-model="personObj.a1"></td>
           </tr>
           <tr>
             <td>访客出入口</td>
@@ -311,11 +310,13 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'smartCommunityAdd',
+  props: ['editData'],
   data() {
     return {
       loading: true,
       tab: 'car',
-        regionList: [
+      cityOption: [1],
+      regionList: [
         {
           id: 1,
           name: '华南办事处',
@@ -390,7 +391,8 @@ export default {
         parkingNum: '车位总数',
         roomNum: '总户数',
         volumetricRate: '容积率',
-        projectDesigns: []
+        projectDesigns: [],
+        oldCity: ''
       },
       carObj: {
         a: '1',
@@ -421,7 +423,6 @@ export default {
         b: '3',
         b1: '4',
         c: '5',
-        c1: '6',
         category: 3
       },
       otherObj: {
@@ -434,7 +435,8 @@ export default {
   },
   created() {
     this.getInsertData()
-    this.mainMsg.projectDesigns = []
+    console.log('editData', this.editData)
+    this.judgeTab()
   },
   mounted() {
     this.$refs.ele.style.height = winHeight() - 180 + 'px'
@@ -444,9 +446,39 @@ export default {
   },
   methods: {
     add() {
-      this.mainMsg.projectDesigns.push(this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj)
-      this.mainMsg.city.id = 1
-      this.$emit('add', this.mainMsg)
+      this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
+      this.mainMsg.oldCity = this.cityOption.join('-')
+      this.$post('/project/save', this.mainMsg).then((res) => {
+      })
+    },
+    judgeTab() {
+      if (this.editData.tabState === 'editTab') {
+        console.log('editTab')
+        var data = this.editData.editData
+        this.mainMsg = data.project
+        data.project.projectDesigns.forEach((item) => {
+          if (item.category === '车行出入') {
+            this.carObj = item
+            this.carObj.category = 0
+          } else if (item.category === '人行出入') {
+            this.personObj = item
+            this.personObj.category = 1
+          } else if (item.category === '电梯出入') {
+            this.elevatorObj = item
+            this.elevatorObj.category = 2
+          } else if (item.category === '机房信息') {
+            this.machineRoomObj = item
+            this.machineRoomObj.category = 3
+          } else if (item.category === '其他信息') {
+            this.otherObj = item
+            this.otherObj.category = 4
+          }
+        })
+        var cityOption = data.project.oldCity.split('-')
+        cityOption.forEach((item) => {
+          this.cityOption.push(parseInt(item))
+        })
+      }
     },
     toggleTab(tab) {
       this.tab = tab
@@ -459,6 +491,11 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+    },
+    cityChange(val) {
+      console.log('val', val)
+      var len = val.length
+      this.mainMsg.city.id = val[len - 1]
     }
   },
   computed: {}
