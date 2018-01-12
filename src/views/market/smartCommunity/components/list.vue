@@ -27,7 +27,7 @@
     </el-table-column>
   </el-table>
   <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
-   @size-change="handleSizeChange" @current-change="handleCurrentChage" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+   @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
 </div>
 </template>
 
@@ -171,7 +171,7 @@ export default {
     handleSizeChange(val) {
       this.pageSize = val
     },
-    handleCurrentChaged(val) {
+    handleCurrentChange(val) {
       this.currentPage = val
       var page = val - 1
       var url = '/project?size=' + this.pageSize + '&page=' + page
