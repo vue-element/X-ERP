@@ -1,14 +1,14 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <div class='project-msg basic-info'>
-    <h4>
+  <div class='project-msg basic-info form-module'>
+    <h4 class="module-title">
       <p>项目基础信息</p>
     </h4>
     <el-row :gutter="40" class="select-row">
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="basic-item customer-info">
-          <label>客户信息:</label>
+          <label>客户信息：</label>
           <el-select v-model="mainMsg.client.id" placeholder="请选择">
            <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
@@ -17,20 +17,16 @@
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>区域:</label>
+          <label>区域：</label>
           <el-select v-model="mainMsg.region.id" placeholder="请选择">
-           <el-option
-             v-for="item in regionList"
-             :key="item.id"
-             :label="item.name"
-             :value="item.id">
+           <el-option v-for="item in regionList" :key="item.id" :label="item.name" :value="item.id">
            </el-option>
          </el-select>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>城市:</label>
+          <label>城市：</label>
           <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
         </div>
       </el-col>
@@ -38,25 +34,25 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>项目名称:</label>
+          <label>项目名称：</label>
           <input type="text" v-model="mainMsg.name" placeholder="请输入">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>楼道及单位数量:</label>
+          <label>楼道及单位数量：</label>
           <input type="text" v-model="mainMsg.buildNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>项目地址:</label>
+          <label>项目地址：</label>
           <input type="text" v-model="mainMsg.address">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>首期入伙时间:</label>
+          <label>首期入伙时间：</label>
           <input type="text" v-model="mainMsg.firstEntry">
         </div>
       </el-col>
@@ -64,25 +60,25 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>建筑业态:</label>
+          <label>建筑业态：</label>
           <input type="text" v-model="mainMsg.archFormat">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>物业管理费:</label>
+          <label>物业管理费：</label>
           <input type="text" v-model="mainMsg.manageFee">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>车位总数:</label>
+          <label>车位总数：</label>
           <input type="text" v-model="mainMsg.parkingNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>车位比:</label>
+          <label>车位比：</label>
           <input type="text" v-model="mainMsg.carRatio">
         </div>
       </el-col>
@@ -90,25 +86,25 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>户数(户):</label>
+          <label>户数(户)：</label>
           <input type="text" v-model="mainMsg.roomNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>容积率:</label>
+          <label>容积率：</label>
           <input type="text" v-model="mainMsg.volumetricRate">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>地面车位数量:</label>
+          <label>地面车位数量：</label>
           <input type="text" v-model="mainMsg.groundParkingNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>地面车位收费标准:</label>
+          <label>地面车位收费标准：</label>
           <input type="text" v-model="mainMsg.groundParkingFee">
         </div>
       </el-col>
@@ -116,25 +112,25 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>总户数(户):</label>
+          <label>总户数(户)：</label>
           <input type="text" v-model="mainMsg.roomNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>总收费面积(平米):</label>
+          <label>总收费面积(平米)：</label>
           <input type="text" v-model="mainMsg.chargeArea">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>地库车位数量:</label>
+          <label>地库车位数量：</label>
           <input type="text" v-model="mainMsg.basementParkingNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>地库车位收费标准:</label>
+          <label>地库车位收费标准：</label>
           <input type="text" v-model="mainMsg.basementParkingFee">
         </div>
       </el-col>
@@ -142,25 +138,25 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>土地面积(平米):</label>
+          <label>土地面积(平米)：</label>
           <input type="text" v-model="mainMsg.landArea">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>总建筑面积(平米):</label>
+          <label>总建筑面积(平米)：</label>
           <input type="text" v-model="mainMsg.builtArea">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>人防车位数量:</label>
+          <label>人防车位数量：</label>
           <input type="text" v-model="mainMsg.defenseParkingNum">
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item">
-          <label>人防车位收费标准:</label>
+          <label>人防车位收费标准：</label>
           <input type="text" v-model="mainMsg.defenseParkingFee">
         </div>
       </el-col>
@@ -168,7 +164,7 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="10">
         <div class="basic-item radio-sel">
-          <label>小区类型:</label>
+          <label>小区类型：</label>
           <ul>
             <li><input type="radio" name="type" label="closeType"><span>封闭式小区</span></li>
             <li><input type="radio" name="type" label="openType"><span>开放式小区</span></li>
@@ -177,7 +173,7 @@
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="basic-item radio-sel">
-          <label>合约模式:</label>
+          <label>合约模式：</label>
           <ul>
             <li><input type="radio" name="model" label="Remuneration"><span>酬金制</span></li>
             <li><input type="radio" name="model" label="Contract"><span>包干制</span></li>
@@ -188,7 +184,7 @@
     <el-row :gutter="40">
       <el-col :xs="24" :sm="24" :lg="16">
         <div class="basic-item radio-sel">
-          <label>小区配套设施:</label>
+          <label>小区配套设施：</label>
           <ul>
             <li><input type="radio" name="facilities" label="company"><span>公司</span></li>
             <li><input type="radio" name="facilities" label="club"><span>会所</span></li>
@@ -201,8 +197,8 @@
       </el-col>
     </el-row>
   </div>
-  <div class="project-msg">
-    <h4>
+  <div class="project-msg form-module">
+    <h4 class="module-title">
       <p>项目设计要素信息</p>
     </h4>
     <el-row class="element-table clearfix" :gutter="40">
@@ -511,53 +507,16 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .form-container {
-  color: #000;
-  border: 1px solid #d2d2d2;
-  margin: 16px 0;
-  padding: 0 20px;
-  @include borderRadius(4px);
   @include noScroll;
-  @include boxSizing;
   overflow-y: scroll;
-  h4 {
-    height: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid #d2d2d2;
-    p {
-      border-left: 5px solid #35d5ba;
-      padding-left: 15px;
-    }
-  }
 }
 // 社区建设单项目信息表
 .form-container {
   .basic-info {
     .el-row {
-      .basic-item {
-        margin-top: 20px;
-        label {
-          display: inline-block;
-          color: #000;
-          width: 30%;
-          line-height: 16px;
-          word-wrap: wrap;
-          margin-right: 2%;
-          font-size: 14px;
-        }
-        input {
-          width: 62%;
-          height: 32px;
-          border: 1px solid #828282;
-          @include borderRadius(4px);
-          text-indent: 12px;
-        }
-      }
       .customer-info {
         label {
-          width: 13%;
-        }
-        input {
-          width: 82%;
+          width: 12%!important;
         }
       }
       .radio-sel {
@@ -652,36 +611,20 @@ export default {
 .smartCommunity-add {
   .select-row {
     .basic-item {
-      @include flex;
-      label {
-        display: inline-block;
-        color: #000;
-        width: 30%;
-        line-height: 34px!important;
-        word-wrap: wrap;
-        margin-right: 2%;
-        font-size: 14px;
-      }
-      .el-select {
-          width: 64%;
-      }
+      .el-select,
       .el-cascader{
-        width: 64%;
-      }
-      input {
-        width: 100%;
-        height: 34px;
-        border: 1px solid #828282;
-        @include borderRadius(4px);
-        text-indent: 12px;
+        width: 66%;
+        input {
+          width: 100%;
+          height: 34px;
+          border: 1px solid #828282;
+          @include borderRadius(4px);
+        }
       }
     }
     .basic-item.customer-info {
-      label {
-        width: 14%!important;
-      }
       .el-select {
-          width: 82%;
+          width: 83%;
       }
     }
   }

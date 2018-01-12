@@ -1,6 +1,6 @@
 <template>
 <div class="app-container">
-  <div class="form-attached clearfix">
+  <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
         <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
@@ -115,41 +115,6 @@ export default {
 .app-container {
   width: 100%;
   @include scrolling
-}
-.form-attached {
-  position: fixed;
-  top: 100px;
-  left: 220px;
-  right: 10px;
-  z-index: 1;
-  height: 50px;
-  // line-height: 40px;
-  font-size: 16px;
-  color: #828282;
-  background-color: #fff;
-
-  .form-inner {
-    height: 100%;
-    margin: 0 16px;
-    margin-top: 10px;
-    height: 40px;
-    line-height: 40px;
-  }
-  div.crud-btn,
-  div.export-btn {
-    button{
-      color: #828282!important;
-      display: inline-block;
-      margin:0 16px;
-      i {
-        display: inline-block;
-        margin-right: 6px;
-      }
-    }
-    button.is-active {
-      color: #35d5ba!important;
-    }
-  }
 }
 .basic-form {
   .el-table__fixed-body-wrapper {

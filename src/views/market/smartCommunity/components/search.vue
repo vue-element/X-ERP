@@ -1,6 +1,6 @@
 <template>
 <div class="search-container smartCommunity-search">
-  <h4>
+  <h4 class="module-title">
     <p>查询条件</p>
   </h4>
   <el-form ref="form" :model="form">
