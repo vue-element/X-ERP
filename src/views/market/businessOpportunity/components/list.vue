@@ -1,6 +1,6 @@
 <template>
 <div class="smartCommunity-list">>
-  <el-table class="basic-form" style="width: 100%"  :data="tableData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+  <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">

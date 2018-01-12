@@ -315,7 +315,7 @@ export default {
     return {
       loading: true,
       tab: 'car',
-        regionList: [
+      regionList: [
         {
           id: 1,
           name: '华南办事处',

@@ -93,13 +93,14 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        // console.log('valid', valid)
-        // this.setToken('11111')
-        // setToken('11111')
-        // this.$router.push({ path: '/' })
+        console.log('valid', valid)
+        this.setToken('11111')
+        setToken('11111')
+        this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
           this.$post('/login', this.loginForm).then((res) => {
+            // console.log(res);
             // this.$router.push({ path: '/' })
             // console.log('res', res.data.success)
             // this.loading = false

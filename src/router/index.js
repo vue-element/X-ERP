@@ -55,7 +55,7 @@ export const asyncRouterMap = [
   },
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
     children: [
-      { path: 'contract-info', component: _import('financial/contractInfo'), name: 'contractInfo', meta: { title: '合同信息管理' }},
+      { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
       { path: 'contract-invoice', component: _import('financial/contractInvoice'), name: 'contractInvoice', meta: { title: '合同开票管理' }},
       { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
       { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},

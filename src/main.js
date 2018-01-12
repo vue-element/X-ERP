@@ -8,7 +8,7 @@ import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
 // import utils from '@/utils/index'
 
-import 'normalize.css/normalize.css'// A modern alternative to CSS resets
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
 import './permission' // permission control
