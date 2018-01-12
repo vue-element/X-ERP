@@ -10,7 +10,7 @@
         <div class="basic-item customer-info">
           <label>客户信息:</label>
           <el-select v-model="mainMsg.client.id" placeholder="请选择">
-           <el-option v-for="item in clientList" :label="item.name" :value="item.id">
+           <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
         </div>
@@ -447,9 +447,9 @@ export default {
   methods: {
     add() {
       this.$message({
-         message: '保存成功',
-         type: 'success'
-       });
+        message: '保存成功',
+        type: 'success'
+      })
       this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
       this.mainMsg.oldCity = this.cityOption.join('-')
       this.$post('/project/save', this.mainMsg).then((res) => {
