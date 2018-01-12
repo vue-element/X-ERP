@@ -436,7 +436,7 @@ export default {
   created() {
     this.getInsertData()
     console.log('editData', this.editData)
-    this.judgeTab()
+    this.editTab()
   },
   mounted() {
     this.$refs.ele.style.height = winHeight() - 180 + 'px'
@@ -446,12 +446,17 @@ export default {
   },
   methods: {
     add() {
+      this.$message({
+         message: '保存成功',
+         type: 'success'
+       });
       this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
       this.mainMsg.oldCity = this.cityOption.join('-')
       this.$post('/project/save', this.mainMsg).then((res) => {
+        this.$message('保持成功')
       })
     },
-    judgeTab() {
+    editTab() {
       if (this.editData.tabState === 'editTab') {
         console.log('editTab')
         var data = this.editData.editData

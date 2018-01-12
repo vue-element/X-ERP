@@ -19,12 +19,6 @@
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="客户类型">
-              <el-select v-model="form.region" placeholder="请选择合约模式">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="区域">
               <el-select v-model="form.region" placeholder="请选择合约模式">
                 <el-option label="区域一" value="shanghai"></el-option>
@@ -46,11 +40,11 @@
             <el-form-item label="业务线负责人">
               <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
             </el-form-item>
+          </el-row>
+          <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="单据日期">
               <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
             </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="执行状态" >
               <el-select v-model="form.city" placeholder="请选择城市">
                 <el-option label="区域一" value="shanghai"></el-option>
@@ -63,6 +57,8 @@
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
+          </el-row>
+          <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="审核状态">
               <el-select v-model="form.city" placeholder="请选择城市">
                 <el-option label="区域一" value="shanghai"></el-option>
@@ -75,12 +71,12 @@
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="所属年月">
               <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
               </el-date-picker>
             </el-form-item>
+          </el-row>
+          <el-row type="flex" class="row-bg" justify="space-between">
             <el-form-item label="商机编码">
               <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
             </el-form-item>
@@ -148,11 +144,12 @@ export default {
   color: #000;
   font-size: 14px;
   .el-row {
-    .el-form-item,.money-item {
+    .el-form-item,
+    .money-item {
       margin: 0;
       padding: 0;
       margin-top: 20px;
-      width: 23%;
+      // width: 23%;
       @include flex;
     }
     .money-item {
@@ -176,22 +173,22 @@ export default {
 }
 </style>
 <style lang="scss">
-.business-search{
+.business-container.business-search{
   .el-form{
     .el-form-item{
       .el-form-item__label{
-        width: 100px;
-        padding: 0;
-        text-align: left;
+        width: 70px;
       }
-      .el-form-item__content,
+      .el-form-item__content {
+        width: 210px;
+      }
       .el-input__inner {
-        width: 200px;
+        width: 210px
       }
     }
-    .el-form-item:first-child {
+    .el-form-item:last-child {
       .el-form-item__label{
-        width: 80px;
+        width: 106px;
       }
     }
   }
@@ -204,14 +201,11 @@ export default {
       height: 22px;
       line-height: 22px;
       vertical-align: top;
-      padding: 0 1px;
-      font-size: 12px!important;
+      font-size: 14px;
     }
     .el-input__icon {
-      width:16px;
-    }
-    .el-range-input {
-      width: 66px!important;
+      width:22px;
+      font-size: 12px;
     }
     .el-range-separator{
       padding: 0 2px;

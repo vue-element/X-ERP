@@ -126,7 +126,7 @@ export default {
         width: 210px
       }
     }
-    .el-form-item:last-child {
+    .el-col:last-child {
       .el-form-item__label{
         width: 96px;
       }
