@@ -93,23 +93,21 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log('valid', valid)
+        // console.log('valid', valid)
         this.setToken('11111')
         setToken('11111')
         this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
-          this.$post('/login', this.loginForm).then((res) => {
-            // console.log(res);
-            // this.$router.push({ path: '/' })
-            // console.log('res', res.data.success)
-            // this.loading = false
-            // this.setToken('11111')
-            // setToken('11111')
+          var loginForm = new FormData()
+          loginForm.append('name', this.loginForm.name)
+          loginForm.append('password', this.loginForm.password)
+          this.$post('/login', loginForm).then((res) => {
+            console.log('res', res)
             if (res.data.success === true) {
               this.setToken('11111')
               setToken('11111')
-              var username = this.loginForm.username
+              var username = this.loginForm.name
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
                 Cookies.set('username', username, { expires: 7 })

@@ -3,29 +3,29 @@
   <div class="form-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button @click="toggleTab('search')" :class="tab === 'search' ? 'is-active' : ''">
+        <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button @click="toggleTab('list')" :class="tab === 'list' ? 'is-active' : ''">
+        <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button @click="toggleTab('add')" :class="tab === 'add' ? 'is-active' : ''">
+        <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button>
+        <!-- <button>
           <i class="iconfont icon-edit"></i>
           <span>修改</span>
-        </button>
-        <button>
+        </button> -->
+        <button @click="delSelectData()" v-show="tab === 'listTab'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
       </div>
       <div class="export-btn fr">
-        <button>
+        <button v-show="tab === 'listTab'">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -33,9 +33,9 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'add'" @add="add"></AddComponent>
-    <ListComponent v-if="tab === 'list'" :searchData="searchData"></ListComponent>
-    <SearchComponent v-if="tab === 'search'" @search="search"></SearchComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow"></ListComponent>
+    <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
   </div>
 </div>
 </template>
@@ -45,9 +45,6 @@ import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
-// import request from '@/utils/request'
-
-// import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunity',
   components: {
@@ -58,7 +55,10 @@ export default {
   data() {
     return {
       searchData: {},
-      tab: 'list',
+      editData: {},
+      listData: '',
+      tab: 'listTab',
+      selArr: [],
       height: 100
     }
   },
@@ -77,17 +77,32 @@ export default {
     toggleTab(tab) {
       this.tab = tab
     },
-    search(searchData) {
-      this.tab = 'list'
-      this.searchData = searchData
+    selData(selArr) {
+      this.selArr = selArr
     },
-    add(searchData) {
-      // this.tab = 'list'
-      // console.log('searchData', searchData)
-      this.searchData = searchData
-      this.$post('/project/save', searchData).then((res) => {
-        // console.log('res', res)
-      })
+    addBtn() {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: {},
+        tabState: 'addTab'
+      }
+    },
+    delSelectData() {
+      if (this.selArr !== null) {
+        var id = { id: this.selArr }
+        console.log('id', id)
+        this.$post('/project/delete', id).then((res) => {
+          console.log('res', res)
+        })
+      }
+    },
+    editRow(data) {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: data,
+        tabState: 'editTab'
+      }
+      // console.log('id', id)
     }
   },
   computed: {}
