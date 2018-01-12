@@ -146,7 +146,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .app-container {
-  /* padding: 20px; */
   width: 100%;
 }
 .attached-btn {
