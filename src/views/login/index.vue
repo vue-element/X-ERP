@@ -94,9 +94,9 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         // console.log('valid', valid)
-        // this.setToken('11111')
-        // setToken('11111')
-        // this.$router.push({ path: '/' })
+        this.setToken('11111')
+        setToken('11111')
+        this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
           var loginForm = new FormData()

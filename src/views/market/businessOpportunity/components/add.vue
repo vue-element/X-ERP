@@ -244,7 +244,7 @@ export default {
           id: 1,
           value: '深度跟进'
         }, {
-          id: 2 ,
+          id: 2,
           value: '已定未签'
         }, {
           id: 3,
@@ -272,7 +272,7 @@ export default {
           value: '合同会签'
         }, {
           id: 5,
-            value: '纸质版合同签订'
+          value: '纸质版合同签订'
         }
       ],
       height: 100,
@@ -305,7 +305,6 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
-
     },
     cityChange(val) {
       var len = val.length
