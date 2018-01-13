@@ -1,7 +1,7 @@
 <template>
-  <div class="pay_money">
+  <div class="pay_money form-container">
     <div class="form-module">
-      <h4>
+      <h4 class="module-title">
         <p>汇总信息</p>
       </h4>
       <div class="inp">
@@ -34,12 +34,10 @@
           </el-col>
         </el-row>
       </div>
-    </div>
-    <div class="show">
-      <div class="title">
+      <h4 class="module-title">
         <p>信息资料</p>
-      </div>
-      <div class="table">
+      </h4>
+      <div class="msg_table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
             <template slot-scope="scope">
@@ -114,18 +112,30 @@ export default {
         3: '200,000',
         4: '100,000',
         5: '600,000'
+      }, {
+        1: '300,000',
+        2: '2018-01-11',
+        3: '200,000',
+        4: '100,000',
+        5: '600,000'
+      }, {
+        1: '300,000',
+        2: '2018-01-11',
+        3: '200,000',
+        4: '100,000',
+        5: '600,000'
       }]
     }
   },
   created() {
     this.resize()
     window.addEventListener('resize', () => {
-      this.resize
+      this.resize()
     })
   },
   methods: {
     resize() {
-      this.height = winHeight() - 378
+      this.height = winHeight() - 517
     }
   }
 }
@@ -133,18 +143,11 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.pay_money{
+.pay_money.form-container{
+  border:none;
+  padding:0 !important;
+  margin:0 !important;
   .form-module{
-    // .title{
-    //   border-bottom:2px solid #d2d2d2;
-    //   padding-bottom:10px;
-    //   p{
-    //     font-size:14px;
-    //     color:#000;
-    //     padding-left:10px;
-    //     border-left:5px solid #35d5ba;
-    //   }
-    // }
     .inp{
       margin-bottom:40px;
       .el-row {
@@ -172,25 +175,5 @@ export default {
       }
     }
   }
-  .show{
-    .title{
-      border-bottom:2px solid #d2d2d2;
-      padding-bottom:10px;
-      p{
-        font-size:14px;
-        color:#000;
-        padding-left:10px;
-        border-left:5px solid #35d5ba;
-      }
-    }
-    .table{
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss">
-.pay_money .total .inp .el-form .el-form-item .el-form-item__content .el-input__inner{
-  width: 170%;
 }
 </style>
