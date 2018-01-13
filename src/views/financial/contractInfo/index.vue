@@ -61,7 +61,7 @@ export default {
     @include boxSizing;
     width:100%;
     height:40px;
-    margin:10px 0 20px;
+    margin:10px 0 10px;
     border:1px solid #d2d2d2;
     color:#828282;
     ul {

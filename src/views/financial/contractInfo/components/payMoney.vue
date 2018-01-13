@@ -151,23 +151,5 @@ export default {
       }
     }
   }
-  .show{
-    .title{
-      border-bottom:2px solid #d2d2d2;
-      padding-bottom:10px;
-      p{
-        font-size:14px;
-        color:#000;
-        padding-left:10px;
-        border-left:5px solid #35d5ba;
-      }
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss">
-.pay_money .total .inp .el-form .el-form-item .el-form-item__content .el-input__inner{
-  width: 170%;
 }
 </style>
