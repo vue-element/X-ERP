@@ -9,127 +9,68 @@
           <p>基础信息</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>创建人：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <input type="text"  placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>所属年月：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <input type="text"  placeholder="请输入" v-model="dateline">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>单据日期：</label>
               <input type="text" v-model="businessInfo.date" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机名称：</label>
+              <input type="text" v-model="businessInfo.name" placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机类型：</label>
+              <input type="text" v-model="businessInfo.type" placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机来源：</label>
+              <input type="text" v-model="businessInfo.source" placeholder="请输入">
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <div class="basic-item customer-info">
+              <label>客户信息：</label>
+              <el-select v-model="businessInfo.client.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>城市：</label>
+              <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>区域：</label>
               <el-select v-model="businessInfo.region.id" placeholder="请选择">
                <el-option v-for="item in regionList" :key="item.id" :label="item.name" :value="item.id">
                </el-option>
              </el-select>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>商机类型：</label>
-              <input type="text" v-model="businessInfo.type" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>商机来源：</label>
-              <input type="text" v-model="businessInfo.source" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <!-- <div class="basic-item">
-              <label>城市名称：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div> -->
-            <div class="basic-item">
-              <label>城市：</label>
-              <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>商机名称：</label>
-              <input type="text" v-model="businessInfo.name" placeholder="请输入">
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <!-- 客户信息 -->
-      <div class="form-module">
-        <h4 class="module-title">
-          <p>客户信息</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>客户名称：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>客户类别：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>业态：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>联系人：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>职位：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>联系人电话：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>QQ：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>E-mail：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="24" :lg="12">
-            <div class="basic-item customer-address">
-              <label>客户地址：</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
             </div>
           </el-col>
         </el-row>
@@ -140,54 +81,56 @@
           <p>项目实施</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="24" :sm="24" :lg="8">
             <div class="basic-item">
-              <label>项目关键信息描述:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>项目关键信息描述：</label>
+              <input type="text" v-model="projectInfo.keyword" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="24" :sm="24" :lg="8">
             <div class="basic-item">
-              <label>业务分类:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>业务分类：</label>
+              <input type="text" v-model="projectInfo.category" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>投标日期:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>方案投标日期:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>投标日期：</label>
+              <input type="text" v-model="projectInfo.bidDate" placeholder="请输入">
             </div>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>总体项目开工时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>方案投标日期：</label>
+              <input type="text" v-model="projectInfo.bidDate2" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>预计开发或发货时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>总体项目开工时间：</label>
+              <input type="text" v-model="projectInfo.startDate" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>预计合同签订时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>预计开发或发货时间：</label>
+              <input type="text" v-model="projectInfo.developDate" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>预计成交金额（元）:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>预计合同签订时间：</label>
+              <input type="text" v-model="projectInfo.signDate" placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>预计成交金额（元）：</label>
+              <input type="text" v-model="projectInfo.amount" placeholder="请输入">
             </div>
           </el-col>
         </el-row>
@@ -197,30 +140,30 @@
           <p>人员信息</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>业务线负责人:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>业务线负责人：</label>
+              <input type="text" v-model="businessInfo.chargePerson" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>电话:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>电话：</label>
+              <input type="text" v-model="businessInfo.chargePersonPhone" placeholder="请输入">
             </div>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>项目具体跟进人:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>项目具体跟进人：</label>
+              <input type="text" v-model="businessInfo.followPerson" placeholder="请输入">
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>电话:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>电话：</label>
+              <input type="text" v-model="businessInfo.followPersonPhone" placeholder="请输入">
             </div>
           </el-col>
         </el-row>
@@ -230,101 +173,110 @@
           <p>进度状况</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>商机跟进状态:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>商机跟进状态</label>
+              <el-select v-model="businessInfo.followState" placeholder="请选择">
+               <el-option v-for="item in followStateList" :key="item.id" :label="item.value" :value="item.id">
+               </el-option>
+             </el-select>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>商机执行状态:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>合同原始金额（元）:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>合同变更金额（元）:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>变更后合同金额（元）:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>合约签订时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>合约开工时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <div class="basic-item">
-              <label>合约完工时间:</label>
-              <input type="text" v-model="businessInfo.q" placeholder="请输入">
+              <label>商机执行状态</label>
+              <el-select v-model="businessInfo.executState" placeholder="请选择">
+               <el-option v-for="item in executStateList" :key="item.id" :label="item.value" :value="item.id">
+               </el-option>
+             </el-select>
             </div>
           </el-col>
         </el-row>
       </div>
-      <div class="form-module approval-opinion">
-        <h4 class="module-title">
-          <p>审批意见</p>
-        </h4>
-        <div class="approval-textarea">
-          <textarea placeholder="输入..."></textarea>
-        </div>
-      </div>
-      <div class="con-search-btn">查  询</div>
+      <div class="con-search-btn" @click="addData"><span>提  交</span></div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import {
-  winHeight
-} from '@/utils'
-// import { fetchList } from '@/api/article'
+import { winHeight, dateline } from '@/utils'
 export default {
   name: 'businessOpportunity-index',
   data() {
     return {
       businessInfo: {
-        q: 1,
-        chargePerson: '业务线负责人',
         city: {},
         client: {},
-        code: '编码',
-        date: '单据日期',
-        executState: '商机执行状态',
-        followPerson: '项目跟进人',
-        followState: '商机跟进状态',
-        name: '商机名称',
         projectImpls: [],
         region: {},
+        code: '编码',
+        date: '单据日期',
+        executState: '',
+        followState: '',
+        name: '商机名称',
         source: '商机来源',
-        type: '商机类型'
+        type: '商机类型',
+        chargePerson: '业务线负责人',
+        followPerson: '项目跟进人',
+        chargePersonPhone: '业务线负责人 - 联系电话',
+        followPersonPhone: '项目跟进人 - 联系电话',
+        oldCity: ''
+      },
+      projectInfo: {
+        amount: '预计成交金额',
+        bidDate: '投标日期',
+        bidDate2: '方案投标日期',
+        category: '业务分类',
+        developDate: '预计开发或发货时间',
+        keyword: '项目关键信息',
+        signDate: '预计合同签订时间',
+        startDate: '总体项目开工时间'
       },
       cityOption: [1],
       regionList: [],
       cityList: [],
-      height: 100
+      followStateList: [
+        {
+          id: 0,
+          value: '浅度跟进'
+        }, {
+          id: 1,
+          value: '深度跟进'
+        }, {
+          id: 2 ,
+          value: '已定未签'
+        }, {
+          id: 3,
+          value: '已签订'
+        }, {
+          id: 4,
+          value: '放弃'
+        }
+      ],
+      executStateList: [
+        {
+          id: 0,
+          value: '前期接洽'
+        }, {
+          id: 1,
+          value: '方案编制'
+        }, {
+          id: 2,
+          value: '投标'
+        }, {
+          id: 3,
+          value: '中标'
+        }, {
+          id: 4,
+          value: '合同会签'
+        }, {
+          id: 5,
+            value: '纸质版合同签订'
+        }
+      ],
+      height: 100,
+      dateline: ''
     }
   },
   created() {
@@ -332,6 +284,8 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
+    this.dateline = dateline()
+    console.log('dateline', this.dateline)
     this.getInsertData()
   },
   mounted() {
@@ -351,10 +305,22 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+
     },
     cityChange(val) {
       var len = val.length
       this.businessInfo.city.id = val[len - 1]
+    },
+    addData() {
+      this.businessInfo.oldCity = this.cityOption.join('-')
+      var bussinessObj = {
+        Business: this.businessInfo
+      }
+      bussinessObj.Business.projectImpls[0] = this.projectInfo
+      console.log('obj', bussinessObj)
+      this.$post('/bussiness/save', bussinessObj).then((res) => {
+        console.log('res', res)
+      })
     }
   },
   computed: {}
@@ -367,25 +333,6 @@ export default {
 .form-container {
   overflow-y: auto;
   @include noScroll;
-}
-.customer-address {
-  label {
-    width: 11%!important;
-  }
-  input {
-    width: 82%!important;
-  }
-}
-.approval-opinion {
-    textarea {
-    @include boxSizing;
-    width: 100%;
-    padding: 8px 14px;
-    height: 70px;
-    border: 1px solid #828282;
-    font-size: 14px;
-    line-height: 16px;
-  }
 }
 
 </style>

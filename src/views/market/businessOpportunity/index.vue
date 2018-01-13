@@ -15,17 +15,17 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button>
+        <!-- <button>
           <i class="iconfont icon-edit"></i>
           <span>修改</span>
-        </button>
-        <button>
+        </button> -->
+        <button v-show="tab === 'list'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
       </div>
       <div class="export-btn fr">
-        <button>
+        <button v-show="tab === 'list'">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -45,7 +45,6 @@ import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
-// import { fetchList } from '@/api/article'
 export default {
   name: 'businessOpportunity',
   components: {

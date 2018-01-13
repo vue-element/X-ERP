@@ -171,7 +171,7 @@
           </ul>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6">
+      <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item radio-sel">
           <label>合约模式：</label>
           <ul>
@@ -203,7 +203,7 @@
     </h4>
     <el-row class="element-table clearfix" :gutter="40">
       <el-col :xs="24" :sm="24" :lg="12">
-        <table class="element-fl" cellspacing="0">
+        <table class="element-fl basic-table" cellspacing="0">
           <tr>
             <td rowspan="3">车行出入</td>
             <td>外围车行口</td>
@@ -260,7 +260,7 @@
         </table>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="12">
-        <table class="element-fr" cellspacing="0">
+        <table class="element-fr basic-table" cellspacing="0">
           <tr>
             <td rowspan="5">机房信息</td>
             <td>电梯机房</td>
@@ -339,28 +339,7 @@ export default {
           projectNum: '32'
         }
       ],
-      cityList: [
-        {
-          id: 1,
-          label: '中国',
-          value: 'zg',
-          children: [{
-            id: '',
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [
-              {
-                value: 'yizhi',
-                label: '一致'
-              },
-              {
-                value: 'yizhi',
-                label: '一致'
-              }
-            ]
-          }]
-        }
-      ],
+      cityList: [],
       mainMsg: {
         city: {},
         region: {},
@@ -550,39 +529,6 @@ export default {
               vertical-align: center;
             }
           }
-        }
-      }
-    }
-  }
-  .element-table {
-    table {
-      width: 100%;
-      margin-top: 20px;
-      margin-right: 40px;
-      border-left: 1px solid #828282;
-      border-bottom: 1px solid #828282;
-      tr {
-        td {
-          width: 110px;
-          height: 28px;
-          text-align: center;
-          font-size: 14px;
-          border-top: 1px solid #828282;
-          border-right: 1px solid #828282;
-          input {
-            display: inline-block;
-            width: 80%;
-            height: 26px;
-            line-height: 26px;
-            text-align: center;
-          }
-        }
-      }
-    }
-    .element-fr {
-      tr {
-        td {
-          width: 217px;
         }
       }
     }

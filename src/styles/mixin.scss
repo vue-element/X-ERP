@@ -124,3 +124,8 @@
     color: $color;
   }
 }
+
+@mixin textAligin {
+  text-align: justify;
+  text-justify:inter-ideograph(IE)
+}

@@ -34,6 +34,12 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
+export function dateline() {
+  var date = new Date()
+  var dateline = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (('0' + date.getDate()).substr(-2))
+  return dateline
+}
+
 export function formatTime(time, option) {
   time = +time * 1000
   const d = new Date(time)

@@ -162,8 +162,6 @@ export default {
         border-left:5px solid #35d5ba;
       }
     }
-    .table{
-    }
   }
 }
 </style>
