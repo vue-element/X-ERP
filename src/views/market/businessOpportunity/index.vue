@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
@@ -59,24 +58,11 @@ export default {
   mounted() {
   },
   created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
   },
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-    },
     toggleTab(tab) {
       this.tab = tab
     },
-    // search(searchData) {
-    //   console.log(111)
-    //   console.log(searchData)
-    //   this.tab = 'list'
-    //   this.searchData = searchData
-    // },
     selData(selArr) {
       this.selArr = selArr
     },
@@ -102,7 +88,6 @@ export default {
         editData: data,
         tabState: 'editTab'
       }
-      // console.log('id', id)
     }
   },
   computed: {}

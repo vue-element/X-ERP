@@ -379,24 +379,25 @@ export default {
         //     this.businessInfo.followState = 4
         // }
 
-        var projectInfo = data.business.projectImpls[0]
-        switch (projectInfo.category) {
-          case '科技-智慧社区工程全委':
-            projectInfo.category = 0
-            break
-          case '科技-智慧社区改造':
-            projectInfo.category = 1
-            break
-          case '科技-物联网大平台':
-            projectInfo.category = 2
-            break
-          case '科技-设计服务':
-            projectInfo.category = 3
-            break
-          default:
-            projectInfo.category = 4
-        }
-        this.projectInfo = projectInfo
+        this.projectInfo = data.business.projectImpls[0]
+        // console.log('projectInfo', projectInfo)
+        // switch (projectInfo.category) {
+        //   case '科技-智慧社区工程全委':
+        //     projectInfo.category = 0
+        //     break
+        //   case '科技-智慧社区改造':
+        //     projectInfo.category = 1
+        //     break
+        //   case '科技-物联网大平台':
+        //     projectInfo.category = 2
+        //     break
+        //   case '科技-设计服务':
+        //     projectInfo.category = 3
+        //     break
+        //   default:
+        //     projectInfo.category = 4
+        // }
+        // this.projectInfo = projectInfo
       }
     }
   },
