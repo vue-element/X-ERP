@@ -1,6 +1,6 @@
 <template>
-  <div class="disclosure_info form-container">
-    <div class="form-module inp">
+  <div class="disclosure-info-container form-container">
+    <div class="inp form-module">
       <h4 class="module-title">
         <p>合同交底信息录入</p>
       </h4>
@@ -25,18 +25,16 @@
         </el-col>
       </el-row>
       <div class="btn">
-        <div class="con-search-btn">保&nbsp;&nbsp;&nbsp;存</div>
-        <div class="con-search-btn">重&nbsp;&nbsp;&nbsp;置</div>
-        <div class="con-search-btn">取&nbsp;&nbsp;&nbsp;消</div>
+        <div class="common-btn">保&nbsp;&nbsp;&nbsp;存</div>
+        <div class="common-btn">重&nbsp;&nbsp;&nbsp;置</div>
+        <div class="common-btn">取&nbsp;&nbsp;&nbsp;消</div>
       </div>
     </div>
-
-    <div class="form-module list">
+    <div class="list form-module">
       <h4 class="module-title">
         <p>合同交底附件列表</p>
-        <div class="con-search-btn up_files">附件上传</div>
+        <div class="up-files common-btn">附件上传</div>
       </h4>
-
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
@@ -124,11 +122,10 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.disclosure_info.form-container{
+.disclosure-info-container.form-container{
   border:none;
   margin:0;
-  padding:0;
-  .form-module.inp{
+  .inp.form-module{
     .el-row{
       margin-bottom:10px;
       .el-col{
@@ -136,7 +133,7 @@ export default {
           margin-top: 20px;
           label {
             color: #000;
-            width: 30%;
+            width: 35%;
             line-height: 16px;
             word-wrap: wrap;
             font-size: 14px;
@@ -156,17 +153,17 @@ export default {
     }
     .btn{
       text-align:center;
-      div.con-search-btn{
+      div.common-btn{
         margin-left:30px;
         display:inline-block;
       }
     }
   }
-  .form-module.list{
+  .list.form-module{
     margin-bottom:0;
     .module-title{
       position:relative;
-      .up_files{
+      .up-files{
         position:absolute;
         top:-20px;
         right:0;

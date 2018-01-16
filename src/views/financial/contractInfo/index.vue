@@ -1,5 +1,5 @@
 <template>
-  <div class="contract-info">
+  <div class="contract-info-container">
     <div class="contractInfo-item">
       <ul>
         <li :class="tab === 'basicInfo'?'is-active':''" @click="toggleTab('basicInfo')">合同基础信息</li>
@@ -11,13 +11,16 @@
         <li :class="tab === 'payMoney'?'is-active':''" @click="toggleTab('payMoney')">付款信息</li>
       </ul>
     </div>
-    <basicInfo v-show="tab === 'basicInfo'"></basicInfo>
-    <disclosureInfo v-show="tab === 'disclosureInfo'"></disclosureInfo>
-    <subContract v-show="tab === 'subContract'"></subContract>
-    <change v-show="tab === 'change'"></change>
-    <invoiceInfo v-show="tab === 'invoiceInfo'"></invoiceInfo>
-    <returnMoney v-show="tab === 'returnMoney'"></returnMoney>
-    <payMoney v-show="tab === 'payMoney'"></payMoney>
+
+    <div class="contractInfo-show">
+      <basicInfo v-show="tab === 'basicInfo'"></basicInfo>
+      <disclosureInfo v-show="tab === 'disclosureInfo'"></disclosureInfo>
+      <subContract v-show="tab === 'subContract'"></subContract>
+      <change v-show="tab === 'change'"></change>
+      <invoiceInfo v-show="tab === 'invoiceInfo'"></invoiceInfo>
+      <returnMoney v-show="tab === 'returnMoney'"></returnMoney>
+      <payMoney v-show="tab === 'payMoney'"></payMoney>
+    </div>
   </div>
 </template>
 
@@ -42,7 +45,7 @@ export default {
   },
   data() {
     return {
-      tab: 'disclosureInfo'
+      tab: 'basicInfo'
     }
   },
   methods: {
@@ -51,17 +54,19 @@ export default {
     }
   }
 }
-
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import 'src/styles/mixin.scss';
-.contract-info{
+.contract-info-container{
   .contractInfo-item{
     @include boxSizing;
-    width:100%;
+    position: fixed;
+    top:100px;
+    left:230px;
+    right: 20px;
     height:40px;
-    margin:10px 0 10px;
+    margin: 10px 0;
     border:1px solid #d2d2d2;
     color:#828282;
     ul {
@@ -80,6 +85,9 @@ export default {
             color: #35d5ba;
         }
     }
+  }
+  .contractInfo-show{
+    margin-top:60px;
   }
 }
 </style>
