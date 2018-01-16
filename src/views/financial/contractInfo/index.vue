@@ -1,93 +1,92 @@
 <template>
-  <div class="contract-info-container">
-    <div class="contractInfo-item">
-      <ul>
-        <li :class="tab === 'basicInfo'?'is-active':''" @click="toggleTab('basicInfo')">合同基础信息</li>
-        <li :class="tab === 'disclosureInfo'?'is-active':''" @click="toggleTab('disclosureInfo')">合同交底信息</li>
-        <li :class="tab === 'subContract'?'is-active':''" @click="toggleTab('subContract')">分包</li>
-        <li :class="tab === 'change'?'is-active':''" @click="toggleTab('change')">变更</li>
-        <li :class="tab === 'invoiceInfo'?'is-active':''" @click="toggleTab('invoiceInfo')">开票信息</li>
-        <li :class="tab === 'returnMoney'?'is-active':''" @click="toggleTab('returnMoney')">回款信息</li>
-        <li :class="tab === 'payMoney'?'is-active':''" @click="toggleTab('payMoney')">付款信息</li>
-      </ul>
+  <div class="contract-container">
+    <div class="form-head-attached">
+      <div class="form-inner">
+        <div class="crud-btn fl">
+          <button @click="searchItem('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+            <i class="iconfont icon-search"></i>
+            <span>查询</span>
+          </button>
+          <button @click="show('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
+          </button>
+          <button @click="addItem('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
+            <i class="iconfont icon-add"></i>
+            <span>新增</span>
+          </button>
+          <button @click="delItem('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
+            <i class="iconfont icon-delete"></i>
+            <span>删除</span>
+          </button>
+        </div>
+        <div class="export-btn fr">
+          <button>
+            <i class="iconfont icon-export"></i>
+            <span>数据导出</span>
+          </button>
+        </div>
+      </div>
     </div>
-
-    <div class="contractInfo-show">
-      <basicInfo v-show="tab === 'basicInfo'"></basicInfo>
-      <disclosureInfo v-show="tab === 'disclosureInfo'"></disclosureInfo>
-      <subContract v-show="tab === 'subContract'"></subContract>
-      <change v-show="tab === 'change'"></change>
-      <invoiceInfo v-show="tab === 'invoiceInfo'"></invoiceInfo>
-      <returnMoney v-show="tab === 'returnMoney'"></returnMoney>
-      <payMoney v-show="tab === 'payMoney'"></payMoney>
+    <div class="contract-list" >
+      <searchComponent v-if="tab === 'searchTab'"></searchComponent>
+      <listComponent v-if="tab === 'listTab'"></listComponent>
+      <addComponent v-if="tab === 'addTab'"></addComponent>
     </div>
   </div>
 </template>
 
 <script>
-import basicInfo from './components/basicInfo'
-import disclosureInfo from './components/disclosureInfo'
-import subContract from './components/subContract'
-import change from './components/change'
-import invoiceInfo from './components/invoiceInfo'
-import returnMoney from './components/returnMoney'
-import payMoney from './components/payMoney'
+import searchComponent from './components/search'
+import listComponent from './components/list'
+import addComponent from './components/add'
 export default {
-  name: 'contractInfo',
   components: {
-    basicInfo,
-    disclosureInfo,
-    subContract,
-    change,
-    invoiceInfo,
-    returnMoney,
-    payMoney
+    searchComponent,
+    listComponent,
+    addComponent
   },
   data() {
     return {
-      tab: 'basicInfo'
+      tab: 'listTab'
     }
   },
+  mounted() {},
+  created() {},
   methods: {
-    toggleTab(tab) {
+    // 搜索条件
+    searchItem(tab) {
+      this.tab = tab
+    },
+    // 查看明细
+    show(tab) {
+      this.tab = tab
+    },
+    // 新增
+    addItem(tab) {
+      this.tab = tab
+    },
+    // 删除
+    delItem(tab) {
       this.tab = tab
     }
-  }
+  },
+  computed: {}
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-@import 'src/styles/mixin.scss';
-.contract-info-container{
-  .contractInfo-item{
-    @include boxSizing;
-    position: fixed;
-    top:100px;
-    left:230px;
-    right: 20px;
-    height:40px;
-    margin: 10px 0;
-    border:1px solid #d2d2d2;
-    color:#828282;
-    ul {
-        @include flex;
-        li {
-            width: 148px;
-            height: 28px;
-            line-height: 30px;
-            margin: 5px;
-            text-align: center;
-            border: solid 1px #d2d2d2;
-            overflow: hidden;
-        }
-        li.is-active {
-            border: solid 1px #35d5ba;
-            color: #35d5ba;
-        }
-    }
+<style  rel="stylesheet/scss" lang="scss" scoped>
+@import "src/styles/mixin.scss";
+.contract-container {
+  width: 100%;
+  @include scrolling
+}
+.basic-form {
+  .el-table__fixed-body-wrapper {
+    margin: 28px 0;
   }
-  .contractInfo-show{
-    margin-top:60px;
-  }
+}
+.contract-list {
+  margin-top: 50px;
 }
 </style>

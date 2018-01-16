@@ -50,7 +50,7 @@
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
   :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
-    </div>
+      </div>
     </div>
   </div>
 </template>
@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 482
+      this.height = winHeight() - 478
     }
   }
 }
@@ -125,6 +125,7 @@ export default {
 .disclosure-info-container.form-container{
   border:none;
   margin:0;
+  padding-top:0;
   .inp.form-module{
     .el-row{
       margin-bottom:10px;
