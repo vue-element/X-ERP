@@ -1,30 +1,40 @@
 <template>
-  <div class="pay_money">
-    <div class="total">
-      <div class="title">
+  <div class="pay-money-container form-container">
+    <div class="total form-module">
+      <h4 class="module-title">
         <p>汇总信息</p>
-      </div>
-      <div class="inp">
-        <el-form ref="form">
-          <el-form-item label="项目累计投入金额">
-            <el-input></el-input>
-          </el-form-item>
-          <el-form-item label="材料累计投入金额">
-            <el-input></el-input>
-          </el-form-item>
-          <el-form-item label="人工累计投入金额">
-            <el-input></el-input>
-          </el-form-item>
-          <el-form-item label="综合累计投入金额">
-            <el-input></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
+      </h4>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
+          <div class="item">
+            <label>项目累计投入金额：</label>
+            <input type="text">
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="12">
+          <div class="item">
+            <label>材料累计投入金额：</label>
+            <input type="text">
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="12">
+          <div class="item">
+            <label>人工累计投入金额：</label>
+            <input type="text">
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="12">
+          <div class="item">
+            <label>综合累计投入金额：</label>
+            <input type="text">
+          </div>
+        </el-col>
+      </el-row>
     </div>
-    <div class="show">
-      <div class="title">
+    <div class="list form-module">
+      <h4 class="module-title">
         <p>信息资料</p>
-      </div>
+      </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
@@ -38,8 +48,8 @@
           <el-table-column align="center" prop="4" label="人工投入金额"></el-table-column>
           <el-table-column align="center" prop="5" label="综合投入金额"></el-table-column>
         </el-table>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
-  :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
+        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
+    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
       </div>
     </div>
   </div>
@@ -106,12 +116,12 @@ export default {
   created() {
     this.resize()
     window.addEventListener('resize', () => {
-      this.resize
+      this.resize()
     })
   },
   methods: {
     resize() {
-      this.height = winHeight() - 450
+      this.height = winHeight() - 503
     }
   }
 }
@@ -119,33 +129,31 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.pay_money{
-  .total{
-    .title{
-      border-bottom:2px solid #d2d2d2;
-      padding-bottom:10px;
-      p{
-        font-size:14px;
-        color:#000;
-        padding-left:10px;
-        border-left:5px solid #35d5ba;
-      }
-    }
-    .inp{
-      .el-form{
-        margin:20px 0 20px 15px;
-        @include flex;
-        flex-wrap: wrap;
-        .el-form-item{
-          flex:50%;
-          @include flex;
-          .label{
-            flex:1;
-            font-size:14px;
-            color:#000;
+.pay-money-container.form-container{
+  border:none;
+  margin:0;
+  .total.form-module{
+    .el-row{
+      margin-bottom:10px;
+      .el-col{
+        .item {
+          margin-top: 20px;
+          label {
+            color: #000;
+            width: 18%;
+            line-height: 16px;
+            word-wrap: wrap;
+            font-size: 14px;
+            vertical-align:middle;
+            display:inline-block;
           }
-          .el-form-item__content{
-            flex:1;
+          input {
+            width: 50%;
+            height: 32px;
+            border: 1px solid #828282;
+            @include borderRadius(4px);
+            text-indent: 12px;
+            vertical-align:middle;
           }
         }
       }
