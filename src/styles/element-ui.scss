@@ -205,8 +205,6 @@
 .el-form-item {
   color: #000;
   .el-form-item__label{
-    // height: 30px;
-    margin-top: 7px;
     line-height: 16px;
     color: #000;
   }
@@ -267,7 +265,7 @@
             td {
               width: 30px;
               height:22px;
-              padding: 0;
+              padding: 4px 0;
               div {
                 height: 16px;
                 padding: 0;

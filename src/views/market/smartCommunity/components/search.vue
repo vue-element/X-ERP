@@ -1,80 +1,94 @@
 <template>
-<div class="search-container smartCommunity-search">
-  <h4 class="module-title">
-    <p>查询条件</p>
-  </h4>
-  <el-form ref="form" :model="form">
-    <el-row type="flex" justify="space-between">
-      <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="活动名称">
-          <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-        </el-form-item>
-        </el-col>
-        <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="区域">
-          <el-select v-model="form.region" placeholder="请选择区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
+<div class="form-container smartCommunity-search">
+  <div class="form-module">
+    <h4 class="module-title">
+      <p>查询条件</p>
+    </h4>
+    <el-row :gutter="40">
+      <el-col :xs="12" :sm="12" :lg="8">
+        <div class="basic-item">
+          <label>项目名称：</label>
+          <input type="text" placeholder="请输入"/>
+        </div>
       </el-col>
-      <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="合约模式">
-          <el-select v-model="form.region" placeholder="请选择合约模式">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
+      <el-col :xs="12" :sm="12" :lg="8">
+        <div class="basic-item basic-date">
+          <label>首期入伙时间：</label>
+          <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01" size="mini">
+          </el-date-picker>
+        </div>
       </el-col>
-    </el-row>
-    <el-row type="flex" class="row-bg" justify="space-between">
-      <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="客户信息" :span="6">
-          <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="城市" :span="6">
-          <el-select v-model="form.city" placeholder="请选择城市">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-      <el-col :lg="8" :sm="12" :xs="12">
-        <el-form-item label="首期入伙时间" :span="6">
-          <el-select v-model="form.region" placeholder="请选择合约模式">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
+      <el-col :xs="12" :sm="12" :lg="8">
+        <div class="basic-item">
+          <label>合约模式：</label>
+          <el-select  placeholder="请选择">
+           <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+           </el-option>
+         </el-select>
+        </div>
       </el-col>
     </el-row>
-  </el-form>
-  <div class="common-btn" @click="search">查  询</div>
+    <el-row :gutter="40">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="basic-item customer-info">
+          <label>客户信息：</label>
+          <el-select v-model="searchData.client" placeholder="请选择">
+           <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+           </el-option>
+         </el-select>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="8">
+        <div class="basic-item">
+          <label>城市：</label>
+          <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="8">
+        <div class="basic-item">
+          <label>区域：</label>
+          <el-select v-model="searchData.region" placeholder="请选择">
+           <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+           </el-option>
+         </el-select>
+        </div>
+      </el-col>
+    </el-row>
+    <div class="common-btn">查  询</div>
+  </div>
 </div>
 </template>
 
 <script>
-// import { winHeight } from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
-  name: 'smartCommunity-search',
+  name: 'SmartCommunitySearch',
   data() {
     return {
-      form: {
-        region: ''
-      },
-      value9: '',
-      height: 100
+      height: 100,
+      clientList: [],
+      cityList: [],
+      regionList: [],
+      cityOption: [0, 1, 3],
+      value: '',
+      searchData: {
+        region: {},
+        client: {},
+        city: {}
+      }
     }
   },
   created() {
+    this.getInsertData()
   },
   methods: {
-    search() {
-      console.log('search')
-      this.$emit('search', this.form)
+    getInsertData() {
+      this.$get('/bussiness/findInsertData').then((res) => {
+        var data = res.data.data
+        this.cityList = data.cityList
+        console.log('data', this.cityList)
+        this.clientList = data.clientList
+        this.regionList = data.regionList
+      })
     }
   },
   computed: {}
@@ -84,7 +98,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.search-container {
+.smartCommunity-search {
   color: #000;
   border: 1px solid #d2d2d2;
   margin: 16px 0;

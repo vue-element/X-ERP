@@ -8,81 +8,120 @@
         <h4 class="module-title">
           <p>查询条件:</p>
         </h4>
-        <el-form ref="form" :model="form">
-          <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="商机名称：">
-              <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-            </el-form-item>
-            <el-form-item label="客户类别：">
-              <el-select v-model="form.region" placeholder="请选择区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="区域：">
-              <el-select v-model="form.region" placeholder="请选择合约模式">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="修改日期：">
-              <el-date-picker v-model="value" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" default-value="2010-10-01">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="业务分类：">
-              <el-select v-model="form.city" placeholder="请选择城市">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="业务线负责人：">
-              <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-            </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="单据日期：">
-              <el-input v-model="form.name" placeholder="请填写活动名称"></el-input>
-            </el-form-item>
-            <el-form-item label="执行状态：" >
-              <el-select v-model="form.city" placeholder="请选择城市">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="商机跟进状态：">
-              <el-select v-model="form.city" placeholder="请选择城市">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="审核状态：">
-              <el-select v-model="form.city" placeholder="请选择城市">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="关联合同：">
-              <el-select v-model="form.city" placeholder="请选择城市">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属年月：">
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机名称：</label>
+              <input type="text"  placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机编码：</label>
+              <input type="text"  placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>审核状态：</label>
+              <input type="text"  placeholder="请输入">
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <div class="basic-item customer-info">
+              <label>客户信息：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>区域：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>城市：</label>
+              <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item customer-info">
+              <label>业务分类：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item customer-info">
+              <label>商机跟进状态：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>商机执行状态：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item basic-date">
+              <label>修改日期：</label>
               <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
               </el-date-picker>
-            </el-form-item>
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="space-between">
-            <el-form-item label="商机编码：">
-              <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
-            </el-form-item>
-            <el-form-item label="城市：">
-              <el-input v-model="form.msg" placeholder="请填写客户信息"></el-input>
-            </el-form-item>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item basic-date">
+              <label>所属年月：</label>
+              <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
+              </el-date-picker>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>单据日期：</label>
+              <input type="text"  placeholder="请输入">
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item customer-info">
+              <label>关联合同：</label>
+              <el-select v-model="msg.id" placeholder="请选择">
+               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item">
+              <label>业务分线负责人：</label>
+              <input type="text"  placeholder="请输入">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
             <div class="el-form-item money-item">
               <label class="el-form-item__label">金额：</label>
               <div class="el-form-item__content">
@@ -91,8 +130,8 @@
                 <input placeholder="0">
               </div>
             </div>
-          </el-row>
-        </el-form>
+          </el-col>
+        </el-row>
         <div class="common-btn">查  询</div>
       </div>
     </div>
@@ -101,36 +140,43 @@
 </template>
 
 <script>
-import {
-  winHeight
-} from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
-  name: 'businessOpportunity-index',
+  name: 'businessOpportunitySearch',
   data() {
     return {
+      filterData: {
+        region: {},
+        client: {},
+        city: {},
+        chargePerson: '业务线负责人',
+        date: '单据日期',
+        name: '商机名称'
+      },
       msg: {
         1: 1
       },
-      inputable: true,
       form: {
         region: '',
         name: ''
       },
       value: '',
-      height: 100
+      clientList: [],
+      cityList: [],
+      regionList: []
     }
   },
   created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
+    this.getInsertData()
   },
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-      // this.height = 0
+    getInsertData() {
+      this.$get('/bussiness/findInsertData').then((res) => {
+        var data = res.data.data
+        this.cityList = data.cityList
+        console.log('data', this.cityList)
+        this.clientList = data.clientList
+        this.regionList = data.regionList
+      })
     }
   },
   computed: {}
@@ -140,7 +186,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.el-form {
+.business-search {
   color: #000;
   font-size: 14px;
   .el-row {
@@ -149,16 +195,23 @@ export default {
       margin: 0;
       padding: 0;
       margin-top: 20px;
-      // width: 23%;
       @include flex;
     }
     .money-item {
+      label.el-form-item__label {
+        width: 26%!important;
+        margin-right: 2%;
+        padding:0;
+        text-align: right;
+      }
       .el-form-item__content{
+        width: 62%;
         @include borderRadius(4px);
         @include flex;
         @include boxSizing;
         border: 1px solid #828282;
         padding:0 15px;
+        padding-left: 15px;
         input {
           width: 40%;
           text-align: center;
@@ -173,38 +226,5 @@ export default {
 }
 </style>
 <style lang="scss">
-.business-container.business-search{
-  .el-form{
-    .el-form-item{
-      .el-form-item__label{
-        width: 110px;
-      }
-      .el-form-item__content {
-        width: 210px;
-      }
-      .el-input__inner {
-        width: 210px
-      }
-    }
-  }
-  .el-date-editor {
-    padding: 3px;
-    .el-range__icon,
-    .el-range-input,
-    .el-range-separator,
-    .el-icon-circle-close {
-      height: 22px;
-      line-height: 22px;
-      vertical-align: top;
-      font-size: 14px;
-    }
-    .el-input__icon {
-      width:22px;
-      font-size: 12px;
-    }
-    .el-range-separator{
-      padding: 0 2px;
-    }
-  }
-}
+@import "src/styles/mixin.scss";
 </style>

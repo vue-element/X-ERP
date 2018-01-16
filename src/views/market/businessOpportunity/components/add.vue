@@ -324,13 +324,15 @@ export default {
     addData() {
       this.businessInfo.oldCity = this.cityOption.join('-')
       this.businessInfo.projectImpls = [this.projectInfo]
-      console.log('projectInfo', this.businessInfo)
+      // console.log('projectInfo', this.businessInfo)
       this.$post('/bussiness/save', this.businessInfo).then((res) => {
         console.log('res', res)
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
+        if (res.data.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+        }
       })
     },
     editTab() {
@@ -342,62 +344,7 @@ export default {
         cityOption.forEach((item) => {
           this.cityOption.push(parseInt(item))
         })
-        // switch (data.business.executState) {
-        //   case '前期接洽':
-        //     this.businessInfo.executState = 0
-        //     break
-        //   case '方案编制':
-        //     this.businessInfo.executState = 1
-        //     break
-        //   case '投标':
-        //     this.businessInfo.executState = 2
-        //     break
-        //   case '中标':
-        //     this.businessInfo.executState = 3
-        //     break
-        //   case '合同会签':
-        //     this.businessInfo.executState = 4
-        //     break
-        //   default:
-        //     this.businessInfo.executState = 5
-        // }
-
-        // switch (data.business.followState) {
-        //   case '浅度跟进':
-        //     this.businessInfo.followState = 0
-        //     break
-        //   case '深度跟进':
-        //     this.businessInfo.followState = 1
-        //     break
-        //   case '已定未签':
-        //     this.businessInfo.followState = 2
-        //     break
-        //   case '已签订':
-        //     this.businessInfo.followState = 3
-        //     break
-        //   default:
-        //     this.businessInfo.followState = 4
-        // }
-
         this.projectInfo = data.business.projectImpls[0]
-        // console.log('projectInfo', projectInfo)
-        // switch (projectInfo.category) {
-        //   case '科技-智慧社区工程全委':
-        //     projectInfo.category = 0
-        //     break
-        //   case '科技-智慧社区改造':
-        //     projectInfo.category = 1
-        //     break
-        //   case '科技-物联网大平台':
-        //     projectInfo.category = 2
-        //     break
-        //   case '科技-设计服务':
-        //     projectInfo.category = 3
-        //     break
-        //   default:
-        //     projectInfo.category = 4
-        // }
-        // this.projectInfo = projectInfo
       }
     }
   },
