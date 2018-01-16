@@ -16,7 +16,7 @@
    <el-table-column prop="followPerson" label="项目跟进人"></el-table-column>
    <el-table-column prop="followState" label="商机跟进状态"></el-table-column>
    <el-table-column prop="executState" label="商机执行状态"></el-table-column>
-   <el-table-column prop="city.name" label="城市"></el-table-column>
+   <el-table-column prop="projectImpls[0].category" label="业务分类"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
@@ -32,16 +32,15 @@
 
 <script>
 import { winHeight } from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
   name: 'businessList',
   props: ['searchData'],
   data() {
     return {
       total: 5,
-      currentPage: 2,
+      currentPage: 1,
       pageSizes: [12, 15, 16],
-      pageSize: 12,
+      pageSize: 15,
       bussinessData: [
         {
           id: 14,
@@ -70,7 +69,7 @@ export default {
               developDate: '预计开发或发货时间',
               signDate: '预计合同签订时间',
               amount: '预计成交金额',
-              category: '科技-智慧社区工程全委'
+              category: 2
             }
           ]
         }
@@ -99,7 +98,7 @@ export default {
       arr.forEach((item) => {
         selArr.push(item.id)
       })
-      console.log('selArr', selArr)
+      // console.log('selArr', selArr)
       this.$emit('selData', selArr)
     },
     seeRow(row) {
@@ -108,7 +107,6 @@ export default {
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/bussiness/delete', projectID).then((res) => {
-        console.log('success', res)
         if (res.status === 200) {
           this.getProjectData()
         }
@@ -117,36 +115,86 @@ export default {
     editRow(id) {
       this.$get('/bussiness/findUpdateData/' + id).then((res) => {
         var data = res.data.data
-        console.log('data', data)
         this.$emit('editRow', data)
       })
     },
     getProjectData() {
-      this.$get('/bussiness').then((res) => {
-        var data = res.data.data
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      var url = '/bussiness?size=' + pageSize + '&page=' + page
+      this.$get(url).then((res) => {
         // console.log('res', res.data.data)
-        this.bussinessData = data.content
+        var data = res.data.data
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
+        this.bussinessData = data.content
+        this.bussinessData.forEach((item) => {
+          // 商机执行状态
+          switch (item.executState) {
+            case 0:
+              item.executState = '前期接洽'
+              break
+            case 1:
+              item.executState = '方案编制'
+              break
+            case 2:
+              item.executState = '投标'
+              break
+            case 3:
+              item.executState = '中标'
+              break
+            case 4:
+              item.executState = '合同会签'
+              break
+            default:
+              item.executState = '纸质版合同签订'
+          }
+          // 商机跟进状态
+          switch (item.followState) {
+            case 0:
+              item.followState = '浅度跟进'
+              break
+            case 1:
+              item.followState = '深度跟进'
+              break
+            case 2:
+              item.followState = '已定未签'
+              break
+            case 3:
+              item.followState = '已签订'
+              break
+            default:
+              item.followState = '放弃'
+          }
+          // 商机业务分类
+          switch (item.projectImpls[0].category) {
+            case 0:
+              item.projectImpls[0].category = '科技-智慧社区工程全委'
+              break
+            case 1:
+              item.projectImpls[0].category = '科技-智慧社区改造'
+              break
+            case 2:
+              item.projectImpls[0].category = '科技-物联网大平台'
+              break
+            case 3:
+              item.projectImpls[0].category = '科技-设计服务'
+              break
+            default:
+              item.projectImpls[0].category = '科技-技术服务'
+          }
+        })
       })
     },
     //  页码处理
     handleSizeChange(val) {
       this.pageSize = val
+      this.getProjectData()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      var page = val - 1
-      var url = '/bussiness?size=' + this.pageSize + '&page=' + page
-      this.$get(url).then((res) => {
-        console.log('res', res.data.data)
-        var data = res.data.data
-        this.bussinessData = data.content
-        this.total = data.totalElements
-        this.currentPage = data.number + 1
-        this.pageSize = data.size
-      })
+      this.getProjectData()
     }
   },
   computed: {}

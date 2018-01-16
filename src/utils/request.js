@@ -23,7 +23,7 @@ service.interceptors.request.use(
         'X-Token': token
       }
     }
-    console.log('config', config)
+    // console.log('config', config)
     return config
   }, error => {
   // Do something with request error

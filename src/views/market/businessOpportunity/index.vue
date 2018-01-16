@@ -31,7 +31,7 @@
   <div class="compotent-tab">
     <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
     <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
+    <SearchComponent v-if="tab === 'searchTab'"></SearchComponent>
   </div>
 </div>
 </template>
