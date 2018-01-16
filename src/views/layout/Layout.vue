@@ -60,6 +60,7 @@ export default {
 		overflow-y: scroll;
 		@include boxSizing;
 		@include scrolling;
+		margin:0 20px;
 	}
 	.hideSidebar .main-container {
 		left: 0;

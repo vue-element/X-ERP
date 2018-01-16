@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://10.51.22.56:8080', // api的base_url
+  baseURL: 'http://10.51.22.75:8080', // api的base_url
   timeout: 5000 // 请求超时时间
 })
 
@@ -23,7 +23,7 @@ service.interceptors.request.use(
         'X-Token': token
       }
     }
-
+    console.log('config', config)
     return config
   }, error => {
   // Do something with request error

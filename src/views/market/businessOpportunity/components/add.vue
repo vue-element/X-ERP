@@ -5,7 +5,7 @@
     <div class="form-inner">
       <!-- 基本信息 -->
       <div class="form-module">
-        <h4 smartCommunity-search>
+        <h4 class="module-title">
           <p>基础信息</p>
         </h4>
         <el-row :gutter="40">
@@ -90,7 +90,10 @@
           <el-col :xs="24" :sm="24" :lg="8">
             <div class="basic-item">
               <label>业务分类：</label>
-              <input type="text" v-model="projectInfo.category" placeholder="请输入">
+              <el-select v-model="projectInfo.category" placeholder="请选择">
+               <el-option v-for="item in projectCategoryList" :key="item.id" :label="item.value" :value="item.id">
+               </el-option>
+             </el-select>
             </div>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
@@ -193,27 +196,28 @@
           </el-col>
         </el-row>
       </div>
-      <div class="con-search-btn" @click="addData"><span>提  交</span></div>
+      <div class="common-btn" @click="addData"><span>提  交</span></div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import { winHeight, dateline } from '@/utils'
+import { dateline } from '@/utils'
 export default {
-  name: 'businessOpportunity-index',
+  name: 'businessOpportunityAdd',
+  props: ['editData'],
   data() {
     return {
       businessInfo: {
-        city: {},
-        client: {},
+        city: { id: 3 },
+        client: { id: 1 },
+        region: { id: 1 },
         projectImpls: [],
-        region: {},
         code: '编码',
         date: '单据日期',
-        executState: '',
-        followState: '',
+        executState: 2,
+        followState: 2,
         name: '商机名称',
         source: '商机来源',
         type: '商机类型',
@@ -221,21 +225,22 @@ export default {
         followPerson: '项目跟进人',
         chargePersonPhone: '业务线负责人 - 联系电话',
         followPersonPhone: '项目跟进人 - 联系电话',
-        oldCity: ''
+        oldCity: 3
       },
       projectInfo: {
         amount: '预计成交金额',
         bidDate: '投标日期',
         bidDate2: '方案投标日期',
-        category: '业务分类',
+        category: 2,
         developDate: '预计开发或发货时间',
         keyword: '项目关键信息',
         signDate: '预计合同签订时间',
         startDate: '总体项目开工时间'
       },
-      cityOption: [1],
+      cityOption: [0, 1, 3],
       regionList: [],
       cityList: [],
+      clientList: [],
       followStateList: [
         {
           id: 0,
@@ -275,29 +280,35 @@ export default {
           value: '纸质版合同签订'
         }
       ],
-      height: 100,
+      projectCategoryList: [
+        {
+          id: 0,
+          value: '科技-智慧社区工程全委'
+        }, {
+          id: 1,
+          value: '科技-智慧社区改造'
+        }, {
+          id: 2,
+          value: '科技-物联网大平台'
+        }, {
+          id: 3,
+          value: '科技-设计服务'
+        }, {
+          id: 4,
+          value: '科技-技术服务'
+        }
+      ],
       dateline: ''
     }
   },
   created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
     this.dateline = dateline()
-    console.log('dateline', this.dateline)
     this.getInsertData()
+    this.editTab()
   },
   mounted() {
-    this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    window.addEventListener('resize', () => {
-      this.$refs.ele.style.height = winHeight() - 180 + 'px'
-    })
   },
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-    },
     getInsertData() {
       this.$get('/bussiness/findInsertData').then((res) => {
         var data = res.data.data
@@ -312,14 +323,81 @@ export default {
     },
     addData() {
       this.businessInfo.oldCity = this.cityOption.join('-')
-      var bussinessObj = {
-        Business: this.businessInfo
-      }
-      bussinessObj.Business.projectImpls[0] = this.projectInfo
-      console.log('obj', bussinessObj)
-      this.$post('/bussiness/save', bussinessObj).then((res) => {
+      this.businessInfo.projectImpls = [this.projectInfo]
+      console.log('projectInfo', this.businessInfo)
+      this.$post('/bussiness/save', this.businessInfo).then((res) => {
         console.log('res', res)
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
       })
+    },
+    editTab() {
+      if (this.editData.tabState === 'editTab') {
+        var data = this.editData.editData
+        this.businessInfo = data.business
+        var cityOption = data.business.oldCity.split('-')
+        this.cityOption = []
+        cityOption.forEach((item) => {
+          this.cityOption.push(parseInt(item))
+        })
+        // switch (data.business.executState) {
+        //   case '前期接洽':
+        //     this.businessInfo.executState = 0
+        //     break
+        //   case '方案编制':
+        //     this.businessInfo.executState = 1
+        //     break
+        //   case '投标':
+        //     this.businessInfo.executState = 2
+        //     break
+        //   case '中标':
+        //     this.businessInfo.executState = 3
+        //     break
+        //   case '合同会签':
+        //     this.businessInfo.executState = 4
+        //     break
+        //   default:
+        //     this.businessInfo.executState = 5
+        // }
+
+        // switch (data.business.followState) {
+        //   case '浅度跟进':
+        //     this.businessInfo.followState = 0
+        //     break
+        //   case '深度跟进':
+        //     this.businessInfo.followState = 1
+        //     break
+        //   case '已定未签':
+        //     this.businessInfo.followState = 2
+        //     break
+        //   case '已签订':
+        //     this.businessInfo.followState = 3
+        //     break
+        //   default:
+        //     this.businessInfo.followState = 4
+        // }
+
+        var projectInfo = data.business.projectImpls[0]
+        switch (projectInfo.category) {
+          case '科技-智慧社区工程全委':
+            projectInfo.category = 0
+            break
+          case '科技-智慧社区改造':
+            projectInfo.category = 1
+            break
+          case '科技-物联网大平台':
+            projectInfo.category = 2
+            break
+          case '科技-设计服务':
+            projectInfo.category = 3
+            break
+          default:
+            projectInfo.category = 4
+        }
+        this.projectInfo = projectInfo
+      }
     }
   },
   computed: {}

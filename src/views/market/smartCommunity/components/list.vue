@@ -1,7 +1,7 @@
 <template>
 <div class="smartCommunity-list">
   <!-- <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable"> -->
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange">
     <el-table-column type="selection"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
@@ -117,9 +117,6 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    // this.$get('/project').then((res) => {
-    //   console.log('res', res.data)
-    // })
     this.getProjectData()
   },
   watch: {
@@ -136,7 +133,7 @@ export default {
       arr.forEach((item) => {
         selArr.push(item.id)
       })
-      // console.log('selArr', selArr)
+      console.log('selArr', selArr)
       this.$emit('selData', selArr)
     },
     seeRow(row) {

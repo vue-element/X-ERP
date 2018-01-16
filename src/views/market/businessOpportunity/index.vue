@@ -3,29 +3,25 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button @click="toggleTab('search')" :class="tab === 'search' ? 'is-active' : ''">
+        <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button @click="toggleTab('list')" :class="tab === 'list' ? 'is-active' : ''">
+        <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button @click="toggleTab('add')" :class="tab === 'add' ? 'is-active' : ''">
+        <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <!-- <button>
-          <i class="iconfont icon-edit"></i>
-          <span>修改</span>
-        </button> -->
-        <button v-show="tab === 'list'">
+        <button @click="delSelectData()" v-show="tab === 'listTab'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'list'">
+        <button v-show="tab === 'listTab'">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -33,9 +29,9 @@
     </div>
   </div>
   <div class="compotent-tab">
-    <AddComponent v-if="tab === 'add'" @add="add"></AddComponent>
-    <ListComponent v-if="tab === 'list'" :searchData="searchData"></ListComponent>
-    <SearchComponent v-if="tab === 'search'" @search="search"></SearchComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow"></ListComponent>
+    <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
   </div>
 </div>
 </template>
@@ -55,8 +51,9 @@ export default {
   data() {
     return {
       searchData: {},
-      tab: 'list',
-      height: 100
+      tab: 'listTab',
+      height: 100,
+      selArr: []
     }
   },
   mounted() {
@@ -74,15 +71,38 @@ export default {
     toggleTab(tab) {
       this.tab = tab
     },
-    search(searchData) {
-      console.log(111)
-      console.log(searchData)
-      this.tab = 'list'
-      this.searchData = searchData
+    // search(searchData) {
+    //   console.log(111)
+    //   console.log(searchData)
+    //   this.tab = 'list'
+    //   this.searchData = searchData
+    // },
+    selData(selArr) {
+      this.selArr = selArr
     },
-    add(searchData) {
-      this.tab = 'list'
-      this.searchData = searchData
+    addBtn() {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: {},
+        tabState: 'addTab'
+      }
+    },
+    delSelectData() {
+      if (this.selArr !== null) {
+        var id = { id: this.selArr }
+        console.log('id', id)
+        this.$post('/bussiness/delete', id).then((res) => {
+          console.log('res', res)
+        })
+      }
+    },
+    editRow(data) {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: data,
+        tabState: 'editTab'
+      }
+      // console.log('id', id)
     }
   },
   computed: {}

@@ -298,7 +298,7 @@
       </el-col>
     </el-row>
   </div>
-  <div class="con-search-btn" @click="add" :loading="loading">提交</div>
+  <div class="common-btn" @click="add" :loading="loading">提交</div>
 </div>
 </template>
 
@@ -421,14 +421,14 @@ export default {
   },
   methods: {
     add() {
-      this.$message({
-        message: '保存成功',
-        type: 'success'
-      })
       this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
       this.mainMsg.oldCity = this.cityOption.join('-')
+      console.log('mainMsg', this.mainMsg)
       this.$post('/project/save', this.mainMsg).then((res) => {
-        this.$message('保持成功')
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
       })
     },
     editTab() {
@@ -455,6 +455,7 @@ export default {
           }
         })
         var cityOption = data.project.oldCity.split('-')
+        this.cityOption = []
         cityOption.forEach((item) => {
           this.cityOption.push(parseInt(item))
         })

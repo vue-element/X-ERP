@@ -51,7 +51,7 @@
       </el-col>
     </el-row>
   </el-form>
-  <div class="con-search-btn" @click="search">查  询</div>
+  <div class="common-btn" @click="search">查  询</div>
 </div>
 </template>
 

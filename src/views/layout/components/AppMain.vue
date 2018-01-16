@@ -22,8 +22,3 @@ export default {
   }
 }
 </script>
-<style>
-.app-main {
-  margin:0 20px;
-}
-</style>

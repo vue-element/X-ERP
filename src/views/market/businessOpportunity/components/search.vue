@@ -93,7 +93,7 @@
             </div>
           </el-row>
         </el-form>
-        <div class="con-search-btn">查  询</div>
+        <div class="common-btn">查  询</div>
       </div>
     </div>
   </div>

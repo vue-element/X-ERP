@@ -1,2 +1,3 @@
-1.@src/store/modules/tagsView.js   
-  9、10行  通过拆分当前页面view.name，保持name不变。页面路由变化，visitedViews标签数组集合不会新增，
+1.文件夹多单词命名 用小驼峰
+2.组件多单词命名 用小驼峰
+3.class 多单词命名 用‘-’连接

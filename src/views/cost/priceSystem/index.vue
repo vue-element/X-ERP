@@ -15,13 +15,25 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
+        <button>
+          <i class="iconfont icon-edit"></i>
+          <span>修改</span>
+        </button>
         <button @click="delSelectData()" v-show="tab === 'listTab'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
       </div>
-      <div class="export-btn fr">
-        <button v-show="tab === 'listTab'">
+      <div class="export-btn fr" v-show="tab === 'listTab'">
+        <button>
+          <i class="iconfont icon-export"></i>
+          <span>数据导入</span>
+        </button>
+        <button>
+          <i class="iconfont icon-export"></i>
+          <span>模版下载</span>
+        </button>
+        <button>
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -53,7 +65,7 @@ export default {
       searchData: {},
       editData: {},
       listData: '',
-      tab: 'listTab',
+      tab: 'addTab',
       selArr: [],
       height: 100
     }

@@ -1,22 +1,22 @@
 <template>
 <div class="bussiness-list">
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+  <el-table class="basic-form" style="width: 100%"  :data="bussinessData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
     <el-table-column type="selection"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
        {{scope.$index  + 1}}
      </template>
    </el-table-column>
-   <el-table-column prop="1" fixed label="公司名称"></el-table-column>
-   <el-table-column prop="2" fixed label="办事处"></el-table-column>
-   <el-table-column prop="region.name" fixed label="地区"></el-table-column>
-   <el-table-column prop="name" fixed label="项目名称"></el-table-column>
-   <el-table-column prop="archFormat" label="建筑业态" sortable></el-table-column>
-   <el-table-column prop="builtArea" label="总建筑面积" sortable></el-table-column>
-   <el-table-column prop="chargeArea" label="总收费面积"></el-table-column>
-   <el-table-column prop="roomNum" label="总户数"></el-table-column>
-   <el-table-column prop="parkingNum" label="车位总数"></el-table-column>
-   <el-table-column prop="contractMode" label="合约模式"></el-table-column>
+   <el-table-column prop="code" fixed label="编码"></el-table-column>
+   <el-table-column prop="name" fixed label="商机名称"></el-table-column>
+   <el-table-column prop="type" fixed label="商机类型"></el-table-column>
+   <el-table-column prop="source" fixed label="商机来源"></el-table-column>
+   <el-table-column prop="date" label="单据日期" sortable></el-table-column>
+   <el-table-column prop="chargePerson" label="业务线负责人" sortable></el-table-column>
+   <el-table-column prop="followPerson" label="项目跟进人"></el-table-column>
+   <el-table-column prop="followState" label="商机跟进状态"></el-table-column>
+   <el-table-column prop="executState" label="商机执行状态"></el-table-column>
+   <el-table-column prop="city.name" label="城市"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
@@ -42,74 +42,40 @@ export default {
       currentPage: 2,
       pageSizes: [12, 15, 16],
       pageSize: 12,
-      projectData: [{
-        1: '2017001176',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000'
-      }],
-      height: 100,
-      oldCity: ''
+      bussinessData: [
+        {
+          id: 14,
+          code: '编码',
+          name: '商机名称',
+          date: '单据日期',
+          type: '商机类型',
+          source: '商机来源',
+          chargePerson: '业务线负责人',
+          chargePersonPhone: '业务线负责人 - 联系电话',
+          followPerson: '项目跟进人',
+          followPersonPhone: '项目跟进人 - 联系电话',
+          followState: '已定未签',
+          executState: '合同会签',
+          region: {},
+          city: {},
+          client: {},
+          oldCity: '0-1-3',
+          projectImpls: [
+            {
+              id: 14,
+              keyword: '项目关键信息',
+              bidDate: '投标日期',
+              bidDate2: '方案投标日期',
+              startDate: '总体项目开工时间',
+              developDate: '预计开发或发货时间',
+              signDate: '预计合同签订时间',
+              amount: '预计成交金额',
+              category: '科技-智慧社区工程全委'
+            }
+          ]
+        }
+      ],
+      height: 100
     }
   },
   created() {
@@ -117,9 +83,6 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    // this.$get('/project').then((res) => {
-    //   console.log('res', res.data)
-    // })
     this.getProjectData()
   },
   watch: {
@@ -136,7 +99,7 @@ export default {
       arr.forEach((item) => {
         selArr.push(item.id)
       })
-      // console.log('selArr', selArr)
+      console.log('selArr', selArr)
       this.$emit('selData', selArr)
     },
     seeRow(row) {
@@ -154,14 +117,15 @@ export default {
     editRow(id) {
       this.$get('/bussiness/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        console.log('data', data)
         this.$emit('editRow', data)
       })
     },
     getProjectData() {
       this.$get('/bussiness').then((res) => {
-        console.log('res', res.data.data)
         var data = res.data.data
-        this.projectData = data.content
+        // console.log('res', res.data.data)
+        this.bussinessData = data.content
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
@@ -174,11 +138,11 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       var page = val - 1
-      var url = '/project?size=' + this.pageSize + '&page=' + page
+      var url = '/bussiness?size=' + this.pageSize + '&page=' + page
       this.$get(url).then((res) => {
-        // console.log('res', res.data.data)
+        console.log('res', res.data.data)
         var data = res.data.data
-        this.projectData = data.content
+        this.bussinessData = data.content
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
