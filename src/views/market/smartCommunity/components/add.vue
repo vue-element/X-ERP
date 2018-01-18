@@ -51,9 +51,10 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6">
-        <div class="basic-item">
+        <div class="basic-item single-date">
           <label>首期入伙时间：</label>
-          <input type="text" v-model="mainMsg.firstEntry">
+          <!-- <input type="text" v-model="mainMsg.firstEntry"> -->
+          <el-date-picker v-model="mainMsg.firstEntry" type="date" placeholder="选择日期" default-value="defaultDate"></el-date-picker>
         </div>
       </el-col>
     </el-row>
@@ -165,19 +166,19 @@
       <el-col :xs="12" :sm="12" :lg="10">
         <div class="basic-item radio-sel">
           <label>小区类型：</label>
-          <ul>
-            <li><input type="radio" name="type" label="closeType"><span>封闭式小区</span></li>
-            <li><input type="radio" name="type" label="openType"><span>开放式小区</span></li>
-          </ul>
+          <el-radio-group v-model="mainMsg.communityType">
+            <el-radio :label="'0'">封闭式小区</el-radio>
+            <el-radio :label="'1'">开放式小区</el-radio>
+          </el-radio-group>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item radio-sel">
           <label>合约模式：</label>
-          <ul>
-            <li><input type="radio" name="model" label="Remuneration"><span>酬金制</span></li>
-            <li><input type="radio" name="model" label="Contract"><span>包干制</span></li>
-          </ul>
+          <el-radio-group v-model="mainMsg.contractMode">
+            <el-radio :label="'0'">酬金制</el-radio>
+            <el-radio :label="'1'">包干制</el-radio>
+          </el-radio-group>
         </div>
       </el-col>
     </el-row>
@@ -185,14 +186,14 @@
       <el-col :xs="24" :sm="24" :lg="16">
         <div class="basic-item radio-sel">
           <label>小区配套设施：</label>
-          <ul>
-            <li><input type="radio" name="facilities" label="company"><span>公司</span></li>
-            <li><input type="radio" name="facilities" label="club"><span>会所</span></li>
-            <li><input type="radio" name="facilities" label="court"><span>球场</span></li>
-            <li><input type="radio" name="facilities" label="rockery"><span>假山</span></li>
-            <li><input type="radio" name="facilities" label="pool"><span>泳池</span></li>
-            <li><input type="radio" name="facilities" label="lake"><span>人工湖</span></li>
-          </ul>
+          <el-radio-group v-model="mainMsg.facility">
+            <el-radio :label="'0'">公司</el-radio>
+            <el-radio :label="'1'">会所</el-radio>
+            <el-radio :label="'2'">球场</el-radio>
+            <el-radio :label="'3'">假山</el-radio>
+            <el-radio :label="'4'">泳池</el-radio>
+            <el-radio :label="'5'">人工湖</el-radio>
+          </el-radio-group>
         </div>
       </el-col>
     </el-row>
@@ -298,20 +299,21 @@
       </el-col>
     </el-row>
   </div>
-  <div class="common-btn" @click="add" :loading="loading">提交</div>
+  <el-button  @click="add" :loading="loading">提交</el-button>
 </div>
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, parseTime } from '@/utils'
 export default {
   name: 'smartCommunityAdd',
   props: ['editData'],
   data() {
     return {
-      loading: true,
+      loading: false,
       tab: 'car',
-      cityOption: [1],
+      defaultDate: '2018-01-17',
+      cityOption: [0, 1, 3],
       regionList: [
         {
           id: 1,
@@ -341,9 +343,9 @@ export default {
       ],
       cityList: [],
       mainMsg: {
-        city: {},
-        region: {},
-        client: {},
+        city: { id: 3 },
+        client: { id: 1 },
+        region: { id: 1 },
         address: '项目地址',
         archFormat: '建筑业态',
         basementParkingFee: '地库车位收费标准',
@@ -352,12 +354,12 @@ export default {
         builtArea: '总建筑面积',
         carRatio: '车位比',
         chargeArea: '总收费面积',
-        communityType: '小区类型',
-        contractMode: '合约模式',
+        communityType: '0',
+        contractMode: '0',
+        facility: '0',
         defenseParkingFee: '人防车位收费标准',
         defenseParkingNum: '人防车位数量',
-        facility: '小区配套',
-        firstEntry: '首期入伙时间',
+        firstEntry: '2018-01-17',
         groundParkingFee: '地面车位收费标准',
         groundParkingNum: '地面车位数量',
         landArea: '土地面积',
@@ -423,6 +425,7 @@ export default {
     add() {
       this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
       this.mainMsg.oldCity = this.cityOption.join('-')
+      this.mainMsg.firstEntry = parseTime(this.mainMsg.firstEntry, '{y}-{m}-{d}')
       console.log('mainMsg', this.mainMsg)
       this.$post('/project/save', this.mainMsg).then((res) => {
         this.$message({
@@ -433,7 +436,6 @@ export default {
     },
     editTab() {
       if (this.editData.tabState === 'editTab') {
-        console.log('editTab')
         var data = this.editData.editData
         this.mainMsg = data.project
         data.project.projectDesigns.forEach((item) => {
@@ -507,29 +509,13 @@ export default {
           max-width: 100px;
           line-height: 30px;
         }
-        ul {
+        .el-radio-group {
           @include flex;
           justify-content: space-around;
           width: 62%;
           height: 30px;
           background-color: #f8f8f8;
           @include borderRadius(4px);
-          li {
-            height: 30px;
-            line-height: 30px;
-            // margin-right: 30px;
-            input {
-              display: inline-block;
-              vertical-align: center;
-              width: auto;
-              height: auto;
-              margin-right: 4px;
-            }
-            span {
-              display: inline-block;
-              vertical-align: center;
-            }
-          }
         }
       }
     }
@@ -560,7 +546,7 @@ export default {
     .basic-item {
       .el-select,
       .el-cascader{
-        width: 66%;
+        width: 62%;
         input {
           width: 100%;
           height: 34px;

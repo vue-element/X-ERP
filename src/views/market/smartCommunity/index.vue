@@ -3,11 +3,11 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
@@ -15,7 +15,7 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button @click="delSelectData()" v-show="tab === 'listTab'">
+        <button v-show="tab === 'listTab'" @click="delSelectData">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -30,8 +30,8 @@
   </div>
   <div class="compotent-tab" >
     <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'"></SearchComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow" :searchData="searchData" ref="del"></ListComponent>
+    <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>
@@ -89,6 +89,12 @@ export default {
         console.log('id', id)
         this.$post('/project/delete', id).then((res) => {
           console.log('res', res)
+          // console.log(this.$refs.del)
+          this.$refs.del.getProjectData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
         })
       }
     },
@@ -99,6 +105,11 @@ export default {
         tabState: 'editTab'
       }
       // console.log('id', id)
+    },
+    searchWord(data) {
+      // console.log('searchWord', data)
+      this.tab = 'listTab'
+      this.searchData = data
     }
   },
   computed: {}

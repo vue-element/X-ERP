@@ -206,7 +206,7 @@ a {
         }
       }
       //日期样式
-      .basic-item.basic-date {
+      .basic-item.range-date {
         .el-date-editor{
           padding: 0;
           width: 62%;
@@ -236,6 +236,21 @@ a {
           .el-range-separator{
             width: 6%;
             padding:0 2px;
+            vertical-align: middle;
+          }
+        }
+      }
+      .basic-item.single-date {
+        .el-date-editor {
+          width: 62%;
+          input.el-input__inner {
+            width: 100%;
+            padding-left: 30px!important;
+            color: #000;
+            // vertical-align: middle;
+          }
+          .el-icon-date{
+            width: 10%;
             vertical-align: middle;
           }
         }
@@ -301,20 +316,22 @@ a {
   }
 }
 .common-btn {
+  @include borderRadius(4px);
+  @include boxSizing;
   margin: 20px auto;
-  // margin-left: 50%;
-  width: 80px;
+  padding: 0 10px;
+  margin-right: 20px;
+  width: auto;
+  min-width: 80px;
   height: 30px;
   line-height: 30px;
-  @include borderRadius(4px);
   background-color: #35d5ba;
   border: 1px solid #35d5ba;
   text-align: center;
   color: #fff;
   font-size: 14px;
-  // span{
-  //   display: inline-block;
-  //   margin: 0 auto;
-  //   letter-spacing:8px;
-  // }
+}
+.common-btn-group {
+  width: 100%;
+  text-align: center;
 }

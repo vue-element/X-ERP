@@ -8,8 +8,8 @@
        {{scope.$index  + 1}}
      </template>
    </el-table-column>
-   <el-table-column prop="1" fixed label="公司名称"></el-table-column>
-   <el-table-column prop="2" fixed label="办事处"></el-table-column>
+   <el-table-column prop="client.name" fixed label="公司名称"></el-table-column>
+   <el-table-column prop="city.name" fixed label="城市"></el-table-column>
    <el-table-column prop="region.name" fixed label="地区"></el-table-column>
    <el-table-column prop="name" fixed label="项目名称"></el-table-column>
    <el-table-column prop="archFormat" label="建筑业态" sortable></el-table-column>
@@ -40,84 +40,24 @@ export default {
   data() {
     return {
       total: 5,
-      currentPage: 2,
+      currentPage: 1,
       pageSizes: [12, 15, 16],
-      pageSize: 12,
-      projectData: [{
-        1: '2017001176',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000'
-      }],
+      pageSize: 15,
+      projectData: [],
       height: 100
     }
   },
   created() {
+    console.log('searchData', this.searchData)
+    if (this.searchData.name) {
+      this.getSearchData()
+    } else {
+      this.getProjectData()
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getProjectData()
   },
   watch: {
     searchData(val, oldVal) {
@@ -155,8 +95,22 @@ export default {
       })
     },
     getProjectData() {
-      this.$get('/project').then((res) => {
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      var url = '/project?size=' + pageSize + '&page=' + page
+      this.$get(url).then((res) => {
         console.log('res', res.data.data)
+        var data = res.data.data
+        this.projectData = data.content
+        this.total = data.totalElements
+        this.currentPage = data.number + 1
+        this.pageSize = data.size
+      })
+    },
+    getSearchData() {
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      this.$post('/project/search?size=' + pageSize + '&page=' + page, this.searchData, false).then((res) => {
         var data = res.data.data
         this.projectData = data.content
         this.total = data.totalElements
@@ -167,19 +121,19 @@ export default {
     //  页码处理
     handleSizeChange(val) {
       this.pageSize = val
+      if (this.searchData.name) {
+        this.getSearchData()
+      } else {
+        this.getProjectData()
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      var page = val - 1
-      var url = '/project?size=' + this.pageSize + '&page=' + page
-      this.$get(url).then((res) => {
-        console.log('res', res.data.data)
-        var data = res.data.data
-        this.projectData = data.content
-        this.total = data.totalElements
-        this.currentPage = data.number + 1
-        this.pageSize = data.size
-      })
+      if (this.searchData.name) {
+        this.getSearchData()
+      } else {
+        this.getProjectData()
+      }
     }
   },
   computed: {}
