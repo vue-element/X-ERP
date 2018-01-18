@@ -107,8 +107,12 @@ export default {
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/bussiness/delete', projectID).then((res) => {
-        if (res.status === 200) {
+        if (res.data.success === true) {
           this.getProjectData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
         }
       })
     },

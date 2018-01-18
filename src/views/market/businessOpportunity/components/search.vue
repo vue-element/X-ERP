@@ -50,7 +50,7 @@
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>城市：</label>
-              <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+              <el-cascader :options="cityList" :show-all-levels="false" v-model="filterData.cityOption" @change="cityChange"></el-cascader>
             </div>
           </el-col>
         </el-row>
@@ -85,14 +85,14 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item basic-date">
+            <div class="basic-item range-date">
               <label>修改日期：</label>
               <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
               </el-date-picker>
             </div>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item basic-date">
+            <div class="basic-item range-date">
               <label>所属年月：</label>
               <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
               </el-date-picker>
@@ -150,7 +150,8 @@ export default {
         city: {},
         chargePerson: '业务线负责人',
         date: '单据日期',
-        name: '商机名称'
+        name: '商机名称',
+        cityOption: [0, 1, 3]
       },
       msg: {
         1: 1
@@ -173,10 +174,15 @@ export default {
       this.$get('/bussiness/findInsertData').then((res) => {
         var data = res.data.data
         this.cityList = data.cityList
-        console.log('data', this.cityList)
+        // console.log('data', this.cityList)
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+    },
+    cityChange(val) {
+      console.log('val', val)
+      var len = val.length
+      this.filterData.city.id = val[len - 1]
     }
   },
   computed: {}
