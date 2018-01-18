@@ -3,6 +3,7 @@
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同分包附件列表</p>
+        <div class="up-files common-btn">附件上传</div>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
@@ -15,7 +16,12 @@
           <el-table-column align="center" prop="2" label="附件说明"></el-table-column>
           <el-table-column align="center" prop="3" label="上传人"></el-table-column>
           <el-table-column align="center" prop="4" label="上传时间"></el-table-column>
-          <el-table-column align="center" prop="5" label="操作"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
@@ -68,5 +74,16 @@ export default {
 .subContract-container.form-container{
   border:none;
   margin:0;
+  .list.form-module{
+    margin-bottom:0;
+    .module-title{
+      position:relative;
+      .up-files{
+        position:absolute;
+        top:-20px;
+        right:0;
+      }
+    }
+  }
 }
 </style>
