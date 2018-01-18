@@ -33,7 +33,7 @@
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同交底附件列表</p>
-        <div class="up-files common-btn">附件上传</div>
+        <el-button class="up-files common-btn" type="text" @click="upFiles">附件上传</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
@@ -76,11 +76,6 @@ export default {
         3: '罗艺',
         4: '2018-01-12'
       }, {
-        1: '附件3：长春中海国际社区智能化合同交底说明书.doc',
-        2: '附件说明',
-        3: '罗艺',
-        4: '2018-01-12'
-      }, {
         1: '附件4：长春中海国际社区智能化合同交底说明书.doc',
         2: '附件说明',
         3: '罗艺',
@@ -88,21 +83,6 @@ export default {
       },
       {
         1: '附件4：长春中海国际社区合同交底记录-国社.doc',
-        2: '附件说明',
-        3: '罗艺',
-        4: '2018-01-12'
-      }, {
-        1: '附件5：长春中海国际社区智能化工程设备采购粮单.xls',
-        2: '附件说明',
-        3: '罗艺',
-        4: '2018-01-12'
-      }, {
-        1: '附件6：长春中海国际社区智能化合同交底说明书.doc',
-        2: '附件说明',
-        3: '罗艺',
-        4: '2018-01-12'
-      }, {
-        1: '附件7：长春中海国际社区智能化合同交底说明书.doc',
         2: '附件说明',
         3: '罗艺',
         4: '2018-01-12'
@@ -120,6 +100,28 @@ export default {
   methods: {
     resize() {
       this.height = winHeight() - 533
+    },
+    upFiles() {
+      var html = '<div class="upFiles">' +
+                  '<div class="item">' +
+                    '<label>附件说明：</label>' +
+                    '<textarea rows="3" cols="20"></textarea>' +
+                  '</div>' +
+                  '<div class="item">' +
+                    '<label>上传人：</label>' +
+                    '<input type="text">' +
+                  '</div>' +
+                  '<div class="item">' +
+                    '<label>上传时间：</label>' +
+                    '<input type="text">' +
+                  '</div>' +
+                  '<div class="item">' +
+                    '<label>添加附件：</label>' +
+                  '</div>' +
+                '</div>'
+      this.$alert(html, '合同交底附件上传', {
+        dangerouslyUseHTMLString: true
+      })
     }
   }
 }
@@ -170,11 +172,73 @@ export default {
     .module-title{
       position:relative;
       .up-files{
+        background-color:#35d5ba;
+        color:white;
+        line-height:0;
         position:absolute;
         top:-20px;
         right:0;
+      }
+      .up-files:hover{
+        background-color:#35d5ba;
+        color:white;
       }
     }
   }
 }
 </style>
+<style rel="stylesheet/scss" lang="scss">
+@import 'src/styles/mixin.scss';
+.el-message-box__wrapper{
+  .el-message-box{
+    width:50%;
+    background-color:red;
+    .el-message-box__content{
+      .el-message-box__message{
+        padding-left:70px;
+        p{
+          .upFiles{
+            .item{
+              margin-bottom:20px;
+              label{
+                color: #000;
+                width: 10%;
+                line-height: 16px;
+                word-wrap: break-word;
+                font-size: 14px;
+                vertical-align:middle;
+                display:inline-block;
+                text-align:right;
+                margin-right:5px;
+              }
+              input{
+                width: 50%;
+                height: 32px;
+                border: 1px solid #828282;
+                @include borderRadius(4px);
+                text-indent: 12px;
+                vertical-align:middle;
+              }
+              textarea{
+                width: 50%;
+                min-height:20%;
+                border: 1px solid #828282;
+                @include borderRadius(4px);
+                text-indent:2px;
+                vertical-align:middle;
+              }
+            }
+            .item:first-child{
+              margin-top:40px;
+              label{
+                vertical-align:top;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+
