@@ -3,7 +3,7 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="searchItem('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="search('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
@@ -11,17 +11,17 @@
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="addItem('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button @click="add('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <button @click="delItem('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
+          <button @click="del('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
             <i class="iconfont icon-delete"></i>
             <span>删除</span>
           </button>
         </div>
         <div class="export-btn fr">
-          <button>
+          <button @click="dataExport">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -54,21 +54,20 @@ export default {
   mounted() {},
   created() {},
   methods: {
-    // 搜索条件
-    searchItem(tab) {
+    search(tab) {
       this.tab = tab
     },
-    // 查看明细
     show(tab) {
       this.tab = tab
     },
-    // 新增
-    addItem(tab) {
+    add(tab) {
       this.tab = tab
     },
-    // 删除
-    delItem(tab) {
+    del(tab) {
       this.tab = tab
+    },
+    dataExport() {
+      alert(123)
     }
   },
   computed: {}

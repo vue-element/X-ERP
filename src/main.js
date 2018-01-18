@@ -29,6 +29,26 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// 路由截获
+// router.beforeEach((to, from, next) => {
+//   const token = getCookie('privarytoken')
+//   if(to.name == "login"){
+//     next();
+//   }else{
+//     if(token !==null){
+//       next()
+//     }else{
+//       setSession("direct", location.href) //保存重定向之前的地址
+//       router.push({
+//         path: '/login',
+//       })
+//       next();
+//     }
+//   }
+//   console.log(to.path)
+//   next()
+// })
+
 new Vue({
   el: '#app',
   router,

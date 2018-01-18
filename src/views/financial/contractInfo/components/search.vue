@@ -1,51 +1,63 @@
 <template>
-  <div class="search-container form-container">
+  <div class="contractInfo-search form-container">
     <div class="form-module">
       <h4 class="module-title">
-        <p>查询条件</p>
+        <p>查询条件:</p>
       </h4>
-      <el-form ref="form" :model="form">
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
-            <div class="item">
-              <label>合同名称：</label>
-              <input type="text">
-            </div>
-          </el-col>
-
-          <el-col :xs="24" :sm="12" :lg="8">
-            <div class="item">
-              <label>合同编号：</label>
-              <input type="text">
-            </div>
-          </el-col>
-
-          <el-col :xs="24" :sm="12" :lg="8">
-            <div class="item">
-              <label>签订日期：</label>
-              <input type="text">
-            </div>
-          </el-col>
-
-          <el-col class="area" :xs="24" :sm="12" :lg="8">
-            <label>所属区域：</label>
-            <el-select v-model="form.region">
-              <el-option label="深圳办事处" value="shanghai"></el-option>
-              <el-option label="华南办事处" value="beijing"></el-option>
-              <el-option label="西北办事处" value="beijing"></el-option>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item">
+            <label>合同名称：</label>
+            <input type="text">
+          </div>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item">
+            <label>合同编码：</label>
+            <input type="text">
+          </div>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item">
+            <label>业务分类：</label>
+            <el-select v-model="value" placeholder="请选择">
+              <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-          </el-col>
-
-          <el-col :xs="24" :sm="12" :lg="8">
-            <div class="item">
-              <label>签订日期：</label>
-              <input type="text">
-            </div>
-          </el-col>
-        </el-row>
-      </el-form>
+          </div>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item basic-date">
+            <label>合同所属年月：</label>
+            <el-date-picker v-model="value1" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item basic-date">
+            <label>签订时间：</label>
+            <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+            </el-date-picker>
+          </div>
+        </el-col>
+         <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item">
+            <label>所属区域：</label>
+            <el-select v-model="value3" placeholder="请选择">
+              <el-option v-for="item in region" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </div>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="8">
+          <div class="basic-item">
+            <label>是否执行结束：</label>
+            <el-select v-model="value4" placeholder="请选择">
+              <el-option v-for="item in isExecute" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </div>
+        </el-col>
+      </el-row>
+      <div class="common-btn">查  询</div>
     </div>
-    <div class="common-btn" @click="search">查  询</div>
   </div>
 </template>
 
@@ -53,59 +65,43 @@
 export default {
   data() {
     return {
-      form: {
-        region: ''
-      }
+      value: '',
+      value1: '',
+      value2: '',
+      value3: '',
+      value4: '',
+      categoryList: [],
+      clientList: [],
+      region: [],
+      isExecute: [{
+        value: '1',
+        label: '是'
+      }, {
+        value: '2',
+        label: '否'
+      }]
     }
   },
+  created() {
+
+  },
   methods: {
-    search() {
-      this.$refs.form.validate(function(res) {
-        console.log(res)
-      })
-    }
-  }
+
+  },
+  computed: {}
 }
 </script>
 
-<style ref="stylesheet/scss" lang="scss" scope>
+<style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.search-container.form-container{
+.contractInfo-search.form-container{
   .form-module{
     .el-row{
       margin-bottom:10px;
       .el-col{
         .item {
           margin-top: 20px;
-          label {
-            color: #000;
-            width: 18%;
-            line-height: 16px;
-            word-wrap: wrap;
-            font-size: 14px;
-            vertical-align:middle;
-            display:inline-block;
-          }
-          input {
-            width: 50%;
-            height: 32px;
-            border: 1px solid #828282;
-            @include borderRadius(4px);
-            text-indent: 12px;
-            vertical-align:middle;
-          }
         }
-      }
-    }
-    .area{
-      margin-top:20px;
-      input{
-        width: 100%;
-        height: 32px;
-        border: 1px solid #828282;
-        @include borderRadius(4px);
-        text-indent: 12px;
-        vertical-align:middle;
       }
     }
   }

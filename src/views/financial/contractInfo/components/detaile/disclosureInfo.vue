@@ -46,7 +46,12 @@
           <el-table-column align="center" prop="2" label="附件说明"></el-table-column>
           <el-table-column align="center" prop="3" label="上传人"></el-table-column>
           <el-table-column align="center" prop="4" label="上传时间"></el-table-column>
-          <el-table-column align="center" prop="5" label="操作"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
   :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
@@ -114,7 +119,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 478
+      this.height = winHeight() - 533
     }
   }
 }
@@ -125,7 +130,6 @@ export default {
 .disclosure-info-container.form-container{
   border:none;
   margin:0;
-  padding-top:0;
   .inp.form-module{
     .el-row{
       margin-bottom:10px;
@@ -134,12 +138,13 @@ export default {
           margin-top: 20px;
           label {
             color: #000;
-            width: 35%;
+            width: 38%;
             line-height: 16px;
             word-wrap: wrap;
             font-size: 14px;
             vertical-align:middle;
             display:inline-block;
+            text-align:right;
           }
           input {
             width: 50%;
