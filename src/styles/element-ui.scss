@@ -262,3 +262,55 @@
     }
   }
 }
+
+.el-message-box__wrapper{
+  .el-message-box{
+    background-color:white !important;
+    width:50%;
+    .el-message-box__content{
+      .el-message-box__message{
+        padding-left:70px;
+        p{
+          .upFiles{
+            .item{
+              margin-bottom:20px;
+              label{
+                color: #000;
+                width: 10%;
+                line-height: 16px;
+                word-wrap: break-word;
+                font-size: 14px;
+                vertical-align:middle;
+                display:inline-block;
+                text-align:right;
+                margin-right:5px;
+              }
+              input{
+                width: 50%;
+                height: 32px;
+                border: 1px solid #828282;
+                @include borderRadius(4px);
+                text-indent: 12px;
+                vertical-align:middle;
+              }
+              textarea{
+                width: 50%;
+                border: 1px solid #828282;
+                text-indent: 12px;
+                padding-top: 5px;
+                @include borderRadius(4px);
+                resize: both;
+              }
+            }
+            .item:first-child{
+              margin-top:40px;
+              label{
+                vertical-align:top;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
