@@ -2,9 +2,34 @@
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
   <div class='project-msg basic-info form-module'>
-    <h4 class="module-title">
-      <p>项目基础信息</p>
-    </h4>
+    <el-form class="project-msg basic-info form-module" :model="mainMsg" :rules="mainMsgRules" ref="ele">
+      <h4 class="module-title">
+        <p>项目基础信息</p>
+      </h4>
+      <el-row :gutter="40" class="select-row">
+        <el-col :xs="24" :sm="24" :lg="12">
+          <el-form-item class="basic-item customer-info" label="客户信息：">
+            <el-select v-model="mainMsg.client.id" placeholder="请选择">
+             <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+             </el-option>
+           </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="6">
+          <el-form-item class="basic-item" label="区域：">
+            <el-select v-model="mainMsg.region.id" placeholder="请选择">
+             <el-option v-for="item in regionList" :key="item.id" :label="item.name" :value="item.id">
+             </el-option>
+           </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="6">
+          <el-form-item class="basic-item" label="城市：">
+            <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-row :gutter="40" class="select-row">
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="basic-item customer-info">

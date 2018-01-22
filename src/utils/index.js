@@ -36,7 +36,7 @@ export function parseTime(time, cFormat) {
 
 export function dateline() {
   var date = new Date()
-  var dateline = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (('0' + date.getDate()).substr(-2))
+  var dateline = date.getFullYear() + '-' + (('0' + date.getMonth() + 1)).substr(-2) + '-' + (('0' + date.getDate()).substr(-2))
   return dateline
 }
 

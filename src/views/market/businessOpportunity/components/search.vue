@@ -12,19 +12,20 @@
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>商机名称：</label>
-              <input type="text"  placeholder="请输入">
+              <input type="text"  placeholder="请输入" v-model="searchData.name">
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <div class="basic-item range-date">
+              <label>单据日期：</label>
+              <el-date-picker v-model="searchData.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
+              </el-date-picker>
             </div>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>商机编码：</label>
-              <input type="text"  placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
-              <label>审核状态：</label>
-              <input type="text"  placeholder="请输入">
+              <label>业务分线负责人：</label>
+              <input type="text"  placeholder="请输入" v-model="searchData.chargePerson">
             </div>
           </el-col>
         </el-row>
@@ -32,7 +33,7 @@
           <el-col :xs="24" :sm="24" :lg="8">
             <div class="basic-item customer-info">
               <label>客户信息：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
+              <el-select placeholder="请选择" v-model="client.id" >
                <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -41,7 +42,7 @@
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>区域：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
+              <el-select placeholder="请选择"  v-model="region.id">
                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -50,89 +51,14 @@
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
               <label>城市：</label>
-              <el-cascader :options="cityList" :show-all-levels="false" v-model="filterData.cityOption" @change="cityChange"></el-cascader>
+              <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item customer-info">
-              <label>业务分类：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
-               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item customer-info">
-              <label>商机跟进状态：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
-               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
-              <label>商机执行状态：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
-               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item range-date">
-              <label>修改日期：</label>
-              <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
-              </el-date-picker>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item range-date">
-              <label>所属年月：</label>
-              <el-date-picker v-model="value" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期" default-value="2017-01-01">
-              </el-date-picker>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
-              <label>单据日期：</label>
-              <input type="text"  placeholder="请输入">
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item customer-info">
-              <label>关联合同：</label>
-              <el-select v-model="msg.id" placeholder="请选择">
-               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
-              <label>业务分线负责人：</label>
-              <input type="text"  placeholder="请输入">
-            </div>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <div class="el-form-item money-item">
-              <label class="el-form-item__label">金额：</label>
-              <div class="el-form-item__content">
-                <input placeholder="0">
-                <span>~</span>
-                <input placeholder="0">
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-        <div class="common-btn">查  询</div>
+        <div class="commont-btn">
+          <el-button @click="search">查  询</el-button>
+          <el-button @click="searchAll">查询所有</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -140,30 +66,26 @@
 </template>
 
 <script>
+import { parseTime } from '@/utils'
 export default {
   name: 'businessOpportunitySearch',
   data() {
     return {
-      filterData: {
-        region: {},
-        client: {},
-        city: {},
+      searchData: {
+        region_id: 1,
+        client_id: 1,
+        city_id: 3,
         chargePerson: '业务线负责人',
-        date: '单据日期',
-        name: '商机名称',
-        cityOption: [0, 1, 3]
+        date: '',
+        name: '商机名称'
       },
-      msg: {
-        1: 1
-      },
-      form: {
-        region: '',
-        name: ''
-      },
-      value: '',
       clientList: [],
       cityList: [],
-      regionList: []
+      regionList: [],
+      region: { id: 1 },
+      client: { id: 1 },
+      city: { id: 3 },
+      cityOption: [0, 1, 3]
     }
   },
   created() {
@@ -174,7 +96,6 @@ export default {
       this.$get('/bussiness/findInsertData').then((res) => {
         var data = res.data.data
         this.cityList = data.cityList
-        // console.log('data', this.cityList)
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
@@ -182,7 +103,22 @@ export default {
     cityChange(val) {
       console.log('val', val)
       var len = val.length
-      this.filterData.city.id = val[len - 1]
+      this.city.id = val[len - 1]
+    },
+    search() {
+      if (this.searchData.date) {
+        this.searchData.date = parseTime(this.searchData.date[0], '{y}-{m}-{d}')
+      } else {
+        this.searchData.date = ''
+      }
+      this.searchData.region_id = this.region.id
+      this.searchData.client_id = this.client.id
+      this.searchData.city_id = this.city.id
+      this.$emit('searchWord', this.searchData)
+    },
+    searchAll() {
+      this.searchData = {}
+      this.$emit('searchWord', this.searchData)
     }
   },
   computed: {}

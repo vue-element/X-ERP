@@ -1,7 +1,6 @@
 <template>
 <div class="smartCommunity-list">
-  <!-- <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable"> -->
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange">
+  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange"  v-loading.body="listLoading" element-loading-text="拼命加载中">
     <el-table-column type="selection"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
@@ -21,7 +20,7 @@
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
-        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">移除</el-button>
+        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
         <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button>
       </template>
     </el-table-column>
@@ -33,12 +32,12 @@
 
 <script>
 import { winHeight } from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunityList',
   props: ['searchData'],
   data() {
     return {
+      listLoading: false,
       total: 5,
       currentPage: 1,
       pageSizes: [12, 15, 16],
@@ -48,12 +47,7 @@ export default {
     }
   },
   created() {
-    console.log('searchData', this.searchData)
-    if (this.searchData.name) {
-      this.getSearchData()
-    } else {
-      this.getProjectData()
-    }
+    this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -73,7 +67,6 @@ export default {
       arr.forEach((item) => {
         selArr.push(item.id)
       })
-      console.log('selArr', selArr)
       this.$emit('selData', selArr)
     },
     seeRow(row) {
@@ -82,7 +75,6 @@ export default {
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/project/delete', projectID).then((res) => {
-        console.log('success', res)
         if (res.status === 200) {
           this.getProjectData()
         }
@@ -95,45 +87,28 @@ export default {
       })
     },
     getProjectData() {
+      this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/project?size=' + pageSize + '&page=' + page
-      this.$get(url).then((res) => {
-        console.log('res', res.data.data)
+      var url = '/project/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then((res) => {
+        // console.log('res', res.data.data)
         var data = res.data.data
         this.projectData = data.content
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
-      })
-    },
-    getSearchData() {
-      var pageSize = this.pageSize || 15
-      var page = this.currentPage - 1 || 0
-      this.$post('/project/search?size=' + pageSize + '&page=' + page, this.searchData, false).then((res) => {
-        var data = res.data.data
-        this.projectData = data.content
-        this.total = data.totalElements
-        this.currentPage = data.number + 1
-        this.pageSize = data.size
+        this.listLoading = false
       })
     },
     //  页码处理
     handleSizeChange(val) {
       this.pageSize = val
-      if (this.searchData.name) {
-        this.getSearchData()
-      } else {
-        this.getProjectData()
-      }
+      this.getProjectData()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      if (this.searchData.name) {
-        this.getSearchData()
-      } else {
-        this.getProjectData()
-      }
+      this.getProjectData()
     }
   },
   computed: {}

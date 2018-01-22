@@ -15,7 +15,7 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button v-show="tab === 'listTab'" @click="delSelectData">
+        <button v-show="deleteShow" @click="delSelectData">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -55,6 +55,7 @@ export default {
       listData: '',
       tab: 'listTab',
       selArr: [],
+      deleteShow: false,
       height: 100
     }
   },
@@ -75,6 +76,11 @@ export default {
     },
     selData(selArr) {
       this.selArr = selArr
+      if (this.selArr.length > 0) {
+        this.deleteShow = true
+      } else {
+        this.deleteShow = false
+      }
     },
     addBtn() {
       this.tab = 'addTab'
@@ -84,19 +90,15 @@ export default {
       }
     },
     delSelectData() {
-      if (this.selArr !== null) {
-        var id = { id: this.selArr }
-        console.log('id', id)
-        this.$post('/project/delete', id).then((res) => {
-          console.log('res', res)
-          // console.log(this.$refs.del)
-          this.$refs.del.getProjectData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
+      var id = { id: this.selArr }
+      this.$post('/project/delete', id).then((res) => {
+        console.log('res', res)
+        this.$refs.del.getProjectData()
+        this.$message({
+          message: '删除成功',
+          type: 'success'
         })
-      }
+      })
     },
     editRow(data) {
       this.tab = 'addTab'
@@ -104,10 +106,8 @@ export default {
         editData: data,
         tabState: 'editTab'
       }
-      // console.log('id', id)
     },
     searchWord(data) {
-      // console.log('searchWord', data)
       this.tab = 'listTab'
       this.searchData = data
     }

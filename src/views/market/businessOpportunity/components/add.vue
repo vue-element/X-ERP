@@ -16,15 +16,16 @@
             </div>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
+            <div class="basic-item single-date">
               <label>所属年月：</label>
-              <input type="text"  placeholder="请输入" v-model="dateline">
+              <!-- <input type="text"  placeholder="请输入" v-model="dateline"> -->
+              <el-date-picker type="date" placeholder="选择日期" v-model="dateline"></el-date-picker>
             </div>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
-            <div class="basic-item">
+            <div class="basic-item single-date">
               <label>单据日期：</label>
-              <input type="text" v-model="businessInfo.date" placeholder="请输入">
+              <el-date-picker type="date" placeholder="选择日期" v-model="docDate"></el-date-picker>
             </div>
           </el-col>
         </el-row>
@@ -178,7 +179,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>商机跟进状态</label>
+              <label>商机跟进状态：</label>
               <el-select v-model="businessInfo.followState" placeholder="请选择">
                <el-option v-for="item in followStateList" :key="item.id" :label="item.value" :value="item.id">
                </el-option>
@@ -187,7 +188,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item">
-              <label>商机执行状态</label>
+              <label>商机执行状态：</label>
               <el-select v-model="businessInfo.executState" placeholder="请选择">
                <el-option v-for="item in executStateList" :key="item.id" :label="item.value" :value="item.id">
                </el-option>
@@ -196,19 +197,23 @@
           </el-col>
         </el-row>
       </div>
-      <div class="common-btn" @click="addData"><span>提  交</span></div>
+      <div class="commont-btn">
+        <el-button @click="addData" :loading="loading">提交</el-button>
+      </div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import { dateline } from '@/utils'
+import { parseTime } from '@/utils'
 export default {
   name: 'businessOpportunityAdd',
   props: ['editData'],
   data() {
     return {
+      loading: false,
+      docDate: '',
       businessInfo: {
         city: { id: 3 },
         client: { id: 1 },
@@ -302,9 +307,10 @@ export default {
     }
   },
   created() {
-    this.dateline = dateline()
     this.getInsertData()
     this.editTab()
+    this.docDate = new Date()
+    this.dateline = new Date()
   },
   mounted() {
   },
@@ -322,11 +328,17 @@ export default {
       this.businessInfo.city.id = val[len - 1]
     },
     addData() {
+      this.loading = true
       this.businessInfo.oldCity = this.cityOption.join('-')
       this.businessInfo.projectImpls = [this.projectInfo]
-      // console.log('projectInfo', this.businessInfo)
+      if (this.docDate) {
+        this.businessInfo.date = parseTime(this.docDate, '{y}-{m}-{d}')
+      } else {
+        this.businessInfo.date = ''
+      }
       this.$post('/bussiness/save', this.businessInfo).then((res) => {
-        console.log('res', res)
+        // console.log('res', res)
+        this.loading = false
         if (res.data.success === true) {
           this.$message({
             message: '保存成功',
@@ -362,4 +374,7 @@ export default {
 
 </style>
 <style  rel="stylesheet/scss" lang="scss">
+input:active {
+  border: 1px solid red;
+}
 </style>

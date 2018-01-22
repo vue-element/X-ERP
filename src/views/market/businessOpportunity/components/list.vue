@@ -1,6 +1,6 @@
 <template>
 <div class="bussiness-list">
-  <el-table class="basic-form" style="width: 100%"  :data="bussinessData" :height="height" @selection-change="handleSelectionChange" ref="multipleTable">
+  <el-table class="basic-form" style="width: 100%"  :data="bussinessData" :height="height" @selection-change="handleSelectionChange" v-loading.body="listLoading" element-loading-text="拼命加载中">
     <el-table-column type="selection"></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号">
       <template slot-scope="scope">
@@ -20,7 +20,7 @@
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
-        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">移除</el-button>
+        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
         <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button>
       </template>
     </el-table-column>
@@ -37,6 +37,7 @@ export default {
   props: ['searchData'],
   data() {
     return {
+      listLoading: false,
       total: 5,
       currentPage: 1,
       pageSizes: [12, 15, 16],
@@ -98,7 +99,6 @@ export default {
       arr.forEach((item) => {
         selArr.push(item.id)
       })
-      // console.log('selArr', selArr)
       this.$emit('selData', selArr)
     },
     seeRow(row) {
@@ -123,16 +123,18 @@ export default {
       })
     },
     getProjectData() {
+      this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/bussiness?size=' + pageSize + '&page=' + page
-      this.$get(url).then((res) => {
-        // console.log('res', res.data.data)
+      var url = '/bussiness/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then((res) => {
+        // console.log('res', res)
         var data = res.data.data
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
         this.bussinessData = data.content
+        this.listLoading = false
         this.bussinessData.forEach((item) => {
           // 商机执行状态
           switch (item.executState) {

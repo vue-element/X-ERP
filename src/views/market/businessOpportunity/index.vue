@@ -15,7 +15,7 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button @click="delSelectData" v-show="tab === 'listTab'">
+        <button @click="delSelectData" v-show="deleteShow">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -30,8 +30,8 @@
   </div>
   <div class="compotent-tab">
     <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @searchData="searchData"></SearchComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData"></ListComponent>
+    <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>
@@ -51,13 +51,14 @@ export default {
     return {
       searchData: {},
       tab: 'listTab',
+      deleteShow: false,
       height: 100,
       selArr: []
     }
   },
-  mounted() {
-  },
   created() {
+  },
+  mounted() {
   },
   methods: {
     toggleTab(tab) {
@@ -65,6 +66,11 @@ export default {
     },
     selData(selArr) {
       this.selArr = selArr
+      if (this.selArr.length > 0) {
+        this.deleteShow = true
+      } else {
+        this.deleteShow = false
+      }
     },
     addBtn() {
       this.tab = 'addTab'
@@ -74,19 +80,16 @@ export default {
       }
     },
     delSelectData() {
-      if (this.selArr !== null) {
-        var id = { id: this.selArr }
-        // console.log('id', id)
-        this.$post('/bussiness/delete', id).then((res) => {
-          this.$refs.del.getProjectData()
-          if (res.data.success === true) {
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          }
-        })
-      }
+      var id = { id: this.selArr }
+      this.$post('/bussiness/delete', id).then((res) => {
+        this.$refs.del.getProjectData()
+        if (res.data.success === true) {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
     },
     editRow(data) {
       this.tab = 'addTab'
@@ -94,6 +97,10 @@ export default {
         editData: data,
         tabState: 'editTab'
       }
+    },
+    searchWord(data) {
+      this.tab = 'listTab'
+      this.searchData = data
     }
   },
   computed: {}
