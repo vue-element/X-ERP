@@ -26,14 +26,14 @@
           </div>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item basic-date">
+          <div class="basic-item range-date">
             <label>合同所属年月：</label>
             <el-date-picker v-model="value1" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
             </el-date-picker>
           </div>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item basic-date">
+          <div class="basic-item range-date">
             <label>签订时间：</label>
             <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
             </el-date-picker>
@@ -56,7 +56,9 @@
           </div>
         </el-col>
       </el-row>
-      <div class="common-btn">查  询</div>
+    </div>
+    <div class="commont-btn">
+      <el-button @click="addData" :loading="loading">提交</el-button>
     </div>
   </div>
 </template>

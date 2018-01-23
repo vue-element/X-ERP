@@ -7,12 +7,12 @@
       </div>
       <el-form-item prop="name" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" />
+        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" /></el-input>
       </el-form-item>
 
       <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
         <span class="iconfont icon-password"></span>
-        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
+        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" /></el-input>
       </el-form-item>
 
       <div class="login-btn">
