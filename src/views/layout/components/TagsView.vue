@@ -58,8 +58,13 @@ export default {
       return false
     },
     isActive(route) {
-      // console.log('route.name', this.$route.path, this.$route.name)
-      return route.path === this.$route.path || route.name === this.$route.name
+      // console.log('route', this.$route.meta.Pname )
+      // console.log('route', route.name )
+      // return route.path === this.$route.path || route.name === this.$route.name
+      return route.path === this.$route.path || route.name === this.$route.name || route.name === this.$route.meta.Pname
+      // if (route.path === this.$route.path || route.name === this.$route.name || route.name === this.$route.meta.Pname ) {
+      //   return true
+      // }
     },
     addViewTags() {
       const route = this.generateRoute()

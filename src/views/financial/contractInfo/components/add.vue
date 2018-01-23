@@ -1,6 +1,6 @@
 <template>
   <div class="contract-info-container">
-    <sticky class="contractInfo-item" className="sub-navbar ">
+    <sticky class="contractInfo-item">
       <ul>
         <li :class="tab === 'basicInfo'?'is-active':''" @click="toggleTab('basicInfo')">合同基础信息</li>
         <li :class="tab === 'disclosureInfo'?'is-active':''" @click="toggleTab('disclosureInfo')">合同交底信息</li>
@@ -34,6 +34,7 @@ import invoiceInfo from '../components/detaile/invoiceInfo'
 import returnMoney from '../components/detaile/returnMoney'
 import payMoney from '../components/detaile/payMoney'
 export default {
+  props: ['rowDetail'],
   components: {
     Sticky,
     basicInfo,
@@ -42,12 +43,15 @@ export default {
     change,
     invoiceInfo,
     returnMoney,
-    payMoney
+    payMoney,
   },
   data() {
     return {
       tab: 'basicInfo'
     }
+  },
+  created() {
+    console.log(this.rowDetail)
   },
   methods: {
     toggleTab(tab) {

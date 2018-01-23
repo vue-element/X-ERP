@@ -39,6 +39,8 @@ export default {
       type: Array
     }
   },
+  created() {
+  },
   methods: {
     ayy(item) {
       // console.log(item.children[0].name)

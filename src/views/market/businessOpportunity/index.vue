@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="compotent-tab">
-    <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" ></AddComponent>
     <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>

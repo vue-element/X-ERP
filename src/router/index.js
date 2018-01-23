@@ -56,15 +56,22 @@ export const asyncRouterMap = [
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
     children: [
       { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
-      { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), hidden: true },
-      { path: 'contract-invoice', component: _import('financial/contractInvoice'), name: 'contractInvoice', meta: { title: '合同开票管理' }},
+      { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), meta: { Pname: 'contractInfo', title: 'hh' }, hidden: true },
+      { path: '/financial/invoice', component: _import('financial/invoice/index'), name: 'invoice', meta: { title: '合同开票管理' },
+        children: [
+          { path: 'list', component: _import('financial/invoice/list'), name: 'invoiceList', meta: { title: '合同开票管理' }},
+          { path: 'add', component: _import('financial/invoice/add'), name: 'invoiceAdd', meta: { title: '合同开票管理' }},
+          { path: 'search', component: _import('financial/invoice/search'), name: 'invoiceSearch', meta: { title: '合同开票管理' }},
+          { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { title: '合同开票管理' }}
+        ]
+      },
       { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
       { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},
       { path: 'progress-manage', component: _import('financial/progressManage'), name: 'progressManage', meta: { title: '项目进度管理' }},
       { path: 'progress-analysis', component: _import('financial/progressAnalysis'), name: 'progressAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
-  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'component', role: ['cw'] },
+  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
     children: [
       { path: 'supplier', component: _import('cost/supplier'), name: 'supplier', meta: { title: '供应商管理' }},
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }},
@@ -108,7 +115,7 @@ export const asyncRouterMap = [
   },
   { path: '/excel',
     component: Layout,
-    hidden: true,
+    hidden: false,
     redirect: '/excel/export-excel',
     name: 'excel',
     meta: {

@@ -9,6 +9,7 @@ const tagsView = {
       // var name = view.name.split('-')[0]
       // if (state.visitedViews.some(v => v.name === name)) return
       state.visitedViews.push({
+        meta: view.meta,
         name: view.name,
         path: view.path,
         title: view.meta.title || 'no-name'
