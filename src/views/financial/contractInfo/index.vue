@@ -78,14 +78,14 @@ export default {
 @import "src/styles/mixin.scss";
 .contract-container {
   width: 100%;
-  @include scrolling
+  @include scrolling;
+  .form-head-attached{
+    position:static;
+  }
 }
 .basic-form {
   .el-table__fixed-body-wrapper {
     margin: 28px 0;
   }
-}
-.contract-list {
-  margin-top: 50px;
 }
 </style>

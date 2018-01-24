@@ -145,12 +145,12 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+// import { winHeight } from '@/utils'
 export default {
   data() {
     return {
       ruleForm: {},
-      Rules: {}
+      rules: {}
     }
   },
   methods: {
