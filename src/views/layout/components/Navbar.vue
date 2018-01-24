@@ -19,7 +19,7 @@
       </li>
       <li @click="logout">
         <span class="logout">退出</span>
-        <i class="iconfont icon-logout"></i>
+        <i class="iconfont icon-out"></i>
       </li>
     </ul>
   </div>

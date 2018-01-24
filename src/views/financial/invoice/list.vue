@@ -23,8 +23,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
-:page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
+      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+       @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     </div>
   </div>
 </template>
@@ -32,10 +32,14 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  name: 'invoiceList',
   data() {
     return {
       height: 100,
+      total: 5,
       currentPage: 1,
+      pageSizes: [12, 15, 16],
+      pageSize: 15,
       tableData: [{
         id: '1',
         number: '2018001176',
@@ -69,19 +73,18 @@ export default {
     resize() {
       this.height = winHeight() - 210
     },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
+    handleSizeChange() {
+      this.pageSize = val
+    },
     seeRow(row) {
       this.$emit('seeRow', row)
-      // this.$router.push({ path: '/financial/contract-info?status=add' })
+      this.$router.push({ path: '/financial/contract-info?status=add' })
     },
     deleteRow(id) {
-      // var contractID = id
-      // this.$post('/contractInfo/delete', contractID).then((res) => {
-      //   console.log(res)
-      // })
-    },
-    // editRow() {
-    //   this.$router.push({ path: '/financial/detaileInfo' })
-    // }
+    }
   }
 }
 </script>

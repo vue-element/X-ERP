@@ -1,5 +1,5 @@
 <template>
-<div class="business-container business-search">
+<div class="business-container invoice-search">
   <!-- 社区建设单项目信息表 -->
   <div class="form-container project-msg"  v-show="true">
     <div class="form-inner">
@@ -68,7 +68,7 @@
 <script>
 import { parseTime } from '@/utils'
 export default {
-  name: 'businessOpportunitySearch',
+  name: 'InvoiceSearch',
   data() {
     return {
       searchData: {
@@ -128,7 +128,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.business-search {
+.invoice-search {
   color: #000;
   font-size: 14px;
   .el-row {

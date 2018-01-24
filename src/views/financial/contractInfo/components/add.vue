@@ -33,6 +33,16 @@ import invoiceInfo from '../components/detaile/invoiceInfo'
 import returnMoney from '../components/detaile/returnMoney'
 import payMoney from '../components/detaile/payMoney'
 export default {
+  props: ['rowDetail'],
+  components: {
+    basicInfo,
+    disclosureInfo,
+    subContract,
+    change,
+    invoiceInfo,
+    returnMoney,
+    payMoney,
+  },
   data() {
     return {
       tab: 'basicInfo',
@@ -41,6 +51,9 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
+  },
+  created() {
+    console.log(this.rowDetail)
   },
   methods: {
     toggleTab(tab) {
@@ -51,15 +64,6 @@ export default {
       this.scroll = document.documentElement.scrollTop || document.body.scrollTop
       console.log(this.scroll)
     }
-  },
-  components: {
-    basicInfo,
-    disclosureInfo,
-    subContract,
-    change,
-    invoiceInfo,
-    returnMoney,
-    payMoney
   }
 }
 </script>

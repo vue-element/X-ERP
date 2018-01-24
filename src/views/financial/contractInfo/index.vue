@@ -3,19 +3,19 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="search('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="show('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="add('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button @click="toggleTab('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <button @click="del('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
+          <button @click="toggleTab('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
             <i class="iconfont icon-delete"></i>
             <span>删除</span>
           </button>
@@ -29,9 +29,9 @@
       </div>
     </div>
     <div class="contract-list" >
-      <searchComponent v-if="tab === 'searchTab'"></searchComponent>
-      <listComponent v-if="tab === 'listTab'"></listComponent>
-      <addComponent v-if="tab === 'addTab'"></addComponent>
+      <searchComponent v-if="tab === 'searchTab'" ></searchComponent>
+      <listComponent v-if="tab === 'listTab'" @seeRow="seeRow"></listComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail"></addComponent>
     </div>
   </div>
 </template>
@@ -51,20 +51,20 @@ export default {
       tab: 'listTab'
     }
   },
+  created() {
+    rowDetail: {}
+  },
   mounted() {},
-  created() {},
   methods: {
-    search(tab) {
+    toggleTab(tab) {
       this.tab = tab
     },
-    show(tab) {
-      this.tab = tab
-    },
-    add(tab) {
-      this.tab = tab
-    },
-    del(tab) {
-      this.tab = tab
+    seeRow(data) {
+      this.tab = 'addTab'
+      this.rowDetail = {
+        RowDetail: data,
+        tabState: 'editTab'
+      }
     },
     dataExport() {
       alert(123)
