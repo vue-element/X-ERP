@@ -58,13 +58,10 @@ export default {
       return false
     },
     isActive(route) {
-      // console.log('route', this.$route.meta.Pname )
-      // console.log('route', route.name )
+      console.log('pName', this.$route.meta.pName )
+      console.log('route', route.name )
       // return route.path === this.$route.path || route.name === this.$route.name
-      return route.path === this.$route.path || route.name === this.$route.name || route.name === this.$route.meta.Pname
-      // if (route.path === this.$route.path || route.name === this.$route.name || route.name === this.$route.meta.Pname ) {
-      //   return true
-      // }
+      return route.path === this.$route.path || route.name === this.$route.name || (route.pName && (route.pName === this.$route.meta.pName))
     },
     addViewTags() {
       const route = this.generateRoute()
