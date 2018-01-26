@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="togglePath('search')" :class="path === 'search' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button @click="togglePath('list')" :class="path === 'list' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button @click="togglePath('add')" :class="path === 'add' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
@@ -36,34 +36,20 @@
         </div>
       </div>
     </div>
-    <!-- <keep-alive :include='cachedViews'>
+    <keep-alive :include='cachedViews'>
       <router-view></router-view>
-    </keep-alive> -->
-    <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" ></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'"></SearchComponent>
-    </div>
+    </keep-alive>
   </div>
 </template>
 
 <script>
 import { parseTime } from '@/utils'
-import AddComponent from './components/add'
-import ListComponent from './components/list'
-import SearchComponent from './components/search'
 export default {
   name: 'contrctInvoice',
-  components: {
-    AddComponent,
-    ListComponent,
-    SearchComponent
-  },
   data() {
     return {
-      path: 'listTab',
+      path: 'list',
       downloadLoading: false,
-      tab: 'listTab',
       list: [
         {
           id: 1,
@@ -98,21 +84,13 @@ export default {
     fetchData() {
       this.listLoading = true
     },
-    toggleTab(tab) {
-      this.tab = tab
-    },
-    addBtn() {
-
-    },
-    editRow(data) {
-      this.tab = 'addTab'
-      this.editData = {
-        editData: data,
-        tabState: 'editTab'
-      }
+    togglePath(path) {
+      // console.log(path)
+      this.path = path
+      this.$router.push({ path: '/financial/invoice/' + path })
     },
     dataImpore() {
-      // this.togglePath('import')
+      this.togglePath('import')
     },
     handleDownload() {
       this.downloadLoading = true

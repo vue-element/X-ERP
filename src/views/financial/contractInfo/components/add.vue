@@ -43,7 +43,7 @@ export default {
     change,
     invoiceInfo,
     returnMoney,
-    payMoney,
+    payMoney
   },
   data() {
     return {

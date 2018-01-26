@@ -57,15 +57,24 @@ export const asyncRouterMap = [
     children: [
       { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
       { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), meta: { pName: 'contractInfo', title: 'hh' }, hidden: true },
-      { path: 'invoice', component: _import('financial/invoice/index'), redirect: '/financial/invoice/list', name: 'contrctInvoice', meta: { title: '合同开票管理' }, hideChildren: true,
+      { path: 'invoice', component: _import('financial/invoice/index'), name: 'contrctInvoice', meta: { title: '合同开票管理' }},
+      // { path: 'invoice', component: _import('financial/invoice/index'), redirect: '/financial/invoice/list', name: 'contrctInvoice', meta: { title: '合同开票管理' }, hideChildren: true,
+      //   children: [
+      //     { path: 'list', component: _import('financial/invoice/list'), name: 'invoiceList', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
+      //     { path: 'add', component: _import('financial/invoice/add'), name: 'invoiceAdd', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }},
+      //     { path: 'search', component: _import('financial/invoice/search'), name: 'invoiceSearch', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
+      //     { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }}
+      //   ]
+      // },
+      { path: 'payment', component: _import('financial/payment/index'), redirect: '/financial/payment/list', name: 'contrctPayment', meta: { title: '合同回款管理' }, hideChildren: true,
         children: [
-          { path: 'list', component: _import('financial/invoice/list'), name: 'invoiceList', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
-          { path: 'add', component: _import('financial/invoice/add'), name: 'invoiceAdd', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
-          { path: 'search', component: _import('financial/invoice/search'), name: 'invoiceSearch', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
-          { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { pName: 'contrctInvoice', title: '合同开票管理' }}
+          { path: 'list', component: _import('financial/payment/list'), name: 'paymentList', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
+          { path: 'add', component: _import('financial/payment/add'), name: 'paymentAdd', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
+          { path: 'search', component: _import('financial/payment/search'), name: 'paymentSearch', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
+          { path: 'import', component: _import('financial/payment/import'), name: 'paymentImport', meta: { pName: 'contrctPayment', title: '合同回款管理' }}
         ]
       },
-      { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
+      // { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
       { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},
       { path: 'progress-manage', component: _import('financial/progressManage'), name: 'progressManage', meta: { title: '项目进度管理' }},
       { path: 'progress-analysis', component: _import('financial/progressAnalysis'), name: 'progressAnalysis', meta: { title: '项目进度分析' }}

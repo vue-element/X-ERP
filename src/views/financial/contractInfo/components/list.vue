@@ -79,9 +79,9 @@ export default {
       //   console.log(res)
       // })
     },
-    // editRow() {
-    //   this.$router.push({ path: '/financial/detaileInfo' })
-    // }
+    editRow() {
+      // this.$router.push({ path: '/financial/detaileInfo' })
+    }
   }
 }
 </script>

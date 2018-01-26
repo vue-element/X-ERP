@@ -52,7 +52,6 @@ export default {
     }
   },
   created() {
-    rowDetail: {}
   },
   mounted() {},
   methods: {

@@ -18,7 +18,6 @@
           <el-col :xs="12" :sm="12" :lg="8">
             <div class="basic-item single-date">
               <label>所属年月：</label>
-              <!-- <input type="text"  placeholder="请输入" v-model="dateline"> -->
               <el-date-picker type="date" placeholder="选择日期" v-model="dateline"></el-date-picker>
             </div>
           </el-col>
