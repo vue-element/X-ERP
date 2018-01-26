@@ -1,65 +1,61 @@
 <template>
   <div class="contractInfo-search form-container">
-    <div class="form-module">
-      <h4 class="module-title">
-        <p>查询条件:</p>
-      </h4>
-      <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item">
-            <label>合同名称：</label>
-            <input type="text">
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item">
-            <label>合同编码：</label>
-            <input type="text">
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item">
-            <label>业务分类：</label>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item range-date">
-            <label>合同所属年月：</label>
-            <el-date-picker v-model="value1" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-            </el-date-picker>
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item range-date">
-            <label>签订时间：</label>
-            <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-            </el-date-picker>
-          </div>
-        </el-col>
-         <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item">
-            <label>所属区域：</label>
-            <el-select v-model="value3" placeholder="请选择">
-              <el-option v-for="item in region" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
-          <div class="basic-item">
-            <label>是否执行结束：</label>
-            <el-select v-model="value4" placeholder="请选择">
-              <el-option v-for="item in isExecute" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="commont-btn">
-      <el-button @click="addData" :loading="loading">提交</el-button>
-    </div>
+     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="basic">
+        <div class="search form-module">
+          <h4 class="module-title">
+            <p>查询条件</p>
+          </h4>
+          <el-row :gutter="40">
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同名称：" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同编码：" prop="name">
+                <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="业务分类：" prop="name">
+                <el-select v-model="ruleForm.work" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item class="range-date" label="合同所属年月：" prop="name">
+                <el-date-picker v-model="ruleForm.firstEntryDate" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item class="single-date" label="签订时间：" prop="name">
+                <el-date-picker v-model="ruleForm.sign" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="所属区域：" prop="name">
+                <el-select v-model="ruleForm.office" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="是否执行结束：" prop="name">
+                <el-select v-model="ruleForm.isExecute" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="commont-btn">
+          <el-button>保存</el-button>
+        </div>
+      </el-form>
   </div>
 </template>
 
@@ -67,21 +63,23 @@
 export default {
   data() {
     return {
-      value: '',
-      value1: '',
-      value2: '',
-      value3: '',
-      value4: '',
-      categoryList: [],
-      clientList: [],
-      region: [],
-      isExecute: [{
-        value: '1',
-        label: '是'
-      }, {
-        value: '2',
-        label: '否'
-      }]
+      disabled: false,
+      ruleForm: {
+        name: '',
+        number: '',
+        work: '',
+        firstEntryDate: '',
+        sign: '',
+        office: '',
+        isExecute: [{
+          value: '1',
+          label: '是'
+        }, {
+          value: '2',
+          label: '否'
+        }]
+      },
+      rules: {}
     }
   },
   created() {

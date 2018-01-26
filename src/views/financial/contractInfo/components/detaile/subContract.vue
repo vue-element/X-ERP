@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 302
+      this.height = winHeight() - 335
     }
   }
 }

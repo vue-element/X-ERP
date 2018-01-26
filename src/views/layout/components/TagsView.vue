@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     visitedViews() {
-      // console.log('1', this.$store.state.tagsView.visitedViews)
+      // console.log('1', this.$store.state.tagsView.visitedViews )
       return this.$store.state.tagsView.visitedViews
     }
   },
@@ -58,8 +58,13 @@ export default {
       return false
     },
     isActive(route) {
+<<<<<<< HEAD
       // console.log('pName', this.$route.meta.pName)
       // console.log('route', route.name)
+=======
+      console.log('pName', this.$route.meta.pName)
+      console.log('route', route.name)
+>>>>>>> 8faead7f462c05cdfabefb040560715818209e7c
       // return route.path === this.$route.path || route.name === this.$route.name
       return route.path === this.$route.path || route.name === this.$route.name || (route.pName && (route.pName === this.$route.meta.pName))
     },

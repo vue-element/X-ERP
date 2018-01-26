@@ -1,35 +1,76 @@
 <template>
   <div class="disclosure-info-container form-container">
-    <div class="inp form-module">
-      <h4 class="module-title">
-        <p>合同交底信息录入</p>
-      </h4>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="8">
-          <div class="item">
-            <label>材料成本交底金额(元)：</label>
-            <input type="text">
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="8">
-          <div class="item">
-            <label>材料成本交底后变更金额(元)：</label>
-            <input type="text">
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="8">
-          <div class="item">
-            <label>材料成本目标总金额(元)：</label>
-            <input type="text">
-          </div>
-        </el-col>
-      </el-row>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="basic">
+      <div class="capital form-module">
+        <h4 class="module-title">
+          <p>资金来源</p>
+        </h4>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="资金来源：" prop="name">
+              <el-select v-model="ruleForm.capital" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="cost form-module">
+        <h4 class="module-title">
+          <p>交底支出</p>
+        </h4>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="资金来源：" prop="name">
+              <el-input v-model="ruleForm.cost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="人工成本：" prop="name">
+              <el-input v-model="ruleForm.manpower" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="综合成本：" prop="name">
+              <el-input v-model="ruleForm.total" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="管理费用：" prop="name">
+              <el-input v-model="ruleForm.manage" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="税金：" prop="name">
+              <el-input v-model="ruleForm.Tax" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="profit form-module">
+        <h4 class="module-title">
+          <p>计划利润</p>
+        </h4>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="毛利润" prop="name">
+             <el-input v-model="ruleForm.profit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="8">
+            <el-form-item label="毛利润率" prop="name">
+             <el-input v-model="ruleForm.crossProfit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
       <div class="btn">
         <div class="common-btn">保&nbsp;&nbsp;&nbsp;存</div>
         <div class="common-btn">重&nbsp;&nbsp;&nbsp;置</div>
         <div class="common-btn">取&nbsp;&nbsp;&nbsp;消</div>
       </div>
-    </div>
+    </el-form>
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同交底附件列表</p>
@@ -88,7 +129,20 @@ export default {
         4: '2018-01-12'
       }],
       height: 100,
-      currentPage: 1
+      currentPage: 1,
+      disabled: false,
+      ruleForm: {
+        name: '',
+        capital: '',
+        cost: '',
+        manpower: '',
+        total: '',
+        manage: '',
+        Tax: '',
+        profit: '',
+        crossProfit: ''
+      },
+      rules: {}
     }
   },
   created() {
@@ -99,7 +153,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 533
+      this.height = winHeight() - 335
     },
     upFiles() {
       var html = '<div class="upFiles">' +
@@ -132,39 +186,16 @@ export default {
 .disclosure-info-container.form-container{
   border:none;
   margin:0;
-  .inp.form-module{
+  .capital.form-module{
     .el-row{
       margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-          label {
-            color: #000;
-            width: 38%;
-            line-height: 16px;
-            word-wrap: wrap;
-            font-size: 14px;
-            vertical-align:middle;
-            display:inline-block;
-            text-align:right;
-          }
-          input {
-            width: 50%;
-            height: 32px;
-            border: 1px solid #828282;
-            @include borderRadius(4px);
-            text-indent: 12px;
-            vertical-align:middle;
-          }
-        }
-      }
     }
-    .btn{
-      text-align:center;
-      div.common-btn{
-        margin-left:30px;
-        display:inline-block;
-      }
+  }
+  .btn{
+    text-align:center;
+    div.common-btn{
+      margin-left:30px;
+      display:inline-block;
     }
   }
   .list.form-module{

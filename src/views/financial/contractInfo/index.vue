@@ -48,10 +48,15 @@ export default {
   },
   data() {
     return {
-      tab: 'listTab'
+      tab: 'listTab',
+      rowDetail: ''
     }
   },
   created() {
+<<<<<<< HEAD
+=======
+    // rowDetail: {}
+>>>>>>> 8faead7f462c05cdfabefb040560715818209e7c
   },
   mounted() {},
   methods: {
@@ -77,14 +82,14 @@ export default {
 @import "src/styles/mixin.scss";
 .contract-container {
   width: 100%;
-  @include scrolling
+  @include scrolling;
+  .contract-list{
+    margin-top:60px;
+  }
 }
 .basic-form {
   .el-table__fixed-body-wrapper {
     margin: 28px 0;
   }
-}
-.contract-list {
-  margin-top: 50px;
 }
 </style>
