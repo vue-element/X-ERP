@@ -76,17 +76,13 @@ export default {
       // this.$post('/contractInfo/delete', contractID).then((res) => {
       //   console.log(res)
       // })
-<<<<<<< HEAD
     },
     editRow() {
       // this.$router.push({ path: '/financial/detaileInfo' })
     }
-=======
-    }
     // editRow() {
     //   this.$router.push({ path: '/financial/detaileInfo' })
     // }
->>>>>>> 8faead7f462c05cdfabefb040560715818209e7c
   }
 }
 </script>
