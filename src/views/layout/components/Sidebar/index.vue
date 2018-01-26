@@ -31,7 +31,7 @@ export default {
     handleOpen(key, keyPath) {
       // console.log(key, keyPath);
     },
-    setDefaultActive () {
+    setDefaultActive() {
       var path = this.$route.path
       if (this.$route.meta.pName) {
         var arr = path.split('/')

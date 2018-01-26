@@ -48,11 +48,12 @@ export default {
   },
   data() {
     return {
-      tab: 'listTab'
+      tab: 'listTab',
+      rowDetail: ''
     }
   },
   created() {
-    rowDetail: {}
+    // rowDetail: {}
   },
   mounted() {},
   methods: {
@@ -79,8 +80,8 @@ export default {
 .contract-container {
   width: 100%;
   @include scrolling;
-  .form-head-attached{
-    position:static;
+  .contract-list{
+    margin-top:60px;
   }
 }
 .basic-form {

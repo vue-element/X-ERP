@@ -1,5 +1,4 @@
 <template>
-  <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
         <el-table-column align="center" prop="0" label="序号">
@@ -26,7 +25,6 @@
       <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
 :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
     </div>
-  </div>
 </template>
 
 <script>
@@ -67,7 +65,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 210
+      this.height = winHeight() - 220
     },
     seeRow(row) {
       this.$emit('seeRow', row)
@@ -78,7 +76,7 @@ export default {
       // this.$post('/contractInfo/delete', contractID).then((res) => {
       //   console.log(res)
       // })
-    },
+    }
     // editRow() {
     //   this.$router.push({ path: '/financial/detaileInfo' })
     // }

@@ -76,7 +76,7 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
       this.pageSize = val
     },
     seeRow(row) {

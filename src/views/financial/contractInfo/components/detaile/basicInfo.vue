@@ -1,163 +1,137 @@
 <template>
-  <div>
-  <div class="basicInfo-container form-container" ref="ele">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="basic">
-      <div class="basic form-module">
-        <h4 class="module-title">
-          <p>基础信息</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="合同名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="城市：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="业务分类：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="来源单类型：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="timeNodes form-module">
-        <h4 class="module-title">
-          <p>时间节点信息</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="归档日期：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="合同所属年月：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="invoice form-module">
-        <h4 class="module-title">
-          <p>开票回款信息</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="开票原始金额(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="累计开票金额(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-           <el-col :xs="24" :sm="12" :lg="8">
-             <el-form-item label="已开票未回款金额(元)：" prop="name">
-               <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-             </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="project form-module">
-        <h4 class="module-title">
-          <p>项目投入信息</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="材料成本目标总金额(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="期末未投入金额(元)：" prop="name">
-              <el-input name="name" type="text"  placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="项目目标成本总金额(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="综合成本累计投入金额(元)：" prop="name">
-              <el-input name="name" type="text"  placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="last-project form-module">
-        <h4 class="module-title">
-          <p>项目合同结束</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="项目实际验收时间：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="质保金金额(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label="合同是否执行结束：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="project-res form-module">
-        <h4 class="module-title">
-          <p>项目经营成果</p>
-        </h4>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="计划毛利(元)：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="实际毛利率：" prop="name">
-              <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="commont-btn">
-        <el-button>保存</el-button>
-        <el-button>重置</el-button>
-        <el-button>取消</el-button>
-      </div>
-    </el-form>
-  </div>
-</div>
+    <div class="basicInfo-container form-container" ref="ele">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="basic">
+        <div class="basic form-module">
+          <h4 class="module-title">
+            <p>基础信息</p>
+          </h4>
+          <el-row :gutter="40">
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同编号：" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同名称：" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="业务类别：" prop="name">
+                <el-select v-model="ruleForm.work" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="客户类型：" prop="name">
+                <el-select v-model="ruleForm.client" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="城市：" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="办事处：" prop="name">
+                <el-select v-model="ruleForm.office" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="timeNodes form-module">
+          <h4 class="module-title">
+            <p>时间信息</p>
+          </h4>
+          <el-row :gutter="40">
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同文本：" prop="name">
+                <el-select v-model="ruleForm.text" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item class="single-date" label="签订时间：" prop="name">
+                 <el-date-picker v-model="ruleForm.sign" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同所属期：" prop="name">
+                <el-select v-model="ruleForm.year" placeholder="请选择活动区域">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item class="range-date" label="合同期限：" prop="name">
+                  <el-date-picker v-model="ruleForm.firstEntryDate" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
+                  </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="invoice form-module">
+          <h4 class="module-title">
+            <p>金额信息</p>
+          </h4>
+          <el-row :gutter="40">
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同金额：" prop="name">
+                <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="变更金额：" prop="name">
+                <el-input v-model="ruleForm.name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              </el-form-item>
+            </el-col>
+             <el-col :xs="24" :sm="12" :lg="8">
+               <el-form-item label="合同总额：" prop="name">
+                 <el-input v-model="ruleForm.name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+               </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="commont-btn">
+          <el-button>保存</el-button>
+          <el-button>重置</el-button>
+          <el-button>取消</el-button>
+        </div>
+      </el-form>
+    </div>
 </template>
 
 <script>
-// import { winHeight } from '@/utils'
 export default {
   data() {
     return {
       disabled: false,
       ruleForm: {
-        name: 'lsp'
+        name: 'lsp',
+        work: '',
+        client: '',
+        office: '',
+        sign: '',
+        year: '',
+        firstEntryDate: ''
       },
-      rules: {}
+      rules: {},
+      height: 100
     }
   },
   created() {
-    // if ()
+
   },
   methods: {
 
