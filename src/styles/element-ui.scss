@@ -387,3 +387,21 @@
     }
   }
 }
+// 上传文件样式
+.el-dialog{
+  width:45%;
+}
+.el-dialog__wrapper .el-dialog .el-dialog__body  .el-form .el-form-item .el-input__prefix .el-input__icon{
+  line-height:30px;
+}
+.el-dialog__footer{
+  margin-top:30px;
+  padding-bottom:25px;
+  text-align:center;
+}
+.el-picker-panel{
+  line-height:10px;
+}
+.el-dialog__body{
+  padding:10px 20px;
+}

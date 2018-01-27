@@ -11,7 +11,7 @@ const searchObj = {
     resetSearch(state) {
       state.searchObj = {}
       state.doSearch = false
-    },
+    }
   },
   actions: {
     setSearchObj({ commit }, searchObj) {

@@ -8,17 +8,17 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同编号：" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+                <el-input v-model="ruleForm.num" placeholder="请输入合同编码" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同名称：" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+                <el-input v-model="ruleForm.name" placeholder="请输入合同名称" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="业务类别：" prop="name">
-                <el-select v-model="ruleForm.work" placeholder="请选择活动区域">
+                <el-select v-model="ruleForm.work" placeholder="请选择业务类别">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -26,7 +26,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="客户类型：" prop="name">
-                <el-select v-model="ruleForm.client" placeholder="请选择活动区域">
+                <el-select v-model="ruleForm.client" placeholder="请选择客户类型">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -34,7 +34,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="城市：" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+                <el-input v-model="ruleForm.name" placeholder="请输入城市" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
@@ -54,7 +54,7 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同文本：" prop="name">
-                <el-select v-model="ruleForm.text" placeholder="请选择活动区域">
+                <el-select v-model="ruleForm.text" placeholder="请选择合同文本">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -62,12 +62,12 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="single-date" label="签订时间：" prop="name">
-                 <el-date-picker v-model="ruleForm.sign" type="date" placeholder="选择日期"></el-date-picker>
+                 <el-date-picker v-model="ruleForm.sign" type="date" placeholder="签订日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同所属期：" prop="name">
-                <el-select v-model="ruleForm.year" placeholder="请选择活动区域">
+                <el-select v-model="ruleForm.year" placeholder="请选择合同所属期">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
@@ -88,18 +88,18 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同金额：" prop="name">
-                <el-input name="name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+                <el-input name="name" type="text" placeholder="请输入合同金额" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="变更金额：" prop="name">
-                <el-input v-model="ruleForm.name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+                <el-input v-model="ruleForm.name" type="text" placeholder="请输入变更金额" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
-             <el-col :xs="24" :sm="12" :lg="8">
-               <el-form-item label="合同总额：" prop="name">
-                 <el-input v-model="ruleForm.name" type="text" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-               </el-form-item>
+            <el-col :xs="24" :sm="12" :lg="8">
+              <el-form-item label="合同总额：" prop="name">
+                <el-input v-model="ruleForm.name" type="text" placeholder="请输入合同总额" :disabled="disabled"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </div>
@@ -113,12 +113,14 @@
 </template>
 
 <script>
+import { winHeight } from '@/utils'
 export default {
   data() {
     return {
       disabled: false,
       ruleForm: {
-        name: 'lsp',
+        num: '',
+        name: '',
         work: '',
         client: '',
         office: '',
@@ -137,6 +139,10 @@ export default {
 
   },
   mounted() {
+    this.$refs.ele.style.height = winHeight() - 230 + 'px'
+    window.addEventListener('resize', () => {
+      this.$refs.ele.style.height = winHeight() - 230 + 'px'
+    })
   }
 }
 </script>

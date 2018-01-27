@@ -3,8 +3,35 @@
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同变更附件列表</p>
-        <div class="up-files common-btn">附件上传</div>
+        <div class="up-files common-btn" @click="upFiles=true">附件上传</div>
       </h4>
+      <!-- 变更弹出框 -->
+      <el-dialog title="合同变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
+        <el-form>
+          <el-form-item label="变更金额">
+            <el-input type="text" v-model="filesForm.cost"></el-input>
+          </el-form-item>
+          <el-form-item label="附件说明">
+            <el-input type="text" v-model="filesForm.desc"></el-input>
+          </el-form-item>
+          <el-form-item label="附件人">
+            <el-input type="text" v-model="filesForm.author"></el-input>
+          </el-form-item>
+          <el-form-item label="上传时间" prop="name">
+             <el-date-picker v-model="filesForm.date" type="date" placeholder="选择日期"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="添加附件" prop="name">
+            <el-upload class="upload" action="" :on-change="handleChange" :file-list="fileList">
+              <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer" >
+            <el-button size="small" @click="upFiles = false" type="success">保 存</el-button>
+            <el-button size="small" type="info">重 置</el-button>
+            <el-button size="small" @click="upFiles = false">取 消</el-button>
+        </div>
+      </el-dialog>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
@@ -52,7 +79,16 @@ export default {
         4: '2018-01-12'
       }],
       height: 100,
-      currentPage: 1
+      currentPage: 1,
+      upFiles: false,
+      filesForm: {
+        cost: '',
+        desc: '',
+        author: '',
+        date: '',
+        files: ''
+      },
+      fileList: []
     }
   },
   created() {
@@ -64,6 +100,9 @@ export default {
   methods: {
     resize() {
       this.height = winHeight() - 335
+    },
+    handleChange() {
+
     }
   }
 }
