@@ -80,9 +80,6 @@ export default {
     editRow() {
       // this.$router.push({ path: '/financial/detaileInfo' })
     }
-    // editRow() {
-    //   this.$router.push({ path: '/financial/detaileInfo' })
-    // }
   }
 }
 </script>
