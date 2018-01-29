@@ -99,6 +99,7 @@
     <!-- 合同交底文件上传 -->
     <el-dialog title="合同交底附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
       <el-form>
+
         <el-form-item label="附件说明">
           <el-input type="text" v-model="fileForm.desc"></el-input>
         </el-form-item>
@@ -109,15 +110,19 @@
            <el-date-picker v-model="fileForm.date" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="上传附件：" prop="name">
-          <el-upload class="upload" :action="importFileUrl" :data="upLoadData" name="importfile" :onError="uploadError" :onSuccess="uploadSuccess" :beforeUpload="beforeAvatarUpload">
-            <el-button size="small" type="primary">点击上传</el-button>
+          <el-upload class="upload-demo" ref="upload" action="F:\大学\我的毕业照\_MG_0001.JPG" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer" >
-          <el-button size="small" @click="upFiles = false" type="success">保 存</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+         <!--  <el-button size="small" @click="upFiles = false" type="success">保 存</el-button>
           <el-button size="small" type="info">重 置</el-button>
-          <el-button size="small" @click="upFiles = false">取 消</el-button>
+          <el-button size="small" @click="upFiles = false">取 消</el-button> -->
       </div>
     </el-dialog>
   </div>
@@ -166,7 +171,8 @@ export default {
       upLoadData: {
         cpyId: '123456',
         occurTime: '2018-01'
-      }
+      },
+      fileList: []
     }
   },
   created() {
@@ -179,31 +185,39 @@ export default {
     resize() {
       this.height = winHeight() - 450
     },
-
-    // 上传成功后的回调
-    uploadSuccess (response, file, fileList) {
-      console.log('上传文件', response)
-    },
-    // 上传错误
-    uploadError (response, file, fileList) {
-      console.log('上传失败，请重试！')
-    },
+    // // 上传成功后的回调
+    // uploadSuccess (response, file, fileList) {
+    //   console.log('上传文件', response)
+    // },
+    // // 上传错误
+    // uploadError (response, file, fileList) {
+    //   console.log('上传失败，请重试！')
+    // },
     // 上传前对文件的大小的判断
-    beforeAvatarUpload (file) {
-      const extension = file.name.split('.')[1] === 'xls'
-      const extension2 = file.name.split('.')[1] === 'xlsx'
-      const extension3 = file.name.split('.')[1] === 'doc'
-      const extension4 = file.name.split('.')[1] === 'docx'
-      const isLt2M = file.size / 1024 / 1024 < 10
-      if (!extension && !extension2 && !extension3 && !extension4) {
-        console.log('上传模板只能是 xls、xlsx、doc、docx 格式!')
-      }
-      if (!isLt2M) {
-        console.log('上传模板大小不能超过 10MB!')
-      }
-      return extension || extension2 || extension3 || extension4 && isLt2M
+    // beforeAvatarUpload (file) {
+    //   const extension = file.name.split('.')[1] === 'xls'
+    //   const extension2 = file.name.split('.')[1] === 'xlsx'
+    //   const extension3 = file.name.split('.')[1] === 'doc'
+    //   const extension4 = file.name.split('.')[1] === 'docx'
+    //   const isLt2M = file.size / 1024 / 1024 < 10
+    //   if (!extension && !extension2 && !extension3 && !extension4) {
+    //     console.log('上传模板只能是 xls、xlsx、doc、docx 格式!')
+    //   }
+    //   if (!isLt2M) {
+    //     console.log('上传模板大小不能超过 10MB!')
+    //   }
+    //   return extension || extension2 || extension3 || extension4 && isLt2M
+    // },
+    submitUpload() {
+      this.$refs.upload.submit()
+      console.log(1111)
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
     }
-
   },
   mounted() {
     this.$refs.ele.style.height = winHeight() - 230 + 'px'
