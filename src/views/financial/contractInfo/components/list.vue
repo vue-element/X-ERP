@@ -1,14 +1,14 @@
 <template>
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
+      <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" >
         <el-table-column align="center" prop="0" label="序号">
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="number" label="合同编码"></el-table-column>
+        <el-table-column align="center" prop="code" label="合同编码"></el-table-column>
         <el-table-column align="center" prop="name" label="合同名称"></el-table-column>
-        <el-table-column align="center" prop="area" label="所属办事处"></el-table-column>
+        <el-table-column align="center" prop="region.name" label="所属办事处"></el-table-column>
         <el-table-column align="center" prop="date" label="合同所属年月"></el-table-column>
         <el-table-column align="center" prop="changeMoney" label="变更后合同金额"></el-table-column>
         <el-table-column align="center" prop="payMoney" label="已开票金额"></el-table-column>
@@ -22,8 +22,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
-:page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
+      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes"
+:page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
 </template>
 
@@ -34,30 +34,14 @@ export default {
     return {
       height: 100,
       currentPage: 1,
-      tableData: [{
-        id: '1',
-        number: '2018001176',
-        name: '深圳市中海华庭电梯监管服务合同',
-        area: '深圳办事处',
-        date: '2018-01',
-        changeMoney: '1,000,000',
-        payMoney: '1,100,000',
-        returnMoney: '500,000',
-        payNoReturn: '300,000'
-      }, {
-        id: '2',
-        number: '2018001177',
-        name: '深圳市中海华庭电梯监管服务合同',
-        area: '深圳办事处',
-        date: '2018-01',
-        changeMoney: '1,000,000',
-        payMoney: '1,100,000',
-        returnMoney: '500,000',
-        payNoReturn: '300,000'
-      }]
+      total: 5,
+      pageSizes: [10, 12, 15],
+      pageSize: 10,
+      contractInfoData: []
     }
   },
   created() {
+    this.getContractInfoData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -66,6 +50,19 @@ export default {
   methods: {
     resize() {
       this.height = winHeight() - 220
+    },
+    getContractInfoData() {
+      var pageSize = this.pageSize || 12
+      var page = this.currentPage - 1 || 0
+      var url = 'http://202.105.96.131:8081/contractInfo/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then((result) => {
+        var data = result.data.data
+        console.log(data)
+        this.contractInfoData = data.content
+        this.total = data.totalElements
+        this.currentPage = data.number + 1
+        this.pageSize = data.size
+      })
     },
     seeRow(row) {
       this.$emit('seeRow', row)
