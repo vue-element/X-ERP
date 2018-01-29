@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="togglePath('search')" :class="path === 'search' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="togglePath('list')" :class="path === 'list' ? 'is-active' : ''">
+          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="togglePath('add')" :class="path === 'add' ? 'is-active' : ''">
+          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
@@ -21,35 +21,51 @@
           </button> -->
         </div>
         <div class="export-btn fr">
-          <button @click="dataImpore" :class="path === 'import' ? 'is-active' : ''">
+          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button @click="handleDownload()" :loading="downloadLoading" :class="tab === 'loadDownTab' ? 'is-active' : ''">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button @click="handleDownload()" :loading="downloadLoading" :class="tab === 'exportTab' ? 'is-active' : ''">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
         </div>
       </div>
     </div>
-    <keep-alive :include='cachedViews'>
-      <router-view></router-view>
-    </keep-alive>
+    <div class="compotent-tab">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
+      <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
+    </div>
   </div>
 </template>
 
 <script>
 import { parseTime } from '@/utils'
+import AddComponent from './components/add'
+import ListComponent from './components/list'
+import SearchComponent from './components/search'
+import ImportComponent from './components/import'
 export default {
-  name: 'invoice',
+  name: 'contrctInvoice',
+  components: {
+    AddComponent,
+    ListComponent,
+    SearchComponent,
+    ImportComponent
+  },
   data() {
     return {
-      path: 'list',
+      path: 'listTab',
       downloadLoading: false,
+      tab: 'listTab',
+      editData: {},
+      searchData: {},
       list: [
         {
           id: 1,
@@ -76,22 +92,36 @@ export default {
     }
   },
   created() {
-    this.fetchData()
   },
   mounted() {},
   methods: {
-    fetchData() {
-      this.listLoading = true
+    toggleTab(tab) {
+      this.tab = tab
     },
-    togglePath(path) {
-      // console.log(path)
-      this.path = path
-      this.$router.push({ path: '/financial/payment/' + path })
+    addBtn() {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: {},
+        tabState: 'addTab'
+      }
+    },
+    editRow(data) {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: data,
+        tabState: 'editTab'
+      }
+    },
+    search(data) {
+      this.searchData = data
+      this.tab = 'listTab'
     },
     dataImpore() {
-      this.togglePath('import')
+      this.tab = 'importTab'
+      // this.togglePath('import')
     },
     handleDownload() {
+      this.tab = 'loadDownTab'
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
@@ -122,15 +152,8 @@ export default {
     }
   },
   computed: {
-    cachedViews() {
-      return this.$store.state.tagsView.cachedViews
-    }
   },
   watch: {
-    $route() {
-      var path = this.$route.path
-      this.path = path.split('/').pop()
-    }
   }
 }
 </script>

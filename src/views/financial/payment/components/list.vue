@@ -7,16 +7,17 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="contractInfo.id" label="合同编号"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同名称"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="number" label="发票号码"></el-table-column>
-        <el-table-column prop="amount" label="回款金额"></el-table-column>
-        <el-table-column prop="date" label="回款日期"></el-table-column>
-        <el-table-column prop="payNoReturn" label="已开票未回款"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column align="center" prop="contractInfo.code" label="合同编号"></el-table-column>
+        <el-table-column align="center" prop="contractInfo.name" label="合同名称"></el-table-column>
+        <el-table-column align="center" prop="contractInfo.region.name" label="所属办事处"></el-table-column>
+        <el-table-column align="center" prop="artificialCost" label="人工成本投入"></el-table-column>
+        <el-table-column align="center" prop="materialCost" label="材料成本投入"></el-table-column>
+        <el-table-column align="center" prop="comprehensiveCost" label="综合成本投入"></el-table-column>
+        <el-table-column align="center" prop="manageCost" label="管理费用"></el-table-column>
+        <el-table-column align="center" prop="tax" label="税金"></el-table-column>
+          <el-table-column align="center" prop="inputDate" label="投入日期"></el-table-column>
+        <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <!-- <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button> -->
             <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
@@ -31,16 +32,36 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  name: 'invoiceList',
+  name: 'paymentList',
+  props: ['searchData'],
   data() {
     return {
-      listLoading: false,
       height: 100,
       total: 5,
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      tableData: []
+      tableData: [{
+        id: '1',
+        number: '2018001176',
+        name: '深圳市中海华庭电梯监管服务合同',
+        area: '深圳办事处',
+        date: '2018-01',
+        changeMoney: '1,000,000',
+        payMoney: '1,100,000',
+        returnMoney: '500,000',
+        payNoReturn: '300,000'
+      }, {
+        id: '2',
+        number: '2018001177',
+        name: '深圳市中海华庭电梯监管服务合同',
+        area: '深圳办事处',
+        date: '2018-01',
+        changeMoney: '1,000,000',
+        payMoney: '1,100,000',
+        returnMoney: '500,000',
+        payNoReturn: '300,000'
+      }]
     }
   },
   created() {
@@ -58,8 +79,9 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/ContractReceived/search?size=' + pageSize + '&page=' + page
-      this.$post(url).then(res => {
+      console.log('searchData', this.searchData)
+      var url = '/ContractPayment/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
           var data = res.data.data
           console.log('data', data)
@@ -81,7 +103,7 @@ export default {
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/ContractReceived/delete', projectID).then(res => {
+      this.$post('/ContractPayment/delete', projectID).then(res => {
         if (res.data.success === true) {
           this.getPaymentData()
           this.$message({
@@ -92,7 +114,11 @@ export default {
       })
     },
     editRow(id) {
-      this.$router.push({ path: '/financial/payment/add?id=' + id })
+      this.$get('/ContractPayment/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        console.log('data', data)
+        this.$emit('editRow', data)
+      })
     }
   }
 }

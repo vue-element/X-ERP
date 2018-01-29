@@ -3,7 +3,7 @@
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
       <div class="form-module">
         <h4 class="module-title">
-          <p>新增回款信息:</p>
+          <p>新增开票信息:</p>
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
@@ -15,8 +15,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="回款金额：" prop="amount">
-              <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="发票抬头名称：" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
@@ -24,12 +24,15 @@
               <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
-            <!-- <el-form-item label="回款日期：" prop="date" class="range-date">
-              <el-date-picker v-model="ruleForm.date" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-              </el-date-picker>
-            </el-form-item> -->
-            <el-form-item label="回款日期：" prop="date" class="single-date">
+            <el-form-item label="开票金额：" prop="amount">
+              <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="8">
+            <el-form-item label="开票日期：" prop="date" class="single-date">
               <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -43,7 +46,7 @@
       <div class="commont-btn">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button><router-link to="/financial/invoice/list">取消</router-link></el-button>
+        <el-button @click="cancel">取消</el-button>
       </div>
     </el-form>
   </div>
@@ -51,32 +54,31 @@
 
 <script>
 export default {
-  name: 'invoiceAdd',
+  name: 'scheduleAnalysisAdd',
+  props: ['editData'],
   data() {
     return {
       loading: false,
       disabled: false,
       contractInfoList: [],
+      originData: {},
       ruleForm: {
-        amount: '回款金额',
+        amount: '开票金额',
         content: '开票内容',
+        name: '发票抬头名称',
         contractInfo: {
           id: 1
         },
-        date: '回款金额',
-        name: '发票抬头名称',
         number: '发票号码'
       },
-      rules: {},
-      originData: {}
+      rules: {}
     }
   },
   created() {
-    console.log('add refresh')
-    this.getInsertData()
-    if (this.$route.query.id) {
-      this.edit()
-      // this.queryId = this.$route.query.id
+    if (this.editData.tabState === 'addTab') {
+      this.getInsertData()
+    } else {
+      this.editInfo()
     }
   },
   methods: {
@@ -87,10 +89,16 @@ export default {
         }
       })
     },
+    editInfo() {
+      console.log(this.editData.editData)
+      var data = this.editData.editData
+      this.contractInfoList = data.contractInfoList
+      this.originData = data.contractBilling
+      this.ruleForm = data.contractBilling
+    },
     save() {
       this.loading = true
-      console.log(this.ruleForm)
-      this.$post('/ContractReceived/save', this.ruleForm).then(res => {
+      this.$post('/contractBilling/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
           console.log('this.ruleForm', this.ruleForm)
           this.loading = false
@@ -98,27 +106,32 @@ export default {
             message: '保存成功',
             type: 'success'
           })
-          // if (this.$route.query.id) {
-          //   this.$router.push('/financial/invoice/list')
-          // }
-        }
-      })
-    },
-    edit() {
-      var id = this.$route.query.id
-      this.$get('/ContractReceived/findUpdateData/' + id).then(res => {
-        if (res.data.success === true) {
-          var data = res.data.data
-          // console.log(data)
-          this.originData = data.contractReceived
-          this.ruleForm = data.contractReceived
+          if (this.editData.tabState === 'editTab') {
+            this.$emit('toggleTab')
+          }
         }
       })
     },
     reset() {
-      // this.ruleForm = this.originData
-      console.log('this.ruleForm', this.ruleForm)
-      console.log('originData', this.originData)
+      if (this.editData.tabState === 'addTab') {
+        console.log('isaddTab')
+        this.ruleForm = {
+          amount: '',
+          content: '',
+          contractInfo: {
+            id: 1
+          },
+          date: '',
+          name: '',
+          number: ''
+        }
+      } else {
+        console.log('originData', this.originData)
+        this.ruleForm = this.originData
+      }
+    },
+    cancel() {
+      this.$emit('toggleTab')
     }
   },
   computed: {}

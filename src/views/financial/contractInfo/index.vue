@@ -53,10 +53,6 @@ export default {
     }
   },
   created() {
-<<<<<<< HEAD
-=======
-    // rowDetail: {}
->>>>>>> 8faead7f462c05cdfabefb040560715818209e7c
   },
   mounted() {},
   methods: {

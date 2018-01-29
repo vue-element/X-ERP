@@ -12,10 +12,11 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
-        <div class="basic-item range-date">
+        <div class="basic-item single-date">
           <label>首期入伙时间：</label>
-          <el-date-picker v-model="firstEntryDate" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
-          </el-date-picker>
+          <el-date-picker type="date" v-model="searchData.firstEntry" placeholder="选择日期" ></el-date-picker>
+          <!-- <el-date-picker v-model="searchData.firstEntry"  value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
+          </el-date-picker> -->
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
@@ -69,7 +70,6 @@ export default {
   data() {
     return {
       height: 100,
-      firstEntryDate: [],
       clientList: [],
       cityList: [],
       regionList: [],
@@ -78,11 +78,11 @@ export default {
       city: { id: 3 },
       contractModeList: [
         {
-          id: '0',
+          id: '酬金制',
           name: '酬金制'
         },
         {
-          id: '1',
+          id: '包干制',
           name: '包干制'
         }
       ],
@@ -91,7 +91,7 @@ export default {
         region_id: 1,
         client_id: 1,
         city_id: 3,
-        contractMode: '0',
+        contractMode: '',
         name: '廖淑萍',
         firstEntry: ''
       }
@@ -114,15 +114,21 @@ export default {
       this.city.id = val[len - 1]
     },
     search() {
-      if (this.firstEntryDate.length > 0) {
-        this.searchData.firstEntry = parseTime(this.firstEntryDate[0], '{y}-{m}-{d}')
-      } else {
-        this.searchData.firstEntry = ''
-      }
+      // this.searchData.firstEntry = this.searchData.firstEntry[0]
       this.searchData.region_id = this.region.id
       this.searchData.client_id = this.client.id
       this.searchData.city_id = this.city.id
-      this.$emit('searchWord', this.searchData)
+      var searchData = {
+        region_id: 1,
+        client_id: 1,
+        city_id: 3,
+        contractMode: '',
+        name: '廖淑萍',
+        firstEntry: '2018-01-10'
+      }
+      // console.log('searchData.firstEntry', this.searchData.firstEntry)
+      // console.log(typeof(this.searchData.firstEntry))
+      this.$emit('searchWord', searchData)
     },
     searchAll() {
       var searchData = {}

@@ -65,7 +65,7 @@ export default {
       var page = this.currentPage - 1 || 0
       // { name: '', number: '' }
       // { contractBilling: { amount: '' } }
-      {'searchData', this.searchData}
+      // { 'searchData', this.searchData }
       var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {

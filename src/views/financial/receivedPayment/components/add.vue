@@ -3,42 +3,35 @@
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
       <div class="form-module">
         <h4 class="module-title">
-          <p>新增开票信息:</p>
+          <p>新增回款信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
+          <!-- <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编码：" prop="contractInfo.id">
               <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="发票抬头名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          </el-col> -->
+          <el-col :xs="12" :sm="12" :lg="12" >
+            <el-form-item label="开票编码："  prop="contractBilling.id">
+              <el-select v-model="ruleForm.contractBilling.id" placeholder="请选择" label="开票内容：" filterable>
+               <el-option v-for="item in contractBillingList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          <el-col :xs="12" :sm="12" :lg="12" >
+            <el-form-item label="回款日期：" prop="date" class="single-date">
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票金额：" prop="amount">
+          <el-col :xs="12" :sm="12" :lg="12" >
+            <el-form-item label="回款金额：" prop="amount">
               <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票日期：" prop="date" class="single-date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票内容：" prop="content">
-              <el-input v-model="ruleForm.content" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -54,24 +47,22 @@
 
 <script>
 export default {
-  name: 'invoiceAdd',
+  name: 'receivedPaymentAdd',
   props: ['editData'],
   data() {
     return {
       loading: false,
       disabled: false,
-      contractInfoList: [],
-      originData: {},
+      contractBillingList: [],
       ruleForm: {
-        amount: '开票金额',
-        content: '开票内容',
-        name: '发票抬头名称',
-        contractInfo: {
+        contractBilling: {
           id: 1
         },
-        number: '发票号码'
+        amount: 100,
+        date: ''
       },
-      rules: {}
+      rules: {},
+      originData: {}
     }
   },
   created() {
@@ -83,24 +74,23 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/contractBilling/findInsertData').then(res => {
+      this.$get('/ContractReceived/findInsertData').then(res => {
         if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
+          this.contractBillingList = res.data.data.contractBillingList
         }
       })
     },
     editInfo() {
       console.log(this.editData.editData)
       var data = this.editData.editData
-      this.contractInfoList = data.contractInfoList
-      this.originData = data.contractBilling
-      this.ruleForm = data.contractBilling
+      this.contractBillingList = data.contractBillingList
+      this.originData = data.contractReceived
+      this.ruleForm = data.contractReceived
     },
     save() {
       this.loading = true
-      this.$post('/contractBilling/save', this.ruleForm).then(res => {
+      this.$post('/ContractReceived/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
-          console.log('this.ruleForm', this.ruleForm)
           this.loading = false
           this.$message({
             message: '保存成功',

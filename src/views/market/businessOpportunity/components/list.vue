@@ -19,9 +19,9 @@
    <el-table-column prop="projectImpls[0].category" label="业务分类"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-        <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button>
+        <!-- <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -79,16 +79,16 @@ export default {
     }
   },
   created() {
+    this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getProjectData()
   },
   watch: {
-    searchData(val, oldVal) {
-      this.search()
-    }
+    // searchData(val, oldVal) {
+    //   this.search()
+    // }
   },
   methods: {
     resize() {
@@ -101,8 +101,11 @@ export default {
       })
       this.$emit('selData', selArr)
     },
-    seeRow(row) {
-      console.log('row', row)
+    seeRow(id) {
+      this.$get('/bussiness/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        this.$emit('editRow', data)
+      })
     },
     deleteRow(id) {
       var projectID = { id: [id] }
@@ -116,19 +119,23 @@ export default {
         }
       })
     },
-    editRow(id) {
-      this.$get('/bussiness/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        this.$emit('editRow', data)
-      })
-    },
     getProjectData() {
+      // console.log('searchData', JSON.stringify(this.searchData))
+      var searchData = {
+        name: '廖淑萍',
+        date: '2018-01-01 00:00',
+        chargePerson: '业务线负责人',
+        city_id: 3,
+        clinet_id: 1,
+        region_id: 1
+      }
+
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then((res) => {
-        // console.log('res', res)
+      this.$post(url, searchData, false).then((res) => {
+        console.log('res', res)
         var data = res.data.data
         this.total = data.totalElements
         this.currentPage = data.number + 1
