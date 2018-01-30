@@ -131,12 +131,5 @@ export default {
 }
 .compotent-tab {
   margin-top: 50px;
-  // border: 1px solid #d2d2d2;
-  // margin-bottom: 16px;
-  // padding: 0 20px;
-  // @include borderRadius(4px);
-  // @include noScroll;
-  // @include boxSizing;
-  // overflow-y: scroll;
 }
 </style>

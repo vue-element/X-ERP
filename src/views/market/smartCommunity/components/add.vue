@@ -568,11 +568,6 @@ export default {
           c: '',
           category: 4
         }
-        // this.carObj = {}
-        // this.personObj = {}
-        // this.elevatorObj = {}
-        // this.machineRoomObj = {}
-        // this.otherObj = {}
       } else {
         this.editInfo()
       }
@@ -581,20 +576,19 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      var data = this.editData.editData
-      this.mainMsg = _.cloneDeep(data.project)
-      console.log('mainMsg', this.mainMsg)
+      var data = _.cloneDeep(this.editData.editData)
+      this.mainMsg = data.project
       data.project.projectDesigns.forEach((item) => {
         if (item.category === '0') {
-          this.carObj = _.cloneDeep(item)
+          this.carObj = item
         } else if (item.category === '1') {
-          this.personObj = _.cloneDeep(item)
+          this.personObj = item
         } else if (item.category === '2') {
-          this.elevatorObj = _.cloneDeep(item)
+          this.elevatorObj = item
         } else if (item.category === '3') {
-          this.machineRoomObj = _.cloneDeep(item)
+          this.machineRoomObj = item
         } else if (item.category === '4') {
-          this.otherObj = _.cloneDeep(item)
+          this.otherObj = item
         }
       })
       var cityOption = data.project.oldCity.split('-')
@@ -644,8 +638,6 @@ export default {
             font-size: 14px;
             label.el-form-item__label {
                 width: 20%!important;
-                // max-width: 100px;
-                // line-height: 30px;
             }
             .el-radio-group {
                 @include flex;

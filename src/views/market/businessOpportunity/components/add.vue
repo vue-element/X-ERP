@@ -259,41 +259,9 @@ export default {
       regionList: [],
       cityList: [],
       clientList: [],
-      followStateList: [{
-        value: '浅度跟进'
-      }, {
-        value: '深度跟进'
-      }, {
-        value: '已定未签'
-      }, {
-        value: '已签订'
-      }, {
-        value: '放弃'
-      }],
-      executStateList: [{
-        value: '前期接洽'
-      }, {
-        value: '方案编制'
-      }, {
-        value: '投标'
-      }, {
-        value: '中标'
-      }, {
-        value: '合同会签'
-      }, {
-        value: '纸质版合同签订'
-      }],
-      projectCategoryList: [{
-        value: '科技-智慧社区工程全委'
-      }, {
-        value: '科技-智慧社区改造'
-      }, {
-        value: '科技-物联网大平台'
-      }, {
-        value: '科技-设计服务'
-      }, {
-        value: '科技-技术服务'
-      }],
+      followStateList: [],
+      executStateList: [],
+      projectCategoryList: [],
       dateline: ''
     }
   },
@@ -369,14 +337,14 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      var data = this.editData.editData
-      this.businessInfo = _.cloneDeep(data.business)
-      var cityOption = _.cloneDeep(data.business.oldCity.split('-'))
+      var data = _.cloneDeep(this.editData.editData)
+      this.businessInfo = data.business
+      var cityOption = data.business.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
-      this.projectInfo = _.cloneDeep(data.business.projectImpls[0])
+      this.projectInfo = data.business.projectImpls[0]
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -394,6 +362,41 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+      this.followStateList = [{
+        value: '浅度跟进'
+      }, {
+        value: '深度跟进'
+      }, {
+        value: '已定未签'
+      }, {
+        value: '已签订'
+      }, {
+        value: '放弃'
+      }]
+      this.executStateList = [{
+        value: '前期接洽'
+      }, {
+        value: '方案编制'
+      }, {
+        value: '投标'
+      }, {
+        value: '中标'
+      }, {
+        value: '合同会签'
+      }, {
+        value: '纸质版合同签订'
+      }]
+      this.projectCategoryList = [{
+        value: '科技-智慧社区工程全委'
+      }, {
+        value: '科技-智慧社区改造'
+      }, {
+        value: '科技-物联网大平台'
+      }, {
+        value: '科技-设计服务'
+      }, {
+        value: '科技-技术服务'
+      }]
     },
     cityChange(val) {
       var len = val.length

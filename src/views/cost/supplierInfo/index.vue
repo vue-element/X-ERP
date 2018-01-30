@@ -1,5 +1,5 @@
 <template>
-  <div class="contract-container">
+  <div class="app-container">
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
@@ -11,9 +11,13 @@
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <!-- <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
+          </button>
+          <!-- <button>
+            <i class="iconfont icon-delete"></i>
+            <span>删除</span>
           </button> -->
         </div>
         <div class="export-btn fr">
@@ -32,6 +36,9 @@
         </div>
       </div>
     </div>
+    <!-- <keep-alive :include='cachedViews'>
+      <router-view></router-view>
+    </keep-alive> -->
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
@@ -48,7 +55,7 @@ import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'scheduleManage',
+  name: 'supplier',
   components: {
     AddComponent,
     ListComponent,
@@ -108,7 +115,6 @@ export default {
     },
     search(data) {
       this.searchData = data
-      this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
       this.tab = 'listTab'
     },
     toggleTab(tab) {
@@ -153,6 +159,12 @@ export default {
     }
   },
   watch: {
+    $route() {
+      var path = this.$route.path
+      this.path = path.split('/').pop()
+      // console.log(this.path)
+      // console.log(this.$route.path)
+    }
   }
 }
 </script>

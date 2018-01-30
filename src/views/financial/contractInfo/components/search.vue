@@ -93,7 +93,7 @@ export default {
   mounted() {
     this.$refs.ele.style.height = winHeight() - 230 + 'px'
     window.addEventListener('resize', () => {
-      this.$refs.ele.style.height = winHeight() - 230+ 'px'
+      this.$refs.ele.style.height = winHeight() - 230 + 'px'
     })
   },
   computed: {
