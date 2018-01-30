@@ -126,4 +126,9 @@ export default {
     }
   }
 }
+.el-table__body-wrapper.is-scroll-right{
+  &::-webkit-scrollbar{
+    width:0;
+  }
+}
 </style>
