@@ -115,6 +115,7 @@ export default {
     },
     search() {
       if (this.firstEntryDate.length > 0) {
+        console.log(this.searchData.firstEntry)
         this.searchData.firstEntry = parseTime(this.firstEntryDate[0], '{y}-{m}-{d}')
       } else {
         this.searchData.firstEntry = ''
