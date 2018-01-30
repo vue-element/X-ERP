@@ -7,16 +7,16 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="合同编号：" prop="contractInfo_id">
+              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称 ：" prop="contractInfo.id" class="single-date">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+            <el-form-item label="合同名称 ：" prop="contractInfo_id" class="single-date">
+              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -41,9 +41,7 @@ export default {
       disabled: false,
       contractInfoList: [],
       ruleForm: {
-        contractInfo: {
-          id: 1
-        }
+        contractInfo_id: 1
       },
       rules: {}
     }

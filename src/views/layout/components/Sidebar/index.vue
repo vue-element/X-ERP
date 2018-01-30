@@ -24,7 +24,7 @@ export default {
     }
   },
   created() {
-    console.log('this.$route.path', this.$route.path)
+    // console.log('this.$route.path', this.$route.path)
     this.setDefaultActive()
   },
   methods: {

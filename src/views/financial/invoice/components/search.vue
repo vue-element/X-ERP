@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编码：" prop="contractInfo_id">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
+              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择"  filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -26,15 +26,11 @@
               <el-input v-model="ruleForm.number" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
-          <!-- <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票日期：" prop="name" class="range-date">
-              <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col> -->
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="开票日期：" prop="date" class="single-date">
-              <el-date-picker v-model="ruleForm.date" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="date" placeholder="选择日期"></el-date-picker>
+              <!-- <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+              </el-date-picker> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,7 +44,6 @@
 </template>
 
 <script>
-// import { parseTime } from '@/utils'
 export default {
   name: 'invoiceSearch',
   data() {
@@ -58,10 +53,10 @@ export default {
       contractInfoList: [],
       ruleForm: {
         contractInfo_id: 1,
-        date: '',
         name: '发票抬头名称',
         number: '发票号码'
       },
+      date: '',
       rules: {}
     }
   },
@@ -77,6 +72,10 @@ export default {
       })
     },
     search() {
+      if (this.date) {
+        this.ruleForm.date = this.date
+      }
+      // console.log('search', this.ruleForm)
       this.$emit('search', this.ruleForm)
     },
     searchAll() {

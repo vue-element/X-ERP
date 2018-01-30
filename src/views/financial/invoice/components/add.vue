@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="合同编码：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -58,6 +58,7 @@ export default {
   props: ['editData'],
   data() {
     return {
+      action: 'add',
       loading: false,
       disabled: false,
       contractInfoList: [],
@@ -76,8 +77,10 @@ export default {
   },
   created() {
     if (this.editData.tabState === 'addTab') {
+      this.action = 'add'
       this.getInsertData()
     } else {
+      this.action = 'edit'
       this.editInfo()
     }
   },

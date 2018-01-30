@@ -6,8 +6,6 @@ const tagsView = {
   mutations: {
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => (v.path === view.path || v.title === view.meta.title))) return
-      // var name = view.name.split('-')[0]
-      // if (state.visitedViews.some(v => v.name === name)) return
       state.visitedViews.push({
         name: view.name,
         pName: view.meta.pName,

@@ -13,8 +13,7 @@
         </el-col>
         <el-col :xs="12" :sm="12" :lg="8">
           <el-form-item label="单据日期：" class="single-date">
-          <el-date-picker type="date" placeholder="选择日期" v-model="searchData.date"></el-date-picker>
-          <!-- <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="searchData.date"></el-date-picker> -->
+          <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="date"></el-date-picker>
             <!-- <el-date-picker v-model="searchData.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期"></el-date-picker> -->
           </el-form-item>
         </el-col>
@@ -27,7 +26,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="24" :lg="8">
           <el-form-item label="客户信息：">
-            <el-select placeholder="请选择" v-model="client.id" >
+            <el-select placeholder="请选择" v-model="searchData.client_id" >
              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -35,7 +34,7 @@
         </el-col>
         <el-col :xs="12" :sm="12" :lg="8">
           <el-form-item label="区域：">
-            <el-select placeholder="请选择"  v-model="region.id">
+            <el-select placeholder="请选择"  v-model="searchData.region_id">
              <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -57,7 +56,6 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils'
 export default {
   name: 'InvoiceSearch',
   data() {
@@ -67,20 +65,18 @@ export default {
         client_id: 1,
         city_id: 3,
         chargePerson: '业务线负责人',
-        date: '',
         name: '商机名称'
       },
+      date: '',
       clientList: [],
       cityList: [],
       regionList: [],
-      region: { id: 1 },
-      client: { id: 1 },
-      city: { id: 3 },
       cityOption: [0, 1, 3]
     }
   },
   created() {
     this.getInsertData()
+    this.searchData.city_id = this.cityOption[2]
   },
   methods: {
     getInsertData() {
@@ -92,24 +88,14 @@ export default {
       })
     },
     cityChange(val) {
-      console.log('val', val)
       var len = val.length
-      this.city.id = val[len - 1]
+      this.searchData.city_id = val[len - 1]
     },
     search() {
-      this.searchData.region_id = this.region.id
-      this.searchData.client_id = this.client.id
-      this.searchData.city_id = this.city.id
-      this.searchData.date = parseTime(this.searchData.date, "{y}-{m}-{d}")
-      console.log('searchData',this.searchData)
-      var searchData = {
-        name: '廖淑萍',
-        date: '2018-01-29',
-        chargePerson: '业务线负责人',
-        city_id: 3,
-        clinet_id: 1,
-        region_id: 1
+      if (this.date) {
+        this.searchData.date = this.date
       }
+      // console.log('searchData', this.searchData)
       this.$emit('searchWord', this.searchData)
     },
     searchAll() {

@@ -57,7 +57,6 @@ export default {
     },
     getInvoiceData() {
       console.log('searchData', this.searchData)
-      // console.log (typeof(this.searchData.date) === object)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0

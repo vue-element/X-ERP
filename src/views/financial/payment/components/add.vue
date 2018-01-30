@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -47,7 +47,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="投入日期：" prop="inputDate" class="single-date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.inputDate"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   name: 'paymentAdd',
   props: ['editData'],
@@ -81,9 +82,7 @@ export default {
         tax: '稅金',
         inputDate: '投入日期'
       },
-      rules: {},
-      // queryId: 1,
-      originData: {}
+      rules: {}
     }
   },
   created() {
@@ -102,10 +101,8 @@ export default {
       })
     },
     editInfo() {
-      console.log(this.editData.editData)
-      var data = this.editData.editData
+      var data = _.cloneDeep(this.editData.editData)
       this.contractInfoList = data.contractInfoList
-      this.originData = data.contractPayment
       this.ruleForm = data.contractPayment
     },
     save() {
@@ -130,14 +127,14 @@ export default {
           amount: '',
           content: '',
           contractInfo: {
-            id: 1
+            id: ''
           },
           date: '',
           name: '',
           number: ''
         }
       } else {
-        this.ruleForm = this.originData
+        this.editInfo()
       }
     },
     cancel() {

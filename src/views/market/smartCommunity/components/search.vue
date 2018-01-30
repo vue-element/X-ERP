@@ -14,7 +14,7 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item single-date">
           <label>首期入伙时间：</label>
-          <el-date-picker type="date" v-model="searchData.firstEntry" placeholder="选择日期" ></el-date-picker>
+          <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="firstEntry" placeholder="选择日期" ></el-date-picker>
           <!-- <el-date-picker v-model="searchData.firstEntry"  value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
           </el-date-picker> -->
         </div>
@@ -33,7 +33,7 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item customer-info">
           <label>客户信息：</label>
-          <el-select v-model="client.id" placeholder="请选择">
+          <el-select v-model="searchData.client_id" placeholder="请选择">
            <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -48,7 +48,7 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item">
           <label>区域：</label>
-          <el-select v-model="region.id" placeholder="请选择">
+          <el-select v-model="searchData.region_id" placeholder="请选择">
            <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils'
 export default {
   name: 'SmartCommunitySearch',
   data() {
@@ -73,9 +72,6 @@ export default {
       clientList: [],
       cityList: [],
       regionList: [],
-      region: { id: 1 },
-      client: { id: 1 },
-      city: { id: 3 },
       contractModeList: [
         {
           id: '酬金制',
@@ -92,13 +88,14 @@ export default {
         client_id: 1,
         city_id: 3,
         contractMode: '',
-        name: '廖淑萍',
-        firstEntry: ''
-      }
+        name: '廖淑萍'
+      },
+      firstEntry: ''
     }
   },
   created() {
     this.getInsertData()
+    this.searchData.city_id = this.cityOption[2]
   },
   methods: {
     getInsertData() {
@@ -111,24 +108,14 @@ export default {
     },
     cityChange(val) {
       var len = val.length
-      this.city.id = val[len - 1]
+      this.searchData.city_id = val[len - 1]
     },
     search() {
-      // this.searchData.firstEntry = this.searchData.firstEntry[0]
-      this.searchData.region_id = this.region.id
-      this.searchData.client_id = this.client.id
-      this.searchData.city_id = this.city.id
-      var searchData = {
-        region_id: 1,
-        client_id: 1,
-        city_id: 3,
-        contractMode: '',
-        name: '廖淑萍',
-        firstEntry: '2018-01-10'
+      if (this.firstEntry) {
+        this.searchData.firstEntry = this.firstEntry
       }
-      // console.log('searchData.firstEntry', this.searchData.firstEntry)
-      // console.log(typeof(this.searchData.firstEntry))
-      this.$emit('searchWord', searchData)
+      // console.log('searchData', this.searchData)
+      this.$emit('searchWord', this.searchData)
     },
     searchAll() {
       var searchData = {}

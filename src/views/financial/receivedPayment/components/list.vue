@@ -31,6 +31,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'receivedPaymentList',
+  props: ['searchData'],
   data() {
     return {
       listLoading: false,
@@ -64,15 +65,15 @@ export default {
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/ContractReceived/search?size=' + pageSize + '&page=' + page
-      this.$post(url).then(res => {
+      this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
+          this.listLoading = false
           var data = res.data.data
           console.log('data', data)
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.listLoading = false
         }
       })
     },

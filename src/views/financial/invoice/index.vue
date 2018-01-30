@@ -115,7 +115,6 @@ export default {
     },
     search(data) {
       this.searchData = data
-      this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
       this.tab = 'listTab'
     },
     toggleTab(tab) {
@@ -163,8 +162,8 @@ export default {
     $route() {
       var path = this.$route.path
       this.path = path.split('/').pop()
-      console.log(this.path)
-      console.log(this.$route.path)
+      // console.log(this.path)
+      // console.log(this.$route.path)
     }
   }
 }

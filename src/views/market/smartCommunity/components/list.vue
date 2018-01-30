@@ -92,7 +92,6 @@ export default {
       })
     },
     getProjectData() {
-      // console.log('res', res.data.data)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0

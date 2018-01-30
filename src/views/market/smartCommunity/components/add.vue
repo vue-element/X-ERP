@@ -21,7 +21,7 @@
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="区域：" prop="region.id">
-            <p v-if="disabled">{{mainMsg.client.name}}</p>
+            <p v-if="disabled">{{mainMsg.region.name}}</p>
             <el-select v-else v-model="mainMsg.region.id" placeholder="请选择">
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
@@ -530,7 +530,7 @@ export default {
           volumetricRate: '',
           projectDesigns: [],
           oldCity: ''
-        },
+        }
         this.carObj = {
           a: '',
           a1: '',
@@ -539,7 +539,7 @@ export default {
           c: '',
           c1: '',
           category: 0
-        },
+        }
         this.personObj = {
           a: '',
           a1: '',
@@ -548,12 +548,12 @@ export default {
           c: '',
           c1: '',
           category: 1
-        },
+        }
         this.elevatorObj = {
           a: '',
           b: '',
           category: 2
-        },
+        }
         this.machineRoomObj = {
           a: '',
           a1: '',
@@ -561,7 +561,7 @@ export default {
           b1: '',
           c: '',
           category: 3
-        },
+        }
         this.otherObj = {
           a: '',
           b: '',
@@ -606,10 +606,10 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
-        this.editWord = "编辑"
+        this.editWord = '编辑'
         this.editInfo()
       } else {
-        this.editWord = "取消编辑"
+        this.editWord = '取消编辑'
       }
     },
     getInsertData() {

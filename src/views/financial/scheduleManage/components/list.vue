@@ -47,19 +47,19 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getInvoiceData()
+    this.getScheduleData()
   },
   methods: {
     resize() {
       this.height = winHeight() - 210
     },
-    getInvoiceData() {
+    getScheduleData() {
       console.log('searchData', this.searchData)
       // console.log (typeof(this.searchData.date) === object)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
+      var url = '/ContractSchedule/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
           var data = res.data.data
@@ -73,17 +73,17 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getInvoiceData()
+      this.getScheduleData()
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getInvoiceData()
+      this.getScheduleData()
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/contractBilling/delete', projectID).then(res => {
+      this.$post('/ContractSchedule/delete', projectID).then(res => {
         if (res.data.success === true) {
-          this.getInvoiceData()
+          this.getScheduleData()
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -92,7 +92,7 @@ export default {
       })
     },
     editRow(id) {
-      this.$get('/contractBilling/findUpdateData/' + id).then((res) => {
+      this.$get('/ContractSchedule/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         console.log('data', data)
         this.$emit('editRow', data)

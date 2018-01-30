@@ -11,7 +11,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+        <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>

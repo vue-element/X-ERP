@@ -94,7 +94,7 @@
           <el-form-item label="业务分类：" prop="region.id">
             <p v-if="disabled">{{projectInfo.category}}</p>
             <el-select v-else v-model="projectInfo.category" placeholder="请选择">
-              <el-option v-for="item in projectCategoryList" :label="item.value" :value="item.value">
+              <el-option v-for="item in projectCategoryList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -183,7 +183,7 @@
           <el-form-item label="商机跟进状态：" prop="region.id">
             <p v-if="disabled">{{businessInfo.followState}}</p>
             <el-select v-else v-model="businessInfo.followState" placeholder="请选择">
-              <el-option v-for="item in followStateList" :label="item.value" :value="item.value">
+              <el-option v-for="item in followStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -192,7 +192,7 @@
           <el-form-item label="商机执行状态：" prop="region.id">
             <p v-if="disabled">{{businessInfo.executState}}</p>
             <el-select v-else v-model="businessInfo.executState" placeholder="请选择">
-              <el-option v-for="item in executStateList" :label="item.value" :value="item.value" >
+              <el-option v-for="item in executStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -301,7 +301,7 @@ export default {
     this.businessInfo.date = new Date()
     this.dateline = new Date()
     this.getInsertData()
-    console.log('tabState',this.editData.tabState)
+    console.log('tabState', this.editData.tabState)
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
       this.editShow = true
@@ -336,7 +336,7 @@ export default {
         this.businessInfo = {
           city: { id: '' },
           client: { id: '' },
-          region: { id: ''},
+          region: { id: '' },
           projectImpls: [],
           code: '',
           executState: '',
@@ -381,10 +381,10 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
-        this.editWord = "编辑"
+        this.editWord = '编辑'
         this.editInfo()
       } else {
-        this.editWord = "取消编辑"
+        this.editWord = '取消编辑'
       }
     },
     getInsertData() {

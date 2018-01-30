@@ -120,21 +120,11 @@ export default {
       })
     },
     getProjectData() {
-      // console.log('searchData', JSON.stringify(this.searchData))
-      var searchData = {
-        name: '廖淑萍',
-        date: '2018-01-01 00:00',
-        chargePerson: '业务线负责人',
-        city_id: 3,
-        clinet_id: 1,
-        region_id: 1
-      }
-
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
-      this.$post(url, searchData, false).then((res) => {
+      this.$post(url, this.searchData, false).then((res) => {
         console.log('res', res)
         var data = res.data.data
         this.total = data.totalElements

@@ -160,12 +160,6 @@ export default {
     }
   },
   watch: {
-    $route() {
-      var path = this.$route.path
-      this.path = path.split('/').pop()
-      console.log(this.path)
-      console.log(this.$route.path)
-    }
   }
 }
 </script>

@@ -24,7 +24,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12" >
             <el-form-item label="回款日期：" prop="date" class="single-date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   name: 'receivedPaymentAdd',
   props: ['editData'],
@@ -53,23 +54,25 @@ export default {
     return {
       loading: false,
       disabled: false,
+      action: 'add',
       contractBillingList: [],
       ruleForm: {
         contractBilling: {
           id: 1
         },
-        amount: 100,
+        amount: '100',
         date: ''
       },
-      rules: {},
-      originData: {}
+      rules: {}
     }
   },
   created() {
     if (this.editData.tabState === 'addTab') {
       this.getInsertData()
+      this.action = 'add'
     } else {
       this.editInfo()
+      this.action = 'edit'
     }
   },
   methods: {
@@ -81,14 +84,13 @@ export default {
       })
     },
     editInfo() {
-      console.log(this.editData.editData)
-      var data = this.editData.editData
+      var data = _.cloneDeep(this.editData.editData)
       this.contractBillingList = data.contractBillingList
-      this.originData = data.contractReceived
       this.ruleForm = data.contractReceived
     },
     save() {
       this.loading = true
+      console.log('ruleForm', JSON.stringify(this.ruleForm))
       this.$post('/ContractReceived/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
           this.loading = false
@@ -96,28 +98,24 @@ export default {
             message: '保存成功',
             type: 'success'
           })
-          if (this.editData.tabState === 'editTab') {
+          if (this.action === 'edit') {
             this.$emit('toggleTab')
           }
         }
       })
     },
     reset() {
-      if (this.editData.tabState === 'addTab') {
+      if (this.action === 'add') {
         console.log('isaddTab')
         this.ruleForm = {
-          amount: '',
-          content: '',
-          contractInfo: {
-            id: 1
+          contractBilling: {
+            id: ''
           },
-          date: '',
-          name: '',
-          number: ''
+          amount: '',
+          date: ''
         }
       } else {
-        console.log('originData', this.originData)
-        this.ruleForm = this.originData
+        this.editInfo()
       }
     },
     cancel() {
