@@ -66,18 +66,10 @@ export const asyncRouterMap = [
       //     { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }}
       //   ]
       // },
-      { path: 'payment', component: _import('financial/payment/index'), redirect: '/financial/payment/list', name: 'contrctPayment', meta: { title: '合同回款管理' }, hideChildren: true,
-        children: [
-          { path: 'list', component: _import('financial/payment/list'), name: 'paymentList', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
-          { path: 'add', component: _import('financial/payment/add'), name: 'paymentAdd', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
-          { path: 'search', component: _import('financial/payment/search'), name: 'paymentSearch', meta: { pName: 'contrctPayment', title: '合同回款管理' }},
-          { path: 'import', component: _import('financial/payment/import'), name: 'paymentImport', meta: { pName: 'contrctPayment', title: '合同回款管理' }}
-        ]
-      },
-      // { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
-      { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},
-      { path: 'progress-manage', component: _import('financial/progressManage'), name: 'progressManage', meta: { title: '项目进度管理' }},
-      { path: 'progress-analysis', component: _import('financial/progressAnalysis'), name: 'progressAnalysis', meta: { title: '项目进度分析' }}
+      { path: 'received-payment', component: _import('financial/receivedPayment/index'), name: 'receivedPayment', meta: { title: '合同回款管理' }},
+      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同付款管理' }},
+      { path: 'schedule-manage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
+      { path: 'schedule-analysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
   { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },

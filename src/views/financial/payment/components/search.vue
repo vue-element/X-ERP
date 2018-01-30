@@ -7,34 +7,19 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编码：" prop="contractInfo_id">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
+            <el-form-item label="合同编号：" prop="contractInfo.id">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="发票抬头名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入您的账号"></el-input>
-            </el-form-item>
-          </el-col>
-          <!-- <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票日期：" prop="name" class="range-date">
-              <el-date-picker v-model="value2" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col> -->
-          <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="开票日期：" prop="date" class="single-date">
-              <el-date-picker v-model="ruleForm.date" type="date" placeholder="选择日期"></el-date-picker>
+            <el-form-item label="合同名称 ：" prop="contractInfo.id" class="single-date">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,29 +33,28 @@
 </template>
 
 <script>
-// import { parseTime } from '@/utils'
 export default {
-  name: 'invoiceSearch',
+  name: 'paymentSearch',
   data() {
     return {
       loading: false,
       disabled: false,
       contractInfoList: [],
       ruleForm: {
-        contractInfo_id: 1,
-        date: '',
-        name: '发票抬头名称',
-        number: '发票号码'
+        contractInfo: {
+          id: 1
+        }
       },
       rules: {}
     }
   },
   created() {
+    console.log('search created')
     this.getInsertData()
   },
   methods: {
     getInsertData() {
-      this.$get('/contractBilling/findInsertData').then(res => {
+      this.$get('/ContractPayment/findInsertData').then(res => {
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.contractInfoList
         }

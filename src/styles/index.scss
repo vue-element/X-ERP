@@ -278,9 +278,11 @@ a {
         font-size: 14px;
         border-top: 1px solid #828282;
         border-right: 1px solid #828282;
-        input {
+        input,
+        p{
           display: inline-block;
           width: 80%;
+          min-width: 60px;
           height: 26px;
           line-height: 26px;
           text-align: center;

@@ -55,7 +55,7 @@ import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'contrctInvoice',
+  name: 'scheduleManage',
   components: {
     AddComponent,
     ListComponent,

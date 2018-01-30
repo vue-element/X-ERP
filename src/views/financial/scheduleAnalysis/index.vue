@@ -36,9 +36,6 @@
         </div>
       </div>
     </div>
-    <!-- <keep-alive :include='cachedViews'>
-      <router-view></router-view>
-    </keep-alive> -->
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
@@ -55,7 +52,7 @@ import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'contrctInvoice',
+  name: 'scheduleAnalysis',
   components: {
     AddComponent,
     ListComponent,

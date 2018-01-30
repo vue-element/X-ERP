@@ -29,8 +29,8 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow" :searchData="searchData" ref="del"></ListComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" ref="del"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -89,6 +89,14 @@ export default {
         tabState: 'addTab'
       }
     },
+    seeRow(data) {
+      this.tab = 'addTab'
+      // console.log(data)
+      this.editData = {
+        editData: data,
+        tabState: 'seeTab'
+      }
+    },
     delSelectData() {
       var id = { id: this.selArr }
       this.$post('/project/delete', id).then((res) => {
@@ -99,13 +107,6 @@ export default {
           type: 'success'
         })
       })
-    },
-    editRow(data) {
-      this.tab = 'addTab'
-      this.editData = {
-        editData: data,
-        tabState: 'editTab'
-      }
     },
     searchWord(data) {
       this.tab = 'listTab'

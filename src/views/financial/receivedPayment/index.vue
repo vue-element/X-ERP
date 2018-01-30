@@ -36,9 +36,6 @@
         </div>
       </div>
     </div>
-    <!-- <keep-alive :include='cachedViews'>
-      <router-view></router-view>
-    </keep-alive> -->
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
@@ -98,6 +95,9 @@ export default {
   },
   mounted() {},
   methods: {
+    toggleTab(tab) {
+      this.tab = tab
+    },
     addBtn() {
       this.tab = 'addTab'
       this.editData = {
@@ -115,11 +115,10 @@ export default {
     },
     search(data) {
       this.searchData = data
+      // this.searchData.date = (this.searchData.date).toISOS tring().slice(0,10)
       this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
+      // console.log('searchData.date', this.searchData.date)
       this.tab = 'listTab'
-    },
-    toggleTab(tab) {
-      this.tab = tab
     },
     dataImpore() {
       this.toggleTab('importTab')

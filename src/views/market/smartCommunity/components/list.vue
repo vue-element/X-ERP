@@ -19,9 +19,9 @@
    <el-table-column prop="contractMode" label="合约模式"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click="seeRow(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-        <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button>
+        <!-- <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -54,9 +54,6 @@ export default {
     })
   },
   watch: {
-    searchData(val, oldVal) {
-      this.search()
-    }
   },
   methods: {
     resize() {
@@ -69,30 +66,38 @@ export default {
       })
       this.$emit('selData', selArr)
     },
-    seeRow(row) {
-      console.log('row', row)
+    seeRow(id) {
+      this.$get('/project/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        this.$emit('seeRow', data)
+      })
     },
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/project/delete', projectID).then((res) => {
         if (res.status === 200) {
           this.getProjectData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
         }
       })
     },
     editRow(id) {
       this.$get('/project/findUpdateData/' + id).then((res) => {
         var data = res.data.data
-        this.$emit('editRow', data)
+        console.log('data', data)
+        // this.$emit('editRow', data)
       })
     },
     getProjectData() {
+      // console.log('res', res.data.data)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/project/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
-        // console.log('res', res.data.data)
         var data = res.data.data
         this.projectData = data.content
         this.total = data.totalElements

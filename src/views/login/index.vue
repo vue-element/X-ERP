@@ -204,8 +204,8 @@ export default {
         vertical-align: middle;
       }
       .el-form-item__content {
-        width: auto;
-        height: auto;
+        width: 100%;
+        height: 54px;
       }
       .el-input{
         display: inline-block;
@@ -227,6 +227,9 @@ export default {
           @include boxSizing;
           border: none;
           outline: none;
+        }
+        input:focus{
+          border: none;
         }
       }
     }

@@ -60,9 +60,6 @@ export default {
     isActive(route) {
       // console.log('pName', this.$route.meta.pName)
       // console.log('route', route.name)
-      // console.log('pName', this.$route.meta.pName)
-      // console.log('route', route.name)
-      // return route.path === this.$route.path || route.name === this.$route.name
       return route.path === this.$route.path || route.name === this.$route.name || (route.pName && (route.pName === this.$route.meta.pName))
     },
     addViewTags() {

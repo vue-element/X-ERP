@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="compotent-tab">
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" ></AddComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData"  @toggleTab="toggleTab('listTab')"></AddComponent>
     <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData" @editRow="editRow"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
@@ -95,7 +95,7 @@ export default {
       this.tab = 'addTab'
       this.editData = {
         editData: data,
-        tabState: 'editTab'
+        tabState: 'seeTab'
       }
     },
     searchWord(data) {

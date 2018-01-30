@@ -6,7 +6,7 @@
           <p>新增开票信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
+          <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编码：" prop="contractInfo.id">
               <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
@@ -14,31 +14,48 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="发票抬头名称：" prop="name">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="合同名称：" prop="name">
               <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+        </el-row>
+        <h4 class="module-title">
+          <p>进度录入</p>
+        </h4>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="项目所属阶段：" prop="contractInfo.id">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="完工百分比：" prop="contractInfo.id">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票金额：" prop="amount">
-              <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="项目状态：" prop="contractInfo.id">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票日期：" prop="date" class="single-date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票内容：" prop="content">
-              <el-input v-model="ruleForm.content" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="上次更新时间：" prop="contractInfo.id">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -54,7 +71,7 @@
 
 <script>
 export default {
-  name: 'invoiceAdd',
+  name: 'scheduleManageAdd',
   props: ['editData'],
   data() {
     return {
