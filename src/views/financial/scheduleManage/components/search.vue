@@ -7,16 +7,16 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择" filterable>
+            <el-form-item label="合同编号:" class="single-date">
+              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择" filterable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称 ：" prop="contractInfo.id" class="single-date">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择" filterable>
+            <el-form-item label="合同名称:" class="single-date">
+              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -41,15 +41,12 @@ export default {
       disabled: false,
       contractInfoList: [],
       ruleForm: {
-        contractInfo: {
-          id: 1
-        }
+        contractInfo_id: 1
       },
       rules: {}
     }
   },
   created() {
-    console.log('search created')
     this.getInsertData()
   },
   methods: {
@@ -61,6 +58,7 @@ export default {
       })
     },
     search() {
+      // console.log('search', this.ruleForm )
       this.$emit('search', this.ruleForm)
     },
     searchAll() {
@@ -74,17 +72,4 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-search.form-container{
-  margin-top: 50px;
-  .form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-}
 </style>

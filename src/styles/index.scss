@@ -143,12 +143,59 @@ a {
 .el-table .cell {
   white-space: nowrap
 }
+//增删改查按钮样式
+.form-head-attached {
+  position: fixed;
+  top: 100px;
+  left: 220px;
+  right: 10px;
+  z-index: 1;
+  height: 50px;
+  // line-height: 40px;
+  font-size: 16px;
+  color: #828282;
+  background-color: #fff;
+
+  .form-inner {
+    height: 100%;
+    margin: 0 16px;
+    margin-top: 10px;
+    height: 40px;
+    line-height: 40px;
+  }
+  div.crud-btn,
+  div.export-btn {
+    button{
+      color: #828282!important;
+      display: inline-block;
+      margin:0 16px;
+      i {
+        display: inline-block;
+        margin-right: 6px;
+      }
+    }
+    button.is-active {
+      color: #35d5ba!important;
+    }
+  }
+}
+.compotent-tab {
+  position: fixed;
+  top: 150px;
+  left: 240px;
+  right: 30px;
+  bottom: 30px;
+}
 // form模块区
 .form-container {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  overflow-y: auto;
   color: #000;
   border: 1px solid #d2d2d2;
-  margin-top: 50px;
-  margin-bottom: 15px;
   padding: 10px 20px;
   @include borderRadius(4px);
   @include boxSizing;
@@ -167,11 +214,10 @@ a {
         width: 100%;
         margin-top: 20px;
         color: #000;
-        // @include flex;
         display: table;
         label {
           color: #000;
-          width: 26%;
+          width: 30%;
           line-height: 16px;
           word-wrap: wrap;
           margin-right: 2%;
@@ -289,42 +335,6 @@ a {
           text-align: center;
         }
       }
-    }
-  }
-}
-//增删改查按钮样式
-.form-head-attached {
-  position: fixed;
-  top: 100px;
-  left: 220px;
-  right: 10px;
-  z-index: 1;
-  height: 50px;
-  // line-height: 40px;
-  font-size: 16px;
-  color: #828282;
-  background-color: #fff;
-
-  .form-inner {
-    height: 100%;
-    margin: 0 16px;
-    margin-top: 10px;
-    height: 40px;
-    line-height: 40px;
-  }
-  div.crud-btn,
-  div.export-btn {
-    button{
-      color: #828282!important;
-      display: inline-block;
-      margin:0 16px;
-      i {
-        display: inline-block;
-        margin-right: 6px;
-      }
-    }
-    button.is-active {
-      color: #35d5ba!important;
     }
   }
 }

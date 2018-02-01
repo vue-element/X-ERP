@@ -71,17 +71,4 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-search.form-container{
-  margin-top: 50px;
-  .form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-}
 </style>
