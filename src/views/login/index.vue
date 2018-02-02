@@ -204,7 +204,7 @@ export default {
         vertical-align: middle;
       }
       .el-form-item__content {
-        width: 100%;
+        width: 100%!important;
         height: 54px;
       }
       .el-input{

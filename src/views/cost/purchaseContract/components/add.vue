@@ -214,6 +214,7 @@ export default {
     },
     reset() {
       if (this.action === 'add') {
+        console.log('add')
       } else {
         this.editInfo()
       }
