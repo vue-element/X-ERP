@@ -69,8 +69,6 @@ export default {
           this.tableData = data.content
           this.listLoading = false
         }
-      }).catch(() => {
-        this.listLoading = false
       })
     },
     handleCurrentChange(val) {
