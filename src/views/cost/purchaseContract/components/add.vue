@@ -180,7 +180,7 @@ export default {
       this.action = 'edit'
       this.editInfo()
       this.disabled = true
-      this.editShow = true
+      this.editShow = false
     }
   },
   methods: {
@@ -233,7 +233,6 @@ export default {
       }
     },
     uploadList(data) {
-      console.log('uploadList', this.purchaseList)
       this.paymentContract.purchaseList = data
     },
     getInsertData() {

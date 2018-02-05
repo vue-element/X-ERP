@@ -2,16 +2,16 @@
   <div class="form-module">
     <h4 class="module-title">
       <p @click="uploadTableShow = false">物料详情</p>
-      <div class="material-table-head fr" v-if="!isDisabled">
+      <div class="material-table-head fr">
         <button @click="handleDownload" :loading="downloadLoading">
           <i class="iconfont icon-download"></i>
           <span>模版下载</span>
         </button>
-        <button @click="uploadMaterial">
+        <button @click="uploadMaterial" v-if="!isDisabled">
           <i class="iconfont icon-import"></i>
           <span>导入物料明细</span>
         </button>
-        <button @click="addMaterial">
+        <button @click="addMaterial" v-if="!isDisabled">
           <i class="iconfont icon-add"></i>
           <span>新增物料明细</span>
         </button>

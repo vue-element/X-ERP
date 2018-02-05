@@ -18,7 +18,14 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+           <el-dropdown @command="handleCommand">
+            <el-button class="el-dropdown-link" type="text">更多</el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="a" @click.native.prevent="downloadPL(scope.row.id)">生成采购清单</el-dropdown-item>
+              <el-dropdown-item command="b">生成采购合同</el-dropdown-item>
+              <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" >删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -29,7 +36,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, parseTime } from '@/utils'
 export default {
   name: 'paymentContractList',
   props: ['searchData'],
@@ -41,7 +48,8 @@ export default {
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      tableData: []
+      tableData: [],
+      purchaseList: []
     }
   },
   created() {
@@ -68,16 +76,12 @@ export default {
           this.pageSize = data.size
           this.tableData = data.content
           this.listLoading = false
+        } else {
+          this.listLoading = false
         }
+      }).catch(() => {
+        this.listLoading = false
       })
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val
-      this.getSupplierData()
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getSupplierData()
     },
     deleteRow(id) {
       var projectID = { id: [id] }
@@ -94,8 +98,45 @@ export default {
     seeRow(id) {
       this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        this.purchaseList = data.paymentContractList.purchaseList
         this.$emit('editRow', data)
       })
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getSupplierData()
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getSupplierData()
+    },
+    handleCommand(command) {
+      console.log('command', command)
+    },
+    downloadPL(id) {
+      this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        this.purchaseList = data.paymentContractList.purchaseList
+        require.ensure([], () => {
+          const { export_json_to_excel } = require('@/vendor/Export2Excel')
+          const tHeader = ['序号', '物料名称', '品牌', '规格型号', '单位', '单价', '数量', '总金额']
+          const filterVal = ['name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
+          const list = this.purchaseList
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel(tHeader, data, this.filename)
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
   watch: {
