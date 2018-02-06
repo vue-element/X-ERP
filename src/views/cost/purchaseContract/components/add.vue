@@ -132,7 +132,7 @@
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
       </div>
-      <table-component @uploadList="uploadList" :purchaseData="purchaseData" :disabled="disabled"></table-component>
+      <table-component :contractId="contractId" :editShow="editShow"></table-component>
     </el-form>
   </div>
 </template>
@@ -151,7 +151,6 @@ export default {
       loading: false,
       disabled: false,
       editShow: false,
-      purchaseData: [],
       paymentContract: {
         applicationPerson: '廖淑萍',
         applicationTime: '2018-01-10',
@@ -164,11 +163,11 @@ export default {
         payTime: '',
         payableAmount: '200',
         paymentObject: '个人',
-        term: '一个月',
-        purchaseList: []
+        term: '一个月'
       },
       businessList: [],
       categoryList: [],
+      contractId: '',
       rules: {}
     }
   },
@@ -180,7 +179,7 @@ export default {
       this.action = 'edit'
       this.editInfo()
       this.disabled = true
-      this.editShow = false
+      this.editShow = true
     }
   },
   methods: {
@@ -188,11 +187,7 @@ export default {
       var data = _.cloneDeep(this.editData.editData)
       this.paymentContract = data.paymentContractList
       this.businessList = data.businessList
-      this.purchaseList = this.paymentContract.purchaseList
-      this.purchaseData = this.purchaseList
-      this.purchaseData.forEach((item) => {
-        item.edit = false
-      })
+      this.contractId = this.paymentContract.id
     },
     save() {
       this.loading = true
@@ -232,9 +227,10 @@ export default {
         this.editWord = '取消编辑'
       }
     },
-    uploadList(data) {
-      this.paymentContract.purchaseList = data
-    },
+    // uploadList(data) {
+    //   console.log('uploadList', this.purchaseList)
+    //   this.paymentContract.purchaseList = data
+    // },
     getInsertData() {
       this.$get('/paymentContract/findInsertData').then((res) => {
         var data = res.data.data
