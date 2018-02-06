@@ -29,8 +29,8 @@
       </div>
     </div>
     <div class="contract-list" >
-      <searchComponent v-if="tab === 'searchTab'" ></searchComponent>
-      <listComponent v-if="tab === 'listTab'" @seeRow="seeRow"></listComponent>
+      <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
+      <listComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData"></listComponent>
       <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail"></addComponent>
     </div>
   </div>
@@ -49,7 +49,8 @@ export default {
   data() {
     return {
       tab: 'listTab',
-      rowDetail: ''
+      rowDetail: '',
+      searchData: {}
     }
   },
   created() {
@@ -65,6 +66,10 @@ export default {
         RowDetail: data,
         tabState: 'editTab'
       }
+    },
+    search(data) {
+      this.tab = 'listTab'
+      this.searchData = data
     },
     dataExport() {
       alert(123)
