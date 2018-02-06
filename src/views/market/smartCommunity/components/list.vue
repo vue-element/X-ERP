@@ -96,6 +96,7 @@ export default {
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/project/search?size=' + pageSize + '&page=' + page
+      console.log(this.searchData)
       this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
         this.projectData = data.content
