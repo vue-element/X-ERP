@@ -78,7 +78,12 @@ export const asyncRouterMap = [
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }},
       { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }},
       { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }},
-      { path: 'storage-manage', component: _import('cost/storageManage/index'), name: 'storageManage', meta: { title: '出入库管理' }}
+      { path: '/cost/storage-manage', component: _import('cost/storageManage/inbound/index'), name: 'storageManage', meta: { title: '出入库管理' },
+        children: [
+          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }},
+          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }}
+        ]
+      }
     ]
   },
   { path: '/permission', component: Layout,

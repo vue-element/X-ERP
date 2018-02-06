@@ -44,7 +44,7 @@ import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'paymentContract',
+  name: 'outbound',
   components: {
     AddComponent,
     ListComponent,
@@ -58,29 +58,7 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {},
-      list: [
-        {
-          id: 1,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 2,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 3,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        }
-      ]
+      list: []
     }
   },
   created() {
@@ -143,9 +121,9 @@ export default {
     // }
   },
   computed: {
-    cachedViews() {
-      return this.$store.state.tagsView.cachedViews
-    }
+    // cachedViews() {
+    //   return this.$store.state.tagsView.cachedViews
+    // }
   },
   watch: {
   }

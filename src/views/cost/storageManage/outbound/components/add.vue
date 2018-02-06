@@ -132,7 +132,7 @@
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
       </div>
-      <table-component @uploadList="purchaseList" :purchaseData="purchaseData" :disabled="disabled"></table-component>
+      <table-component @uploadList="uploadList" :purchaseData="purchaseData" :disabled="disabled"></table-component>
     </el-form>
   </div>
 </template>
@@ -169,7 +169,6 @@ export default {
       },
       businessList: [],
       categoryList: [],
-      purchaseList: [],
       rules: {}
     }
   },
@@ -191,6 +190,9 @@ export default {
       this.businessList = data.businessList
       this.purchaseList = this.paymentContract.purchaseList
       this.purchaseData = this.purchaseList
+      this.purchaseData.forEach((item) => {
+        item.edit = false
+      })
     },
     save() {
       this.loading = true
