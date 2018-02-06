@@ -129,7 +129,4 @@ export default {
     margin: 28px 0;
   }
 }
-.compotent-tab {
-  margin-top: 50px;
-}
 </style>

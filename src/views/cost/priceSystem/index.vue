@@ -1,93 +1,103 @@
 <template>
-<div class="app-container">
-  <div class="form-head-attached clearfix">
-    <div class="form-inner">
-      <div class="crud-btn fl">
-        <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
-          <i class="iconfont icon-search"></i>
-          <span>查询</span>
-        </button>
-        <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
-          <i class="iconfont icon-seeAll"></i>
-          <span>查看明细</span>
-        </button>
-        <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
-          <i class="iconfont icon-add"></i>
-          <span>新增</span>
-        </button>
-        <button>
-          <i class="iconfont icon-edit"></i>
-          <span>修改</span>
-        </button>
-        <button @click="delSelectData()" v-show="tab === 'listTab'">
-          <i class="iconfont icon-delete"></i>
-          <span>删除</span>
-        </button>
-      </div>
-      <div class="export-btn fr" v-show="tab === 'listTab'">
-        <button>
-          <i class="iconfont icon-export"></i>
-          <span>数据导入</span>
-        </button>
-        <button>
-          <i class="iconfont icon-export"></i>
-          <span>模版下载</span>
-        </button>
-        <button>
-          <i class="iconfont icon-export"></i>
-          <span>数据导出</span>
-        </button>
+  <div class="app-container">
+    <div class="form-head-attached">
+      <div class="form-inner">
+        <div class="crud-btn fl">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+            <i class="iconfont icon-search"></i>
+            <span>查询</span>
+          </button>
+          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
+          </button>
+          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+            <i class="iconfont icon-add"></i>
+            <span>新增</span>
+          </button>
+          <!-- <button>
+            <i class="iconfont icon-delete"></i>
+            <span>删除</span>
+          </button> -->
+        </div>
+        <div class="export-btn fr">
+          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
+            <i class="iconfont icon-import"></i>
+            <span>数据导入</span>
+          </button>
+          <button @click="handleDownload()" :loading="downloadLoading">
+            <i class="iconfont icon-download"></i>
+            <span>模版下载</span>
+          </button>
+          <button @click="handleDownload()" :loading="downloadLoading">
+            <i class="iconfont icon-export"></i>
+            <span>数据导出</span>
+          </button>
+        </div>
       </div>
     </div>
+    <!-- <keep-alive :include='cachedViews'>
+      <router-view></router-view>
+    </keep-alive> -->
+    <div class="compotent-tab">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <SearchComponent v-show="tab === 'searchTab'" @search="search"></SearchComponent>
+      <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
+    </div>
   </div>
-  <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @editRow="editRow"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
-  </div>
-</div>
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { parseTime } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
+import ImportComponent from './components/import'
 export default {
-  name: 'smartCommunity',
+  name: 'supplier',
   components: {
     AddComponent,
     ListComponent,
-    SearchComponent
+    SearchComponent,
+    ImportComponent
   },
   data() {
     return {
-      searchData: {},
+      path: 'listTab',
+      downloadLoading: false,
+      tab: 'listTab',
       editData: {},
-      listData: '',
-      tab: 'addTab',
-      selArr: [],
-      height: 100
+      searchData: {},
+      list: [
+        {
+          id: 1,
+          title: '头条信息',
+          author: '作者',
+          pageviews: 200,
+          display_time: '2018-01-22'
+        },
+        {
+          id: 2,
+          title: '头条信息',
+          author: '作者',
+          pageviews: 200,
+          display_time: '2018-01-22'
+        },
+        {
+          id: 3,
+          title: '头条信息',
+          author: '作者',
+          pageviews: 200,
+          display_time: '2018-01-22'
+        }
+      ]
     }
   },
-  mounted() {
-  },
   created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
   },
+  mounted() {},
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-    },
-    toggleTab(tab) {
-      this.tab = tab
-    },
-    selData(selArr) {
-      this.selArr = selArr
-    },
     addBtn() {
       this.tab = 'addTab'
       this.editData = {
@@ -95,48 +105,64 @@ export default {
         tabState: 'addTab'
       }
     },
-    delSelectData() {
-      if (this.selArr !== null) {
-        var id = { id: this.selArr }
-        console.log('id', id)
-        this.$post('/project/delete', id).then((res) => {
-          console.log('res', res)
-        })
-      }
-    },
     editRow(data) {
-      this.tab = 'addTab'
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      // console.log('id', id)
+      console.log('editData', this.editData)
+      this.tab = 'addTab'
+    },
+    search(data) {
+      this.searchData = data
+      this.tab = 'listTab'
+    },
+    toggleTab(tab) {
+      this.tab = tab
+    },
+    dataImpore() {
+      this.toggleTab('importTab')
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
+        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const list = this.list
+        // if (list) {
+        //   list = this.list
+        // } else {
+        //   list = []
+        // }
+        // console.log('list', list)
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, this.filename)
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
-  computed: {}
+  computed: {
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews
+    }
+  },
+  watch: {
+  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.app-container {
-  width: 100%;
-  @include scrolling
-}
-.basic-form {
-  .el-table__fixed-body-wrapper {
-    margin: 28px 0;
-  }
-}
-.compotent-tab {
-  margin-top: 50px;
-  // border: 1px solid #d2d2d2;
-  // margin-bottom: 16px;
-  // padding: 0 20px;
-  // @include borderRadius(4px);
-  // @include noScroll;
-  // @include boxSizing;
-  // overflow-y: scroll;
-}
 </style>

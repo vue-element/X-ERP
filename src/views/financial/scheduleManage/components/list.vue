@@ -9,10 +9,10 @@
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
         <el-table-column prop="contractInfo.name" label="合同名称"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="项目所属阶段"></el-table-column>
-        <el-table-column prop="name" label="完工百分比"></el-table-column>
-        <el-table-column prop="amount" label="开票百分比"></el-table-column>
-        <el-table-column prop="date" label="项目状态"></el-table-column>
+        <el-table-column prop="stage" label="项目所属阶段"></el-table-column>
+        <el-table-column prop="finishPercentage" label="完工百分比"></el-table-column>
+        <el-table-column prop="billingPercentage" label="开票百分比"></el-table-column>
+        <el-table-column prop="status" label="项目状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>
@@ -55,7 +55,6 @@ export default {
     },
     getScheduleData() {
       console.log('searchData', this.searchData)
-      // console.log (typeof(this.searchData.date) === object)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
@@ -93,8 +92,8 @@ export default {
     },
     editRow(id) {
       this.$get('/ContractSchedule/findUpdateData/' + id).then((res) => {
+        console.log('res', res)
         var data = res.data.data
-        console.log('data', data)
         this.$emit('editRow', data)
       })
     }

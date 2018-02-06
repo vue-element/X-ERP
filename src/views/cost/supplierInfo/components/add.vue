@@ -154,6 +154,15 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
+            <el-form-item label="供应商类别:">
+              <p v-if="disabled">{{supplyInfo.type}}</p>
+              <el-select v-else v-model="supplyInfo.type" placeholder="请选择" filterable>
+               <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="8" :lg="8">
             <el-form-item label="供应商类型:">
               <p v-if="disabled">{{supplyInfo.category}}</p>
               <el-select v-else v-model="supplyInfo.category" placeholder="请选择" filterable>
@@ -171,6 +180,8 @@
              </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
             <el-form-item label="结算方式:">
               <p v-if="disabled">{{supplyInfo.settlementMethod}}</p>
@@ -180,8 +191,6 @@
              </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
             <el-form-item label="合作开始日期:" class="single-date">
               <p v-if="disabled">{{supplyInfo.startDate}}</p>
@@ -238,6 +247,7 @@ export default {
         invoiceType: '小规模纳税人',
         taxRate: '税率',
         category: '常用型',
+        type: '甲方指定',
         reviewState: '合格',
         settlementMethod: '月结',
         startDate: '',
@@ -248,6 +258,7 @@ export default {
       materialCategoryList: [],
       invoiceTypeList: [],
       categoryList: [],
+      typeList: [],
       reviewStateList: [],
       settlementMethodList: [],
       rules: {}
@@ -306,6 +317,7 @@ export default {
           invoiceType: '',
           taxRate: '',
           category: '',
+          type: '',
           reviewState: '',
           settlementMethod: '',
           startDate: '',
@@ -355,6 +367,13 @@ export default {
         { value: '常用型' },
         { value: '临时型' },
         { value: '历史型' }
+      ]
+      this.typeList = [
+        { value: '战略供方' },
+        { value: '甲方指定' },
+        { value: '普通合格' },
+        { value: '试用' },
+        { value: '临时供方' }
       ]
       this.reviewStateList = [
         { value: '合格' },

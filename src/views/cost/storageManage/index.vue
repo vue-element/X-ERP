@@ -1,5 +1,5 @@
 <template>
-  <div class="contract-container">
+  <div class="app-container">
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
@@ -11,20 +11,16 @@
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <!-- <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
+          </button>
+          <!-- <button>
+            <i class="iconfont icon-delete"></i>
+            <span>删除</span>
           </button> -->
         </div>
         <div class="export-btn fr">
-          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
-            <i class="iconfont icon-import"></i>
-            <span>数据导入</span>
-          </button>
-          <button @click="handleDownload()" :loading="downloadLoading">
-            <i class="iconfont icon-download"></i>
-            <span>模版下载</span>
-          </button>
           <button @click="handleDownload()" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
@@ -42,13 +38,13 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils'
+// import { parseTime } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'scheduleManage',
+  name: 'paymentContract',
   components: {
     AddComponent,
     ListComponent,
@@ -108,44 +104,43 @@ export default {
     },
     search(data) {
       this.searchData = data
-      this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
       this.tab = 'listTab'
     },
     toggleTab(tab) {
       this.tab = tab
-    },
-    dataImpore() {
-      this.toggleTab('importTab')
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-        const list = this.list
-        // if (list) {
-        //   list = this.list
-        // } else {
-        //   list = []
-        // }
-        // console.log('list', list)
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
-        this.downloadLoading = false
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
     }
+    // dataImpore() {
+    //   this.toggleTab('importTab')
+    // },
+    // handleDownload() {
+    //   this.downloadLoading = true
+    //   require.ensure([], () => {
+    //     const { export_json_to_excel } = require('@/vendor/Export2Excel')
+    //     const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
+    //     const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+    //     const list = this.list
+    //     // if (list) {
+    //     //   list = this.list
+    //     // } else {
+    //     //   list = []
+    //     // }
+    //     // console.log('list', list)
+    //     const data = this.formatJson(filterVal, list)
+    //     export_json_to_excel(tHeader, data, this.filename)
+    //     this.downloadLoading = false
+    //   })
+    // },
+    // formatJson(filterVal, jsonData) {
+    //   return jsonData.map(v =>
+    //     filterVal.map(j => {
+    //       if (j === 'timestamp') {
+    //         return parseTime(v[j])
+    //       } else {
+    //         return v[j]
+    //       }
+    //     })
+    //   )
+    // }
   },
   computed: {
     cachedViews() {
@@ -159,13 +154,4 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.contract-container {
-  width: 100%;
-  @include scrolling
-}
-.basic-form {
-  .el-table__fixed-body-wrapper {
-    margin: 28px 0;
-  }
-}
 </style>

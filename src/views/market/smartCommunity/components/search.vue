@@ -129,53 +129,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.smartCommunity-search {
-  color: #000;
-  border: 1px solid #d2d2d2;
-  margin: 16px 0;
-  padding: 0 20px;
-  @include borderRadius(4px);
-  h4 {
-    height: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid #d2d2d2;
-    p {
-      border-left: 5px solid #35d5ba;
-      padding-left: 15px;
-    }
-  }
-  .el-form {
-    color: #000;
-    .el-row {
-      .el-form-item {
-        margin: 0;
-        padding: 0;
-        margin-top: 20px;
-        @include flex;
-      }
-    }
-  }
-}
 </style>
 <style lang="scss">
-.smartCommunity-search{
-  .el-form{
-    .el-form-item{
-      .el-form-item__label{
-        width: 70px;
-      }
-      .el-form-item__content {
-        width: 210px;
-      }
-      .el-input__inner {
-        width: 210px
-      }
-    }
-    .el-col:last-child {
-      .el-form-item__label{
-        width: 96px;
-      }
-    }
-  }
-}
 </style>

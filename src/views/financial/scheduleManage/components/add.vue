@@ -7,16 +7,13 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编码：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+            <el-form-item label="合同编码:">
+              <p>{{ruleForm.contractInfo.code}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="合同名称:">
+                <p>{{ruleForm.contractInfo.name}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -25,17 +22,17 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="项目所属阶段：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="项目所属阶段:">
+              <el-select v-model="ruleForm.stage" placeholder="请选择">
+               <el-option v-for="item in stageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="完工百分比：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="完工百分比:">
+              <el-select v-model="ruleForm.finishPercentage" placeholder="请选择">
+               <el-option v-for="item in finishPercentageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -43,19 +40,16 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="项目状态：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="项目状态:">
+              <el-select v-model="ruleForm.status" placeholder="请选择">
+               <el-option v-for="item in statusList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="上次更新时间：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+            <el-form-item label="上次更新时间:">
+              <p>{{ruleForm.time | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -70,52 +64,59 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   name: 'scheduleManageAdd',
   props: ['editData'],
   data() {
     return {
+      action: 'add',
       loading: false,
       disabled: false,
       contractInfoList: [],
-      originData: {},
+      stageList: [],
+      finishPercentageList: [],
+      statusList: [],
       ruleForm: {
-        amount: '开票金额',
-        content: '开票内容',
-        name: '发票抬头名称',
-        contractInfo: {
-          id: 1
-        },
-        number: '发票号码'
+        billingPercentage: '开票百分比',
+        finishPercentage: '完工百分比',
+        stage: '项目所属阶段',
+        status: '项目状态',
+        time: '更新时间'
       },
       rules: {}
     }
   },
   created() {
+    this.getInsertData()
     if (this.editData.tabState === 'addTab') {
-      this.getInsertData()
+      this.action = 'add'
     } else {
+      this.action = 'edit'
       this.editInfo()
     }
   },
   methods: {
     getInsertData() {
-      this.$get('/contractBilling/findInsertData').then(res => {
-        if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
-        }
-      })
+      this.stageList = [{ value: '未进场' }, { value: '施工中' }, { value: '已完工' }]
+      this.finishPercentageList = [
+        { value: '5%' }, { value: '10%' }, { value: '15%' }, { value: '20%' },
+        { value: '25%' }, { value: '30%' }, { value: '35%' }, { value: '40%' },
+        { value: '45%' }, { value: '50%' }, { value: '55%' }, { value: '60%' },
+        { value: '65%' }, { value: '70%' }, { value: '75%' }, { value: '80%' },
+        { value: '85%' }, { value: '90%' }, { value: '95%' }, { value: '100%' }
+      ]
+      this.statusList = [{ value: '正常' }, { value: '滞后' }, { value: '严重滞后' }]
     },
     editInfo() {
-      console.log(this.editData.editData)
-      var data = this.editData.editData
+      var data = _.cloneDeep(this.editData.editData)
       this.contractInfoList = data.contractInfoList
-      this.originData = data.contractBilling
-      this.ruleForm = data.contractBilling
+      this.ruleForm = data.contractSchedule
     },
     save() {
       this.loading = true
-      this.$post('/contractBilling/save', this.ruleForm).then(res => {
+      this.ruleForm.time = new Date()
+      this.$post('/ContractSchedule/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
           console.log('this.ruleForm', this.ruleForm)
           this.loading = false
@@ -143,8 +144,7 @@ export default {
           number: ''
         }
       } else {
-        console.log('originData', this.originData)
-        this.ruleForm = this.originData
+        this.editInfo()
       }
     },
     cancel() {
@@ -157,17 +157,4 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-add.form-container{
-  margin-top: 50px;
-  .form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-}
 </style>

@@ -61,9 +61,6 @@ export default {
 		@include boxSizing;
 		@include scrolling;
 		margin:0 20px;
-		.compotent-tab {
-			margin-top: 50px!important;
-		}
 	}
 	.hideSidebar .main-container {
 		left: 0;

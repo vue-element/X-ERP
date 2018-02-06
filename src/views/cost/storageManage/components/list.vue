@@ -2,17 +2,19 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-        <el-table-column prop="code" label="产品编号"></el-table-column>
-        <el-table-column prop="name" label="产品名称"></el-table-column>
-        <el-table-column prop="type" label="产品类型"></el-table-column>
-        <el-table-column prop="system" label="系统"></el-table-column>
-        <el-table-column prop="specModel" label="规格型号"></el-table-column>
-        <el-table-column prop="brand" label="品牌"></el-table-column>
-        <el-table-column prop="supply.name" label="供应商"></el-table-column>
-        <el-table-column prop="productQuotation" label="最新报价"></el-table-column>
-        <el-table-column prop="supply.category" label="供应商类型"></el-table-column>
-        <el-table-column prop="supply.unit" label="单位"></el-table-column>
+        <el-table-column prop="0" label="序号">
+          <template slot-scope="scope">
+           {{scope.$index + 1}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="applicationTime" label="申请时间"></el-table-column>
+        <el-table-column prop="applicationPerson" label="申请人"></el-table-column>
+        <el-table-column prop="orderNumber" label="订单编号"></el-table-column>
+        <el-table-column prop="business.code" label="商机编号"></el-table-column>
+        <el-table-column prop="optCost" label="优化成本"></el-table-column>
+        <el-table-column prop="category" label="业务线"></el-table-column>
+        <el-table-column prop="department" label="使用部门"></el-table-column>
+        <el-table-column prop="business.name" label="使用项目"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
@@ -29,7 +31,7 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  name: 'supplierList',
+  name: 'paymentContractList',
   props: ['searchData'],
   data() {
     return {
@@ -57,7 +59,7 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/price/search?size=' + pageSize + '&page=' + page
+      var url = '/paymentContract/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
           var data = res.data.data
@@ -66,7 +68,11 @@ export default {
           this.pageSize = data.size
           this.tableData = data.content
           this.listLoading = false
+        } else {
+          this.listLoading = false
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     handleCurrentChange(val) {
@@ -79,7 +85,7 @@ export default {
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/price/delete', projectID).then(res => {
+      this.$post('/paymentContract/delete', projectID).then(res => {
         if (res.data.success === true) {
           this.getSupplierData()
           this.$message({
@@ -90,7 +96,7 @@ export default {
       })
     },
     seeRow(id) {
-      this.$get('/price/findUpdateData/' + id).then((res) => {
+      this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         this.$emit('editRow', data)
       })
