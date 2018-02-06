@@ -51,15 +51,14 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同文本：" prop="name">
-                <el-select v-model="ruleForm.text" placeholder="请选择合同文本">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                <el-select v-model="ruleForm.textList" placeholder="请选择合同文本">
+                  <el-option v-for="item in textList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="single-date" label="签订时间：" prop="name">
-                 <el-date-picker v-model="ruleForm.sign" type="date" placeholder="签订日期"></el-date-picker>
+                 <el-date-picker v-model="ruleForm.signDate" type="date" placeholder="签订日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
@@ -114,6 +113,13 @@ export default {
       cityList: '',
       clientList: '',
       regionList: '',
+      textList: [{
+        id: '1',
+        name: '是'
+      }, {
+        id: '2',
+        name: '否'
+      }],
       category: [{
         id: '1',
         name: '科技-智慧社区工程全委'
@@ -154,12 +160,15 @@ export default {
       ruleForm: {
         code: '',
         name: '',
-        category: '',
-        client: '',
+        categoryList: '',
+        clientList: '',
+        city: '',
+        regionList: '',
+        textList: '',
+        signDate: '',
         office: '',
         sign: '',
-        year: '',
-        city: ''
+        year: ''
       },
       height: 100
     }
@@ -189,7 +198,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/mixin.scss";
   .basicInfo-container.form-container{
-    margin:0;
+    margin-top:140px;
     overflow-y:auto;
     @include noScroll;
     .form-module{

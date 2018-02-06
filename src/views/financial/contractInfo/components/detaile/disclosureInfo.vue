@@ -120,9 +120,6 @@
       </el-form>
       <div slot="footer" class="dialog-footer" >
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-         <!--  <el-button size="small" @click="upFiles = false" type="success">保 存</el-button>
-          <el-button size="small" type="info">重 置</el-button>
-          <el-button size="small" @click="upFiles = false">取 消</el-button> -->
       </div>
     </el-dialog>
   </div>
@@ -185,29 +182,6 @@ export default {
     resize() {
       this.height = winHeight() - 450
     },
-    // // 上传成功后的回调
-    // uploadSuccess (response, file, fileList) {
-    //   console.log('上传文件', response)
-    // },
-    // // 上传错误
-    // uploadError (response, file, fileList) {
-    //   console.log('上传失败，请重试！')
-    // },
-    // 上传前对文件的大小的判断
-    // beforeAvatarUpload (file) {
-    //   const extension = file.name.split('.')[1] === 'xls'
-    //   const extension2 = file.name.split('.')[1] === 'xlsx'
-    //   const extension3 = file.name.split('.')[1] === 'doc'
-    //   const extension4 = file.name.split('.')[1] === 'docx'
-    //   const isLt2M = file.size / 1024 / 1024 < 10
-    //   if (!extension && !extension2 && !extension3 && !extension4) {
-    //     console.log('上传模板只能是 xls、xlsx、doc、docx 格式!')
-    //   }
-    //   if (!isLt2M) {
-    //     console.log('上传模板大小不能超过 10MB!')
-    //   }
-    //   return extension || extension2 || extension3 || extension4 && isLt2M
-    // },
     submitUpload() {
       this.$refs.upload.submit()
       console.log(1111)
@@ -232,7 +206,7 @@ export default {
 @import "src/styles/mixin.scss";
 .disclosure-info-container.form-container{
   overflow-y:auto;
-  margin:0;
+  margin-top:140px;
   &::-webkit-scrollbar{
     width:0;
   }

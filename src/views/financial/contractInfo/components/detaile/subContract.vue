@@ -5,7 +5,7 @@
         <p>合同分包附件列表</p>
         <div class="up-files common-btn" @click="upFiles=true">附件上传</div>
       </h4>
-      <!-- 分包弹出框 -->
+      <!-- 分包文件上传 -->
       <el-dialog title="合同分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
         <el-form>
           <el-form-item label="分包金额">
@@ -111,7 +111,7 @@ export default {
 @import "src/styles/mixin.scss";
 .subContract-container.form-container{
   border:none;
-  margin:0;
+  margin-top:140px;
   .list.form-module{
     margin-bottom:0;
     .module-title{

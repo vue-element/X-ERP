@@ -91,8 +91,5 @@ export default {
         }
     }
   }
-  .contractInfo-show{
-    margin-top:100px;
-  }
 }
 </style>

@@ -85,8 +85,5 @@ export default {
         }
     }
   }
-  .contractInfo-show{
-    margin-top:60px;
-  }
 }
 </style>

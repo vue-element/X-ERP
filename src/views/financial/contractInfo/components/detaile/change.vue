@@ -112,7 +112,7 @@ export default {
 @import "src/styles/mixin.scss";
 .change-container.form-container{
   border:none;
-  margin:0;
+  margin-top:140px;
   .list.form-module{
     margin-bottom:0;
     .module-title{

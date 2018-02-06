@@ -113,7 +113,7 @@ export default {
 @import "src/styles/mixin.scss";
 .pay-money-container.form-container{
   border:none;
-  margin:0;
+  margin-top:140px;
   .total.form-module{
     .el-row{
       margin-bottom:10px;

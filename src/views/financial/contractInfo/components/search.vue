@@ -135,6 +135,7 @@ export default {
 @import "src/styles/mixin.scss";
 .contractInfo-search.form-container{
   overflow-y:auto;
+  margin-top:90px;
   &::-webkit-scrollbar{
     width:0;
   }
