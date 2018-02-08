@@ -5,7 +5,6 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router)
-
 /* Layout */
 import Layout from '../views/layout/Layout'
 

@@ -191,8 +191,8 @@ export default {
     },
     save() {
       this.loading = true
-      console.log('payment', JSON.stringify(this.paymentContract))
       this.$post('/paymentContract/save', this.paymentContract).then(res => {
+        console.log('res')
         if (res.data.success === true) {
           this.loading = false
           this.$message({
@@ -202,6 +202,7 @@ export default {
           if (this.action === 'edit') {
             this.$emit('toggleTab')
           }
+          this.contractId = 3
         }
       }).catch(() => {
         this.loading = false
