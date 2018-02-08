@@ -58,17 +58,17 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="single-date" label="签订时间：" prop="name">
-                 <el-date-picker v-model="ruleForm.signDate" type="date" placeholder="签订日期"></el-date-picker>
+                 <el-date-picker v-model="ruleForm.signDate" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="签订日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="single-date" label="合同所属期：" prop="name">
-                <el-date-picker v-model="ruleForm.date" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker v-model="ruleForm.term" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="range-date" label="合同期限：" prop="name">
-                  <el-date-picker v-model="ruleForm.firstEntryDate" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
+                  <el-date-picker v-model="ruleForm.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
                   </el-date-picker>
               </el-form-item>
             </el-col>
@@ -81,25 +81,25 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同金额：" prop="name">
-                <el-input name="name" type="text" placeholder="请输入合同金额"></el-input>
+                <el-input v-model="ruleForm.originalAmount" type="text" placeholder="请输入合同金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="变更金额：" prop="name">
-                <el-input v-model="ruleForm.name" type="text" placeholder="请输入变更金额"></el-input>
+                <el-input v-model="ruleForm.changeAmount" type="text" placeholder="请输入变更金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同总额：" prop="name">
-                <el-input v-model="ruleForm.name" type="text" placeholder="请输入合同总额"></el-input>
+                <el-input v-model="ruleForm.contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </div>
         <div class="commont-btn">
           <el-button>保存</el-button>
-          <el-button>重置</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="reset">重置</el-button>
+          <el-button @click="cancel('listTab')">取消</el-button>
         </div>
       </el-form>
     </div>
@@ -110,6 +110,7 @@ import { winHeight } from '@/utils'
 export default {
   data() {
     return {
+      height: 100,
       cityList: '',
       clientList: '',
       regionList: '',
@@ -166,11 +167,12 @@ export default {
         regionList: '',
         textList: '',
         signDate: '',
-        office: '',
-        sign: '',
-        year: ''
-      },
-      height: 100
+        term: '',
+        date: '',
+        originalAmount: '',
+        changeAmount: '',
+        contractTotalAmount: ''
+      }
     }
   },
   created() {
@@ -184,6 +186,26 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+    },
+    reset() {
+      this.ruleForm = {
+        code: '',
+        name: '',
+        categoryList: '',
+        clientList: '',
+        city: '',
+        regionList: '',
+        textList: '',
+        signDate: '',
+        term: '',
+        date: '',
+        originalAmount: '',
+        changeAmount: '',
+        contractTotalAmount: ''
+      }
+    },
+    cancel() {
+      console.log(123)
     }
   },
   mounted() {

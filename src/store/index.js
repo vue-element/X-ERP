@@ -10,6 +10,11 @@ import getters from './getters'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  state: {
+    tab: 'listTab'
+  },
+  mutations: {
+  },
   modules: {
     app,
     permission,

@@ -3,25 +3,25 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="toggleTab('addTab')" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <button @click="toggleTab('delTab')" :class="tab === 'delTab' ? 'is-active' : ''">
+          <!-- <button :class="tab === 'delTab' ? 'is-active' : ''">
             <i class="iconfont icon-delete"></i>
             <span>删除</span>
-          </button>
+          </button> -->
         </div>
         <div class="export-btn fr">
-          <button @click="dataExport">
+          <button>
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+// import store from '../../../store/index.js'
 import searchComponent from './components/search'
 import listComponent from './components/list'
 import addComponent from './components/add'
@@ -60,22 +61,24 @@ export default {
     toggleTab(tab) {
       this.tab = tab
     },
+    addBtn() {
+      this.tab = 'addTab'
+    },
     seeRow(data) {
       this.tab = 'addTab'
-      this.rowDetail = {
-        RowDetail: data,
-        tabState: 'editTab'
-      }
+      // this.rowDetail = {
+      //   RowDetail: data,
+      //   tabState: 'editTab'
+      // }
     },
     search(data) {
       this.tab = 'listTab'
       this.searchData = data
-    },
-    dataExport() {
-      alert(123)
     }
   },
-  computed: {}
+  computed: {
+    // ...mapState(['tab'])
+  }
 }
 </script>
 

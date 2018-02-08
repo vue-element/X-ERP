@@ -33,7 +33,6 @@ import invoiceInfo from '../components/detaile/invoiceInfo'
 import returnMoney from '../components/detaile/returnMoney'
 import payMoney from '../components/detaile/payMoney'
 export default {
-  props: ['rowDetail', 'searchData'],
   components: {
     basicInfo,
     disclosureInfo,
