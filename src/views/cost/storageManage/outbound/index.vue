@@ -21,7 +21,7 @@
           </button> -->
         </div>
         <div class="export-btn fr">
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button @click="handleDownload" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -38,13 +38,13 @@
 </template>
 
 <script>
-// import { parseTime } from '@/utils'
+import { parseTime } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'outbound',
+  name: 'inbound',
   components: {
     AddComponent,
     ListComponent,
@@ -86,44 +86,44 @@ export default {
     },
     toggleTab(tab) {
       this.tab = tab
+    },
+    dataImpore() {
+      this.toggleTab('importTab')
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
+        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const list = this.list
+        // if (list) {
+        //   list = this.list
+        // } else {
+        //   list = []
+        // }
+        // console.log('list', list)
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, this.filename)
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
-    // dataImpore() {
-    //   this.toggleTab('importTab')
-    // },
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   require.ensure([], () => {
-    //     const { export_json_to_excel } = require('@/vendor/Export2Excel')
-    //     const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
-    //     const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-    //     const list = this.list
-    //     // if (list) {
-    //     //   list = this.list
-    //     // } else {
-    //     //   list = []
-    //     // }
-    //     // console.log('list', list)
-    //     const data = this.formatJson(filterVal, list)
-    //     export_json_to_excel(tHeader, data, this.filename)
-    //     this.downloadLoading = false
-    //   })
-    // },
-    // formatJson(filterVal, jsonData) {
-    //   return jsonData.map(v =>
-    //     filterVal.map(j => {
-    //       if (j === 'timestamp') {
-    //         return parseTime(v[j])
-    //       } else {
-    //         return v[j]
-    //       }
-    //     })
-    //   )
-    // }
   },
   computed: {
-    // cachedViews() {
-    //   return this.$store.state.tagsView.cachedViews
-    // }
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews
+    }
   },
   watch: {
   }

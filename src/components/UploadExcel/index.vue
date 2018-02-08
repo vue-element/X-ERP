@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <el-button :loading="loading" type="primary" @click="handleUpload">点击上传</el-button> -->
+    <el-button :loading="loading" type="primary" @click="handleUpload">点击上传</el-button>
     <input id="excel-upload-input" type="file" accept=".xlsx, .xls" class="c-hide" @change="handkeFileChange">
   </div>
 </template>

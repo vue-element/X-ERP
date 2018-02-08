@@ -1,107 +1,82 @@
 <template>
-  <div class="form-module">
-    <h4 class="module-title">
-      <p @click="uploadTableShow = false">物料详情</p>
-      <div class="material-table-head fr">
-        <button @click="handleDownload" :loading="downloadLoading">
-          <i class="iconfont icon-download"></i>
-          <span>模版下载</span>
-        </button>
-        <button @click="uploadMaterial" v-if="!isDisabled">
-          <i class="iconfont icon-import"></i>
-          <span>导入物料明细</span>
-        </button>
-        <button @click="addMaterial" v-if="!isDisabled">
-          <i class="iconfont icon-add"></i>
-          <span>新增物料明细</span>
-        </button>
+  <div class="payment-contract">
+    <div class="form-module">
+      <h4 class="module-title">
+        <p @click="uploadTableShow = false">物料详情</p>
+        <div class="material-table-head fr">
+          <button @click="handleDownload" :loading="downloadLoading">
+            <i class="iconfont icon-download"></i>
+            <span>模版下载</span>
+          </button>
+          <button @click="uploadMaterial">
+            <i class="iconfont icon-import"></i>
+            <span>导入物料明细</span>
+          </button>
+          <button @click="addMaterial">
+            <i class="iconfont icon-add"></i>
+            <span>新增出库</span>
+          </button>
+        </div>
+      </h4>
+      <!-- <div  v-show="!uploadTableShow"> -->
+      <div>
+        <el-table class="basic-form" style="width: 100%" :data="outboundList" v-loading.body="listLoading">
+          <el-table-column label="序号">
+            <template slot-scope="scope">
+             {{scope.$index + 1}}
+            </template>
+          </el-table-column>
+          <el-table-column label="物料名称">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.name" placeholder="请填写">
+              <span v-else>{{scope.row.name}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="规格型号">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
+              <span v-else>{{scope.row.model}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="品牌">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写">
+              <span v-else>{{scope.row.brand}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="出库数量">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+              <span v-else>{{scope.row.number}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+              <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-    </h4>
-    <div  v-show="!uploadTableShow">
-      <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-        <el-table-column label="序号">
-          <template slot-scope="scope">
-           {{scope.$index + 1}}
-          </template>
-        </el-table-column>
-        <el-table-column label="物料名称">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.name" placeholder="请填写">
-            <span v-else>{{scope.row.name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="品牌">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写">
-            <span v-else>{{scope.row.brand}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="规格型号">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
-            <span v-else>{{scope.row.model}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="单位">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写">
-            <span v-else>{{scope.row.unit}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="单价">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.unitPrice" placeholder="请填写">
-            <span v-else>{{scope.row.unitPrice}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="数量">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
-            <span v-else>{{scope.row.number}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="总金额">
-          <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写">
-            <span v-else>{{scope.row.totalAmount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" v-if="!isDisabled">
-          <template slot-scope="scope">
-            <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row)" type="text">完成</el-button>
-            <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.$index)" type="text">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div v-show="uploadTableShow">
-      <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
-      <el-table :data="uploadDetail" border highlight-current-row style="width: 100%;margin-top:20px;">
-        <el-table-column v-for='item of uploadHeader' :prop="item" :label="item" :key='item'>
-        </el-table-column>
-      </el-table>
-      <!-- <div class="commont-btn">
-        <el-button :loading="comfirmUploading" @click="comfirmUpload">确认上传</el-button>
-      </div> -->
+      <div v-show="uploadTableShow">
+        <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import UploadExcelComponent from '@/components/UploadExcel/common.vue'
 import { parseTime } from '@/utils'
-import _ from 'lodash'
+import Vue from 'vue'
 
 export default {
-  props: ['purchaseData', 'disabled'],
   components: { UploadExcelComponent },
+  props: ['contractId', 'editShow'],
   data() {
     return {
-      purchaseList: [],
-      uploadHeader: [],
-      uploadDetail: [],
-      isDisabled: false,
+      outboundList: [],
       uploadTableShow: false,
       listLoading: false,
       downloadLoading: false,
@@ -109,19 +84,17 @@ export default {
     }
   },
   created() {
-    this.purchaseList = _.cloneDeep(this.purchaseData)
-    this.isDisabled = _.cloneDeep(this.disabled)
+    console.log('editShow', this.editShow)
+    this.getOutboundList()
   },
   watch: {
-    purchaseData(data) {
-      this.purchaseList = _.cloneDeep(data)
-    },
-    disabled(disabled) {
-      // console.log('isDisabled', disabled)
-      this.isDisabled = _.cloneDeep(disabled)
-    }
   },
   methods: {
+    getOutboundList() {
+      this.$get('/outboundList').then((res) => {
+        this.outboundList = res.data.data.content
+      })
+    },
     addMaterial() {
       var obj = {
         name: '',
@@ -133,30 +106,36 @@ export default {
         totalAmount: '',
         edit: true
       }
-      this.purchaseList.push(obj)
-      this.$emit('uploadList', this.purchaseList)
+      this.outboundList.push(obj)
     },
-    deleteRow(index) {
-      console.log(index)
-      this.purchaseList.splice(index, 1)
-      this.$emit('uploadList', this.purchaseList)
+    deleteRow(id) {
+      var rowId = { id: [id] }
+      this.$post('/outboundList/delete', rowId).then((res) => {
+        if (res.data.success === true) {
+          this.getOutboundList()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
     },
     editRow(row, index) {
       row.edit = !row.edit
-      this.purchaseList[index] = row
-      console.log(row)
+      Vue.set(this.outboundList, index, row)
+      // console.log('outboundList[idex]', this.outboundList[index])
+    },
+    confirmEdit(row, index) {
+      row.edit = !row.edit
+      Vue.set(this.outboundList, index, row)
+      // console.log('outboundList[idex]', this.outboundList[index])
+      this.$post('/outboundList/save', row).then((res) => {
+        this.getOutboundList()
+      })
     },
     uploadMaterial() {
       this.uploadTableShow = true
       this.$refs.upload.handleUpload()
-    },
-    confirmEdit(row) {
-      row.edit = false
-      // this.$message({
-      //   message: 'The title has been edited',
-      //   type: 'success'
-      // })
-      this.$emit('uploadList', this.purchaseList)
     },
     handleDownload() {
       this.downloadLoading = true
@@ -182,9 +161,7 @@ export default {
       )
     },
     selected(data) {
-      this.uploadDetail = data.results
-      this.uploadHeader = data.header
-      var list = []
+      // var list = []
       this.uploadDetail.forEach((item) => {
         var obj = {}
         obj = {
@@ -196,10 +173,16 @@ export default {
           number: item['数量'],
           totalAmount: item['总金额']
         }
-        list.push(obj)
+        this.$post('/outboundList/save', obj).then((res) => {
+          console.log('res', res)
+          this.getOutboundList()
+        })
+        // list.push(obj)
       })
-      console.log('list', list)
-      this.$emit('uploadList', list)
+      // console.log('list', JSON.stringify(list))
+      // this.$post('/outboundList/save', list).then((res) => {
+      //   console.log('res', res)
+      // })
     }
   }
 }
@@ -208,19 +191,29 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.material-table-head {
-  margin: 0 10px;
-  margin-top: -10px;
-  margin-bottom: 20px;
-  button{
-    margin-left:20px;
-    color: #828282;
+.payment-contract {
+  .material-table-head {
+    margin: 0 10px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    button{
+      margin-left:20px;
+      color: #828282;
+    }
+    button:focus {
+      color: #35d5ba;
+    }
+    button.is-active {
+      color: #35d5ba;
+    }
   }
-  button:focus {
-    color: #35d5ba;
-  }
-  button.is-active {
-    color: #35d5ba;
+  .el-table {
+    .el-input {
+      .el-input__icon{
+        line-height: 26px!important;
+      }
+    }
   }
 }
+
 </style>

@@ -203,6 +203,7 @@ export default {
         unitPrice: '',
         number: '',
         totalAmount: '',
+        paymentContract: { id: this.contractId },
         edit: true
       }
       this.purchaseList.push(obj)
