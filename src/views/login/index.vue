@@ -37,7 +37,6 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      // console.log(value)
       if (!isvalidUsername(value)) {
         callback(new Error('请输入正确的用户名'))
       } else {
@@ -97,10 +96,12 @@ export default {
           this.loading = true
           this.$post('/login', this.loginForm, false).then((res) => {
             this.loading = false
-            // console.log('res', res)
             if (res.data.success === true) {
               this.setToken('11111')
               setToken('11111')
+              var accountData = res.data
+              sessionStorage.setItem('accountData', accountData)
+              this.$store.commit('CHANGE_INFO', accountData)
               var username = this.loginForm.name
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
