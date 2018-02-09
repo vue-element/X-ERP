@@ -117,12 +117,11 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .app-container {
   width: 100%;
-  @include scrolling
+  @include scrolling;
 }
 .basic-form {
   .el-table__fixed-body-wrapper {

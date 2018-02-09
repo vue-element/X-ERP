@@ -11,47 +11,47 @@
       </h4>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="客户信息：" prop="client.id">
+          <el-form-item label="客户信息：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
-            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择">
+            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息">
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="区域：" prop="region.id">
+          <el-form-item label="区域：" prop="region">
             <p v-if="disabled">{{mainMsg.region.name}}</p>
-            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择">
+            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择区域">
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="城市：">
+          <el-form-item label="城市：" prop="city">
             <p v-if="disabled">{{mainMsg.city.name}}</p>
-            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="项目名称：">
+          <el-form-item label="项目名称："  prop="name">
             <p v-if="disabled">{{mainMsg.name}}</p>
-            <el-input v-else v-model="mainMsg.name" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.name" placeholder="请输入项目名称"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="楼道及单位数量：">
+          <el-form-item label="楼栋及单位数量：" prop="buildNum">
             <p v-if="disabled">{{mainMsg.buildNum}}</p>
-            <el-input v-else v-model="mainMsg.buildNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.buildNum" placeholder="请输入楼栋及单位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="项目地址：">
+          <el-form-item label="项目地址：" prop="address">
             <p v-if="disabled">{{mainMsg.address}}</p>
-            <el-input v-else v-model="mainMsg.address" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.address" placeholder="请输入项目地址"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -63,35 +63,45 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="建筑业态：">
+          <el-form-item label="建筑业态：" prop="archFormat">
             <p v-if="disabled">{{mainMsg.archFormat}}</p>
-            <el-input v-else v-model="mainMsg.archFormat" placeholder="请输入您的账号"></el-input>
+            <el-select v-else v-model="mainMsg.archFormat" placeholder="请输入建筑业态">
+              <!-- <el-option v-for="item in archFormatList" :label="item.name" :value="item.id" :key="item.id"> -->
+              <el-option label="多层" value="1"></el-option>
+              <el-option label="高层" value="2"></el-option>
+              <el-option label="小高层" value="3"></el-option>
+              <el-option label="别墅" value="4"></el-option>
+              <el-option label="商业" value="5"></el-option>
+              <el-option label="写字楼" value="6"></el-option>
+              </el-option>
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="物业管理费：">
             <p v-if="disabled">{{mainMsg.manageFee}}</p>
-            <el-input v-else v-model="mainMsg.manageFee" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.manageFee" placeholder="请输入物业管理费"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="车位总数：">
+          <el-form-item label="车位总数：" prop="parkingNum">
             <p v-if="disabled">{{mainMsg.parkingNum}}</p>
-            <el-input v-else v-model="mainMsg.parkingNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.parkingNum" placeholder="请输入车位总数"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="车位比：">
             <p v-if="disabled">{{mainMsg.carRatio}}</p>
-            <el-input v-else v-model="mainMsg.carRatio" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.carRatio" placeholder="请输入车位比"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="户数(户)：">
+          <el-form-item label="户数(户)：" prop="roomNum">
             <p v-if="disabled">{{mainMsg.roomNum}}</p>
-            <el-input v-else v-model="mainMsg.roomNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.roomNum" placeholder="请输入总户数"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -99,19 +109,19 @@
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="容积率：">
             <p v-if="disabled">{{mainMsg.volumetricRate}}</p>
-            <el-input v-else v-model="mainMsg.volumetricRate" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.volumetricRate" placeholder="请输入容积率"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="地面车位数量：">
             <p v-if="disabled">{{mainMsg.groundParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.groundParkingNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.groundParkingNum" placeholder="请输入地面车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="地面车位收费标准：">
             <p v-if="disabled">{{mainMsg.groundParkingFee}}</p>
-            <el-input v-else v-model="mainMsg.groundParkingFee" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.groundParkingFee" placeholder="请输入地面车位收费标准"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,19 +129,19 @@
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="总收费面积(平米)：">
             <p v-if="disabled">{{mainMsg.chargeArea}}</p>
-            <el-input v-else v-model="mainMsg.chargeArea" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.chargeArea" placeholder="请输入总收费面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="地库车位数量：">
             <p v-if="disabled">{{mainMsg.basementParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.basementParkingNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.basementParkingNum" placeholder="请输入地库车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="地库车位收费标准：">
             <p v-if="disabled">{{mainMsg.basementParkingFee}}</p>
-            <el-input v-else v-model="mainMsg.basementParkingFee" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.basementParkingFee" placeholder="请输入地库车位收费标准"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -139,19 +149,19 @@
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="土地面积(平米)：">
             <p v-if="disabled">{{mainMsg.landArea}}</p>
-            <el-input v-else v-model="mainMsg.landArea" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.landArea" placeholder="请输入土地面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
-          <el-form-item label="总建筑面积(平米)：">
+          <el-form-item label="总建筑面积(平米)：" prop="builtArea">
             <p v-if="disabled">{{mainMsg.builtArea}}</p>
-            <el-input v-else v-model="mainMsg.builtArea" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.builtArea" placeholder="请输入总建筑面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="人防车位数量：">
             <p v-if="disabled">{{mainMsg.defenseParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.defenseParkingNum" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.defenseParkingNum" placeholder="请输入人防车位数量"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -159,13 +169,13 @@
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="人防车位收费标准：">
             <p v-if="disabled">{{mainMsg.defenseParkingFee}}</p>
-            <el-input v-else v-model="mainMsg.defenseParkingFee" placeholder="请输入您的账号"></el-input>
+            <el-input v-else v-model="mainMsg.defenseParkingFee" placeholder="请输入人防车位收费收费标准"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="8">
-          <el-form-item label="小区类型：" class="radio-sel">
+          <el-form-item label="小区类型：" class="radio-sel" prop="communityType">
             <p v-if="disabled">{{mainMsg.communityType}}</p>
             <el-radio-group v-else v-model="mainMsg.communityType">
               <el-radio :label="'封闭式小区'">封闭式小区</el-radio>
@@ -176,7 +186,7 @@
         <el-col :xs="12" :sm="12" :lg="8">
           <el-form-item label="合约模式：" class="radio-sel">
             <p v-if="disabled">{{mainMsg.contractMode}}</p>
-            <el-radio-group v-else v-model="mainMsg.contractMode">
+            <el-radio-group v-else v-model="mainMsg.contractMode" placeholder="请选择合约模式">
               <el-radio :label="'酬金制'">酬金制</el-radio>
               <el-radio :label="'包干制'">包干制</el-radio>
             </el-radio-group>
@@ -185,7 +195,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="24" :lg="16">
-          <el-form-item label="小区配套设施：" class="radio-sel community-facility">
+          <el-form-item label="小区配套设施：" class="radio-sel community-facility" prop="facility">
             <p v-if="disabled">{{mainMsg.facility}}</p>
             <el-radio-group v-else v-model="mainMsg.facility">
               <el-radio :label="'公司'">公司</el-radio>
@@ -367,7 +377,7 @@
       </el-row>
     </div>
     <div class="commont-btn" v-show="!disabled">
-      <el-button @click="add" :loading="loading">提交</el-button>
+      <el-button @click="add('mainMsg')" :loading="loading">提交</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>
@@ -380,89 +390,131 @@ export default {
   name: 'smartCommunityAdd',
   props: ['editData'],
   data() {
+    var validateClient = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('客户信息不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var validateRegion = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('区域不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var validateCity = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('城市不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
       loading: false,
       disabled: false,
       editShow: false,
-      rules: {},
+      rules: {
+        client: [{ required: true, validator: validateClient, trigger: 'change' }],
+        region: [{ required: true, validator: validateRegion, trigger: 'change' }],
+        city: [{ required: true, validator: validateCity, trigger: 'change' }],
+        name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
+        archFormat: [{ required: true, message: '请输入楼栋及单位数量', trigger: 'change' }],
+        buildNum: [{ required: true, message: '请输入楼栋及单位数量', trigger: 'blur' }],
+        roomNum: [{ required: true, message: '请输入总户数', trigger: 'blur' }],
+        address: [{ required: true, message: '请输入项目地址', trigger: 'blur' }],
+        builtArea: [{ required: true, message: '请输入总建筑面积', trigger: 'blur' }],
+        communityType: [{ required: true, message: '请选择小区类型', trigger: 'blur' }],
+        parkingNum: [{ required: true, message: '请输入车位总数', trigger: 'blur' }],
+        facility: [{ required: true, message: '请选择小区配套设施', trigger: 'blur' }]
+      },
       tab: 'car',
-      cityOption: [0, 1, 3],
+      cityOption: [],
       regionList: [],
       clientList: [],
       cityList: [],
+      archFormatList: [
+        { id: 1, name: '多层' },
+        { id: 2, name: '高层' },
+        { id: 3, name: '小高层' },
+        { id: 4, name: '别墅' },
+        { id: 5, name: '商业' },
+        { id: 6, name: '写字楼' }
+      ],
       defaultMsg: {},
       mainMsg: {
         city: {
-          id: 3
+          id: ''
         },
         client: {
-          id: 1
+          id: ''
         },
         region: {
-          id: 1
+          id: ''
         },
-        address: '项目地址',
-        archFormat: '建筑业态',
-        basementParkingFee: '地库车位收费标准',
-        basementParkingNum: '地库车位数量',
-        buildNum: '楼栋及单元数量',
-        builtArea: '总建筑面积',
-        carRatio: '车位比',
-        chargeArea: '总收费面积',
+        address: '',
+        archFormat: '',
+        basementParkingFee: '',
+        basementParkingNum: '',
+        buildNum: '',
+        builtArea: '',
+        carRatio: '',
+        chargeArea: '',
         communityType: '',
         contractMode: '',
         facility: '',
-        defenseParkingFee: '人防车位收费标准',
-        defenseParkingNum: '人防车位数量',
+        defenseParkingFee: '',
+        defenseParkingNum: '',
         firstEntry: '',
-        groundParkingFee: '地面车位收费标准',
-        groundParkingNum: '地面车位数量',
-        landArea: '土地面积',
-        manageFee: '物业管理费',
-        name: '项目名称',
-        parkingNum: '车位总数',
-        roomNum: '总户数',
-        volumetricRate: '容积率',
+        groundParkingFee: '',
+        groundParkingNum: '',
+        landArea: '',
+        manageFee: '',
+        name: '',
+        parkingNum: '',
+        roomNum: '',
+        volumetricRate: '',
         projectDesigns: [],
         oldCity: ''
       },
       carObj: {
-        a: '1',
-        a1: '2',
-        b: '3',
-        b1: '4',
-        c: '5',
-        c1: '6',
+        a: '',
+        a1: '',
+        b: '',
+        b1: '',
+        c: '',
+        c1: '',
         category: 0
       },
       personObj: {
-        a: '1',
-        a1: '2',
-        b: '3',
-        b1: '4',
-        c: '5',
-        c1: '6',
+        a: '',
+        a1: '',
+        b: '',
+        b1: '',
+        c: '',
+        c1: '',
         category: 1
       },
       elevatorObj: {
-        a: '1',
-        b: '3',
+        a: '',
+        b: '',
         category: 2
       },
       machineRoomObj: {
-        a: '1',
-        a1: '2',
-        b: '3',
-        b1: '4',
-        c: '5',
+        a: '',
+        a1: '',
+        b: '',
+        b1: '',
+        c: '',
         category: 3
       },
       otherObj: {
-        a: '1',
-        b: '1',
-        c: '1',
+        a: '',
+        b: '',
+        c: '',
         category: 4
       }
     }
@@ -481,30 +533,36 @@ export default {
   },
   mounted() {},
   methods: {
-    add() {
-      this.loading = true
-      this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
-      this.mainMsg.oldCity = this.cityOption.join('-')
-      console.log(this.mainMsg)
-      this.$post('/project/save', this.mainMsg).then((res) => {
-        this.loading = false
-        if (res.data.success === true) {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
+    add(mainMsg) {
+      this.$refs[mainMsg].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
+          this.mainMsg.oldCity = this.cityOption.join('-')
+          console.log(this.mainMsg)
+          this.$post('/project/save', this.mainMsg).then((res) => {
+            this.loading = false
+            if (res.data.success === true) {
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              if (this.action === 'edit') {
+                this.$emit('toggleTab')
+              }
+            }
           })
-          if (this.action === 'edit') {
-            this.$emit('toggleTab')
-          }
+        } else {
+          return false
         }
       })
     },
     reset() {
       if (this.action === 'add') {
         this.mainMsg = {
-          city: { id: 3 },
-          client: { id: 1 },
-          region: { id: 1 },
+          city: { id: '' },
+          client: { id: '' },
+          region: { id: '' },
           address: '',
           archFormat: '',
           basementParkingFee: '',
@@ -614,7 +672,6 @@ export default {
       })
     },
     cityChange(val) {
-      console.log('val', val)
       var len = val.length
       this.mainMsg.city.id = val[len - 1]
     }
@@ -692,8 +749,9 @@ export default {
   }
   .el-form-item.community-facility {
     label.el-form-item__label {
-      width: 16%!important;
+      width: 20%!important;
       line-height: 30px;
+      margin-right: 20px;
     }
   }
   .element-table {

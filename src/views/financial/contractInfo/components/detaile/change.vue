@@ -121,6 +121,7 @@ export default {
         position:absolute;
         top:-20px;
         right:0;
+        cursor:pointer;
       }
     }
   }

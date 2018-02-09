@@ -125,7 +125,6 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
-        console.log('res', res)
         var data = res.data.data
         this.total = data.totalElements
         this.currentPage = data.number + 1

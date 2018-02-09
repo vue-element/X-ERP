@@ -218,8 +218,8 @@ export default {
   .btn{
     text-align:center;
     div.common-btn{
-      margin-left:30px;
       display:inline-block;
+      cursor:pointer;
     }
   }
   .list.form-module{

@@ -8,21 +8,19 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item">
           <label>项目名称：</label>
-          <input type="text" v-model="searchData.name" placeholder="请输入"/>
+          <input type="text" v-model="searchData.name" placeholder="请输入项目名称"/>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item single-date">
           <label>首期入伙时间：</label>
           <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="firstEntry" placeholder="选择日期" ></el-date-picker>
-          <!-- <el-date-picker v-model="searchData.firstEntry"  value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
-          </el-date-picker> -->
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item">
           <label>合约模式：</label>
-          <el-select v-model="searchData.contractMode" placeholder="请选择">
+          <el-select v-model="searchData.contractMode" placeholder="请选择合约模式">
            <el-option v-for="item in contractModeList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -33,7 +31,7 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item customer-info">
           <label>客户信息：</label>
-          <el-select v-model="searchData.client_id" placeholder="请选择">
+          <el-select v-model="searchData.client_id" placeholder="请选择客户信息">
            <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -42,13 +40,13 @@
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item">
           <label>城市：</label>
-          <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+          <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="8">
         <div class="basic-item">
           <label>区域：</label>
-          <el-select v-model="searchData.region_id" placeholder="请选择">
+          <el-select v-model="searchData.region_id" placeholder="请选择区域">
            <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -82,13 +80,13 @@ export default {
           name: '包干制'
         }
       ],
-      cityOption: [0, 1, 3],
+      cityOption: ['', '', ''],
       searchData: {
-        region_id: 1,
-        client_id: 1,
-        city_id: 3,
+        region_id: '',
+        client_id: '',
+        city_id: '',
         contractMode: '',
-        name: '廖淑萍'
+        name: ''
       },
       firstEntry: ''
     }
@@ -114,7 +112,6 @@ export default {
       if (this.firstEntry) {
         this.searchData.firstEntry = this.firstEntry
       }
-      // console.log('searchData', this.searchData)
       this.$emit('searchWord', this.searchData)
     },
     searchAll() {
@@ -126,7 +123,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 </style>
