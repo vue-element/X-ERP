@@ -93,17 +93,11 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        // console.log('valid', valid)
-        this.setToken('11111')
-        setToken('11111')
-        this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
-          var loginForm = new FormData()
-          loginForm.append('name', this.loginForm.name)
-          loginForm.append('password', this.loginForm.password)
-          this.$post('/login', loginForm).then((res) => {
-            console.log('res', res)
+          this.$post('/login', this.loginForm, false).then((res) => {
+            this.loading = false
+            // console.log('res', res)
             if (res.data.success === true) {
               this.setToken('11111')
               setToken('11111')
@@ -117,6 +111,11 @@ export default {
                 Cookies.remove('password', '')
               }
               this.$router.push({ path: '/' })
+            } else {
+              this.$message({
+                message: '登陆失败，请重新登陆',
+                type: 'success'
+              })
             }
           }).catch(() => {
             this.loading = false
