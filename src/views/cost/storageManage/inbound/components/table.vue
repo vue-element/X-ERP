@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList').then((res) => {
+      this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         var data = res.data.data.content
         this.purchaseList = _.cloneDeep(data)
       })

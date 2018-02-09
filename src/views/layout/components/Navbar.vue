@@ -26,11 +26,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-
 export default {
   components: {
     Breadcrumb,
@@ -43,9 +42,16 @@ export default {
       'name',
       'avatar',
       'language'
-    ])
+    ]),
+    ...mapState(['account'])
+  },
+  mounted() {
+    this.getName()
   },
   methods: {
+    getName() {
+      // console.log(this.account)
+    },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },

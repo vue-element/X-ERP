@@ -103,10 +103,13 @@ export default {
           loginForm.append('name', this.loginForm.name)
           loginForm.append('password', this.loginForm.password)
           this.$post('/login', loginForm).then((res) => {
-            console.log('res', res)
+          //  console.log(res.data)
             if (res.data.success === true) {
               this.setToken('11111')
               setToken('11111')
+              var accountData = res.data
+              sessionStorage.setItem('accountData', accountData)
+              this.$store.commit('CHANGE_INFO', accountData)
               var username = this.loginForm.name
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
