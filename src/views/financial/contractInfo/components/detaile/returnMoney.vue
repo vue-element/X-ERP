@@ -1,19 +1,20 @@
 <template>
   <div class="returnMoney-container form-container">
-    <div class="inp form-module">
-      <h4 class="module-title">
-        <p>汇总信息</p>
-      </h4>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="8">
-          <div class="item">
-            <label>累计回款金额：</label>
-            <input type="text">
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="list form-module">
+    <el-form :model="contractReceived" :rules="rules" ref="contractReceived">
+      <div class="form-module">
+        <h4 class="module-title">
+          <p>汇总信息</p>
+        </h4>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="累计回款金额：">
+              <el-input v-model="contractReceived.amount" placeholder="请输入累计回款金额"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
+    </el-form>
+    <div class="form-module">
       <h4 class="module-title">
         <p>回款详情</p>
       </h4>
@@ -56,7 +57,10 @@ export default {
         4: '紫御华府智慧社区建设技术服务款'
       }],
       height: 100,
-      currentPage: 1
+      currentPage: 1,
+      contractReceived: {
+        amount: ''
+      }
     }
   },
   created() {
@@ -67,7 +71,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 460
+      this.height = winHeight() - 475
     }
   }
 }
@@ -78,44 +82,8 @@ export default {
 .returnMoney-container.form-container{
   border:none;
   margin-top:140px;
-  .inp.form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-          label {
-            color: #000;
-            width: 35%;
-            line-height: 16px;
-            word-wrap: wrap;
-            font-size: 14px;
-            vertical-align:middle;
-            display:inline-block;
-            text-align:right;
-          }
-          input {
-            width: 50%;
-            height: 32px;
-            border: 1px solid #828282;
-            @include borderRadius(4px);
-            text-indent: 12px;
-            vertical-align:middle;
-          }
-        }
-      }
-    }
-  }
-  .list.form-module{
-    margin-bottom:0;
-    .module-title{
-      position:relative;
-      .up-files{
-        position:absolute;
-        top:-20px;
-        right:0;
-      }
-    }
+  &::-webkit-scrollbar{
+    width: 0;
   }
 }
 </style>

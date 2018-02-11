@@ -10,7 +10,7 @@
         <p>项目基础信息</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户信息：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
             <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息">
@@ -19,7 +19,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="区域：" prop="region">
             <p v-if="disabled">{{mainMsg.region.name}}</p>
             <el-select v-else v-model="mainMsg.region.id" placeholder="请选择区域">
@@ -28,27 +28,29 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="城市：" prop="city">
             <p v-if="disabled">{{mainMsg.city.name}}</p>
             <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="项目名称："  prop="name">
             <p v-if="disabled">{{mainMsg.name}}</p>
             <el-input v-else v-model="mainMsg.name" placeholder="请输入项目名称"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="楼栋及单位数量：" prop="buildNum">
             <p v-if="disabled">{{mainMsg.buildNum}}</p>
             <el-input v-else v-model="mainMsg.buildNum" placeholder="请输入楼栋及单位数量"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="项目地址：" prop="address">
             <p v-if="disabled">{{mainMsg.address}}</p>
             <el-input v-else v-model="mainMsg.address" placeholder="请输入项目地址"></el-input>
@@ -56,13 +58,13 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="首期入伙时间：" class="single-date">
             <p v-if="disabled">{{mainMsg.firstEntry}}</p>
             <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="mainMsg.firstEntry" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="建筑业态：" prop="archFormat">
             <p v-if="disabled">{{mainMsg.archFormat}}</p>
             <el-select v-else v-model="mainMsg.archFormat" placeholder="请输入建筑业态">
@@ -70,27 +72,29 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="物业管理费：">
             <p v-if="disabled">{{mainMsg.manageFee}}</p>
             <el-input v-else v-model="mainMsg.manageFee" placeholder="请输入物业管理费"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="车位总数：" prop="parkingNum">
             <p v-if="disabled">{{mainMsg.parkingNum}}</p>
             <el-input v-else v-model="mainMsg.parkingNum" placeholder="请输入车位总数"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="车位比：">
             <p v-if="disabled">{{mainMsg.carRatio}}</p>
             <el-input v-else v-model="mainMsg.carRatio" placeholder="请输入车位比"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="户数(户)：" prop="roomNum">
             <p v-if="disabled">{{mainMsg.roomNum}}</p>
             <el-input v-else v-model="mainMsg.roomNum" placeholder="请输入总户数"></el-input>
@@ -98,39 +102,41 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="容积率：">
             <p v-if="disabled">{{mainMsg.volumetricRate}}</p>
             <el-input v-else v-model="mainMsg.volumetricRate" placeholder="请输入容积率"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地面车位数量：">
             <p v-if="disabled">{{mainMsg.groundParkingNum}}</p>
             <el-input v-else v-model="mainMsg.groundParkingNum" placeholder="请输入地面车位数量"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地面车位收费标准：">
             <p v-if="disabled">{{mainMsg.groundParkingFee}}</p>
             <el-input v-else v-model="mainMsg.groundParkingFee" placeholder="请输入地面车位收费标准"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="总收费面积(平米)：">
             <p v-if="disabled">{{mainMsg.chargeArea}}</p>
             <el-input v-else v-model="mainMsg.chargeArea" placeholder="请输入总收费面积"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地库车位数量：">
             <p v-if="disabled">{{mainMsg.basementParkingNum}}</p>
             <el-input v-else v-model="mainMsg.basementParkingNum" placeholder="请输入地库车位数量"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地库车位收费标准：">
             <p v-if="disabled">{{mainMsg.basementParkingFee}}</p>
             <el-input v-else v-model="mainMsg.basementParkingFee" placeholder="请输入地库车位收费标准"></el-input>
@@ -138,27 +144,27 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="土地面积(平米)：">
             <p v-if="disabled">{{mainMsg.landArea}}</p>
             <el-input v-else v-model="mainMsg.landArea" placeholder="请输入土地面积"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="总建筑面积(平米)：" prop="builtArea">
             <p v-if="disabled">{{mainMsg.builtArea}}</p>
             <el-input v-else v-model="mainMsg.builtArea" placeholder="请输入总建筑面积"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="人防车位数量：">
             <p v-if="disabled">{{mainMsg.defenseParkingNum}}</p>
             <el-input v-else v-model="mainMsg.defenseParkingNum" placeholder="请输入人防车位数量"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="人防车位收费标准：">
             <p v-if="disabled">{{mainMsg.defenseParkingFee}}</p>
             <el-input v-else v-model="mainMsg.defenseParkingFee" placeholder="请输入人防车位收费收费标准"></el-input>
@@ -166,7 +172,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="8">
+        <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="小区类型：" class="radio-sel" prop="communityType">
             <p v-if="disabled">{{mainMsg.communityType}}</p>
             <el-radio-group v-else v-model="mainMsg.communityType">
@@ -175,7 +181,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="12" :lg="8">
+        <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合约模式：" class="radio-sel">
             <p v-if="disabled">{{mainMsg.contractMode}}</p>
             <el-radio-group v-else v-model="mainMsg.contractMode" placeholder="请选择合约模式">
@@ -186,7 +192,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="24" :lg="16">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="小区配套设施：" class="radio-sel community-facility" prop="facility">
             <p v-if="disabled">{{mainMsg.facility}}</p>
             <el-radio-group v-else v-model="mainMsg.facility">
@@ -694,7 +700,7 @@ export default {
                 width: 20%!important;
             }
             .el-radio-group {
-                @include flex;
+                padding-left: 20px;
                 justify-content: space-around;
                 width: 62%;
                 height: 30px;
@@ -733,7 +739,6 @@ export default {
   .el-form-item.radio-sel {
     display: flex;
     label.el-form-item__label {
-      width: 34%!important;
       line-height: 30px;
     }
     .el-form-item__content {

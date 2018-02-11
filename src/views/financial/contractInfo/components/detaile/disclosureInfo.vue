@@ -1,14 +1,14 @@
 <template>
   <div class="disclosure-info-container form-container" ref="ele">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="basic">
-      <div class="capital form-module">
+    <el-form :model="disclosureInfo" :rules="rules" ref="disclosureInfo" class="basic">
+      <div class="form-module">
         <h4 class="module-title">
           <p>资金来源</p>
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="资金来源：" prop="name">
-              <el-select v-model="ruleForm.capital" placeholder="请选择资金来源">
+            <el-form-item label="资金来源：">
+              <el-select v-model="disclosureInfo.capital" placeholder="请选择资金来源">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
@@ -22,28 +22,28 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="资金来源：" prop="name">
-              <el-input v-model="ruleForm.cost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="资金来源：">
+              <el-input v-model="disclosureInfo.cost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="人工成本：" prop="name">
-              <el-input v-model="ruleForm.manpower" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="人工成本：">
+              <el-input v-model="disclosureInfo.artificialCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="综合成本：" prop="name">
-              <el-input v-model="ruleForm.total" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="综合成本：">
+              <el-input v-model="disclosureInfo.comprehensiveCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="管理费用：" prop="name">
-              <el-input v-model="ruleForm.manage" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="管理费用：">
+              <el-input v-model="disclosureInfo.manageCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="税金：" prop="name">
-              <el-input v-model="ruleForm.Tax" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="税金：">
+              <el-input v-model="disclosureInfo.Tax" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -54,13 +54,13 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="毛利润" prop="name">
-             <el-input v-model="ruleForm.profit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="毛利润">
+             <el-input v-model="disclosureInfo.profit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="毛利润率" prop="name">
-             <el-input v-model="ruleForm.crossProfit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="毛利润率">
+             <el-input v-model="disclosureInfo.profitRate" placeholder="请输入您的账号" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -99,27 +99,24 @@
     <!-- 合同交底文件上传 -->
     <el-dialog title="合同交底附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
       <el-form>
-
         <el-form-item label="附件说明">
           <el-input type="text" v-model="fileForm.desc"></el-input>
         </el-form-item>
         <el-form-item label="附件人">
           <el-input type="text" v-model="fileForm.author"></el-input>
         </el-form-item>
-        <el-form-item label="上传时间：" prop="name">
+        <el-form-item label="上传时间" prop="name">
            <el-date-picker v-model="fileForm.date" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="上传附件：" prop="name">
-          <el-upload class="upload-demo" ref="upload" action="F:\大学\我的毕业照\_MG_0001.JPG" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+        <el-form-item label="上传附件" prop="name">
+          <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer" >
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -141,19 +138,19 @@ export default {
         3: '罗艺',
         4: '2018-01-12'
       }],
-      height: 100,
+      height: 200,
       currentPage: 1,
       disabled: false,
-      ruleForm: {
+      disclosureInfo: {
         name: '',
         capital: '',
         cost: '',
-        manpower: '',
-        total: '',
-        manage: '',
+        artificialCost: '',
+        comprehensiveCost: '',
+        manageCost: '',
         Tax: '',
         profit: '',
-        crossProfit: ''
+        profitRate: ''
       },
       rules: {},
       // 文件上传地址----------------------------------------
@@ -172,16 +169,8 @@ export default {
       fileList: []
     }
   },
-  created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
-  },
+  created() {},
   methods: {
-    resize() {
-      this.height = winHeight() - 450
-    },
     submitUpload() {
       this.$refs.upload.submit()
       console.log(1111)
@@ -210,11 +199,6 @@ export default {
   &::-webkit-scrollbar{
     width:0;
   }
-  .el-form{
-    .capital.form-module{
-      margin-bottom:15px;
-    }
-  }
   .btn{
     text-align:center;
     div.common-btn{
@@ -233,10 +217,6 @@ export default {
         position:absolute;
         top:-20px;
         right:0;
-      }
-      .up-files:hover{
-        background-color:#35d5ba;
-        color:white;
       }
     }
   }

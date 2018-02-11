@@ -6,30 +6,26 @@
         <div class="up-files common-btn" @click="upFiles=true">附件上传</div>
       </h4>
       <!-- 分包文件上传 -->
-      <el-dialog title="合同分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
+      <el-dialog title="分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
         <el-form>
-          <el-form-item label="分包金额">
-            <el-input type="text" v-model="filesForm.desc"></el-input>
-          </el-form-item>
           <el-form-item label="附件说明">
-            <el-input type="text" v-model="filesForm.desc"></el-input>
+            <el-input type="text" v-model="fileForm.desc"></el-input>
           </el-form-item>
-          <el-form-item label="上传人">
-            <el-input type="text" v-model="filesForm.author"></el-input>
+          <el-form-item label="附件人">
+            <el-input type="text" v-model="fileForm.author"></el-input>
           </el-form-item>
           <el-form-item label="上传时间" prop="name">
-             <el-date-picker v-model="filesForm.date" type="date" placeholder="选择日期"></el-date-picker>
+             <el-date-picker v-model="fileForm.date" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
-          <el-form-item label="添加附件" prop="name">
-            <el-upload class="upload" action="" :on-change="handleChange" :file-list="fileList">
-              <el-button size="small" type="primary">点击上传</el-button>
+          <el-form-item label="上传附件" prop="name">
+            <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" >
-            <el-button size="small" @click="upFiles = false" type="success">保 存</el-button>
-            <el-button size="small" type="info">重 置</el-button>
-            <el-button size="small" @click="upFiles = false">取 消</el-button>
+          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交</el-button>
         </div>
       </el-dialog>
       <div class="table">
@@ -80,12 +76,18 @@ export default {
       }],
       height: 100,
       currentPage: 1,
+      // 文件上传地址----------------------------------------
       upFiles: false,
-      filesForm: {
+      fileForm: {
         desc: '',
         author: '',
-        date: '',
-        files: ''
+        date: ''
+      },
+      // 后台传输接口
+      importFileUrl: 'http:dtc.com/cpy/add',
+      upLoadData: {
+        cpyId: '123456',
+        occurTime: '2018-01'
       },
       fileList: []
     }
@@ -100,8 +102,15 @@ export default {
     resize() {
       this.height = winHeight() - 335
     },
-    handleChange() {
-
+    submitUpload() {
+      this.$refs.upload.submit()
+      console.log(1111)
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
     }
   }
 }

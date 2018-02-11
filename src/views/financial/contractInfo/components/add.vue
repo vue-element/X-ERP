@@ -13,13 +13,13 @@
     </div>
 
     <div class="contractInfo-show">
-      <basicInfo v-show="tab === 'basicInfo'"></basicInfo>
-      <disclosureInfo v-show="tab === 'disclosureInfo'"></disclosureInfo>
-      <subContract v-show="tab === 'subContract'"></subContract>
-      <change v-show="tab === 'change'"></change>
-      <invoiceInfo v-show="tab === 'invoiceInfo'"></invoiceInfo>
-      <returnMoney v-show="tab === 'returnMoney'"></returnMoney>
-      <payMoney v-show="tab === 'payMoney'"></payMoney>
+      <basicInfo v-if="tab === 'basicInfo'"></basicInfo>
+      <disclosureInfo v-if="tab === 'disclosureInfo'"></disclosureInfo>
+      <subContract v-if="tab === 'subContract'"></subContract>
+      <change v-if="tab === 'change'"></change>
+      <invoiceInfo v-if="tab === 'invoiceInfo'"></invoiceInfo>
+      <returnMoney v-if="tab === 'returnMoney'"></returnMoney>
+      <payMoney v-if="tab === 'payMoney'"></payMoney>
     </div>
   </div>
 </template>
