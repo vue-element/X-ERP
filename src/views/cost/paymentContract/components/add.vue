@@ -191,6 +191,7 @@ export default {
     },
     save() {
       this.loading = true
+      console.log('paymentContract', JSON.stringify(this.paymentContract))
       this.$post('/paymentContract/save', this.paymentContract).then(res => {
         console.log('res')
         if (res.data.success === true) {

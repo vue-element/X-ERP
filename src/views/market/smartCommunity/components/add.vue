@@ -66,15 +66,7 @@
           <el-form-item label="建筑业态：" prop="archFormat">
             <p v-if="disabled">{{mainMsg.archFormat}}</p>
             <el-select v-else v-model="mainMsg.archFormat" placeholder="请输入建筑业态">
-              <!-- <el-option v-for="item in archFormatList" :label="item.name" :value="item.id" :key="item.id"> -->
-              <el-option label="多层" value="1"></el-option>
-              <el-option label="高层" value="2"></el-option>
-              <el-option label="小高层" value="3"></el-option>
-              <el-option label="别墅" value="4"></el-option>
-              <el-option label="商业" value="5"></el-option>
-              <el-option label="写字楼" value="6"></el-option>
-              </el-option>
-              </el-option>
+              <el-option v-for="item in archFormatList" :label="item.name" :value="item.name" :key="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -422,7 +414,7 @@ export default {
         region: [{ required: true, validator: validateRegion, trigger: 'change' }],
         city: [{ required: true, validator: validateCity, trigger: 'change' }],
         name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
-        archFormat: [{ required: true, message: '请输入楼栋及单位数量', trigger: 'change' }],
+        archFormat: [{ required: true, message: '请选择建筑业态', trigger: 'change' }],
         buildNum: [{ required: true, message: '请输入楼栋及单位数量', trigger: 'blur' }],
         roomNum: [{ required: true, message: '请输入总户数', trigger: 'blur' }],
         address: [{ required: true, message: '请输入项目地址', trigger: 'blur' }],
@@ -436,23 +428,16 @@ export default {
       regionList: [],
       clientList: [],
       cityList: [],
-      archFormatList: [
-        { id: 1, name: '多层' },
-        { id: 2, name: '高层' },
-        { id: 3, name: '小高层' },
-        { id: 4, name: '别墅' },
-        { id: 5, name: '商业' },
-        { id: 6, name: '写字楼' }
-      ],
+      archFormatList: [],
       defaultMsg: {},
       mainMsg: {
         city: {
           id: ''
         },
-        client: {
+        region: {
           id: ''
         },
-        region: {
+        client: {
           id: ''
         },
         address: '',
@@ -670,6 +655,19 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+      this.archFormatList = [{
+        name: '多层'
+      }, {
+        name: '高层'
+      }, {
+        name: '小高层'
+      }, {
+        name: '别墅'
+      }, {
+        name: '商业'
+      }, {
+        name: '写字楼'
+      }]
     },
     cityChange(val) {
       var len = val.length
