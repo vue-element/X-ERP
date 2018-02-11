@@ -215,25 +215,18 @@ export default {
     confirmEdit(row, index) {
       row.edit = !row.edit
       Vue.set(this.purchaseList, index, row)
+      this.saveMaterial(this.purchaseList)
+    },
+    saveMaterial(list) {
       if (this.contractId) {
-        row.paymentContract = {
-          id: this.contractId
-        }
-        this.$post('/purchaseList/save', { objectList: [row] }).then((res) => {
+        list.forEach((item) => {
+          item.paymentContract = { id: this.contractId }
+        })
+        this.$post('/purchaseList/save', { objectList: list }).then((res) => {
           this.getPurchaseList()
         })
       }
     },
-    // saveMaterial(list) {
-    //   if (this.contractId) {
-    //     list.forEach((item) => {
-    //       item.paymentContract = { id: this.contractId }
-    //     })
-    //     this.$post('/purchaseList/save', { objectList: list }).then((res) => {
-    //       this.getPurchaseList()
-    //     })
-    //   }
-    // },
     deleteRow(id, index) {
       if (this.contractId) {
         this.$post('/purchaseList/delete', { id: [id] }).then((res) => {
@@ -250,7 +243,6 @@ export default {
       }
     },
     selected(data) {
-      var list = []
       this.uploadDetail = data.results
       this.uploadDetail.forEach((item) => {
         var obj = {}
@@ -263,19 +255,7 @@ export default {
           number: item['数量'],
           totalAmount: item['总金额']
         }
-        if (this.contractId) {
-          obj.paymentContract = {
-            id: this.contractId
-          }
-        }
-        list.push(obj)
-      })
-      var objectList = {
-        objectList: list
-      }
-      this.$post('/purchaseList/save', objectList).then((res) => {
-        console.log('res', res)
-        this.getPurchaseList()
+        this.purchaseList.push(obj)
       })
     },
     uploadMaterial() {
@@ -392,11 +372,7 @@ export default {
       this.purchaseList.forEach((item) => {
         item.paymentContract = { id: data }
       })
-      // console.log('purchaseList', this.purchaseList)
-      this.$post('/purchaseList/save', this.purchaseList).then((res) => {
-        console.log('res', res)
-        this.getPurchaseList()
-      })
+      this.saveMaterial(this.purchaseList)
     }
   }
 }

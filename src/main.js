@@ -48,7 +48,6 @@ Object.keys(filters).forEach(key => {
 //   console.log(to.path)
 //   next()
 // })
-
 new Vue({
   el: '#app',
   router,

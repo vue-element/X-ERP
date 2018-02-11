@@ -67,8 +67,10 @@ export default {
     }
   },
   created() {
-    var name = Cookies.get('name')
+    var name = Cookies.get('username')
     var password = Cookies.get('password')
+    console.log('name', name)
+    console.log('password', password)
     if (name && password) {
       this.isKeepPw = true
       this.loginForm.name = name
@@ -99,9 +101,9 @@ export default {
             if (res.data.success === true) {
               this.setToken('11111')
               setToken('11111')
-              var accountData = res.data
-              sessionStorage.setItem('accountData', accountData)
-              this.$store.commit('CHANGE_INFO', accountData)
+              var userInfo = res.data.data
+              // sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+              this.$store.commit('login', userInfo)
               var username = this.loginForm.name
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
@@ -129,7 +131,8 @@ export default {
     },
     ...mapActions([
       'setToken',
-      'setRoles'
+      'setRoles',
+      'login'
     ])
   },
   computed: {

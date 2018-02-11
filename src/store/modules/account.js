@@ -1,12 +1,33 @@
-import 'vuex'
-//  存储登录后的account数据
-const account = {
+// import Cookies from 'js-cookie'
+import { getToken, removeToken } from '@/utils/auth'
+const user = {
+  state: {
+    userInfo: {},
+    token: getToken()
+  },
   mutations: {
-    CHANGE_INFO: (state, count) => {
-      state.accountData = count
-    //  console.log(state.account)
+    login (state, userInfo) {
+      state.userInfo = userInfo
+    },
+    setToken: (state, token) => {
+      state.token = token
+    },
+    logout: (state) => {
+      state.userInfo = {}
+      state.token = ''
+      removeToken()
+    }
+  },
+  actions: {
+    login({ commit }, userInfo) {
+      commit('login', userInfo)
+    },
+    setToken({ commit }, token) {
+      commit('setToken', token)
+    },
+    logout({ commit }) {
+      commit('logout')
     }
   }
 }
-
-export default account
+export default user

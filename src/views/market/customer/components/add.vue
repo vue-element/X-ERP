@@ -118,12 +118,6 @@ export default {
       } else {
         callback()
       }
-      // console.log('ValidatePhone', validatePhone(value))
-      // if (!validatePhone(value)) {
-      //   callback(new Error('请输入正确的用户名'))
-      // } else {
-      //   callback()
-      // }
     }
     return {
       categoryList: [],

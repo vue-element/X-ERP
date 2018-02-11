@@ -13,20 +13,20 @@
       <el-row :gutter="40">
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="创建人:">
-            <p v-if="disabled">{{inputPerson}}</p>
-            <el-input v-else placeholder="请输入创建人"></el-input>
+            <p v-if="disabled">{{userInfo.account.name}}</p>
+            <el-input v-else placeholder="请输入创建人" v-model="userInfo.account.name" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="所属年月:" class="single-date">
-            <p v-if="disabled">{{dateline}}</p>
-            <el-date-picker v-else type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="请选择日期" v-model="dateline"></el-date-picker>
+            <p v-if="disabled">{{businessInfo.date}}</p>
+            <el-date-picker v-else type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="请选择日期" v-model="businessInfo.date"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="单据日期:" class="single-date">
-            <p v-if="disabled">{{businessInfo.date}}</p>
-            <el-date-picker v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="businessInfo.date"  placeholder="选择日期"></el-date-picker>
+            <p v-if="disabled">{{businessInfo.billDate}}</p>
+            <el-date-picker v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="businessInfo.billDate"  placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,13 +40,19 @@
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="商机类型:">
             <p v-if="disabled">{{businessInfo.type}}</p>
-            <el-input v-else v-model="businessInfo.type" placeholder="请输入商机类型"></el-input>
+            <el-select v-else v-model="businessInfo.type" placeholder="请选择商机类型">
+              <el-option label="普通类型" value="普通类型"></el-option>
+              <el-option label="机密线索" value="机密线索"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="商机来源:">
             <p v-if="disabled">{{businessInfo.source}}</p>
-            <el-input v-else v-model="businessInfo.source" placeholder="请输入商机来源"></el-input>
+            <el-select v-else v-model="businessInfo.source" placeholder="请选择商机来源">
+              <el-option label="公司" value="公司"></el-option>
+              <el-option label="个人" value="个人"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -83,13 +89,13 @@
         <p>项目实施</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="24" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="项目关键信息描述:">
             <p v-if="disabled">{{businessInfo.projectImpls[0].keyword}}</p>
             <el-input v-else v-model="businessInfo.projectImpls[0].keyword" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
@@ -98,27 +104,29 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="预计成交金额（元）:" prop="amount">
             <p v-if="disabled">{{businessInfo.projectImpls[0].amount}}</p>
             <el-input v-else v-model="businessInfo.projectImpls[0].amount" @change="amountChange" placeholder="请输入"  min='0'></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="投标日期:" class="single-date">
             <p v-if="disabled">{{businessInfo.projectImpls[0].bidDate}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].bidDate"  placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="方案投标日期:" class="single-date">
             <p v-if="disabled">{{businessInfo.projectImpls[0].bidDate2}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].bidDate2"  placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="总体项目开工时间:" class="single-date">
             <p v-if="disabled">{{businessInfo.projectImpls[0].startDate}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].startDate"  placeholder="选择日期"></el-date-picker>
@@ -126,13 +134,13 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="预计开发或发货时间:" class="single-date">
             <p v-if="disabled">{{businessInfo.projectImpls[0].developDate}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].developDate"  placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="预计合同签订时间:" class="single-date">
             <p v-if="disabled">{{businessInfo.projectImpls[0].signDate}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].signDate"  placeholder="选择日期"></el-date-picker>
@@ -146,13 +154,13 @@
         <p>人员信息</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务线负责人:" prop="chargePerson">
             <p v-if="disabled">{{businessInfo.chargePerson}}</p>
             <el-input v-else v-model="businessInfo.chargePerson" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+       <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="电话:" prop="chargePersonPhone">
             <p v-if="disabled">{{businessInfo.chargePersonPhone}}</p>
             <el-input v-else v-model="businessInfo.chargePersonPhone" placeholder="请输入"  type="phone"></el-input>
@@ -160,13 +168,13 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="项目具体跟进人:" prop="followPerson">
             <p v-if="disabled">{{businessInfo.followPerson}}</p>
             <el-input v-else v-model="businessInfo.followPerson" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="电话:" prop="followPersonPhone">
             <p v-if="disabled">{{businessInfo.followPersonPhone}}</p>
             <el-input v-else v-model="businessInfo.followPersonPhone" placeholder="请输入"></el-input>
@@ -180,7 +188,7 @@
         <p>进度状况</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机跟进状态:" prop="followState">
             <p v-if="disabled">{{businessInfo.followState}}</p>
             <el-select v-else v-model="businessInfo.followState" placeholder="请选择">
@@ -189,13 +197,60 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="8" :lg="8">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机执行状态:" prop="executState">
             <p v-if="disabled">{{businessInfo.executState}}</p>
             <el-select v-else v-model="businessInfo.executState" placeholder="请选择">
               <el-option v-for="item in executStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="商机审批状态:" prop="region">
+            <p v-if="disabled">{{businessInfo.examineState}}</p>
+            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择区域">
+              <el-option v-for="item in examineStateList" :label="item.value" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同原始金额:">
+            <p>{{businessInfo.examineState}}</p>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同变更金额:">
+            <p>{{businessInfo.examineState}}</p>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同总金额:">
+            <p>{{businessInfo.examineState}}</p>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同签订时间:">
+            <p>{{businessInfo.examineState}}</p>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同开工时间:">
+            <p>{{businessInfo.examineState}}</p>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同完成时间:">
+            <p>{{businessInfo.examineState}}</p>
           </el-form-item>
         </el-col>
       </el-row>
@@ -211,6 +266,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import { outputmoney } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
 export default {
@@ -264,9 +320,11 @@ export default {
           }
         ],
         code: '编码',
-        date: '2018-01-01',
+        billDate: '2018-01-01',
+        date: '2018-02-01',
         executState: '',
         followState: '',
+        examineState: '',
         name: '',
         source: '商机来源',
         type: '商机类型',
@@ -283,6 +341,7 @@ export default {
       followStateList: [],
       executStateList: [],
       projectCategoryList: [],
+      examineStateList: [],
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
@@ -313,7 +372,11 @@ export default {
       this.action = 'add'
     }
   },
-  mounted() {},
+  computed: {
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
   methods: {
     add() {
       this.$refs.businessInfo.validate(valid => {
@@ -360,9 +423,13 @@ export default {
               startDate: ''
             }
           ],
+          amount: '',
           code: '',
+          date: '',
+          billDate: '',
           executState: '',
           followState: '',
+          examineState: '',
           name: '',
           source: '',
           type: '',
@@ -406,41 +473,14 @@ export default {
         this.regionList = data.regionList
         console.log('regionList', this.regionList)
       })
-      this.followStateList = [{
-        value: '浅度跟进'
-      }, {
-        value: '深度跟进'
-      }, {
-        value: '已定未签'
-      }, {
-        value: '已签订'
-      }, {
-        value: '放弃'
-      }]
-      this.executStateList = [{
-        value: '前期接洽'
-      }, {
-        value: '方案编制'
-      }, {
-        value: '投标'
-      }, {
-        value: '中标'
-      }, {
-        value: '合同会签'
-      }, {
-        value: '纸质版合同签订'
-      }]
-      this.projectCategoryList = [{
-        value: '科技-智慧社区工程全委'
-      }, {
-        value: '科技-智慧社区改造'
-      }, {
-        value: '科技-物联网大平台'
-      }, {
-        value: '科技-设计服务'
-      }, {
-        value: '科技-技术服务'
-      }]
+      this.followStateList = [{ value: '浅度跟进' }, { value: '深度跟进' }, { value: '已定未签' }, { value: '已签订' }, { value: '放弃' }]
+      this.executStateList = [{ value: '前期接洽' }, { value: '方案编制' }, { value: '投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }]
+      this.projectCategoryList = [
+        { value: '科技-智慧工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大数据平台' }, { value: '科技-设计服务' },
+        { value: '科技-技术服务' }, { value: '科技-技术服务+材料采购' }, { value: '科技-产品营销' }, { value: '机电-设备查验' }, { value: '机电-设施设备运维平台' },
+        { value: '机电-设备运维全委' }, { value: '机电-电梯第三方监管' }, { value: '机电-节能工程' }, { value: '机电-设备升级改造' }, { value: '机电-设备顾问' }
+      ]
+      this.examineStateList = [{ value: '审核中' }, { value: '已审批' }, { value: '重新审批' }]
     },
     cityChange(val) {
       var len = val.length
@@ -453,17 +493,12 @@ export default {
       this.businessInfo.amount = outputmoney(val)
       this.businessInfo.projectImpls[0].amount = outputmoney(val)
     }
-  },
-  computed: {}
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>@import "src/styles/mixin.scss";
-.form-container {
-    overflow-y: auto;
-    @include noScroll;
-}
 .busniess-add {
   .edit-btn {
     margin: 0;

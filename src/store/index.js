@@ -5,18 +5,12 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import search from './modules/search'
 import user from './modules/user'
-import getters from './getters'
 import account from './modules/account'
+import getters from './getters'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  state: {
-    tab: 'listTab',
-    accountData: ''
-  },
-  mutations: {
-  },
   modules: {
     app,
     permission,

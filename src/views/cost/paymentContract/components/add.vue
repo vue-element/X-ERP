@@ -191,11 +191,9 @@ export default {
     },
     save() {
       this.loading = true
-      console.log('paymentContract', JSON.stringify(this.paymentContract))
       this.$post('/paymentContract/save', this.paymentContract).then(res => {
-        console.log('res')
+        this.loading = false
         if (res.data.success === true) {
-          this.loading = false
           this.$message({
             message: '保存成功',
             type: 'success'
@@ -203,7 +201,12 @@ export default {
           if (this.action === 'edit') {
             this.$emit('toggleTab')
           }
-          this.contractId = 3
+          this.contractId = res.data.data.id
+        } else {
+          this.$message({
+            message: '保存失败',
+            type: 'success'
+          })
         }
       }).catch(() => {
         this.loading = false
@@ -220,7 +223,6 @@ export default {
       this.$emit('toggleTab')
     },
     toggleEditBtn() {
-      // console.log('disabledASdd', this.disabled)
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'

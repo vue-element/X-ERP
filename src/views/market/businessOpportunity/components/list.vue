@@ -86,9 +86,6 @@ export default {
     })
   },
   watch: {
-    // searchData(val, oldVal) {
-    //   this.search()
-    // }
   },
   methods: {
     resize() {
@@ -125,69 +122,19 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
-        console.log('res', res)
-        var data = res.data.data
-        this.total = data.totalElements
-        this.currentPage = data.number + 1
-        this.pageSize = data.size
-        this.bussinessData = data.content
-        this.listLoading = false
-        this.bussinessData.forEach((item) => {
-          // 商机执行状态
-          switch (item.executState) {
-            case 0:
-              item.executState = '前期接洽'
-              break
-            case 1:
-              item.executState = '方案编制'
-              break
-            case 2:
-              item.executState = '投标'
-              break
-            case 3:
-              item.executState = '中标'
-              break
-            case 4:
-              item.executState = '合同会签'
-              break
-            default:
-              item.executState = '纸质版合同签订'
-          }
-          // 商机跟进状态
-          switch (item.followState) {
-            case 0:
-              item.followState = '浅度跟进'
-              break
-            case 1:
-              item.followState = '深度跟进'
-              break
-            case 2:
-              item.followState = '已定未签'
-              break
-            case 3:
-              item.followState = '已签订'
-              break
-            default:
-              item.followState = '放弃'
-          }
-          // 商机业务分类
-          switch (item.projectImpls[0].category) {
-            case 0:
-              item.projectImpls[0].category = '科技-智慧社区工程全委'
-              break
-            case 1:
-              item.projectImpls[0].category = '科技-智慧社区改造'
-              break
-            case 2:
-              item.projectImpls[0].category = '科技-物联网大平台'
-              break
-            case 3:
-              item.projectImpls[0].category = '科技-设计服务'
-              break
-            default:
-              item.projectImpls[0].category = '科技-技术服务'
-          }
-        })
+        if (res.data.success === true) {
+          this.listLoading = false
+          var data = res.data.data
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
+          this.bussinessData = data.content
+        } else {
+          this.$message({
+            message: '数据获取失败',
+            type: 'success'
+          })
+        }
       })
     },
     //  页码处理
