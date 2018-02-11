@@ -9,29 +9,19 @@
           <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
             <el-table-column label="发货明细">
               <el-table-column label="序号">
-                <template slot-scope="scope">
-                 {{scope.$index + 1}}
-                </template>
+                <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
               <el-table-column label="物料名称">
-                <template slot-scope="scope">
-                  <span>{{scope.row.name}}</span>
-                </template>
+                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
               </el-table-column>
               <el-table-column label="规格型号">
-                <template slot-scope="scope">
-                  <span>{{scope.row.model}}</span>
-                </template>
+                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
               </el-table-column>
               <el-table-column label="品牌">
-                <template slot-scope="scope">
-                  <span>{{scope.row.brand}}</span>
-                </template>
+                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
               </el-table-column>
               <el-table-column label="采购数量">
-                <template slot-scope="scope">
-                  <span>{{scope.row.number}}</span>
-                </template>
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
             </el-table-column>
           </el-table>
@@ -67,7 +57,6 @@
                 <template slot-scope="scope">
                   <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                   <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
-                  <!-- <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button> -->
                 </template>
               </el-table-column>
             </el-table-column>
@@ -82,7 +71,7 @@
       </div>
     </div>
     <!--审核动态  -->
-    <!-- <div class="form-module"> -->
+    <div class="form-module">
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
@@ -139,7 +128,6 @@ export default {
   created() {
     console.log('editShow', this.contractId)
     this.getPurchaseList()
-    this.getInboundList()
   },
   watch: {
   },
@@ -148,53 +136,26 @@ export default {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         var data = res.data.data.content
         this.purchaseList = _.cloneDeep(data)
+        this.purchaseList.forEach((item) => {
+          this.InboundList.push(item.inboundDetailes[0])
+        })
+        this.InboundList.forEach((item) => {
+          item.edit = true
+        })
+        console.log('InboundList', this.InboundList)
       })
     },
-    getInboundList() {
-      this.$get('/inboundDetaile').then((res) => {
-        var data = res.data.data.content
-        this.InboundList = _.cloneDeep(data)
-      })
-    },
-    addMaterial() {
-      var obj = {
-        name: '',
-        brand: '',
-        model: '',
-        unit: '',
-        unitPrice: '',
-        number: '',
-        totalAmount: '',
-        edit: true
-      }
-      if (this.contractId) {
-        obj.paymentContract = {
-          id: this.contractId
-        }
-      }
-      this.purchaseList.push(obj)
-    },
-    // deleteRow(id) {
-    //   var rowId = { id: [id] }
-    //   this.$post('/purchaseList/delete', rowId).then((res) => {
-    //     if (res.data.success === true) {
-    //       this.getPurchaseList()
-    //       this.$message({
-    //         message: '删除成功',
-    //         type: 'success'
-    //       })
-    //     }
-    //   })
-    // },
     editRow(row, index) {
-      row.edit = !row.edit
+      console.log('row', row)
+      row.edit = true
       Vue.set(this.InboundList, index, row)
     },
     confirmEdit(row, index) {
-      row.edit = !row.edit
+      row.edit = false
       Vue.set(this.InboundList, index, row)
+      console.log('row', JSON.stringify(row))
       this.$post('/inboundDetaile/save', row).then((res) => {
-        this.getInboundList()
+
       })
     },
     uploadMaterial() {
@@ -225,7 +186,6 @@ export default {
       )
     },
     selected(data) {
-      // var list = []
       this.uploadDetail.forEach((item) => {
         var obj = {}
         obj = {
@@ -241,12 +201,7 @@ export default {
           console.log('res', res)
           this.getPurchaseList()
         })
-        // list.push(obj)
       })
-      // console.log('list', JSON.stringify(list))
-      // this.$post('/purchaseList/save', list).then((res) => {
-      //   console.log('res', res)
-      // })
     }
   }
 }

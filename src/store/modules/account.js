@@ -3,7 +3,8 @@ import { getToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     userInfo: {},
-    token: getToken()
+    token: getToken(),
+    roles: []
   },
   mutations: {
     login (state, userInfo) {
@@ -16,6 +17,9 @@ const user = {
       state.userInfo = {}
       state.token = ''
       removeToken()
+    },
+    setRoles: (state, roles) => {
+      state.roles = roles
     }
   },
   actions: {
@@ -24,6 +28,9 @@ const user = {
     },
     setToken({ commit }, token) {
       commit('setToken', token)
+    },
+    setRoles({ commit }, roles) {
+      commit('setRoles', roles)
     },
     logout({ commit }) {
       commit('logout')

@@ -15,5 +15,6 @@ const getters = {
   doSearch: state => state.search.doSearch,
   userInfo: state => state.account.userInfo,
   token: state => state.account.token
+  // roles: state => state.account.roles
 }
 export default getters

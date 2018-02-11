@@ -58,6 +58,8 @@ export default {
       loginRules: {
         name: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        // name: [{ required: true, trigger: 'blur', message: '请输入账号' }],
+        // password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
       },
       loading: false,
       showDialog: false,
@@ -104,6 +106,7 @@ export default {
               var userInfo = res.data.data
               // sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
               this.$store.commit('login', userInfo)
+              // this.$store.commit('setRoles', userInfo.role.code)
               var username = this.loginForm.name
               var password = this.loginForm.password
               if (this.isKeepPw === true) {
