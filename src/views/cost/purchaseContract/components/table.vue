@@ -223,7 +223,7 @@ export default {
           item.paymentContract = { id: this.contractId }
         })
         this.$post('/purchaseList/save', { objectList: list }).then((res) => {
-          if (res.data.success === true ) {
+          if (res.data.success === true) {
             this.$message({
               message: '保存成功',
               type: 'success'
@@ -316,7 +316,7 @@ export default {
       row.edit = !row.edit
       Vue.set(this.billingList, index, row)
       this.$post('/billing/save', row).then((res) => {
-        if (res.data.success === true ) {
+        if (res.data.success === true) {
           this.$message({
             message: '保存成功',
             type: 'success'
