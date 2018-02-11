@@ -88,14 +88,25 @@
       <h4 class="module-title">
         <p>项目实施</p>
       </h4>
+<<<<<<< HEAD
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
+=======
+      <el-row :gutter="40" class="keyMsg">
+        <el-col :xs="24" :sm="24" :lg="24">
+>>>>>>> 8c82d19dc5965cb830d26ea3b0707ad1a05f30a0
           <el-form-item label="项目关键信息描述:">
             <p v-if="disabled">{{businessInfo.projectImpls[0].keyword}}</p>
-            <el-input v-else v-model="businessInfo.projectImpls[0].keyword" placeholder="请输入"></el-input>
+            <el-input v-else v-model="businessInfo.projectImpls[0].keyword" placeholder="请输入项目关键信息"></el-input>
           </el-form-item>
         </el-col>
+<<<<<<< HEAD
         <el-col :xs="24" :sm="12" :lg="12">
+=======
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="24" :lg="8">
+>>>>>>> 8c82d19dc5965cb830d26ea3b0707ad1a05f30a0
           <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
@@ -314,7 +325,7 @@ export default {
             bidDate2: '2018-01-01',
             category: '',
             developDate: '2018-01-01',
-            keyword: '项目关键信息',
+            keyword: '',
             signDate: '2018-01-01',
             startDate: '2018-01-01'
           }
@@ -326,8 +337,8 @@ export default {
         followState: '',
         examineState: '',
         name: '',
-        source: '商机来源',
-        type: '商机类型',
+        source: '',
+        type: '',
         chargePerson: '业务线负责人',
         followPerson: '项目跟进人',
         chargePersonPhone: '13682571372',
@@ -341,7 +352,12 @@ export default {
       followStateList: [],
       executStateList: [],
       projectCategoryList: [],
+<<<<<<< HEAD
       examineStateList: [],
+=======
+      sourceList: [],
+      typeList:[],
+>>>>>>> 8c82d19dc5965cb830d26ea3b0707ad1a05f30a0
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
@@ -471,8 +487,8 @@ export default {
         this.cityList = data.cityList
         this.clientList = data.clientList
         this.regionList = data.regionList
-        console.log('regionList', this.regionList)
       })
+<<<<<<< HEAD
       this.followStateList = [{ value: '浅度跟进' }, { value: '深度跟进' }, { value: '已定未签' }, { value: '已签订' }, { value: '放弃' }]
       this.executStateList = [{ value: '前期接洽' }, { value: '方案编制' }, { value: '投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }]
       this.projectCategoryList = [
@@ -481,6 +497,67 @@ export default {
         { value: '机电-设备运维全委' }, { value: '机电-电梯第三方监管' }, { value: '机电-节能工程' }, { value: '机电-设备升级改造' }, { value: '机电-设备顾问' }
       ]
       this.examineStateList = [{ value: '审核中' }, { value: '已审批' }, { value: '重新审批' }]
+=======
+      this.followStateList = [{
+        value: '浅度跟进'
+      }, {
+        value: '深度跟进'
+      }, {
+        value: '已定未签'
+      }, {
+        value: '已签订'
+      }, {
+        value: '放弃'
+      }]
+      this.executStateList = [{
+        value: '前期接洽'
+      }, {
+        value: '方案编制'
+      }, {
+        value: '投标'
+      }, {
+        value: '中标'
+      }, {
+        value: '合同会签'
+      }, {
+        value: '纸质版合同签订'
+      }]
+      this.projectCategoryList = [{
+        value: '科技-智慧社区工程全委'
+      }, {
+        value: '科技-智慧社区改造'
+      }, {
+        value: '科技-物联网大平台'
+      }, {
+        value: '科技-设计服务'
+      }, {
+        value: '科技-技术服务'
+      }, {
+        value: '机电-设备运维平台'
+      }, {
+        value: '机电-设备顾问'
+      }, {
+        value: '机电-节能工程'
+      }, {
+        value: '机电-设备查验'
+      }, {
+        value: '机电-设备运维全委'
+      }, {
+        value: '机电-设备升级改造'
+      }, {
+        value: '机电-电梯第三方监管'
+      }],
+      this.sourceList = [{
+        name: '公司'
+      }, {
+        name: '个人'
+      }],
+      this.typeList = [{
+        name: '普通线索'
+      }, {
+        name: '机密线索'
+      }]
+>>>>>>> 8c82d19dc5965cb830d26ea3b0707ad1a05f30a0
     },
     cityChange(val) {
       var len = val.length
@@ -509,4 +586,10 @@ export default {
 }
 </style>
 <style  rel="stylesheet/scss" lang="scss">
+.business-container .form-module .keyMsg label{
+  width: 9%!important;
+}
+.business-container .form-module .keyMsg .el-form-item__content{
+  width: 88%!important;
+}
 </style>

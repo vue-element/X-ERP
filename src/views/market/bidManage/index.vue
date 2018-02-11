@@ -115,6 +115,7 @@ export default {
             text-align: center;
             border: solid 1px #d2d2d2;
 						overflow: hidden;
+            cursor: pointer;
         }
         li.is-active {
             border: solid 1px #35d5ba;
@@ -162,6 +163,7 @@ export default {
                 display: inline-block;
                 margin: 0 12px;
                 color: #828282;
+                cursor: pointer;
             }
         }
     }
