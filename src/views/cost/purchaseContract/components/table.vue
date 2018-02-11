@@ -72,7 +72,7 @@
             <template slot-scope="scope">
               <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
               <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+              <el-button @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -173,6 +173,7 @@ export default {
       purchaseList: [],
       billingList: [],
       paymentList: [],
+      uploadDetail: [],
       isDisabled: false,
       uploadTableShow: false,
       listLoading: false,
@@ -181,16 +182,16 @@ export default {
     }
   },
   created() {
-    console.log('editShow', this.editShow)
-    this.getPurchaseList()
-    this.getBillingList()
-    this.getPaymentList()
-  },
-  watch: {
+    console.log('editShow', this.contractId)
+    if (this.contractId) {
+      this.getPurchaseList()
+      this.getBillingList()
+      this.getPaymentList()
+    }
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList').then((res) => {
+      this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         this.purchaseList = res.data.data.content
       })
     },
@@ -203,34 +204,64 @@ export default {
         unitPrice: '',
         number: '',
         totalAmount: '',
-        paymentContract: { id: this.contractId },
         edit: true
       }
       this.purchaseList.push(obj)
     },
-    deleteRow(id) {
-      var rowId = { id: [id] }
-      this.$post('/purchaseList/delete', rowId).then((res) => {
-        if (res.data.success === true) {
-          this.getPurchaseList()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
-      })
-    },
     editRow(row, index) {
       row.edit = !row.edit
       Vue.set(this.purchaseList, index, row)
-      // console.log('purchaseList[idex]', this.purchaseList[index])
     },
     confirmEdit(row, index) {
       row.edit = !row.edit
       Vue.set(this.purchaseList, index, row)
-      // console.log('purchaseList[idex]', this.purchaseList[index])
-      this.$post('/purchaseList/save', row).then((res) => {
-        this.getPurchaseList()
+      this.saveMaterial(this.purchaseList)
+    },
+    saveMaterial(list) {
+      if (this.contractId) {
+        list.forEach((item) => {
+          item.paymentContract = { id: this.contractId }
+        })
+        this.$post('/purchaseList/save', { objectList: list }).then((res) => {
+          if (res.data.success === true ) {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.getPurchaseList()
+          }
+        })
+      }
+    },
+    deleteRow(id, index) {
+      if (this.contractId) {
+        this.$post('/purchaseList/delete', { id: [id] }).then((res) => {
+          if (res.data.success === true) {
+            this.getPurchaseList()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      } else {
+        this.purchaseList.splice(index, 1)
+      }
+    },
+    selected(data) {
+      this.uploadDetail = data.results
+      this.uploadDetail.forEach((item) => {
+        var obj = {}
+        obj = {
+          name: item['物料名称'],
+          brand: item['品牌'],
+          model: item['规格型号'],
+          unit: item['单位'],
+          unitPrice: item['单价'],
+          number: item['数量'],
+          totalAmount: item['总金额']
+        }
+        this.purchaseList.push(obj)
       })
     },
     uploadMaterial() {
@@ -260,33 +291,9 @@ export default {
         })
       )
     },
-    selected(data) {
-      // var list = []
-      this.uploadDetail.forEach((item) => {
-        var obj = {}
-        obj = {
-          name: item['物料名称'],
-          brand: item['品牌'],
-          model: item['规格型号'],
-          unit: item['单位'],
-          unitPrice: item['单价'],
-          number: item['数量'],
-          totalAmount: item['总金额']
-        }
-        this.$post('/purchaseList/save', obj).then((res) => {
-          console.log('res', res)
-          this.getPurchaseList()
-        })
-        // list.push(obj)
-      })
-      // console.log('list', JSON.stringify(list))
-      // this.$post('/purchaseList/save', list).then((res) => {
-      //   console.log('res', res)
-      // })
-    },
     // 开票信息
     getBillingList() {
-      this.$get('/billing').then((res) => {
+      this.$get('/billing/findAllByPaymentContract/' + this.contractId).then((res) => {
         this.billingList = res.data.data.content
       })
     },
@@ -301,6 +308,23 @@ export default {
       }
       this.billingList.push(obj)
     },
+    editBillingRow(row, index) {
+      row.edit = !row.edit
+      Vue.set(this.billingList, index, row)
+    },
+    confirmBillingEdit(row, index) {
+      row.edit = !row.edit
+      Vue.set(this.billingList, index, row)
+      this.$post('/billing/save', row).then((res) => {
+        if (res.data.success === true ) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getBillingList()
+        }
+      })
+    },
     deleteBillingRow(id) {
       var rowId = { id: [id] }
       this.$post('/billing/delete', rowId).then((res) => {
@@ -313,20 +337,9 @@ export default {
         }
       })
     },
-    editBillingRow(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.billingList, index, row)
-    },
-    confirmBillingEdit(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.billingList, index, row)
-      this.$post('/billing/save', row).then((res) => {
-        this.getBillingList()
-      })
-    },
     // 付款信息
     getPaymentList() {
-      this.$get('/payment').then((res) => {
+      this.$get('/payment/findAllByPaymentContract/' + this.contractId).then((res) => {
         this.paymentList = res.data.data.content
       })
     },
@@ -341,6 +354,23 @@ export default {
       }
       this.paymentList.push(obj)
     },
+    editPaymentRow(row, index) {
+      row.edit = !row.edit
+      Vue.set(this.paymentList, index, row)
+    },
+    confirmPaymentEdit(row, index) {
+      row.edit = !row.edit
+      Vue.set(this.paymentList, index, row)
+      this.$post('/payment/save', row).then((res) => {
+        if (res.data.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getPaymentList()
+        }
+      })
+    },
     deletePaymentRow(id) {
       var rowId = { id: [id] }
       this.$post('/payment/delete', rowId).then((res) => {
@@ -352,17 +382,15 @@ export default {
           })
         }
       })
-    },
-    editPaymentRow(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.paymentList, index, row)
-    },
-    confirmPaymentEdit(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.paymentList, index, row)
-      this.$post('/payment/save', row).then((res) => {
-        this.getPaymentList()
+    }
+  },
+  watch: {
+    contractId(data) {
+      console.log('my contractId', data)
+      this.purchaseList.forEach((item) => {
+        item.paymentContract = { id: data }
       })
+      this.saveMaterial(this.purchaseList)
     }
   }
 }

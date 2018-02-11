@@ -223,7 +223,13 @@ export default {
           item.paymentContract = { id: this.contractId }
         })
         this.$post('/purchaseList/save', { objectList: list }).then((res) => {
-          this.getPurchaseList()
+          if (res.data.success === true ) {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.getPurchaseList()
+          }
         })
       }
     },
@@ -310,7 +316,13 @@ export default {
       row.edit = !row.edit
       Vue.set(this.billingList, index, row)
       this.$post('/billing/save', row).then((res) => {
-        this.getBillingList()
+        if (res.data.success === true ) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getBillingList()
+        }
       })
     },
     deleteBillingRow(id) {
@@ -350,7 +362,13 @@ export default {
       row.edit = !row.edit
       Vue.set(this.paymentList, index, row)
       this.$post('/payment/save', row).then((res) => {
-        this.getPaymentList()
+        if (res.data.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getPaymentList()
+        }
       })
     },
     deletePaymentRow(id) {
