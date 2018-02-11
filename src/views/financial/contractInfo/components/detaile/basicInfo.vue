@@ -1,43 +1,43 @@
 <template>
     <div class="basicInfo-container form-container" ref="ele">
-      <el-form :model="ruleForm" ref="ruleForm" class="basic">
+      <el-form :model="contractInfo" ref="contractInfo" class="basic">
         <div class="basic form-module">
           <h4 class="module-title">
             <p>基础信息</p>
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="合同编号：" prop="name">
-                <el-input v-model="ruleForm.code" placeholder="请输入合同编码"></el-input>
+              <el-form-item label="合同编号：">
+                <el-input v-model="contractInfo.code" placeholder="请输入合同编码"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="合同名称：" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入合同名称"></el-input>
+              <el-form-item label="合同名称：">
+                <el-input v-model="contractInfo.name" placeholder="请输入合同名称"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="业务类别：" prop="name">
-                <el-select v-model="ruleForm.category" placeholder="请选择业务类别">
-                  <el-option v-for="item in category" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              <el-form-item label="业务类别：">
+                <el-select v-model="contractInfo.category" placeholder="请选择业务类别">
+                  <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="客户类型：" prop="name">
-                <el-select v-model="ruleForm.clientList" placeholder="请选择客户类型">
+              <el-form-item label="客户类型：">
+                <el-select v-model="contractInfo.client.id" placeholder="请选择客户类型">
                   <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="城市：" prop="name">
-                <el-input v-model="ruleForm.city" placeholder="请输入城市"></el-input>
+              <el-form-item label="城市：">
+                <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="办事处：" prop="name">
-                <el-select v-model="ruleForm.regionList" placeholder="请选择活动区域">
+              <el-form-item label="办事处：">
+                <el-select v-model="contractInfo.region.id" placeholder="请选择活动区域">
                   <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -50,25 +50,25 @@
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="合同文本：" prop="name">
-                <el-select v-model="ruleForm.textList" placeholder="请选择合同文本">
-                  <el-option v-for="item in textList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              <el-form-item label="合同文本：">
+                <el-select v-model="contractInfo.text" placeholder="请选择合同文本">
+                  <el-option v-for="item in textList" :label="item.value" :value="item.value" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item class="single-date" label="签订时间：" prop="name">
-                 <el-date-picker v-model="ruleForm.signDate" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="签订日期"></el-date-picker>
+              <el-form-item class="single-date" label="签订时间：">
+                 <el-date-picker v-model="contractInfo.signDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="签订日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item class="single-date" label="合同所属期：" prop="name">
-                <el-date-picker v-model="ruleForm.term" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
+              <el-form-item class="single-date" label="合同所属期：">
+                <el-date-picker v-model="contractInfo.term" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item class="range-date" label="合同期限：" prop="name">
-                  <el-date-picker v-model="ruleForm.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
+              <el-form-item class="range-date" label="合同期限：">
+                  <el-date-picker v-model="contractInfo.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
                   </el-date-picker>
               </el-form-item>
             </el-col>
@@ -80,24 +80,24 @@
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="合同金额：" prop="name">
-                <el-input v-model="ruleForm.originalAmount" type="text" placeholder="请输入合同金额"></el-input>
+              <el-form-item label="合同金额：">
+                <el-input v-model="contractInfo.originalAmount" type="text" placeholder="请输入合同金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="变更金额：" prop="name">
-                <el-input v-model="ruleForm.changeAmount" type="text" placeholder="请输入变更金额"></el-input>
+              <el-form-item label="变更金额：">
+                <el-input v-model="contractInfo.changeAmount" type="text" placeholder="请输入变更金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item label="合同总额：" prop="name">
-                <el-input v-model="ruleForm.contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
+              <el-form-item label="合同总额：">
+                <el-input v-model="contractInfo.contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </div>
         <div class="commont-btn">
-          <el-button>保存</el-button>
+          <el-button @click="add" :loading="loading">保存</el-button>
           <el-button @click="reset">重置</el-button>
           <el-button @click="cancel('listTab')">取消</el-button>
         </div>
@@ -111,67 +111,34 @@ export default {
   data() {
     return {
       height: 100,
-      cityList: '',
-      clientList: '',
-      regionList: '',
-      textList: [{
-        id: '1',
-        name: '是'
-      }, {
-        id: '2',
-        name: '否'
-      }],
-      category: [{
-        id: '1',
-        name: '科技-智慧社区工程全委'
-      }, {
-        id: '2',
-        name: '科技-智慧社区改造'
-      }, {
-        id: '3',
-        name: '科技-物联网大平台'
-      }, {
-        id: '4',
-        name: '科技-设计服务'
-      }, {
-        id: '5',
-        name: '科技-技术服务'
-      }, {
-        id: '6',
-        name: '机电-设备运维平台'
-      }, {
-        id: '7',
-        name: '机电-设备顾问'
-      }, {
-        id: '8',
-        name: '机电-节能工程'
-      }, {
-        id: '9',
-        name: '机电-设备查验'
-      }, {
-        id: '10',
-        name: '机电-设备运维全委'
-      }, {
-        id: '11',
-        name: '机电-设备升级改造'
-      }, {
-        id: '12',
-        name: '机电-电梯第三方监管'
-      }],
-      ruleForm: {
+      loading: false,
+      cityList: [],
+      cityOption: [],
+      clientList: [],
+      regionList: [],
+      textList: [],
+      categoryList: [],
+      contractInfo: {
         code: '',
         name: '',
-        categoryList: '',
-        clientList: '',
-        city: '',
-        regionList: '',
-        textList: '',
+        category: '',
+        client: {
+          id: ''
+        },
+        city: {
+          id: ''
+        },
+        region: {
+          id: ''
+        },
+        text: '',
         signDate: '',
         term: '',
         date: '',
         originalAmount: '',
         changeAmount: '',
-        contractTotalAmount: ''
+        contractTotalAmount: '',
+        oldCity: ''
       }
     }
   },
@@ -179,6 +146,12 @@ export default {
     this.data()
   },
   methods: {
+    add() {
+      this.contractInfo.oldCity = this.cityOption.join('-')
+      this.$post('/contractInfo/save', this.contractInfo).then((res) => {
+        console.log(res)
+      })
+    },
     data() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
@@ -186,12 +159,17 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
+      this.categoryList = [
+        { value: '科技-智慧工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大数据平台' }, { value: '科技-设计服务' },
+        { value: '科技-技术服务' }, { value: '科技-技术服务+材料采购' }, { value: '科技-产品营销' }, { value: '机电-设备查验' }, { value: '机电-设施设备运维平台' }, { value: '机电-设备运维全委' }, { value: '机电-电梯第三方监管' }, { value: '机电-节能工程' }, { value: '机电-设备升级改造' }, { value: '机电-设备顾问' }
+      ]
+      this.textList = [{ value: '是' }, { value: '否' }]
     },
     reset() {
       this.ruleForm = {
         code: '',
         name: '',
-        categoryList: '',
+        category: '',
         clientList: '',
         city: '',
         regionList: '',
@@ -204,8 +182,9 @@ export default {
         contractTotalAmount: ''
       }
     },
-    cancel() {
-      console.log(123)
+    cityChange(val) {
+      var len = val.length
+      this.contractInfo.city.id = val[len - 1]
     }
   },
   mounted() {
