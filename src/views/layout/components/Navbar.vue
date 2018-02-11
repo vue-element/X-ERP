@@ -4,9 +4,9 @@
   <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
   <ul class="navbar" mode="horizontal">
     <li>欢迎您～</li>
-    <li class="department">{{userInfo.account.role.name}}</li>
-    <li class="department">
-      <span class="username">{{userInfo.account.name}}</span>
+    <li class="department">{{user.name}}</li>
+    <li>
+      <span class="username">{{user.department}}</span>
       <i class="iconfont icon-username"></i>
     </li>
     <li>
@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'userInfo',
+      // 'userInfo',
       'avatar',
       'language'
     ])
@@ -70,6 +70,10 @@ export default {
           var userInfo = res.data.data
           this.setToken('11111')
           this.$store.commit('login', userInfo)
+          this.user = {
+            name: userInfo.account.role.name,
+            department: userInfo.account.name
+          }
         }
       })
     },
@@ -91,7 +95,6 @@ export default {
     },
     ...mapActions([
       'setToken',
-      // 'setRoles',
       'login'
     ])
   }
