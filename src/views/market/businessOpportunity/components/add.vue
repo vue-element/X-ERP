@@ -88,16 +88,25 @@
       <h4 class="module-title">
         <p>项目实施</p>
       </h4>
+<<<<<<< HEAD
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
+=======
+      <el-row :gutter="40" class="keyMsg">
+        <el-col :xs="24" :sm="24" :lg="12">
+>>>>>>> b7abcd66461ee1ef942cfa5efc264d614b375a90
           <el-form-item label="项目关键信息描述:">
             <p v-if="disabled">{{businessInfo.projectImpls[0].keyword}}</p>
             <el-input v-else v-model="businessInfo.projectImpls[0].keyword" placeholder="请输入项目关键信息"></el-input>
           </el-form-item>
         </el-col>
+<<<<<<< HEAD
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="24" :lg="8">
+=======
+        <el-col :xs="24" :sm="24" :lg="12">
+>>>>>>> b7abcd66461ee1ef942cfa5efc264d614b375a90
           <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
@@ -507,13 +516,5 @@ export default {
       float: right;
     }
   }
-}
-</style>
-<style  rel="stylesheet/scss" lang="scss">
-.business-container .form-module .keyMsg label{
-  width: 9%!important;
-}
-.business-container .form-module .keyMsg .el-form-item__content{
-  width: 88%!important;
 }
 </style>
