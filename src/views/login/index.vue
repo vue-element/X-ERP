@@ -58,8 +58,6 @@ export default {
       loginRules: {
         name: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-        // name: [{ required: true, trigger: 'blur', message: '请输入账号' }],
-        // password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
       },
       loading: false,
       showDialog: false,
@@ -69,17 +67,17 @@ export default {
     }
   },
   created() {
-    var name = Cookies.get('username')
-    var password = Cookies.get('password')
-    console.log('name', name)
-    console.log('password', password)
-    if (name && password) {
-      this.isKeepPw = true
-      this.loginForm.name = name
-      this.loginForm.password = password
-    } else {
-      this.loginForm.name = ''
-      this.loginForm.password = ''
+    if (Cookies.get('isKeepPw')) {
+      var name = Cookies.get('username')
+      var password = Cookies.get('password')
+      if (name && password) {
+        this.isKeepPw = true
+        this.loginForm.name = name
+        this.loginForm.password = password
+      } else {
+        this.loginForm.name = ''
+        this.loginForm.password = ''
+      }
     }
   },
   methods: {
@@ -101,20 +99,15 @@ export default {
           this.$post('/login', this.loginForm, false).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              this.setToken('11111')
               setToken('11111')
               var userInfo = res.data.data
-              // sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
               this.$store.commit('login', userInfo)
-              // this.$store.commit('setRoles', userInfo.role.code)
               var username = this.loginForm.name
               var password = this.loginForm.password
+              Cookies.set('username', username, { expires: 7 })
+              Cookies.set('password', password, { expires: 7 })
               if (this.isKeepPw === true) {
-                Cookies.set('username', username, { expires: 7 })
-                Cookies.set('password', password, { expires: 7 })
-              } else {
-                Cookies.remove('username', '')
-                Cookies.remove('password', '')
+                Cookies.set('isKeepPw', true)
               }
               this.$router.push({ path: '/' })
             } else {
@@ -133,7 +126,7 @@ export default {
       })
     },
     ...mapActions([
-      'setToken',
+      // 'setToken',
       'setRoles',
       'login'
     ])

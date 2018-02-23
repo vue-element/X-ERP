@@ -103,6 +103,7 @@
       <el-button @click="cancel">取消</el-button>
     </div>
   </el-form>
+  <!-- <el-button type="text" @click="open" :disabled="notEmpty">点击打开 Message Box</el-button> -->
 </div>
 </template>
 <script>
@@ -124,20 +125,20 @@ export default {
       typeList: [],
       natureList: [],
       client: {
-        address: '地址',
-        category: '中海物业',
+        address: '',
+        category: '',
         email: '邮箱',
         name: '名称',
-        nature: '国有',
+        nature: '',
         person: '联系人',
         phone: '联系电话',
         position: '职位',
         projectNu: '在建项目数',
         qq: 'qq',
-        type: '多层'
+        type: ''
       },
       action: 'add',
-      editWord: '编辑',
+      editWord: '',
       loading: false,
       disabled: false,
       editShow: false,
@@ -175,6 +176,7 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
+              this.$emit('changeObj', false)
               if (this.action === 'edit') {
                 this.$emit('toggleTab')
               }
@@ -186,6 +188,7 @@ export default {
       })
     },
     reset() {
+      // this.$emit('changeObj', false)
       if (this.action === 'add') {
         this.client = {
           address: '',
@@ -245,7 +248,15 @@ export default {
       ]
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    client: {
+      handler(obj) {
+        this.$emit('changeObj', true)
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
