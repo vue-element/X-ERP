@@ -1,107 +1,111 @@
 <template>
   <div class="payment-contract">
-    <div class="form-module">
-      <h4 class="module-title">
-        <p>入库验收</p>
-      </h4>
-      <el-row>
-        <el-col :xs="24" :sm="24" :lg="12">
-          <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-            <el-table-column label="发货明细">
-              <el-table-column label="序号">
-                <template slot-scope="scope">{{scope.$index + 1}}</template>
+    <div v-show="actionTab === 'inboundInfo'">
+      <div class="form-module">
+        <h4 class="module-title">
+          <p>入库验收</p>
+        </h4>
+        <el-row>
+          <el-col :xs="24" :sm="24" :lg="12">
+            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
+              <el-table-column label="发货明细">
+                <el-table-column label="序号">
+                  <template slot-scope="scope">{{scope.$index + 1}}</template>
+                </el-table-column>
+                <el-table-column label="物料名称">
+                  <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
+                </el-table-column>
+                <el-table-column label="规格型号">
+                  <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+                </el-table-column>
+                <el-table-column label="品牌">
+                  <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
+                </el-table-column>
+                <el-table-column label="采购数量">
+                  <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+                </el-table-column>
               </el-table-column>
-              <el-table-column label="物料名称">
-                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
+            </el-table>
+          </el-col>
+          <el-col :xs="24" :sm="24" :lg="12">
+            <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+              <el-table-column label="验收明细">
+                <el-table-column label="实收数量">
+                  <template slot-scope="scope">
+                    <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+                    <span v-else>{{scope.row.number}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="核对型号">
+                  <template slot-scope="scope">
+                    <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
+                    <span v-else>{{scope.row.model}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="质量外观">
+                  <template slot-scope="scope">
+                    <input v-if="scope.row.edit" type="text" v-model="scope.row.quality" placeholder="请填写">
+                    <span v-else>{{scope.row.quality}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="合格证">
+                  <template slot-scope="scope">
+                    <input v-if="scope.row.edit" type="text" v-model="scope.row.certificate" placeholder="请填写">
+                    <span v-else>{{scope.row.certificate}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+                    <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
+                  </template>
+                </el-table-column>
               </el-table-column>
-              <el-table-column label="规格型号">
-                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-              </el-table-column>
-              <el-table-column label="品牌">
-                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
-              </el-table-column>
-              <el-table-column label="采购数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-            </el-table-column>
-          </el-table>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="12">
-          <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
-            <el-table-column label="验收明细">
-              <el-table-column label="实收数量">
-                <template slot-scope="scope">
-                  <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
-                  <span v-else>{{scope.row.number}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="核对型号">
-                <template slot-scope="scope">
-                  <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
-                  <span v-else>{{scope.row.model}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="质量外观">
-                <template slot-scope="scope">
-                  <input v-if="scope.row.edit" type="text" v-model="scope.row.quality" placeholder="请填写">
-                  <span v-else>{{scope.row.quality}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="合格证">
-                <template slot-scope="scope">
-                  <input v-if="scope.row.edit" type="text" v-model="scope.row.certificate" placeholder="请填写">
-                  <span v-else>{{scope.row.certificate}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作">
-                <template slot-scope="scope">
-                  <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-                  <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
-                </template>
-              </el-table-column>
-            </el-table-column>
-          </el-table>
-        </el-col>
-      </el-row>
-      <div class="commont-btn">
-        <el-button :loading="false">提交审核</el-button>
+            </el-table>
+          </el-col>
+        </el-row>
+        <div class="commont-btn">
+          <el-button :loading="false">提交审核</el-button>
+        </div>
+        <div v-show="uploadTableShow">
+          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
+        </div>
       </div>
-      <div v-show="uploadTableShow">
-        <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
+      <!--审核动态  -->
+      <div class="form-module">
+        <h4 class="module-title">
+          <p>审核动态</p>
+        </h4>
+        <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+          <el-table-column label="序号">
+            <template slot-scope="scope">{{scope.$index + 1}}</template>
+          </el-table-column>
+          <el-table-column label="审核步骤">
+            <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+          </el-table-column>
+          <el-table-column label="品牌">
+            <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+          </el-table-column>
+          <el-table-column label="操作人">
+            <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
+          </el-table-column>
+          <el-table-column label="操作时间">
+            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          </el-table-column>
+          <el-table-column label="审核结果">
+            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          </el-table-column>
+          <el-table-column label="下一步骤">
+            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          </el-table-column>
+          <el-table-column label="下一步骤审核人">
+            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
-    <!--审核动态  -->
-    <div class="form-module">
-      <h4 class="module-title">
-        <p>审核动态</p>
-      </h4>
-      <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
-        <el-table-column label="序号">
-          <template slot-scope="scope">{{scope.$index + 1}}</template>
-        </el-table-column>
-        <el-table-column label="审核步骤">
-          <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-        </el-table-column>
-        <el-table-column label="品牌">
-          <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-        </el-table-column>
-        <el-table-column label="操作人">
-          <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
-        </el-table-column>
-        <el-table-column label="操作时间">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-        </el-table-column>
-        <el-table-column label="审核结果">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-        </el-table-column>
-        <el-table-column label="下一步骤">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-        </el-table-column>
-        <el-table-column label="下一步骤审核人">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <div v-show="actionTab === 'officeCheck'"></div>
+    <div v-show="actionTab === 'costCheck'"></div>
   </div>
 </template>
 
@@ -113,7 +117,7 @@ import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['contractId', 'editShow'],
+  props: ['contractId', 'editShow', 'actionTab'],
   data() {
     return {
       purchaseList: [],
@@ -128,8 +132,6 @@ export default {
   created() {
     console.log('editShow', this.contractId)
     this.getPurchaseList()
-  },
-  watch: {
   },
   methods: {
     getPurchaseList() {
@@ -202,6 +204,11 @@ export default {
           this.getPurchaseList()
         })
       })
+    }
+  },
+  watch: {
+    actionTab(data) {
+      console.log(data)
     }
   }
 }

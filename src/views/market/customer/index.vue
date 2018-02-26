@@ -7,7 +7,7 @@
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button> -->
-        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
     <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" ref="del"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
@@ -42,7 +42,7 @@ import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
 export default {
-  name: 'smartCommunity',
+  name: 'customer',
   components: {
     AddComponent,
     ListComponent,
@@ -54,9 +54,11 @@ export default {
       editData: {},
       listData: '',
       tab: 'listTab',
+      oldTab: '',
       selArr: [],
       deleteShow: false,
-      height: 100
+      height: 100,
+      isChange: false
     }
   },
   mounted() {
@@ -82,6 +84,16 @@ export default {
         this.deleteShow = false
       }
     },
+    listBtn() {
+      console.log('isChange', this.isChange)
+      if (this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = 'listTab'
+        })
+        return
+      }
+      this.tab = 'listTab'
+    },
     addBtn() {
       this.tab = 'addTab'
       this.editData = {
@@ -91,7 +103,6 @@ export default {
     },
     seeRow(data) {
       this.tab = 'addTab'
-      // console.log(data)
       this.editData = {
         editData: data,
         tabState: 'seeTab'
@@ -111,9 +122,28 @@ export default {
     searchWord(data) {
       this.tab = 'listTab'
       this.searchData = data
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+      }).catch(() => {
+      })
+    },
+    changeObj(status) {
+      this.isChange = status
     }
   },
-  computed: {}
+  computed: {
+  },
+  watch: {
+    // tab (newVal, oldVal) {
+    //   // console.log('newVal', newVal)
+    //   // console.log('oldVal', oldVal)
+    // }
+  }
 }
 </script>
 

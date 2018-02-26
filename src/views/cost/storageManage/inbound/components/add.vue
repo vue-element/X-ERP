@@ -2,9 +2,9 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="actionTab === 'inboundInfo'">入库填写</li>
-        <li :class="actionTab === 'officeCheck' ? 'is-active' : ''" @click="actionTab === 'officeCheck'">办事处审核</li>
-        <li :class="actionTab === 'costCheck' ? 'is-active' : ''" @click="actionTab === 'costCheck'">成本部审核</li>
+        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="toggleTab('inboundInfo')">入库填写</li>
+        <li :class="actionTab === 'officeCheck' ? 'is-active' : ''" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li :class="actionTab === 'costCheck' ? 'is-active' : ''" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
@@ -43,7 +43,7 @@
             </el-col>
           </el-row>
         </div>
-        <table-component :contractId="contractId" :editShow="editShow"></table-component>
+        <table-component :contractId="contractId" :editShow="editShow" :actionTab="actionTab"></table-component>
       </el-form>
     </div>
   </div>
@@ -87,6 +87,10 @@ export default {
       this.paymentContract = data.paymentContractList
       this.businessList = data.businessList
       this.contractId = this.paymentContract.id
+    },
+    toggleTab(tab) {
+      this.actionTab = tab
+      console.log('tan', tab)
     }
   },
   computed: {}
