@@ -13,8 +13,8 @@
     </div>
 
     <div class="contractInfo-show">
-      <basicInfo v-if="tab === 'basicInfo'"></basicInfo>
-      <disclosureInfo v-if="tab === 'disclosureInfo'"></disclosureInfo>
+      <basicInfo v-if="tab === 'basicInfo'" :editData="editData"></basicInfo>
+      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData"></disclosureInfo>
       <subContract v-if="tab === 'subContract'"></subContract>
       <change v-if="tab === 'change'"></change>
       <invoiceInfo v-if="tab === 'invoiceInfo'"></invoiceInfo>
@@ -42,6 +42,7 @@ export default {
     returnMoney,
     payMoney
   },
+  props: ['editData'],
   data() {
     return {
       tab: 'basicInfo'

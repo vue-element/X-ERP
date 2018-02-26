@@ -1,6 +1,9 @@
 <template>
   <div class="disclosure-info-container form-container" ref="ele">
-    <el-form :model="disclosureInfo" :rules="rules" ref="disclosureInfo" class="basic">
+    <div class="commont-btn edit-btn" v-show="editShow">
+      <el-button @click="toggleEditBtn">{{editWord}}</el-button>
+    </div>
+    <el-form :model="contractInfo" ref="contractInfo" class="basic">
       <div class="form-module">
         <h4 class="module-title">
           <p>资金来源</p>
@@ -8,10 +11,10 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="资金来源：">
-              <el-select v-model="disclosureInfo.capital" placeholder="请选择资金来源">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
+              <p v-if="disabled">{{contractInfo.sourceFunds}}</p>
+              <el-select v-else v-model="contractInfo.sourceFunds" placeholder="请选择资金来源">
+                  <el-option v-for="item in sourceFundsList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+                </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -22,28 +25,33 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
-            <el-form-item label="资金来源：">
-              <el-input v-model="disclosureInfo.cost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+            <el-form-item label="材料成本：">
+              <p v-if="disabled">{{contractInfo.materialCost}}</p>
+              <el-input v-else v-model="contractInfo.materialCost" placeholder="请输入材料成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="人工成本：">
-              <el-input v-model="disclosureInfo.artificialCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.artificialCost}}</p>
+              <el-input v-else v-model="contractInfo.artificialCost" placeholder="请输入人工成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="综合成本：">
-              <el-input v-model="disclosureInfo.comprehensiveCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.comprehensiveCost}}</p>
+              <el-input v-else v-model="contractInfo.comprehensiveCost" placeholder="请输入综合成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="管理费用：">
-              <el-input v-model="disclosureInfo.manageCost" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.manageCost}}</p>
+              <el-input v-else v-model="contractInfo.manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="税金：">
-              <el-input v-model="disclosureInfo.Tax" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.tax}}</p>
+              <el-input v-else v-model="contractInfo.tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -55,19 +63,21 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="毛利润">
-             <el-input v-model="disclosureInfo.profit" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.tax}}</p>
+              <el-input v-else v-model="contractInfo.profit" placeholder="请输入毛利润"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="毛利润率">
-             <el-input v-model="disclosureInfo.profitRate" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <p v-if="disabled">{{contractInfo.tax}}</p>
+              <el-input v-else v-model="contractInfo.profitRate" placeholder="请输入毛利润率"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </div>
       <div class="btn">
-        <div class="common-btn">保&nbsp;&nbsp;&nbsp;存</div>
-        <div class="common-btn">重&nbsp;&nbsp;&nbsp;置</div>
+        <div class="common-btn" @click="add" :loading="loading">保&nbsp;&nbsp;&nbsp;存</div>
+        <div class="common-btn" @click="reset">重&nbsp;&nbsp;&nbsp;置</div>
         <div class="common-btn">取&nbsp;&nbsp;&nbsp;消</div>
       </div>
     </el-form>
@@ -123,8 +133,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { winHeight } from '@/utils'
 export default {
+  props: ['editData'],
   data() {
     return {
       tableData: [{
@@ -140,19 +152,22 @@ export default {
       }],
       height: 200,
       currentPage: 1,
+      action: 'add',
+      editShow: false,
+      editWord: '编辑',
       disabled: false,
-      disclosureInfo: {
-        name: '',
-        capital: '',
-        cost: '',
+      loading: false,
+      sourceFundsList: [],
+      contractInfo: {
+        sourceFunds: '',
+        materialCost: '',
         artificialCost: '',
         comprehensiveCost: '',
         manageCost: '',
-        Tax: '',
+        tax: '',
         profit: '',
         profitRate: ''
       },
-      rules: {},
       // 文件上传地址----------------------------------------
       upFiles: false,
       fileForm: {
@@ -169,11 +184,62 @@ export default {
       fileList: []
     }
   },
-  created() {},
+  created() {
+    this.getInsertData()
+    if (this.editData.tabState === 'seeTab') {
+      this.action = 'edit'
+      this.editShow = true
+      this.disabled = true
+      this.editInfo()
+    } else {
+      this.action = 'add'
+    }
+  },
   methods: {
+    getInsertData() {
+      this.sourceFundsList = [{ value: '酬金制' }, { value: '包干制' }, { value: '本体金' }]
+    },
+    add() {
+      this.loading = true
+      this.$post('/contractBasis/save', this.contractInfo).then((res) => {
+        this.loading = false
+        if (res.data.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    editInfo() {
+      var data = _.cloneDeep(this.editData.editData)
+      console.log(data)
+      // this.contractInfo = data.contractInfo
+      // console.log(this.contractInfo)
+    },
+    toggleEditBtn() {
+      this.disabled = !this.disabled
+      if (this.disabled === true) {
+        this.editWord = '编辑'
+        this.editInfo()
+      } else {
+        this.editWord = '取消编辑'
+      }
+    },
+    reset() {
+      this.contractInfo = {
+        sourceFunds: '',
+        materialCost: '',
+        artificialCost: '',
+        comprehensiveCost: '',
+        manageCost: '',
+        tax: '',
+        profit: '',
+        profitRate: ''
+      }
+    },
     submitUpload() {
       this.$refs.upload.submit()
-      console.log(1111)
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -198,6 +264,12 @@ export default {
   margin-top:140px;
   &::-webkit-scrollbar{
     width:0;
+  }
+  .edit-btn{
+    margin: 0;
+    button{
+      float: right;
+    }
   }
   .btn{
     text-align:center;

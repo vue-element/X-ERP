@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-info-container form-container">
-    <el-form :model="invoceInfo" :rules="rules" ref="invoceInfo">
+    <el-form :model="invoceInfo" ref="invoceInfo">
       <div class="form-module">
         <h4 class="module-title">
           <p>汇总信息</p>
@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票抬头名称">
-              <el-input v-model="invoceInfo.name" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="invoceInfo.name" placeholder="请输入开票抬头名称"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计开票金额">
-              <el-input v-model="invoceInfo.amount" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="invoceInfo.amount" placeholder="请输入累计开票金额"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

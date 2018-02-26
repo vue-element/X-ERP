@@ -77,11 +77,23 @@ export default {
       })
     },
     seeRow(id) {
-      console.log(id)
+      this.$get('/contractInfo/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        console.log(data)
+        this.$emit('editRow', data)
+      })
     },
-    deleteRow() {
-    },
-    editRow() {
+    deleteRow(id) {
+      var contractInfoID = { id: [id] }
+      this.$post('/contractInfo/delete', contractInfoID).then((res) => {
+        if (res.status === 200) {
+          this.getContractInfoData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
     },
     handleSizeChange(val) {
       this.pageSize = val
