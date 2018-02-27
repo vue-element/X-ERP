@@ -13,7 +13,7 @@
     </div>
 
     <div class="contractInfo-show">
-      <basicInfo v-if="tab === 'basicInfo'" :editData="editData"></basicInfo>
+      <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel"></basicInfo>
       <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData"></disclosureInfo>
       <subContract v-if="tab === 'subContract'"></subContract>
       <change v-if="tab === 'change'"></change>
@@ -42,7 +42,7 @@ export default {
     returnMoney,
     payMoney
   },
-  props: ['editData'],
+  props: ['editData', 'contractMsg'],
   data() {
     return {
       tab: 'basicInfo'
@@ -55,6 +55,9 @@ export default {
   methods: {
     toggleTab(tab) {
       this.tab = tab
+    },
+    cancel () {
+      this.$emit('cancel')
     }
   }
 }
