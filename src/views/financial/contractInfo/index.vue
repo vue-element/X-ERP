@@ -31,7 +31,7 @@
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
       <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData"></addComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel"></addComponent>
     </div>
   </div>
 </template>

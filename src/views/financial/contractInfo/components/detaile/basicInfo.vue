@@ -99,35 +99,6 @@
                 <el-date-picker v-else v-model="contractInfo.limit" @change="change" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
               </el-form-item>
             </el-col>
-
-            <!-- 第二种 -->
-           <!--  <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item class="single-date" label="合同开始时间：">
-                <p v-if="disabled">{{contractInfo.startDate}}</p>
-                <el-date-picker v-else v-model="contractInfo.startDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :lg="8">
-              <el-form-item class="single-date" label="合同结束时间：">
-                <p v-if="disabled">{{contractInfo.endDate}}</p>
-                <el-date-picker v-else v-model="contractInfo.endDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-              </el-form-item>
-            </el-col> -->
-
-            <!-- 第三种 -->
-             <!--  <el-form-item label="活动时间" required>
-              <el-col :span="11">
-                <el-form-item>
-                  <el-date-picker type="date" placeholder="选择日期" v-model="contractInfo.endDate" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col class="line" :span="2">-</el-col>
-              <el-col :span="11">
-                <el-form-item>
-                  <el-time-picker type="fixed-time" placeholder="选择时间" v-model="contractInfo.endDate" style="width: 100%;"></el-time-picker>
-                </el-form-item>
-              </el-col>
-            </el-form-item> -->
           </el-row>
         </div>
         <div class="invoice form-module">
@@ -209,8 +180,10 @@ export default {
         startDate: '',
         endDate: '',
         oldCity: '',
-        limit: []
-      }
+        limit: [],
+        dateShow: ''
+      },
+      contractMsg: {}
     }
   },
   created() {
@@ -226,7 +199,8 @@ export default {
   },
   methods: {
     change() {
-      console.log(this.contractInfo.limit)
+      this.disabled = true
+      this.disabled = false
     },
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
@@ -245,8 +219,11 @@ export default {
     add() {
       this.loading = true
       this.contractInfo.oldCity = this.cityOption.join('-')
-      this.contractInfo.limit = this.contractInfo.limit
+      this.contractInfo.startDate = this.contractInfo.limit[0]
+      this.contractInfo.endDate = this.contractInfo.limit[1]
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
+        this.contractMsg = res.data.data
+        sessionStorage.setItem('contractMsg', JSON.stringify(this.contractMsg))
         this.loading = false
         if (res.data.success === true) {
           this.$message({
@@ -264,8 +241,7 @@ export default {
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
-      console.log(this.contractInfo)
-      var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join('-') // 渲染p标签
+      var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join('-')
       this.contractInfo.dateShow = dateShow
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
     },
@@ -315,15 +291,7 @@ export default {
       this.contractInfo.city.id = val[len - 1]
     },
     cancel() {
-    },
-    formatDate(date) {
-      var year = date.getFullYear()
-      var month = date.getMonth() + 1
-      var day = date.getDate()
-      return year + '-' + this.formatTen(month) + '-' + this.formatTen(day)
-    },
-    formatTen(num) {
-      return num > 9 ? (num + '') : ('0' + num)
+      this.$emit('cancel')
     }
   },
   mounted() {
