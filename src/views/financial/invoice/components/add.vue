@@ -101,6 +101,7 @@ export default {
     },
     save() {
       this.loading = true
+      console.log('ruleForm', JSON.stringify(this.ruleForm))
       this.$post('/contractBilling/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
           console.log('this.ruleForm', this.ruleForm)

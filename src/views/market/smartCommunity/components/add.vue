@@ -13,7 +13,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户信息：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
-            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息">
+            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息" filterable>
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -47,7 +47,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="楼栋及单位数量：" prop="buildNum">
             <p v-if="disabled">{{mainMsg.buildNum}}</p>
-            <el-input v-else v-model="mainMsg.buildNum" placeholder="请输入楼栋及单位数量"></el-input>
+            <el-input v-else v-model="mainMsg.buildNum" type="number" placeholder="请输入楼栋及单位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -77,13 +77,13 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="物业管理费：">
             <p v-if="disabled">{{mainMsg.manageFee}}</p>
-            <el-input v-else v-model="mainMsg.manageFee" placeholder="请输入物业管理费"></el-input>
+            <el-input v-else v-model="mainMsg.manageFee" @change="amountChange" placeholder="请输入物业管理费"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="车位总数：" prop="parkingNum">
             <p v-if="disabled">{{mainMsg.parkingNum}}</p>
-            <el-input v-else v-model="mainMsg.parkingNum" placeholder="请输入车位总数"></el-input>
+            <el-input v-else v-model="mainMsg.parkingNum" type="number" placeholder="请输入车位总数"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -97,7 +97,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="户数(户)：" prop="roomNum">
             <p v-if="disabled">{{mainMsg.roomNum}}</p>
-            <el-input v-else v-model="mainMsg.roomNum" placeholder="请输入总户数"></el-input>
+            <el-input v-else v-model="mainMsg.roomNum" type="number" placeholder="请输入总户数"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -109,23 +109,37 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="地面车位数量：">
-            <p v-if="disabled">{{mainMsg.groundParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.groundParkingNum" placeholder="请输入地面车位数量"></el-input>
+          <el-form-item label="总收费面积(平米)：">
+            <p v-if="disabled">{{mainMsg.chargeArea}}㎡</p>
+            <el-input v-else v-model="mainMsg.chargeArea" type="number" placeholder="请输入总收费面积"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="地面车位收费标准：">
-            <p v-if="disabled">{{mainMsg.groundParkingFee}}</p>
-            <el-input v-else v-model="mainMsg.groundParkingFee" placeholder="请输入地面车位收费标准"></el-input>
+          <el-form-item label="土地面积(平米)：">
+            <p v-if="disabled">{{mainMsg.landArea}}㎡</p>
+            <el-input v-else v-model="mainMsg.landArea" type="number" placeholder="请输入土地面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="总收费面积(平米)：">
-            <p v-if="disabled">{{mainMsg.chargeArea}}</p>
-            <el-input v-else v-model="mainMsg.chargeArea" placeholder="请输入总收费面积"></el-input>
+          <el-form-item label="总建筑面积(平米)：" prop="builtArea">
+            <p v-if="disabled">{{mainMsg.builtArea}}㎡</p>
+            <el-input v-else v-model="mainMsg.builtArea" type="number" placeholder="请输入总建筑面积"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
+          <el-form-item label="地面车位数量：">
+            <p v-if="disabled">{{mainMsg.groundParkingNum}}</p>
+            <el-input v-else v-model="mainMsg.groundParkingNum" type="number" placeholder="请输入地面车位数量"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="12">
+          <el-form-item label="地面车位收费标准：">
+            <p v-if="disabled">{{mainMsg.groundParkingFee}}</p>
+            <el-input v-else v-model="mainMsg.groundParkingFee" placeholder="请输入地面车位收费标准"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -133,7 +147,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地库车位数量：">
             <p v-if="disabled">{{mainMsg.basementParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.basementParkingNum" placeholder="请输入地库车位数量"></el-input>
+            <el-input v-else v-model="mainMsg.basementParkingNum" type="number" placeholder="请输入地库车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -145,23 +159,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="土地面积(平米)：">
-            <p v-if="disabled">{{mainMsg.landArea}}</p>
-            <el-input v-else v-model="mainMsg.landArea" placeholder="请输入土地面积"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="总建筑面积(平米)：" prop="builtArea">
-            <p v-if="disabled">{{mainMsg.builtArea}}</p>
-            <el-input v-else v-model="mainMsg.builtArea" placeholder="请输入总建筑面积"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="人防车位数量：">
             <p v-if="disabled">{{mainMsg.defenseParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.defenseParkingNum" placeholder="请输入人防车位数量"></el-input>
+            <el-input v-else v-model="mainMsg.defenseParkingNum" type="number" placeholder="请输入人防车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -192,17 +192,17 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="小区配套设施：" class="radio-sel community-facility" prop="facility">
-            <p v-if="disabled">{{mainMsg.facility}}</p>
-            <el-radio-group v-else v-model="mainMsg.facility">
-              <el-radio :label="'公司'">公司</el-radio>
-              <el-radio :label="'会所'">会所</el-radio>
-              <el-radio :label="'球场'">球场</el-radio>
-              <el-radio :label="'假山'">假山</el-radio>
-              <el-radio :label="'泳池'">泳池</el-radio>
-              <el-radio :label="'人工湖'">人工湖</el-radio>
-            </el-radio-group>
+        <el-col :xs="24" :sm="18" :lg="18">
+          <el-form-item label="小区配套设施：" class="checkbox-sel community-facility" prop="facility">
+            <p v-if="disabled">{{facilityWord}}</p>
+            <el-checkbox-group v-else @change="change" v-model="mainMsg.facilityList">
+              <el-checkbox :label="'公司'">公司</el-checkbox>
+              <el-checkbox :label="'会所'">会所</el-checkbox>
+              <el-checkbox :label="'球场'">球场</el-checkbox>
+              <el-checkbox :label="'假山'">假山</el-checkbox>
+              <el-checkbox :label="'泳池'">泳池</el-checkbox>
+              <el-checkbox :label="'人工湖'">人工湖</el-checkbox>
+            </el-checkbox-group                                                     >
           </el-form-item>
         </el-col>
       </el-row>
@@ -384,6 +384,7 @@
 </template>
 <script>
 import _ from 'lodash'
+import { isObjectValueEqual, outputmoney } from '@/utils'
 export default {
   name: 'smartCommunityAdd',
   props: ['editData'],
@@ -456,7 +457,7 @@ export default {
         chargeArea: '',
         communityType: '',
         contractMode: '',
-        facility: '',
+        facilityList: [],
         defenseParkingFee: '',
         defenseParkingNum: '',
         firstEntry: '',
@@ -495,10 +496,10 @@ export default {
         category: 2
       },
       machineRoomObj: {
-        a: '',
-        a1: '',
-        b: '',
-        b1: '',
+        a: '2',
+        a1: '3',
+        b: '4',
+        b1: '5',
         c: '',
         category: 3
       },
@@ -507,7 +508,9 @@ export default {
         b: '',
         c: '',
         category: 4
-      }
+      },
+      facilityWord: '',
+      temp: {}
     }
   },
   created() {
@@ -520,20 +523,28 @@ export default {
       this.disabled = true
     } else {
       this.action = 'add'
+      this.temp = _.cloneDeep(this.mainMsg)
     }
   },
   mounted() {},
   methods: {
+    change() {
+      console.log(this.mainMsg.facilityList)
+      this.disabled = true
+      this.disabled = false
+    },
     add(mainMsg) {
       this.$refs[mainMsg].validate((valid) => {
         if (valid) {
           this.loading = true
           this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
           this.mainMsg.oldCity = this.cityOption.join('-')
+          this.mainMsg.facility = this.mainMsg.facilityList.join('、')
           console.log(this.mainMsg)
           this.$post('/project/save', this.mainMsg).then((res) => {
             this.loading = false
             if (res.data.success === true) {
+              this.$emit('changeObj', false)
               this.$message({
                 message: '保存成功',
                 type: 'success'
@@ -550,82 +561,27 @@ export default {
     },
     reset() {
       if (this.action === 'add') {
-        this.mainMsg = {
-          city: { id: '' },
-          client: { id: '' },
-          region: { id: '' },
-          address: '',
-          archFormat: '',
-          basementParkingFee: '',
-          basementParkingNum: '',
-          buildNum: '',
-          builtArea: '',
-          carRatio: '',
-          chargeArea: '',
-          communityType: '',
-          contractMode: '',
-          facility: '',
-          defenseParkingFee: '',
-          defenseParkingNum: '',
-          firstEntry: '',
-          groundParkingFee: '',
-          groundParkingNum: '',
-          landArea: '',
-          manageFee: '',
-          name: '',
-          parkingNum: '',
-          roomNum: '',
-          volumetricRate: '',
-          projectDesigns: [],
-          oldCity: ''
-        }
-        this.carObj = {
-          a: '',
-          a1: '',
-          b: '',
-          b1: '',
-          c: '',
-          c1: '',
-          category: 0
-        }
-        this.personObj = {
-          a: '',
-          a1: '',
-          b: '',
-          b1: '',
-          c: '',
-          c1: '',
-          category: 1
-        }
-        this.elevatorObj = {
-          a: '',
-          b: '',
-          category: 2
-        }
-        this.machineRoomObj = {
-          a: '',
-          a1: '',
-          b: '',
-          b1: '',
-          c: '',
-          category: 3
-        }
-        this.otherObj = {
-          a: '',
-          b: '',
-          c: '',
-          category: 4
-        }
+        this.mainMsg = _.cloneDeep(this.temp)
+        this.carObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 0 }
+        this.personObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 1 }
+        this.elevatorObj = { a: '', b: '', category: 2 }
+        this.machineRoomObj = { a: '', a1: '', b: '', b1: '', c: '', category: 3 }
+        this.otherObj = { a: '', b: '', c: '', category: 4 }
       } else {
         this.editInfo()
       }
     },
     cancel() {
+      this.$emit('changeObj', false)
       this.$emit('toggleTab')
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
+      console.log('data', data)
       this.mainMsg = data.project
+      this.facilityWord = _.cloneDeep(this.mainMsg.facility)
+      this.mainMsg.facilityList = this.mainMsg.facility.split('、')
+      this.temp = _.cloneDeep(this.mainMsg)
       data.project.projectDesigns.forEach((item) => {
         if (item.category === '0') {
           this.carObj = item
@@ -661,26 +617,29 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
-      this.archFormatList = [{
-        name: '多层'
-      }, {
-        name: '高层'
-      }, {
-        name: '小高层'
-      }, {
-        name: '别墅'
-      }, {
-        name: '商业'
-      }, {
-        name: '写字楼'
-      }]
+      this.archFormatList = [{ name: '多层' }, { name: '高层' }, { name: '小高层' }, { name: '别墅' }, { name: '商业' }, { name: '写字楼' }]
     },
     cityChange(val) {
       var len = val.length
       this.mainMsg.city.id = val[len - 1]
+    },
+    amountChange(val) {
+      this.mainMsg.manageFee = outputmoney(val)
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    mainMsg: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
@@ -693,20 +652,25 @@ export default {
 // 社区建设单项目信息表
 .form-container {
     .el-row {
-        .el-form-item.radio-sel {
+        .el-form-item.radio-sel,
+        .el-form-item.checkbox-sel{
             @include flex;
             font-size: 14px;
             label.el-form-item__label {
                 width: 20%!important;
             }
-            .el-radio-group {
-                padding-left: 20px;
-                justify-content: space-around;
-                width: 62%;
-                height: 30px;
-                background-color: #f8f8f8;
-                @include borderRadius(4px);
-            }
+        }
+        .el-form-item.radio-sel .el-radio-group,
+        .el-form-item.checkbox-sel .el-checkbox-group{
+            padding-left: 20px;
+            justify-content: space-around;
+            width: 62%;
+            height: 30px;
+            background-color: #f8f8f8;
+            @include borderRadius(4px);
+        }
+        .el-form-item.checkbox-sel .el-checkbox-group {
+          width: 100%!important;
         }
     }
     ul.design-msg {
@@ -740,6 +704,7 @@ export default {
     display: flex;
     label.el-form-item__label {
       line-height: 30px;
+        margin-top: 0!important;
     }
     .el-form-item__content {
       .el-radio-group {
@@ -752,9 +717,9 @@ export default {
   }
   .el-form-item.community-facility {
     label.el-form-item__label {
-      width: 20%!important;
+      margin-top: 0!important;
+      width: 18%!important;
       line-height: 30px;
-      margin-right: 20px;
     }
   }
   .element-table {

@@ -336,3 +336,22 @@ function outputcents(amount) {
   amount = Math.round(((amount) - Math.floor(amount)) * 100)
   return (amount < 10 ? '.0' + amount : '.' + amount)
 }
+
+// 判断2个对象是否相等
+export function isObjectValueEqual(a1, b1) {
+  var a = JSON.stringify(a1)
+  var b = JSON.stringify(b1)
+  var aProps = Object.getOwnPropertyNames(a)
+  var bProps = Object.getOwnPropertyNames(b)
+  if (aProps.length !== bProps.length) {
+    return false
+  }
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i]
+    if (a[propName] !== b[propName]) {
+      console.log('a[propName]', propName)
+      return false
+    }
+  }
+  return true
+}

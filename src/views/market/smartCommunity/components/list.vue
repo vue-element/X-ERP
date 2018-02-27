@@ -7,12 +7,12 @@
        {{scope.$index  + 1}}
      </template>
    </el-table-column>
-   <el-table-column prop="client.name" fixed label="公司名称"></el-table-column>
-   <el-table-column prop="city.name" fixed label="城市"></el-table-column>
-   <el-table-column prop="region.name" fixed label="地区"></el-table-column>
-   <el-table-column prop="name" fixed label="项目名称"></el-table-column>
-   <el-table-column prop="archFormat" label="建筑业态" sortable></el-table-column>
-   <el-table-column prop="builtArea" label="总建筑面积" sortable></el-table-column>
+   <el-table-column prop="client.name" label="公司名称"></el-table-column>
+   <el-table-column prop="city.name" label="城市"></el-table-column>
+   <el-table-column prop="region.name" label="地区"></el-table-column>
+   <el-table-column prop="name" label="项目名称"></el-table-column>
+   <el-table-column prop="archFormat" label="建筑业态"></el-table-column>
+   <el-table-column prop="builtArea" label="总建筑面积"></el-table-column>
    <el-table-column prop="chargeArea" label="总收费面积"></el-table-column>
    <el-table-column prop="roomNum" label="总户数"></el-table-column>
    <el-table-column prop="parkingNum" label="车位总数"></el-table-column>
@@ -21,7 +21,6 @@
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-        <!-- <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -104,6 +103,7 @@ export default {
         this.currentPage = data.number + 1
         this.pageSize = data.size
         this.listLoading = false
+        this.$emit('exportData', this.projectData)
       })
     },
     //  页码处理

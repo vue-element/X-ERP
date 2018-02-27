@@ -103,6 +103,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.listLoading = false
+          this.$emit('exportData', this.clientList)
         } else {
           this.listLoading = false
         }

@@ -28,7 +28,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户信息：">
-            <el-select placeholder="请选择" v-model="searchData.client_id" >
+            <el-select placeholder="请选择" v-model="searchData.client_id" filterable>
              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>

@@ -60,7 +60,7 @@
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="客户信息:">
             <p v-if="disabled">{{businessInfo.client.name}}</p>
-            <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户信息">
+            <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户信息" filterable>
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -266,6 +266,7 @@
 
 <script>
 import _ from 'lodash'
+import { isObjectValueEqual } from '@/utils'
 import { mapGetters } from 'vuex'
 import { outputmoney } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
@@ -355,14 +356,12 @@ export default {
         followPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         followState: [{ required: true, message: '请输入商机跟进状态', trigger: 'change' }],
         executState: [{ required: true, message: '请输入商机执行状态', trigger: 'change' }]
-      }
+      },
+      temp: {}
     }
   },
   created() {
-    // this.businessInfo.date = new Date()
-    // this.dateline =
     this.getInsertData()
-    console.log('tabState', this.editData)
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
       this.editShow = true
@@ -371,6 +370,7 @@ export default {
     } else {
       this.action = 'add'
     }
+    this.temp = _.cloneDeep(this.businessInfo)
   },
   computed: {
     ...mapGetters([
@@ -407,44 +407,14 @@ export default {
     },
     reset() {
       if (this.action === 'add') {
-        this.businessInfo = {
-          city: { id: '' },
-          client: { id: '' },
-          region: { id: '' },
-          projectImpls: [
-            {
-              amount: '',
-              bidDate: '',
-              bidDate2: '',
-              category: '',
-              developDate: '',
-              keyword: '',
-              signDate: '',
-              startDate: ''
-            }
-          ],
-          amount: '',
-          code: '',
-          date: '',
-          billDate: '',
-          executState: '',
-          followState: '',
-          examineState: '',
-          name: '',
-          source: '',
-          type: '',
-          chargePerson: '',
-          followPerson: '',
-          chargePersonPhone: '',
-          followPersonPhone: '',
-          oldCity: ''
-        }
+        this.businessInfo = _.cloneDeep(this.temp)
         this.cityOption = []
       } else {
         this.editInfo()
       }
     },
     cancel() {
+      this.$emit('changeObj', false)
       this.$emit('toggleTab')
     },
     editInfo() {
@@ -491,6 +461,18 @@ export default {
     amountChange(val) {
       this.businessInfo.amount = outputmoney(val)
       this.businessInfo.projectImpls[0].amount = outputmoney(val)
+    }
+  },
+  watch: {
+    businessInfo: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
     }
   }
 }

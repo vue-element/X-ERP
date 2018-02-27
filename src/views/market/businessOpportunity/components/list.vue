@@ -129,6 +129,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.bussinessData = data.content
+          this.$emit('exportData', data.content)
         } else {
           this.$message({
             message: '数据获取失败',
