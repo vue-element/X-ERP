@@ -5,13 +5,13 @@
       <p>查询条件</p>
     </h4>
     <el-row :gutter="40">
-      <el-col :xs="12" :sm="12" :lg="8">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>项目名称：</label>
           <input type="text" v-model="searchData.name" placeholder="请输入"/>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="8">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item single-date">
           <label>首期入伙时间：</label>
           <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="firstEntry" placeholder="选择日期" ></el-date-picker>
@@ -19,7 +19,9 @@
           </el-date-picker> -->
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="8">
+    </el-row>
+    <el-row :gutter="40">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>合约模式：</label>
           <el-select v-model="searchData.contractMode" placeholder="请选择">
@@ -28,9 +30,7 @@
          </el-select>
         </div>
       </el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col :xs="12" :sm="12" :lg="8">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item customer-info">
           <label>客户信息：</label>
           <el-select v-model="searchData.client_id" placeholder="请选择">
@@ -39,13 +39,15 @@
          </el-select>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="8">
+    </el-row>
+    <el-row :gutter="40">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>城市：</label>
           <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="8">
+      <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>区域：</label>
           <el-select v-model="searchData.region_id" placeholder="请选择">

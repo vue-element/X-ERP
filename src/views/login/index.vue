@@ -101,6 +101,7 @@ export default {
             if (res.data.success === true) {
               setToken('11111')
               var userInfo = res.data.data
+              console.log('userInfo', userInfo)
               this.$store.commit('login', userInfo)
               var username = this.loginForm.name
               var password = this.loginForm.password

@@ -47,7 +47,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="楼栋及单位数量：" prop="buildNum">
             <p v-if="disabled">{{mainMsg.buildNum}}</p>
-            <el-input v-else v-model="mainMsg.buildNum" type="number" placeholder="请输入楼栋及单位数量"></el-input>
+            <el-input v-else v-model="mainMsg.buildNum" type="number" min="0" placeholder="请输入楼栋及单位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -83,7 +83,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="车位总数：" prop="parkingNum">
             <p v-if="disabled">{{mainMsg.parkingNum}}</p>
-            <el-input v-else v-model="mainMsg.parkingNum" type="number" placeholder="请输入车位总数"></el-input>
+            <el-input v-else v-model="mainMsg.parkingNum" type="number" min="0" placeholder="请输入车位总数"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -97,7 +97,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="户数(户)：" prop="roomNum">
             <p v-if="disabled">{{mainMsg.roomNum}}</p>
-            <el-input v-else v-model="mainMsg.roomNum" type="number" placeholder="请输入总户数"></el-input>
+            <el-input v-else v-model="mainMsg.roomNum" type="number" min="0" placeholder="请输入总户数"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -111,7 +111,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="总收费面积(平米)：">
             <p v-if="disabled">{{mainMsg.chargeArea}}㎡</p>
-            <el-input v-else v-model="mainMsg.chargeArea" type="number" placeholder="请输入总收费面积"></el-input>
+            <el-input v-else v-model="mainMsg.chargeArea" type="number" min="0" placeholder="请输入总收费面积"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,13 +119,13 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="土地面积(平米)：">
             <p v-if="disabled">{{mainMsg.landArea}}㎡</p>
-            <el-input v-else v-model="mainMsg.landArea" type="number" placeholder="请输入土地面积"></el-input>
+            <el-input v-else v-model="mainMsg.landArea" type="number" min="0" placeholder="请输入土地面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="总建筑面积(平米)：" prop="builtArea">
             <p v-if="disabled">{{mainMsg.builtArea}}㎡</p>
-            <el-input v-else v-model="mainMsg.builtArea" type="number" placeholder="请输入总建筑面积"></el-input>
+            <el-input v-else v-model="mainMsg.builtArea" type="number" min="0" placeholder="请输入总建筑面积"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -133,7 +133,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地面车位数量：">
             <p v-if="disabled">{{mainMsg.groundParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.groundParkingNum" type="number" placeholder="请输入地面车位数量"></el-input>
+            <el-input v-else v-model="mainMsg.groundParkingNum" type="number" min="0" placeholder="请输入地面车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -147,7 +147,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="地库车位数量：">
             <p v-if="disabled">{{mainMsg.basementParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.basementParkingNum" type="number" placeholder="请输入地库车位数量"></el-input>
+            <el-input v-else v-model="mainMsg.basementParkingNum" type="number" min="0" placeholder="请输入地库车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -161,7 +161,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="人防车位数量：">
             <p v-if="disabled">{{mainMsg.defenseParkingNum}}</p>
-            <el-input v-else v-model="mainMsg.defenseParkingNum" type="number" placeholder="请输入人防车位数量"></el-input>
+            <el-input v-else v-model="mainMsg.defenseParkingNum" type="number" min="0" placeholder="请输入人防车位数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -428,7 +428,7 @@ export default {
         builtArea: [{ required: true, message: '请输入总建筑面积', trigger: 'blur' }],
         communityType: [{ required: true, message: '请选择小区类型', trigger: 'blur' }],
         parkingNum: [{ required: true, message: '请输入车位总数', trigger: 'blur' }],
-        facility: [{ required: true, message: '请选择小区配套设施', trigger: 'blur' }]
+        facilityList: [{ required: true, message: '请选择小区配套设施', trigger: 'blur' }]
       },
       tab: 'car',
       cityOption: [],

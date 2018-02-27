@@ -11,14 +11,6 @@
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-            <!-- <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
-              <i class="iconfont icon-add"></i>
-              <span>新增</span>
-            </button> -->
-          <!-- <button>
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
         </div>
         <div class="export-btn fr">
           <button @click="handleDownload" :loading="downloadLoading">
@@ -62,6 +54,7 @@ export default {
     }
   },
   created() {
+    console.log('inbound')
   },
   mounted() {},
   methods: {

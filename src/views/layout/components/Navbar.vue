@@ -64,7 +64,6 @@ export default {
         name,
         password
       }
-      console.log('userInfo', userInfo)
       this.$post('/login', userInfo, false).then((res) => {
         if (res.data.success === true) {
           var userInfo = res.data.data

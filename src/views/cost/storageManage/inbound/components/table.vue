@@ -1,6 +1,6 @@
 <template>
   <div class="payment-contract">
-    <div v-show="actionTab === 'inboundInfo'">
+    <div v-show="actionTab === 'inboundInfo' || actionTab === 'officeCheck'">
       <div class="form-module">
         <h4 class="module-title">
           <p>入库验收</p>
@@ -64,48 +64,102 @@
             </el-table>
           </el-col>
         </el-row>
-        <div class="commont-btn">
-          <el-button :loading="false">提交审核</el-button>
+        <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
+          <el-button :loading="checkLoading" @click="submitCheck">提交审核</el-button>
+        </div>
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
+          <el-button :loading="false">通过审核</el-button>
+          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false">退回填写</el-button>
         </div>
         <div v-show="uploadTableShow">
           <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
         </div>
       </div>
       <!--审核动态  -->
+    </div>
+    <!-- <div v-show="actionTab === 'officeCheck'"></div> -->
+    <div v-show="actionTab === 'costCheck'">
       <div class="form-module">
         <h4 class="module-title">
-          <p>审核动态</p>
+          <p>入库成本核算</p>
         </h4>
-        <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
-          <el-table-column label="序号">
-            <template slot-scope="scope">{{scope.$index + 1}}</template>
-          </el-table-column>
-          <el-table-column label="审核步骤">
-            <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-          </el-table-column>
-          <el-table-column label="品牌">
-            <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-          </el-table-column>
-          <el-table-column label="操作人">
-            <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
-          </el-table-column>
-          <el-table-column label="操作时间">
-            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-          </el-table-column>
-          <el-table-column label="审核结果">
-            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-          </el-table-column>
-          <el-table-column label="下一步骤">
-            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-          </el-table-column>
-          <el-table-column label="下一步骤审核人">
-            <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-          </el-table-column>
-        </el-table>
+        <el-row>
+          <el-col :xs="24" :sm="24" :lg="24">
+            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
+              <el-table-column label="序号">
+                <template slot-scope="scope">{{scope.$index + 1}}</template>
+              </el-table-column>
+              <el-table-column label="物料名称">
+                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
+              </el-table-column>
+              <el-table-column label="规格型号">
+                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+              </el-table-column>
+              <el-table-column label="品牌">
+                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
+              </el-table-column>
+              <el-table-column label="采购数量">
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              </el-table-column>
+              <el-table-column label="数量">
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              </el-table-column>
+              <el-table-column label="单个成本">
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              </el-table-column>
+              <el-table-column label="单个抵扣税金">
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              </el-table-column>
+              <el-table-column label="合计">
+                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <div class="commont-btn">
+          <el-button :loading="false">通过审核</el-button>
+          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false">导出入库成本核算表</el-button>
+          <el-button :loading="false">导出出库成本核算表</el-button>
+          <el-button :loading="false">退回填写</el-button>
+        </div>
+        <div v-show="uploadTableShow">
+          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
+        </div>
       </div>
     </div>
-    <div v-show="actionTab === 'officeCheck'"></div>
-    <div v-show="actionTab === 'costCheck'"></div>
+    <div class="form-module">
+      <h4 class="module-title">
+        <p>审核动态</p>
+      </h4>
+      <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+        <el-table-column label="序号">
+          <template slot-scope="scope">{{scope.$index + 1}}</template>
+        </el-table-column>
+        <el-table-column label="审核步骤">
+          <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+        </el-table-column>
+        <el-table-column label="品牌">
+          <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+        </el-table-column>
+        <el-table-column label="操作人">
+          <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
+        </el-table-column>
+        <el-table-column label="操作时间">
+          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+        </el-table-column>
+        <el-table-column label="审核结果">
+          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+        </el-table-column>
+        <el-table-column label="下一步骤">
+          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+        </el-table-column>
+        <el-table-column label="下一步骤审核人">
+          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -126,7 +180,8 @@ export default {
       uploadTableShow: false,
       listLoading: false,
       downloadLoading: false,
-      comfirmUploading: false
+      comfirmUploading: false,
+      checkLoading: false
     }
   },
   created() {
@@ -138,6 +193,7 @@ export default {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         var data = res.data.data.content
         this.purchaseList = _.cloneDeep(data)
+        console.log('purchaseList', this.purchaseList)
         this.purchaseList.forEach((item) => {
           this.InboundList.push(item.inboundDetailes[0])
         })
@@ -163,6 +219,9 @@ export default {
     uploadMaterial() {
       this.uploadTableShow = true
       this.$refs.upload.handleUpload()
+    },
+    submitCheck() {
+
     },
     handleDownload() {
       this.downloadLoading = true
@@ -239,6 +298,9 @@ export default {
         line-height: 26px!important;
       }
     }
+  }
+  .commont-btn {
+    text-align: right;
   }
 }
 

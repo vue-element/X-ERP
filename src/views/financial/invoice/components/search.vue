@@ -28,9 +28,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="开票日期：" prop="date" class="range-date">
-              <!-- <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="searchData.date" placeholder="选择日期"></el-date-picker> -->
-              <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
-              </el-date-picker>
+              <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -75,7 +73,12 @@ export default {
       var searchData = {}
       for (var key in this.searchData) {
         if (this.searchData[key]) {
-          searchData[key] = this.searchData[key]
+          if (key === 'date') {
+            searchData['date'] = this.searchData['date'][0]
+            searchData['date1'] = this.searchData['date'][1]
+          } else {
+            searchData[key] = this.searchData[key]
+          }
         }
       }
       searchData['date'] = this.searchData['date'][0]

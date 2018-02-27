@@ -6,41 +6,40 @@
           <p>查询条件:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="商机编号:">
-              <el-select  v-model="searchData.business_id" placeholder="请选择" filterable>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="合同编号:">
+              <el-input v-model="searchData.applicationPerson" placeholder="请输入合同编号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="办事处:">
+             <el-select  v-model="searchData.business_id" placeholder="请选择" filterable>
                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="业务线:">
-              <el-select v-model="searchData.category" placeholder="请选择" filterable>
-               <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
-               </el-option>
-             </el-select>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="采购清单编号:">
+              <el-input v-model="searchData.applicationPerson" placeholder="请输入采购清单编号"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="订单编号:">
-              <el-input v-model="searchData.orderNumber" placeholder="请输入使用部门"></el-input>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="入库单号:">
+              <el-input v-model="searchData.orderNumber" placeholder="请输入入库单号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="使用部门:">
-              <el-input v-model="searchData.department" placeholder="请输入使用部门"></el-input>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="供应商:" class="single-date">
+              <el-input v-model="searchData.applicationPerson" placeholder="请输入供应商"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="申请人:" class="single-date">
-              <el-input v-model="searchData.applicationPerson" placeholder="请输入申请人"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="申请时间:" class="single-date">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="日期:" class="single-date">
               <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="searchData.applicationTime" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -56,7 +55,6 @@
 
 <script>
 export default {
-  name: 'paymentContractSearch',
   data() {
     return {
       loading: false,

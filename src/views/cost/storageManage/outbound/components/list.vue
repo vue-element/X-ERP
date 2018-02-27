@@ -7,18 +7,17 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="applicationTime" label="申请时间"></el-table-column>
-        <el-table-column prop="applicationPerson" label="申请人"></el-table-column>
-        <el-table-column prop="orderNumber" label="订单编号"></el-table-column>
-        <el-table-column prop="business.code" label="商机编号"></el-table-column>
-        <el-table-column prop="optCost" label="优化成本"></el-table-column>
-        <el-table-column prop="category" label="业务线"></el-table-column>
-        <el-table-column prop="department" label="使用部门"></el-table-column>
-        <el-table-column prop="business.name" label="使用项目"></el-table-column>
+        <el-table-column prop="applicationTime" label="合同编号"></el-table-column>
+        <el-table-column prop="applicationPerson" label="采购清单编号"></el-table-column>
+        <el-table-column prop="orderNumber" label="入库单号"></el-table-column>
+        <el-table-column prop="business.code" label="办事处"></el-table-column>
+        <el-table-column prop="optCost" label="供应商"></el-table-column>
+        <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">审核</el-button>
+            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -31,7 +30,6 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  name: 'paymentContractList',
   props: ['searchData'],
   data() {
     return {

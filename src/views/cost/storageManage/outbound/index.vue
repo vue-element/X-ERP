@@ -1,98 +1,128 @@
 <template>
-  <div class="outbound-container">
+  <div class="app-container">
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-
-          <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
-            <i class="iconfont icon-add"></i>
-            <span>新增</span>
-          </button>
-
         </div>
         <div class="export-btn fr">
-          <button>
+          <button @click="handleDownload" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
         </div>
       </div>
     </div>
-    <div class="contract-list" >
-      <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
-      <listComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail"></addComponent>
+    <div class="compotent-tab">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
+      <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
     </div>
   </div>
 </template>
 
 <script>
-// import store from '../../../store/index.js'
-import searchComponent from './components/search'
-import listComponent from './components/list'
-import addComponent from './components/add'
+import { parseTime } from '@/utils'
+import AddComponent from './components/add'
+import ListComponent from './components/list'
+import SearchComponent from './components/search'
+import ImportComponent from './components/import'
 export default {
+  name: 'outbound',
   components: {
-    searchComponent,
-    listComponent,
-    addComponent
+    AddComponent,
+    ListComponent,
+    SearchComponent,
+    ImportComponent
   },
   data() {
     return {
+      path: 'listTab',
+      downloadLoading: false,
       tab: 'listTab',
-      rowDetail: '',
-      searchData: {}
+      editData: {},
+      searchData: {},
+      list: []
     }
   },
   created() {
+    console.log('inbound')
   },
   mounted() {},
   methods: {
+    addBtn() {
+      this.tab = 'addTab'
+      this.editData = {
+        editData: {},
+        tabState: 'addTab'
+      }
+    },
+    editRow(data) {
+      this.editData = {
+        editData: data,
+        tabState: 'editTab'
+      }
+      console.log('editData', this.editData)
+      this.tab = 'addTab'
+    },
+    search(data) {
+      this.searchData = data
+      this.tab = 'listTab'
+    },
     toggleTab(tab) {
       this.tab = tab
     },
-    addBtn() {
-      this.tab = 'addTab'
+    dataImpore() {
+      this.toggleTab('importTab')
     },
-    seeRow(data) {
-      this.tab = 'addTab'
-      // this.rowDetail = {
-      //   RowDetail: data,
-      //   tabState: 'editTab'
-      // }
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
+        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const list = this.list
+        // if (list) {
+        //   list = this.list
+        // } else {
+        //   list = []
+        // }
+        // console.log('list', list)
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, this.filename)
+        this.downloadLoading = false
+      })
     },
-    search(data) {
-      this.tab = 'listTab'
-      this.searchData = data
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
   computed: {
-    // ...mapState(['tab'])
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews
+    }
+  },
+  watch: {
   }
 }
 </script>
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.outbound-container {
-  width: 100%;
-  @include scrolling;
-  .contract-list{
-    margin-top:60px;
-  }
-}
-.basic-form {
-  .el-table__fixed-body-wrapper {
-    margin: 28px 0;
-  }
-}
 </style>

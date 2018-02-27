@@ -217,40 +217,45 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="12" :sm="12" :lg="12">
+      </el-row>
+    </div>
+    <div class="form-module">
+      <h4 class="module-title">
+        <p>合同信息</p>
+      </h4>
+      <el-row :gutter="40">
+        <el-col :xs="12" :sm="12" :lg="12" v-show="action === 'edit'">
           <el-form-item label="合同原始金额:">
-            <p>{{businessInfo.examineState}}</p>
+            <p>{{contractInfo.originalAmount}}</p>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同变更金额:">
-            <p>{{businessInfo.examineState}}</p>
+            <p>{{contractInfo.changeAmount}}</p>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="40" v-show="action === 'edit'">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同总金额:">
-            <p>{{businessInfo.examineState}}</p>
+            <p>{{contractInfo.contractTotalAmount}}</p>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同签订时间:">
-            <p>{{businessInfo.examineState}}</p>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="合同开工时间:">
-            <p>{{businessInfo.examineState}}</p>
+            <p>{{contractInfo.signDate}}</p>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40">
+      <el-row :gutter="40"  v-show="action === 'edit'">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="合同开工时间:">
+            <p>{{contractInfo.startDate}}</p>
+          </el-form-item>
+        </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同完成时间:">
-            <p>{{businessInfo.examineState}}</p>
+            <p>{{contractInfo.endDate}}</p>
           </el-form-item>
         </el-col>
       </el-row>
@@ -343,6 +348,7 @@ export default {
       executStateList: [],
       projectCategoryList: [],
       examineStateList: [],
+      contractInfo: {},
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
@@ -418,6 +424,10 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
+      this.$get('/contractInfo/findAllByBussiness/1').then((res) => {
+        this.contractInfo = res.data.data
+        console.log('res.daa', res)
+      })
       var data = _.cloneDeep(this.editData.editData)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')

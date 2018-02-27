@@ -246,6 +246,7 @@ export default {
       this.loading = true
       this.contractInfo.oldCity = this.cityOption.join('-')
       this.contractInfo.limit = this.contractInfo.limit
+      console.log(JSON.stringify(this.contractInfo))
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
         this.loading = false
         if (res.data.success === true) {

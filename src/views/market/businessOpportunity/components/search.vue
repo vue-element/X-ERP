@@ -35,9 +35,8 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="修改日期:" class="single-date">
-          <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="searchData.modifydDate"></el-date-picker>
-            <!-- <el-date-picker v-model="searchData.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期"></el-date-picker> -->
+          <el-form-item label="修改日期:" class="range-date">
+            <el-date-picker v-model="searchData.modifydDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -48,9 +47,8 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="所属年月:" class="single-date">
-          <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="searchData.date"></el-date-picker>
-            <!-- <el-date-picker v-model="searchData.date" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期"></el-date-picker> -->
+          <el-form-item label="所属年月:" class="range-date">
+          <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -165,10 +163,19 @@ export default {
       var searchData = {}
       for (var key in this.searchData) {
         if (this.searchData[key]) {
-          searchData[key] = this.searchData[key]
+          if (key === 'modifydDate') {
+            searchData['modifydDate'] = this.searchData['modifydDate'][0]
+            searchData['modifydDate1'] = this.searchData['modifydDate'][1]
+          } else if (key === 'date') {
+            searchData['date'] = this.searchData['date'][0]
+            searchData['date1'] = this.searchData['date'][1]
+          } else {
+            searchData[key] = this.searchData[key]
+          }
         }
       }
-      this.$emit('searchWord', searchData)
+      console.log('search', searchData)
+      // this.$emit('searchWord', searchData)
     },
     searchAll() {
       var searchData = {}
