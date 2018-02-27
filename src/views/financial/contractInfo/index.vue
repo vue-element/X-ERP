@@ -15,10 +15,10 @@
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <!-- <button :class="tab === 'delTab' ? 'is-active' : ''">
+          <button :class="tab === 'delTab' ? 'is-active' : ''">
             <i class="iconfont icon-delete"></i>
             <span>删除</span>
-          </button> -->
+          </button>
         </div>
         <div class="export-btn fr">
           <button>
@@ -30,14 +30,13 @@
     </div>
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
-      <listComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail"></addComponent>
+      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow"></listComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData"></addComponent>
     </div>
   </div>
 </template>
 
 <script>
-// import store from '../../../store/index.js'
 import searchComponent from './components/search'
 import listComponent from './components/list'
 import addComponent from './components/add'
@@ -51,7 +50,8 @@ export default {
     return {
       tab: 'listTab',
       rowDetail: '',
-      searchData: {}
+      searchData: {},
+      editData: {}
     }
   },
   created() {
@@ -61,23 +61,31 @@ export default {
     toggleTab(tab) {
       this.tab = tab
     },
+    // 点击新增
     addBtn() {
       this.tab = 'addTab'
+      this.editData = {
+        editData: {},
+        tabState: 'addTab'
+      }
     },
-    seeRow(data) {
+    // 点击查看
+    editRow(data) {
       this.tab = 'addTab'
-      // this.rowDetail = {
-      //   RowDetail: data,
-      //   tabState: 'editTab'
-      // }
+      this.editData = {
+        editData: data,
+        tabState: 'seeTab'
+      }
     },
     search(data) {
       this.tab = 'listTab'
       this.searchData = data
+    },
+    cancel() {
+      this.tab = 'listTab'
     }
   },
   computed: {
-    // ...mapState(['tab'])
   }
 }
 </script>

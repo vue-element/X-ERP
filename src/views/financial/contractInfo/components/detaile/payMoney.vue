@@ -1,6 +1,6 @@
 <template>
   <div class="contractPayment-container form-container">
-    <el-form :model="contractPayment" :rules="rules" ref="contractPayment">
+    <el-form :model="contractPayment" ref="contractPayment">
       <div class="form-module">
         <h4 class="module-title">
           <p>汇总信息</p>
@@ -8,24 +8,24 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="项目累计投入金额：">
-              <el-input v-model="contractPayment.name" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="contractPayment.name"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="材料累计投入金额：">
-              <el-input v-model="contractPayment.materialCost" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="contractPayment.materialCost"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="人工累计投入金额：">
-              <el-input v-model="contractPayment.artificialCost" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="contractPayment.artificialCost"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="综合累计投入金额：">
-              <el-input v-model="contractPayment.comprehensiveCost" placeholder="请输入您的账号"></el-input>
+              <el-input v-model="contractPayment.comprehensiveCost"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

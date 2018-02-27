@@ -1,6 +1,6 @@
 <template>
   <div class="returnMoney-container form-container">
-    <el-form :model="contractReceived" :rules="rules" ref="contractReceived">
+    <el-form :model="contractReceived" ref="contractReceived">
       <div class="form-module">
         <h4 class="module-title">
           <p>汇总信息</p>
@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计回款金额：">
-              <el-input v-model="contractReceived.amount" placeholder="请输入累计回款金额"></el-input>
+              <el-input v-model="contractReceived.amount"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
