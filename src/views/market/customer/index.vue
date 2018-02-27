@@ -15,13 +15,9 @@
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
-        <button v-show="deleteShow" @click="delSelectData">
-          <i class="iconfont icon-delete"></i>
-          <span>删除</span>
-        </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'listTab'">
+        <button v-show="tab === 'listTab'" @click="handleDownload()">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -30,7 +26,7 @@
   </div>
   <div class="compotent-tab" >
     <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" ref="del"></ListComponent>
+    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -56,8 +52,8 @@ export default {
       tab: 'listTab',
       oldTab: '',
       selArr: [],
-      deleteShow: false,
       height: 100,
+      exprotList: [],
       isChange: false
     }
   },
@@ -74,25 +70,17 @@ export default {
       this.height = winHeight() - 210
     },
     toggleTab(tab) {
-      this.tab = tab
-    },
-    selData(selArr) {
-      this.selArr = selArr
-      if (this.selArr.length > 0) {
-        this.deleteShow = true
-      } else {
-        this.deleteShow = false
-      }
-    },
-    listBtn() {
-      console.log('isChange', this.isChange)
-      if (this.isChange === true) {
+      if (this.tab === 'addTab' && this.isChange === true) {
         this.showPopWin(() => {
-          this.tab = 'listTab'
+          this.tab = tab
         })
+        this.isChange = false
         return
       }
-      this.tab = 'listTab'
+      this.tab = tab
+    },
+    listBtn() {
+      this.toggleTab('listTab')
     },
     addBtn() {
       this.tab = 'addTab'
@@ -107,17 +95,6 @@ export default {
         editData: data,
         tabState: 'seeTab'
       }
-    },
-    delSelectData() {
-      var id = { id: this.selArr }
-      this.$post('/project/delete', id).then((res) => {
-        console.log('res', res)
-        this.$refs.del.getProjectData()
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
-      })
     },
     searchWord(data) {
       this.tab = 'listTab'
@@ -134,16 +111,33 @@ export default {
     },
     changeObj(status) {
       this.isChange = status
+    },
+    exportData(data) {
+      this.exprotList = data
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '客户名称', '客户类型', '业态', '企业性质', '联系人', '联系人电话', 'QQ', 'E-mail', '客户地址']
+        const filterVal = ['id', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
+        const list = this.exprotList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '商机管理表')
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j]
+        })
+      )
     }
   },
   computed: {
   },
-  watch: {
-    // tab (newVal, oldVal) {
-    //   // console.log('newVal', newVal)
-    //   // console.log('oldVal', oldVal)
-    // }
-  }
+  watch: {}
 }
 </script>
 

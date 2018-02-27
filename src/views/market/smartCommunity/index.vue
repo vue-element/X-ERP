@@ -21,7 +21,7 @@
         </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'listTab'">
+        <button v-show="tab === 'listTab'" @click="handleDownload()">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -29,15 +29,14 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" ref="del"></ListComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
     <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>
 
 <script>
-import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
@@ -56,22 +55,23 @@ export default {
       tab: 'listTab',
       selArr: [],
       deleteShow: false,
-      height: 100
+      exprotList: [],
+      isChange: false
     }
   },
   mounted() {
   },
   created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
   },
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-    },
     toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        this.isChange = false
+        return
+      }
       this.tab = tab
     },
     selData(selArr) {
@@ -83,15 +83,14 @@ export default {
       }
     },
     addBtn() {
-      this.tab = 'addTab'
+      this.toggleTab('addTab')
       this.editData = {
         editData: {},
         tabState: 'addTab'
       }
     },
     seeRow(data) {
-      this.tab = 'addTab'
-      // console.log(data)
+      this.toggleTab('addTab')
       this.editData = {
         editData: data,
         tabState: 'seeTab'
@@ -109,8 +108,49 @@ export default {
       })
     },
     searchWord(data) {
-      this.tab = 'listTab'
+      this.toggleTab('listTab')
       this.searchData = data
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+      }).catch(() => {
+      })
+    },
+    changeObj(res) {
+      this.isChange = res
+    },
+    exportData(data) {
+      this.exprotList = data
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单位数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
+          '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
+        const filterVal = ['id', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
+          'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']
+        const list = this.exprotList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '智慧社区数据库')
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      var list = ['client', 'region', 'city']
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (list.indexOf(j) !== -1) {
+            return v[j]['name']
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
   computed: {}

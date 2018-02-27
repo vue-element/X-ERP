@@ -7,7 +7,7 @@
   <el-form :model="client" :rules="rules" ref="client">
     <div class="form-module">
       <h4 class="module-title">
-        <p>项目基础信息</p>
+        <p>客户基础信息</p>
       </h4>
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :lg="12">
@@ -103,11 +103,11 @@
       <el-button @click="cancel">取消</el-button>
     </div>
   </el-form>
-  <!-- <el-button type="text" @click="open" :disabled="notEmpty">点击打开 Message Box</el-button> -->
 </div>
 </template>
 <script>
 import _ from 'lodash'
+import { isObjectValueEqual } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
 export default {
   name: 'customer',
@@ -138,32 +138,35 @@ export default {
         type: ''
       },
       action: 'add',
-      editWord: '',
+      editWord: '编辑',
       loading: false,
       disabled: false,
       editShow: false,
       rules: {
         name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
-        category: [{ required: true, message: '请输入客户类别', trigger: 'blur' }],
-        type: [{ required: true, message: '请输入业态', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入客户类别', trigger: 'change' }],
+        type: [{ required: true, message: '请输入业态', trigger: 'change' }],
         person: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
         position: [{ required: true, message: '请输入职位', trigger: 'blur' }],
         phone: [{ required: true, trigger: 'blur', validator: validPhone }]
-      }
+      },
+      temp: {}
     }
   },
   created() {
     this.getInsertData()
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
-      this.editInfo()
+      this.client = _.cloneDeep(this.editData.editData)
       this.editShow = true
       this.disabled = true
     } else {
       this.action = 'add'
     }
+    this.temp = _.cloneDeep(this.client)
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     add() {
       this.$refs.client.validate(valid => {
@@ -188,31 +191,11 @@ export default {
       })
     },
     reset() {
-      // this.$emit('changeObj', false)
-      if (this.action === 'add') {
-        this.client = {
-          address: '',
-          category: '',
-          email: '',
-          name: '',
-          nature: '',
-          person: '',
-          phone: '',
-          position: '',
-          projectNu: '',
-          qq: '',
-          type: ''
-        }
-      } else {
-        this.editInfo()
-      }
+      this.client = _.cloneDeep(this.temp)
     },
     cancel() {
+      this.$emit('changeObj', false)
       this.$emit('toggleTab')
-    },
-    editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.client = data
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -252,7 +235,11 @@ export default {
   watch: {
     client: {
       handler(obj) {
-        this.$emit('changeObj', true)
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
       },
       deep: true
     }
