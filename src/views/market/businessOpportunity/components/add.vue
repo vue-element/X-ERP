@@ -96,7 +96,7 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="12">
-          <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
+          <el-form-item label="业务分类:" prop="category">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
               <el-option v-for="item in projectCategoryList" :label="item.value" :value="item.value" :key="item.id">
@@ -191,7 +191,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机跟进状态:" prop="followState">
             <p v-if="disabled">{{businessInfo.followState}}</p>
-            <el-select v-else v-model="businessInfo.followState" placeholder="请选择">
+            <el-select v-else v-model="businessInfo.followState" placeholder="请选择商机跟进状态">
               <el-option v-for="item in followStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -200,7 +200,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机执行状态:" prop="executState">
             <p v-if="disabled">{{businessInfo.executState}}</p>
-            <el-select v-else v-model="businessInfo.executState" placeholder="请选择">
+            <el-select v-else v-model="businessInfo.executState" placeholder="请选择商机执行状态">
               <el-option v-for="item in executStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -209,9 +209,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="商机审批状态:" prop="region">
+          <el-form-item label="商机审批状态:" prop="examineState">
             <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择区域">
+            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择商机审批状态">
               <el-option v-for="item in examineStateList" :label="item.value" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -219,12 +219,12 @@
         </el-col>
       </el-row>
     </div>
-    <div class="form-module">
+    <div class="form-module" v-show="action === 'edit'">
       <h4 class="module-title">
         <p>合同信息</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="12" v-show="action === 'edit'">
+        <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同原始金额:">
             <p>{{contractInfo.originalAmount}}</p>
           </el-form-item>
@@ -235,7 +235,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40" v-show="action === 'edit'">
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同总金额:">
             <p>{{contractInfo.contractTotalAmount}}</p>
@@ -247,7 +247,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40"  v-show="action === 'edit'">
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同开工时间:">
             <p>{{contractInfo.startDate}}</p>
@@ -348,20 +348,28 @@ export default {
       executStateList: [],
       projectCategoryList: [],
       examineStateList: [],
-      contractInfo: {},
+      contractInfo: {
+        originalAmount: '',
+        changeAmount: '',
+        contractTotalAmount: '',
+        signDate: '',
+        startDate: '',
+        endDate: ''
+      },
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
         region: [{ required: true, validator: validateRegion, trigger: 'change' }],
         city: [{ required: true, validator: validateCity, trigger: 'change' }],
         amount: [{ required: true, message: '请输入金额', trigger: 'blur' }],
-        category: [{ required: true, message: '请输入业务分类', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入业务分类', trigger: 'change' }],
         chargePerson: [{ required: true, message: '请输入业务线负责人', trigger: 'blur' }],
         chargePersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         followPerson: [{ required: true, message: '请输入项目具体跟进人', trigger: 'blur' }],
         followPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         followState: [{ required: true, message: '请输入商机跟进状态', trigger: 'change' }],
-        executState: [{ required: true, message: '请输入商机执行状态', trigger: 'change' }]
+        executState: [{ required: true, message: '请输入商机执行状态', trigger: 'change' }],
+        examineState: [{ required: true, message: '请输入商机审批状态', trigger: 'change' }]
       },
       temp: {}
     }
@@ -424,16 +432,20 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      this.$get('/contractInfo/findAllByBussiness/1').then((res) => {
-        this.contractInfo = res.data.data
-        console.log('res.daa', res)
-      })
       var data = _.cloneDeep(this.editData.editData)
+      console.log('daftaaaa', data)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
+      })
+      this.businessInfo.amount = this.businessInfo.projectImpls[0].amount
+      this.businessInfo.category = this.businessInfo.projectImpls[0].category
+      this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id ).then((res) => {
+        if (res.data.success === true && res.data.data) {
+          this.contractInfo = res.data.data
+        }
       })
     },
     toggleEditBtn() {
