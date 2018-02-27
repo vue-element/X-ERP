@@ -5,11 +5,10 @@ const tagsView = {
   },
   mutations: {
     ADD_VISITED_VIEWS: (state, view) => {
-      if (state.visitedViews.some(v => v.path === view.path)) return
-      // var name = view.name.split('-')[0]
-      // if (state.visitedViews.some(v => v.name === name)) return
+      if (state.visitedViews.some(v => (v.path === view.path || v.title === view.meta.title))) return
       state.visitedViews.push({
         name: view.name,
+        pName: view.meta.pName,
         path: view.path,
         title: view.meta.title || 'no-name'
       })
@@ -53,7 +52,7 @@ const tagsView = {
     }
   },
   actions: {
-    addVisitedViews({ commit }, view) {
+    addVisitedViews({ commit, state }, view) {
       commit('ADD_VISITED_VIEWS', view)
     },
     delVisitedViews({ commit, state }, view) {

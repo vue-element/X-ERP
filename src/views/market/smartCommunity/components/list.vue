@@ -1,142 +1,119 @@
 <template>
-<div class="app-container">
-  <div>
-    <el-table :data="tableData" style="width: 100%" class="basic-form" :height="height">
-      <el-table-column align="center" prop="0" fixed label="序号">
-        <template slot-scope="scope">
-         {{scope.$index}}
-       </template>
-     </el-table-column>
-     <el-table-column align="center" prop="1" fixed label="公司名称"></el-table-column>
-     <el-table-column align="center" prop="2" fixed label="办事处"></el-table-column>
-     <el-table-column align="center" prop="3" fixed label="地区"></el-table-column>
-     <el-table-column align="center" prop="4" fixed label="项目名称"></el-table-column>
-     <el-table-column align="center" prop="5" label="建筑业态" sortable></el-table-column>
-     <el-table-column align="center" prop="6" label="总建筑面积" sortable></el-table-column>
-     <el-table-column align="center" prop="7" label="总收藏面积"></el-table-column>
-     <el-table-column align="center" prop="8" label="总户数"></el-table-column>
-     <el-table-column align="center" prop="9" label="车位总数"></el-table-column>
-     <el-table-column align="center" prop="10" label="合约模式"></el-table-column>
-    </el-table>
-    <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
-    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="50"></el-pagination>
-  </div>
+<div class="smartCommunity-list">
+  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange"  v-loading.body="listLoading" element-loading-text="拼命加载中">
+    <el-table-column type="selection"></el-table-column>
+    <el-table-column align="center" prop="0" fixed label="序号">
+      <template slot-scope="scope">
+       {{scope.$index  + 1}}
+     </template>
+   </el-table-column>
+   <el-table-column prop="client.name" label="公司名称"></el-table-column>
+   <el-table-column prop="city.name" label="城市"></el-table-column>
+   <el-table-column prop="region.name" label="地区"></el-table-column>
+   <el-table-column prop="name" label="项目名称"></el-table-column>
+   <el-table-column prop="archFormat" label="建筑业态"></el-table-column>
+   <el-table-column prop="builtArea" label="总建筑面积"></el-table-column>
+   <el-table-column prop="chargeArea" label="总收费面积"></el-table-column>
+   <el-table-column prop="roomNum" label="总户数"></el-table-column>
+   <el-table-column prop="parkingNum" label="车位总数"></el-table-column>
+   <el-table-column prop="contractMode" label="合约模式"></el-table-column>
+   <el-table-column fixed="right" label="操作" width="120">
+      <template slot-scope="scope">
+        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
+        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+   @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
 </div>
 </template>
 
 <script>
 import { winHeight } from '@/utils'
-// import { fetchList } from '@/api/article'
 export default {
   name: 'smartCommunityList',
+  props: ['searchData'],
   data() {
     return {
-      tableData: [{
-        1: '2017001176',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000',
-        2: '弱电维保-中海华庭',
-        3: '中海房地产',
-        4: '2017-12',
-        5: '1000000',
-        6: '深度跟进',
-        7: '项目侦测',
-        8: '东莞',
-        9: '深圳办事处',
-        10: '机电-设备运维',
-        11: '高级分类',
-        12: '1000000',
-        13: '20000',
-        14: '30000',
-        15: '40000',
-        16: '50000',
-        17: '10000',
-        18: '王晓',
-        19: '20170110',
-        20: '已审批'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-      }, {
-        1: '2017000000'
-        // }, {
-        //   1: '2017000000'
-        // }, {
-        //   1: '2017000000'
-      }],
-      currentPage: 2,
+      listLoading: false,
+      total: 5,
+      currentPage: 1,
+      pageSizes: [12, 15, 16],
+      pageSize: 15,
+      projectData: [],
       height: 100
     }
   },
   created() {
+    this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
     })
   },
+  watch: {
+  },
   methods: {
     resize() {
       this.height = winHeight() - 210
-      // this.height = 0
+    },
+    handleSelectionChange(arr) {
+      var selArr = []
+      arr.forEach((item) => {
+        selArr.push(item.id)
+      })
+      this.$emit('selData', selArr)
+    },
+    seeRow(id) {
+      this.$get('/project/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        this.$emit('seeRow', data)
+      })
+    },
+    deleteRow(id) {
+      var projectID = { id: [id] }
+      this.$post('/project/delete', projectID).then((res) => {
+        if (res.status === 200) {
+          this.getProjectData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    editRow(id) {
+      this.$get('/project/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        console.log('data', data)
+        // this.$emit('editRow', data)
+      })
+    },
+    getProjectData() {
+      this.listLoading = true
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      var url = '/project/search?size=' + pageSize + '&page=' + page
+      console.log(this.searchData)
+      this.$post(url, this.searchData, false).then((res) => {
+        var data = res.data.data
+        this.projectData = data.content
+        this.total = data.totalElements
+        this.currentPage = data.number + 1
+        this.pageSize = data.size
+        this.listLoading = false
+        this.$emit('exportData', this.projectData)
+      })
+    },
+    //  页码处理
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getProjectData()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getProjectData()
     }
   },
   computed: {}

@@ -8,7 +8,7 @@ import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
 // import utils from '@/utils/index'
 
-import 'normalize.css/normalize.css'// A modern alternative to CSS resets
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
 import './permission' // permission control
@@ -29,6 +29,25 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// 路由截获
+// router.beforeEach((to, from, next) => {
+//   const token = getCookie('privarytoken')
+//   if(to.name == "login"){
+//     next();
+//   }else{
+//     if(token !==null){
+//       next()
+//     }else{
+//       setSession("direct", location.href) //保存重定向之前的地址
+//       router.push({
+//         path: '/login',
+//       })
+//       next();
+//     }
+//   }
+//   console.log(to.path)
+//   next()
+// })
 new Vue({
   el: '#app',
   router,

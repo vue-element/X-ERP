@@ -143,74 +143,310 @@ a {
 .el-table .cell {
   white-space: nowrap
 }
-// 页面的增删改查区
-.form-attached {
-  margin: 0 15px;
+//增删改查按钮样式
+.form-head-attached {
+  position: fixed;
+  top: 100px;
+  left: 220px;
+  right: 10px;
+  z-index: 1;
   height: 50px;
-  line-height: 50px;
+  // line-height: 40px;
   font-size: 16px;
   color: #828282;
-  ul.crud-btn {
-    li {
+  background-color: #fff;
+
+  .form-inner {
+    height: 100%;
+    margin: 0 16px;
+    margin-top: 10px;
+    height: 40px;
+    line-height: 40px;
+  }
+  div.crud-btn,
+  div.export-btn {
+    button{
+      color: #828282!important;
       display: inline-block;
-      margin-right: 35px;
+      margin:0 16px;
       i {
         display: inline-block;
         margin-right: 6px;
       }
     }
-  }
-  .data-export {
-    i {
-      display: inline-block;
-      margin-right: 6px;
+    button.is-active {
+      color: #35d5ba!important;
     }
   }
 }
-// form模块区
-.form-container {
-  border-top: 5px solid #d2d2d2;
-  color: #000;
-  .form-inner {
-    border: 1px solid #d2d2d2;
-    margin: 16px 0;
-    padding: 10px 20px;
-    @include borderRadius(4px);
-    h4 {
-      height: 20px;
-      padding: 10px 0;
-      p {
-        border-left: 5px solid #35d5ba;
-        padding-left: 15px;
-      }
+.inner-tab-toggle {
+  @include boxSizing;
+  width: 100%;
+  height: 40px;
+  border: solid 1px #d2d2d2;
+  color: #828282;
+  vertical-align: middle;
+  background-color: #fff;
+  ul {
+    @include flex;
+    z-index: 1003;
+    li {
+      width: 148px;
+      height: 28px;
+      line-height: 30px;
+      margin: 5px;
+      text-align: center;
+      border: solid 1px #d2d2d2;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    li.is-active {
+      border: solid 1px #35d5ba;
+      color: #35d5ba;
     }
   }
-  table {
+},
+.compotent-tab {
+  position: fixed;
+  top: 150px;
+  left: 240px;
+  right: 30px;
+  bottom: 30px;
+}
+// form模块区
+.form-container {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  overflow-y: auto;
+  color: #000;
+  border: 1px solid #d2d2d2;
+  padding: 10px 20px;
+  @include borderRadius(4px);
+  @include boxSizing;
+  .form-module {
+    margin-bottom: 30px;
+    h4.module-title{
+      height: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #d2d2d2;
+      p {
+        border-left: 5px solid #35d5ba;
+        padding:0 15px;
+      }
+    }
+    .basic-item {
+        width: 100%;
+        margin-top: 20px;
+        color: #000;
+        display: table;
+        label {
+          color: #000;
+          width: 30%;
+          line-height: 16px;
+          word-wrap: wrap;
+          margin-right: 2%;
+          font-size: 14px;
+          text-align: right;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        input {
+          width: 62%;
+          height: 32px;
+          border: 1px solid #828282;
+          @include borderRadius(4px);
+          @include boxSizing;
+          padding-left: 12px;
+          vertical-align: middle;
+        }
+        input:focus {
+          border: 1px solid #3f9eff;
+        }
+        .el-select,
+        .el-cascader{
+          width: 62%;
+          height: 34px;
+          line-height: 34px;
+          @include boxSizing;
+          input {
+            width: 100%;
+            height: 32px;
+            line-height: 32px;
+            border: 1px solid #828282;
+            @include borderRadius(4px);
+            color: #000;
+          }
+          input:focus {
+            border: 1px solid #3f9eff;
+          }
+        }
+        .el-cascader .el-cascader__label{
+          color: #000!important;
+        }
+      }
+      //日期样式
+      .basic-item.range-date, {
+        .el-date-editor{
+          padding: 0;
+          width: 62%;
+          height: 34px;
+          line-height: 34px;
+          border: 1px solid #828282;
+          @include borderRadius(4px);
+          .el-range-input {
+            width: 38%;
+            padding:0;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border: none;
+            font-size: 13px;
+            color: #000;
+            vertical-align: top;
+          }
+          .el-icon-date{
+            width: 8%;
+            margin-left: 0;
+          }
+          .el-range__close-icon {
+            width: 7%;
+            vertical-align: middle;
+          }
+          .el-range-separator{
+            width: 6%;
+            padding:0 2px;
+            vertical-align: middle;
+          }
+        }
+      }
+      .basic-item.single-date {
+        .el-date-editor {
+          width: 62%;
+          height: 34px;
+          line-height: 34px;
+          input.el-input__inner {
+            width: 100%;
+            padding-left: 30px!important;
+            color: #000;
+            vertical-align: middle;
+          }
+          .el-input__prefix{
+            width: 10%;
+            vertical-align: middle;
+          }
+        }
+      }
+  }
+  table.basic-table {
     width: 100%;
     margin-right: 40px;
     border-left: 1px solid #828282;
     border-bottom: 1px solid #828282;
     tr {
       td {
-        // width: 110px;
         height: 28px;
         text-align: center;
         font-size: 14px;
         border-top: 1px solid #828282;
         border-right: 1px solid #828282;
+        input,
+        p{
+          display: inline-block;
+          width: 80%;
+          min-width: 60px;
+          height: 26px;
+          line-height: 26px;
+          text-align: center;
+        }
       }
     }
   }
 }
-.con-search-btn {
+.common-btn {
+  @include borderRadius(4px);
+  @include boxSizing;
   margin: 20px auto;
-  width: 130px;
+  padding: 0 10px;
+  margin-right: 20px;
+  width: auto;
+  min-width: 80px;
   height: 30px;
   line-height: 30px;
-  @include borderRadius(4px);
   background-color: #35d5ba;
   border: 1px solid #35d5ba;
   text-align: center;
   color: #fff;
   font-size: 14px;
+}
+.commont-btn{
+  width: 100%;
+  text-align: center;
+  margin: 40px 0;
+  button.el-button {
+    @include borderRadius(4px);
+    @include boxSizing;
+    padding: 0 10px;
+    margin-right: 20px;
+    width: auto;
+    min-width: 80px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #35d5ba;
+    border: 1px solid #35d5ba;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    span {
+      padding:0 10px;
+    }
+    a {
+      color: #fff;
+    }
+  }
+  button.el-button:hover {
+    background-color: #10a185;
+    border: 1px solid #10a185;
+  }
+  button.el-button:focus {
+    background-color: #10a185;
+    border: 1px solid #10a185;
+  }
+  button.el-button.is-loading {
+    span{
+      padding:0;
+    }
+  }
+}
+.commont-btn:hover {
+  cursor: pointer;
+}
+.commont-btn.edit-top-btn {
+  margin: 0;
+  button {
+    float: right;
+  }
+}
+
+
+// 上传文件样式
+.el-form-item{
+  .el-form-item__label{
+    vertical-align: top;
+    margin-top:8px;
+  }
+  .el-form-item__content{
+    .upload-demo{
+      .el-upload{
+        display: inline-block;
+        margin-right: 20px;
+      }
+      .el-upload__tip{
+        display: inline-block;
+        margin-top: 0;
+      }
+    }
+  }
 }

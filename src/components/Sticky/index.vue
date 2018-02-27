@@ -14,11 +14,11 @@ export default {
   props: {
     stickyTop: {
       type: Number,
-      default: 0
+      default: 150
     },
     zIndex: {
       type: Number,
-      default: 1
+      default: 1002
     },
     className: {
       type: String

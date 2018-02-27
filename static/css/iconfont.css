@@ -14,11 +14,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-cost:before { content: "\e666"; }
+
 .icon-jiaocha:before { content: "\e6b3"; }
 
 .icon-home:before { content: "\e63a"; }
 
 .icon-edit:before { content: "\e67a"; }
+
+.icon-out:before { content: "\e658"; }
 
 .icon-search:before { content: "\e72c"; }
 
@@ -32,6 +36,10 @@
 
 .icon-money:before { content: "\e607"; }
 
+.icon-download:before { content: "\e639"; }
+
+.icon-export:before { content: "\e638"; }
+
 .icon-person:before { content: "\e610"; }
 
 .icon-username:before { content: "\e777"; }
@@ -42,6 +50,8 @@
 
 .icon-help:before { content: "\e600"; }
 
-.icon-export:before { content: "\e601"; }
+.icon-export1:before { content: "\e601"; }
 
 .icon-add:before { content: "\e60e"; }
+
+.icon-import:before { content: "\e778"; }

@@ -7,12 +7,12 @@
       </div>
       <el-form-item prop="name" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" />
+        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" /></el-input>
       </el-form-item>
 
       <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
         <span class="iconfont icon-password"></span>
-        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" />
+        <el-input name="password" type="password" @click.native="passwordClick"  @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入您的密码" /></el-input>
       </el-form-item>
 
       <div class="login-btn">
@@ -37,7 +37,6 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      // console.log(value)
       if (!isvalidUsername(value)) {
         callback(new Error('请输入正确的用户名'))
       } else {
@@ -68,15 +67,17 @@ export default {
     }
   },
   created() {
-    var name = Cookies.get('name')
-    var password = Cookies.get('password')
-    if (name && password) {
-      this.isKeepPw = true
-      this.loginForm.name = name
-      this.loginForm.password = password
-    } else {
-      this.loginForm.name = ''
-      this.loginForm.password = ''
+    if (Cookies.get('isKeepPw')) {
+      var name = Cookies.get('username')
+      var password = Cookies.get('password')
+      if (name && password) {
+        this.isKeepPw = true
+        this.loginForm.name = name
+        this.loginForm.password = password
+      } else {
+        this.loginForm.name = ''
+        this.loginForm.password = ''
+      }
     }
   },
   methods: {
@@ -93,29 +94,27 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log('valid', valid)
-        this.setToken('11111')
-        setToken('11111')
-        this.$router.push({ path: '/' })
         if (valid) {
           this.loading = true
-          this.$post('/login', this.loginForm).then((res) => {
-            // this.$router.push({ path: '/' })
-            console.log('res', res)
+          this.$post('/login', this.loginForm, false).then((res) => {
             this.loading = false
-            this.setToken('11111')
-            setToken('11111')
-            if (res.success === true) {
-              var username = this.loginForm.username
+            if (res.data.success === true) {
+              setToken('11111')
+              var userInfo = res.data.data
+              this.$store.commit('login', userInfo)
+              var username = this.loginForm.name
               var password = this.loginForm.password
+              Cookies.set('username', username, { expires: 7 })
+              Cookies.set('password', password, { expires: 7 })
               if (this.isKeepPw === true) {
-                Cookies.set('username', username, { expires: 7 })
-                Cookies.set('password', password, { expires: 7 })
-              } else {
-                Cookies.remove('username', '')
-                Cookies.remove('password', '')
+                Cookies.set('isKeepPw', true)
               }
               this.$router.push({ path: '/' })
+            } else {
+              this.$message({
+                message: '登陆失败，请重新登陆',
+                type: 'success'
+              })
             }
           }).catch(() => {
             this.loading = false
@@ -127,8 +126,9 @@ export default {
       })
     },
     ...mapActions([
-      'setToken',
-      'setRoles'
+      // 'setToken',
+      'setRoles',
+      'login'
     ])
   },
   computed: {
@@ -203,8 +203,8 @@ export default {
         vertical-align: middle;
       }
       .el-form-item__content {
-        width: auto;
-        height: auto;
+        width: 100%!important;
+        height: 54px;
       }
       .el-input{
         display: inline-block;
@@ -224,6 +224,10 @@ export default {
           // margin: 5px 0;
           padding: 0 20px;
           @include boxSizing;
+          border: none;
+          outline: none;
+        }
+        input:focus{
           border: none;
         }
       }

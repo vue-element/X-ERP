@@ -5,7 +5,6 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router)
-
 /* Layout */
 import Layout from '../views/layout/Layout'
 
@@ -23,7 +22,6 @@ meta : {
 // constantRouterMap 代表那些不需要动态判断权限的路由，如登录页，404，等通用页面。
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
-  { path: 'dashboard', component: _import('dashboard/index'), hidden: true },
   { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
   { path: '/404', component: _import('errorPage/404'), hidden: true },
   { path: '/401', component: _import('errorPage/401'), hidden: true },
@@ -35,7 +33,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index'),
       name: 'dashboard',
-      meta: { title: '首页', icon: 'home', noCache: true }
+      meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
   }
 ]
@@ -47,83 +45,53 @@ export default new Router({
 })
 // asyncRouterMap 代表那些需求动态判断权限并通过 addRouters 动态添加的页面。具体的会在 权限判断 页面介绍。
 export const asyncRouterMap = [
-  {
-    path: '/market',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'market',
-    meta: {
-      title: '市场管理',
-      icon: 'person',
-      role: ['sc']
-    },
+  { path: '/market', component: Layout, redirect: 'noredirect', name: 'market', meta: { title: '市场管理', icon: 'person', role: ['sc'] },
     children: [
-      // { path: 'index', component: _import('market/smartCommunity'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: '/smartCommunity', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' },
+      { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
+      { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
+      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
+      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
+    ]
+  },
+  { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
+    children: [
+      { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
+      // { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), meta: { pName: 'contractInfo', title: 'hh' }, hidden: true },
+      { path: 'invoice', component: _import('financial/invoice/index'), name: 'contrctInvoice', meta: { title: '合同开票管理' }},
+      // { path: 'invoice', component: _import('financial/invoice/index'), redirect: '/financial/invoice/list', name: 'contrctInvoice', meta: { title: '合同开票管理' }, hideChildren: true,
+      //   children: [
+      //     { path: 'list', component: _import('financial/invoice/list'), name: 'invoiceList', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
+      //     { path: 'add', component: _import('financial/invoice/add'), name: 'invoiceAdd', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }},
+      //     { path: 'search', component: _import('financial/invoice/search'), name: 'invoiceSearch', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
+      //     { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }}
+      //   ]
+      // },
+      { path: 'received-payment', component: _import('financial/receivedPayment/index'), name: 'receivedPayment', meta: { title: '合同回款管理' }},
+      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同付款管理' }},
+      { path: 'schedule-manage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
+      { path: 'schedule-analysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
+    ]
+  },
+  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
+    children: [
+      { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }},
+      { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }},
+      { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }},
+      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }},
+      { path: '/cost/storage-manage', component: _import('cost/storageManage/inbound/index'), name: 'storageManage', meta: { title: '出入库管理' },
         children: [
-          { path: 'list', component: _import('market/smartCommunity/components/list'), name: 'smartCommunityList', meta: { title: '智慧社区数据库' }},
-          { path: 'add', component: _import('market/smartCommunity/components/add'), name: 'smartCommunityAdd', meta: { title: '智慧社区数据库' }},
-          { path: 'search', component: _import('market/smartCommunity/components/search'), name: 'smartCommunitySearch', meta: { title: '智慧社区数据库' }}
-        ]
-    },
-      // { path: 'smartCommunity/add', component: _import('market/smartCommunity/add'), name: 'smartCommunity-add', meta: { title: '智慧社区数据库' }},
-      // { path: 'smartCommunity/search', component: _import('market/smartCommunity/search'), name: 'smartCommunity-search', meta: { title: '智慧社区数据库' }},
-      { path: 'business-opportunity/add', component: _import('market/businessOpportunity/add'), name: 'businessOpportunity-add', meta: { title: '商机管理' }},
-      { path: 'business-opportunity/search', component: _import('market/businessOpportunity/search'), name: 'businessOpportunity-search', meta: { title: '商机管理' }},
-      { path: '/bid-manage', component: _import('market/bidManage/bidManage'), name: 'bidManage', meta: { title: '投标报价管理' },
-        children: [
-          { path: 'primary-material', component: _import('market/bidManage/Form/primaryMaterial'), name: 'primaryMaterial', meta: { title: '主材标价表' }},
-          { path: 'auxiliary-material', component: _import('market/bidManage/Form/auxiliaryMaterial'), name: 'auxiliaryMaterial', meta: { title: '辅材标价表' }},
-          { path: 'manualSummary', component: _import('market/bidManage/Form/manualSummary'), name: 'manualSummary', meta: { title: '人工汇总表' }},
-          { path: 'priceSummary', component: _import('market/bidManage/Form/priceSummary'), name: 'priceSummary', meta: { title: '报价汇总表' }}
+          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }},
+          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }}
         ]
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'financial',
-    meta: {
-      title: '财务管理',
-      icon: 'money',
-      role: ['cw']
-    },
-    children: [
-      { path: 'contract-info', component: _import('financial/contractInfo'), name: 'contractInfo', meta: { title: '合同信息管理' }},
-      { path: 'contract-invoice', component: _import('financial/contractInvoice'), name: 'contractInvoice', meta: { title: '合同开票管理' }},
-      { path: 'contract-received-payment', component: _import('financial/contractReceivedPayment'), name: 'contractReceivedPayment', meta: { title: '合同回款管理' }},
-      { path: 'contract-payment', component: _import('financial/contractPayment'), name: 'contractPayment', meta: { title: '合同付款管理' }},
-      { path: 'progress-manage', component: _import('financial/progressManage'), name: 'progressManage', meta: { title: '项目进度管理' }},
-      { path: 'progress-analysis', component: _import('financial/progressAnalysis'), name: 'progressAnalysis', meta: { title: '项目进度分析' }}
-    ]
-  },
-  {
-    path: '/cost',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'cost',
-    meta: {
-      title: '成本管理',
-      icon: 'component',
-      role: ['cw']
-    },
-    children: [
-      { path: 'supplier', component: _import('cost/supplier'), name: 'supplier', meta: { title: '供应商管理' }},
-      { path: 'price', component: _import('cost/price'), name: 'price', meta: { title: '价格体系管理' }},
-      { path: 'payment-contract', component: _import('cost/paymentContract'), name: 'paymentContract', meta: { title: '付款合同管理' }},
-      { path: 'purchase-contract', component: _import('cost/purchaseContract'), name: 'purchaseContract', meta: { title: '采购合同管理' }},
-      { path: 'storage-manage', component: _import('cost/storageManage'), name: 'storageManage', meta: { title: '出入库管理' }},
-      { path: 'balance', component: _import('cost/balance'), name: 'balance', meta: { title: '付款结算管理' }}
-    ]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    // hidden: true,
+  { path: '/permission', component: Layout,
+    hidden: true,
     redirect: '/permission/index',
-    meta: { role: ['admin'] },
+    meta: {
+      role: ['admin']
+    },
     children: [{
       path: 'index',
       component: _import('permission/index'),
@@ -135,11 +103,10 @@ export const asyncRouterMap = [
       }
     }]
   },
-
   {
     path: '/error',
     component: Layout,
-    // hidden: true,
+    hidden: true,
     redirect: 'noredirect',
     name: 'errorPages',
     meta: {
@@ -151,10 +118,9 @@ export const asyncRouterMap = [
       { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: '404', noCache: true }}
     ]
   },
-  {
-    path: '/excel',
+  { path: '/excel',
     component: Layout,
-    // hidden: true,
+    hidden: false,
     redirect: '/excel/export-excel',
     name: 'excel',
     meta: {
@@ -167,13 +133,10 @@ export const asyncRouterMap = [
       { path: 'upload-excel', component: _import('excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'upload excel' }}
     ]
   },
-
-  {
-    path: '/i18n',
+  { path: '/i18n',
     component: Layout,
-    // hidden: true,
+    hidden: true,
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: '国际化', icon: 'international' }}]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]

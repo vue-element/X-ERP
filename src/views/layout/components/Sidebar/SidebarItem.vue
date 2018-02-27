@@ -15,7 +15,7 @@
         </template>
 
         <template v-for="child in item.children" v-if="!child.hidden">
-          <sidebar-item class="nest-menu" v-if="child.children&&child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
+          <sidebar-item class="nest-menu" v-if="!child.hideChildren && child.children && child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
 
           <router-link v-else :to="item.path+'/'+child.path" :key="child.name">
             <el-menu-item :index="item.path+'/'+child.path">
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'SidebarItem',
   props: {
@@ -39,9 +38,11 @@ export default {
       type: Array
     }
   },
+  created() {
+  },
   methods: {
     ayy(item) {
-      console.log(item.children[0].name)
+      // console.log(item.children[0].name)
     }
   }
 }

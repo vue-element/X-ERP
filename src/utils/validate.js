@@ -13,6 +13,12 @@ export function validateURL(textval) {
   return urlregex.test(textval)
 }
 
+/* 数字验证*/
+export function validateNumber(str) {
+  const reg = /^[1-9]\d*$/
+  return reg.test(str)
+}
+
 /* 小写字母*/
 export function validateLowerCase(str) {
   const reg = /^[a-z]+$/
@@ -26,8 +32,18 @@ export function validateUpperCase(str) {
 }
 
 /* 大小写字母*/
-export function validatAlphabets(str) {
+export function validateAlphabets(str) {
   const reg = /^[A-Za-z]+$/
+  return reg.test(str)
+}
+/* 固定电话 */
+export function validatePhone(str) {
+  const reg = /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/
+  return reg.test(str)
+}
+/* 手机验证 */
+export function validateMobile(str) {
+  const reg = /^1[34578]\d{9}$/
   return reg.test(str)
 }
 

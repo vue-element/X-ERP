@@ -100,6 +100,15 @@
     background-color: #ddd;
   }
 }
+@mixin noScroll {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background-color: #fff;
+  }
+  // scrollbar-track-color: #fff;
+  // scrollbar-shadow-color: #fff;
+}
 
 @mixin placeholderColor($color) {
   &::-webkit-input-placeholder { /* WebKit browsers */
@@ -114,4 +123,9 @@
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
     color: $color;
   }
+}
+
+@mixin textAligin {
+  text-align: justify;
+  text-justify:inter-ideograph(IE)
 }
