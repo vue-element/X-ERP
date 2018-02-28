@@ -50,10 +50,10 @@ export const asyncRouterMap = [
       { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
       { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
       { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
-      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
+      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }, hidden: true }
     ]
   },
-  { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
+  { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] }, hidden: true,
     children: [
       { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
       // { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), meta: { pName: 'contractInfo', title: 'hh' }, hidden: true },
@@ -72,7 +72,7 @@ export const asyncRouterMap = [
       { path: 'schedule-analysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
-  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
+  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] }, hidden: true,
     children: [
       { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }},
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }},
@@ -120,7 +120,7 @@ export const asyncRouterMap = [
   },
   { path: '/excel',
     component: Layout,
-    hidden: false,
+    hidden: true,
     redirect: '/excel/export-excel',
     name: 'excel',
     meta: {

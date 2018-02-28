@@ -96,7 +96,7 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="12">
-          <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
+          <el-form-item label="业务分类:" prop="category">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
               <el-option v-for="item in projectCategoryList" :label="item.value" :value="item.value" :key="item.id">
@@ -219,12 +219,12 @@
         </el-col>
       </el-row>
     </div>
-    <div class="form-module">
+    <div class="form-module" v-show="action === 'edit'">
       <h4 class="module-title">
         <p>合同信息</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="12" v-show="action === 'edit'">
+        <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同原始金额:">
             <p>{{contractInfo.originalAmount}}</p>
           </el-form-item>
@@ -235,7 +235,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40" v-show="action === 'edit'">
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同总金额:">
             <p>{{contractInfo.contractTotalAmount}}</p>
@@ -247,7 +247,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40"  v-show="action === 'edit'">
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同开工时间:">
             <p>{{contractInfo.startDate}}</p>
@@ -309,35 +309,35 @@ export default {
       inputPerson: '',
       businessInfo: {
         city: { id: '' },
-        client: { id: 1 },
+        client: { id: '' },
         region: { id: '' },
         category: '',
         amount: '',
         projectImpls: [
           {
             amount: '',
-            bidDate: '2018-01-01',
-            bidDate2: '2018-01-01',
+            bidDate: '',
+            bidDate2: '',
             category: '',
-            developDate: '2018-01-01',
+            developDate: '',
             keyword: '',
-            signDate: '2018-01-01',
-            startDate: '2018-01-01'
+            signDate: '',
+            startDate: ''
           }
         ],
-        code: '编码',
-        billDate: '2018-01-01',
-        date: '2018-02-01',
+        code: '',
+        billDate: '',
+        date: '',
         executState: '',
         followState: '',
         examineState: '',
         name: '',
         source: '',
         type: '',
-        chargePerson: '业务线负责人',
-        followPerson: '项目跟进人',
-        chargePersonPhone: '13682571372',
-        followPersonPhone: '13233471372',
+        chargePerson: '',
+        followPerson: '',
+        chargePersonPhone: '',
+        followPersonPhone: '',
         oldCity: ''
       },
       cityOption: [],
@@ -348,7 +348,14 @@ export default {
       executStateList: [],
       projectCategoryList: [],
       examineStateList: [],
-      contractInfo: {},
+      contractInfo: {
+        originalAmount: '',
+        changeAmount: '',
+        contractTotalAmount: '',
+        signDate: '',
+        startDate: '',
+        endDate: ''
+      },
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
@@ -432,8 +439,12 @@ export default {
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
+      this.businessInfo.amount = this.businessInfo.projectImpls[0].amount
+      this.businessInfo.category = this.businessInfo.projectImpls[0].category
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
-        this.contractInfo = res.data.data
+        if (res.data.success === true && res.data.data) {
+          this.contractInfo = res.data.data
+        }
       })
     },
     toggleEditBtn() {
