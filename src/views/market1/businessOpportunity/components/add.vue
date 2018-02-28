@@ -354,15 +354,14 @@ export default {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
         region: [{ required: true, validator: validateRegion, trigger: 'change' }],
         city: [{ required: true, validator: validateCity, trigger: 'change' }],
-        amount: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }],
-        category: [{ required: true, message: '请选择业务分类', trigger: 'change' }],
+        amount: [{ required: true, message: '请输入金额', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入业务分类', trigger: 'blur' }],
         chargePerson: [{ required: true, message: '请输入业务线负责人', trigger: 'blur' }],
         chargePersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         followPerson: [{ required: true, message: '请输入项目具体跟进人', trigger: 'blur' }],
         followPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
-        followState: [{ required: true, message: '请选择商机跟进状态', trigger: 'change' }],
-        executState: [{ required: true, message: '请选择商机执行状态', trigger: 'change' }],
-        examineState: [{ required: true, message: '请选择商机审批状态', trigger: 'change' }]
+        followState: [{ required: true, message: '请输入商机跟进状态', trigger: 'change' }],
+        executState: [{ required: true, message: '请输入商机执行状态', trigger: 'change' }]
       },
       temp: {}
     }
@@ -425,15 +424,16 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
+      this.$get('/contractInfo/findAllByBussiness/1').then((res) => {
+        this.contractInfo = res.data.data
+        console.log('res.daa', res)
+      })
       var data = _.cloneDeep(this.editData.editData)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
-      })
-      this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
-        this.contractInfo = res.data.data
       })
     },
     toggleEditBtn() {
