@@ -78,8 +78,8 @@ export default {
     },
     seeRow(id) {
       this.$get('/contractInfo/findUpdateData/' + id).then((res) => {
-        console.log(res)
         var data = res.data.data
+        console.log(data)
         data.id = id
         this.$emit('editRow', data)
       })
