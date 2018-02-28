@@ -15,10 +15,10 @@
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <button :class="tab === 'delTab' ? 'is-active' : ''">
+        <!--   <button :class="tab === 'delTab' ? 'is-active' : ''">
             <i class="iconfont icon-delete"></i>
             <span>删除</span>
-          </button>
+          </button> -->
         </div>
         <div class="export-btn fr">
           <button>

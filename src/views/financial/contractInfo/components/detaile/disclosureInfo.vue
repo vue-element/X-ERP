@@ -3,10 +3,7 @@
     <div class="commont-btn edit-btn" v-show="editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
-    <div class="commont-btn edit-btn" v-show="addShow">
-      <el-button @click="toggleAddBtn">{{addWord}}</el-button>
-    </div>
-    <el-form :model="ContractBasis" ref="ContractBasis" class="basic">
+    <el-form :model="contractBasis" ref="contractBasis" class="basic">
       <div class="form-module">
         <h4 class="module-title">
           <p>资金来源</p>
@@ -14,8 +11,8 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="资金来源：">
-              <p v-if="disabled">{{ContractBasis.sourceFunds}}</p>
-              <el-select v-else v-model="ContractBasis.sourceFunds" placeholder="请选择资金来源">
+              <p v-if="disabled">{{contractBasis.sourceFunds}}</p>
+              <el-select v-else v-model="contractBasis.sourceFunds" placeholder="请选择资金来源">
                   <el-option v-for="item in sourceFundsList" :label="item.value" :value="item.value" :key="item.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -29,32 +26,32 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="材料成本：">
-              <p v-if="disabled">{{ContractBasis.materialCost}}</p>
-              <el-input v-else v-model="ContractBasis.materialCost" placeholder="请输入材料成本"></el-input>
+              <p v-if="disabled">{{contractBasis.materialCost}}</p>
+              <el-input v-else v-model="contractBasis.materialCost" placeholder="请输入材料成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="人工成本：">
-              <p v-if="disabled">{{ContractBasis.artificialCost}}</p>
-              <el-input v-else v-model="ContractBasis.artificialCost" placeholder="请输入人工成本"></el-input>
+              <p v-if="disabled">{{contractBasis.artificialCost}}</p>
+              <el-input v-else v-model="contractBasis.artificialCost" placeholder="请输入人工成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="综合成本：">
-              <p v-if="disabled">{{ContractBasis.comprehensiveCost}}</p>
-              <el-input v-else v-model="ContractBasis.comprehensiveCost" placeholder="请输入综合成本"></el-input>
+              <p v-if="disabled">{{contractBasis.comprehensiveCost}}</p>
+              <el-input v-else v-model="contractBasis.comprehensiveCost" placeholder="请输入综合成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="管理费用：">
-              <p v-if="disabled">{{ContractBasis.manageCost}}</p>
-              <el-input v-else v-model="ContractBasis.manageCost" placeholder="请输入管理费用"></el-input>
+              <p v-if="disabled">{{contractBasis.manageCost}}</p>
+              <el-input v-else v-model="contractBasis.manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="税金：">
-              <p v-if="disabled">{{ContractBasis.tax}}</p>
-              <el-input v-else v-model="ContractBasis.tax" placeholder="请输入税金"></el-input>
+              <p v-if="disabled">{{contractBasis.tax}}</p>
+              <el-input v-else v-model="contractBasis.tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -66,14 +63,14 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="毛利润">
-              <p v-if="disabled">{{ContractBasis.tax}}</p>
-              <el-input v-else v-model="ContractBasis.profit" placeholder="请输入毛利润"></el-input>
+              <p v-if="disabled">{{contractBasis.tax}}</p>
+              <el-input v-else v-model="contractBasis.profit" placeholder="请输入毛利润"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="毛利润率">
-              <p v-if="disabled">{{ContractBasis.tax}}</p>
-              <el-input v-else v-model="ContractBasis.profitRate" placeholder="请输入毛利润率"></el-input>
+              <p v-if="disabled">{{contractBasis.tax}}</p>
+              <el-input v-else v-model="contractBasis.profitRate" placeholder="请输入毛利润率"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -88,7 +85,7 @@
     <div class="list form-module" style="margin-top:20px;">
       <h4 class="module-title">
         <p>回款计划</p>
-        <el-button type="text" class="up-files common-btn" @click="planBox = true">新增回款</el-button>
+        <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable">
@@ -128,8 +125,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save">保&nbsp;&nbsp;&nbsp;存</el-button>
-        <el-button type="info">重&nbsp;&nbsp;&nbsp;置</el-button>
+        <el-button type="primary" @click="paymentPlanSave">保&nbsp;&nbsp;&nbsp;存</el-button>
+        <el-button type="info" @clici="paymentPlanReset">重&nbsp;&nbsp;&nbsp;置</el-button>
         <el-button @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
       </div>
     </el-dialog>
@@ -196,14 +193,12 @@ export default {
       currentPage: 1,
       action: 'add',
       editShow: false,
-      addShow: false,
       state: false,
       editWord: '编辑',
-      addWord: '新增',
       disabled: false,
       loading: false,
       sourceFundsList: [],
-      ContractBasis: {
+      contractBasis: {
         sourceFunds: '',
         materialCost: '',
         artificialCost: '',
@@ -220,7 +215,10 @@ export default {
         paymentCondition: '',
         ratio: '',
         amount: '',
-        date: ''
+        date: '',
+        contractBasis: {
+          id: ''
+        }
       },
       // 附件上传
       tableData: [],
@@ -240,6 +238,16 @@ export default {
   },
   created() {
     this.getInsertData()
+    this.getPaymentPlan()
+    // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
+    var contractMsg = sessionStorage.getItem('contractMsg')
+    if (contractMsg) {
+      this.disabled = false
+      this.state = true
+    } else {
+      this.disabled = true
+    }
+    // 判断状态是查看还是新增
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
       this.editShow = true
@@ -247,8 +255,6 @@ export default {
       this.editInfo()
     } else {
       this.action = 'add'
-      this.addShow = true
-      this.disabled = true
     }
   },
   methods: {
@@ -257,14 +263,14 @@ export default {
     },
     add() {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      contractMsg.contractBasis.sourceFunds = this.ContractBasis.sourceFunds
-      contractMsg.contractBasis.artificialCost = this.ContractBasis.artificialCost
-      contractMsg.contractBasis.comprehensiveCost = this.ContractBasis.comprehensiveCost
-      contractMsg.contractBasis.manageCost = this.ContractBasis.manageCost
-      contractMsg.contractBasis.tax = this.ContractBasis.tax
-      contractMsg.contractBasis.profit = this.ContractBasis.profit
-      contractMsg.contractBasis.profitRate = this.ContractBasis.profitRate
-      console.log(JSON.stringify(contractMsg))
+      contractMsg.contractBasis.sourceFunds = this.contractBasis.sourceFunds
+      contractMsg.contractBasis.artificialCost = this.contractBasis.artificialCost
+      contractMsg.contractBasis.comprehensiveCost = this.contractBasis.comprehensiveCost
+      contractMsg.contractBasis.manageCost = this.contractBasis.manageCost
+      contractMsg.contractBasis.tax = this.contractBasis.tax
+      contractMsg.contractBasis.profit = this.contractBasis.profit
+      contractMsg.contractBasis.profitRate = this.contractBasis.profitRate
+      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
       this.loading = true
       this.$post('/contractBasis/save', contractMsg).then((res) => {
         this.loading = false
@@ -275,11 +281,12 @@ export default {
           })
         }
       })
+      sessionStorage.removeItem('contractMsg')
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      this.$get('/contractBasis/findAllByContractBasis/' + data.id).then((res) => {
-        console.log(res)
+      this.$get('/contractBasis/findAllBycontractBasis/' + data.id).then((res) => {
+        // console.log(res)
       })
     },
     toggleEditBtn() {
@@ -291,18 +298,8 @@ export default {
         this.editWord = '取消编辑'
       }
     },
-    toggleAddBtn() {
-      this.disabled = !this.disabled
-      if (this.disabled === true) {
-        this.addWord = '新增'
-        this.state = false
-      } else {
-        this.addWord = '取消'
-        this.state = true
-      }
-    },
     reset() {
-      this.ContractBasis = {
+      this.contractBasis = {
         sourceFunds: '',
         materialCost: '',
         artificialCost: '',
@@ -313,11 +310,38 @@ export default {
         profitRate: ''
       }
     },
-    save() {
-      console.log(JSON.stringify(this.paymentPlan))
+    // 点击新增回款计划前判断是否有合同交底的ID
+    clickPlanBox() {
+      if (this.paymentPlan.contractBasis.id) {
+        this.planBox = true
+      } else {
+        this.$message({
+          message: '请先输入合同交底信息'
+        })
+      }
+    },
+    paymentPlanSave() {
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
-        console.log(res)
+        this.planBox = false
+        if (res.data.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+        }
       })
+    },
+    paymentPlanReset() {
+      this.paymentPlan = {
+        paymentCondition: '',
+        ratio: '',
+        amount: '',
+        date: ''
+      }
+    },
+    getPaymentPlan() {
+      var contractMsg = sessionStorage.getItem('contractMsg')
+      console.log(contractMsg.contractBasis.id)
     },
     submitUpload() {
       this.$refs.upload.submit()

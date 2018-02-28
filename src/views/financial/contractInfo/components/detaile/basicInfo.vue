@@ -182,8 +182,7 @@ export default {
         oldCity: '',
         limit: [],
         dateShow: ''
-      },
-      contractMsg: {}
+      }
     }
   },
   created() {
@@ -222,8 +221,8 @@ export default {
       this.contractInfo.startDate = this.contractInfo.limit[0]
       this.contractInfo.endDate = this.contractInfo.limit[1]
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
-        this.contractMsg = res.data.data
-        sessionStorage.setItem('contractMsg', JSON.stringify(this.contractMsg))
+        var contractMsg = res.data.data
+        sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
         this.loading = false
         if (res.data.success === true) {
           this.$message({
