@@ -191,7 +191,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机跟进状态:" prop="followState">
             <p v-if="disabled">{{businessInfo.followState}}</p>
-            <el-select v-else v-model="businessInfo.followState" placeholder="请选择">
+            <el-select v-else v-model="businessInfo.followState" placeholder="请选择商机跟进状态">
               <el-option v-for="item in followStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -200,7 +200,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机执行状态:" prop="executState">
             <p v-if="disabled">{{businessInfo.executState}}</p>
-            <el-select v-else v-model="businessInfo.executState" placeholder="请选择">
+            <el-select v-else v-model="businessInfo.executState" placeholder="请选择商机执行状态">
               <el-option v-for="item in executStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -209,10 +209,10 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="商机审批状态:" prop="region">
+          <el-form-item label="商机审批状态:" prop="examineState">
             <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择区域">
-              <el-option v-for="item in examineStateList" :label="item.value" :value="item.id" :key="item.id">
+            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择商机审批状态">
+              <el-option v-for="item in examineStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
