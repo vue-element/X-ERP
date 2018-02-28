@@ -10,7 +10,7 @@ const service = axios.create({
   // baseURL: 'http://10.51.23.71:8080',
   // baseURL: 'http://10.51.39.106:8080',
   // baseURL: 'http://10.51.36.108:8081',
-  baseURL: 'http://202.105.96.131:8081',
+  baseURL: 'http://202.105.96.131:8083',
   timeout: 5000 // 请求超时时间
 })
 

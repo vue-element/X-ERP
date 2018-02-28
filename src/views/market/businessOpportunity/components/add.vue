@@ -208,11 +208,11 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="12">
+        <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机审批状态:" prop="examineState">
             <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择商机审批状态">
-              <el-option v-for="item in examineStateList" :label="item.value" :value="item.id" :key="item.id">
+            <el-select v-else v-model="businessInfo.examineState" placeholder="请选择商机执行状态">
+              <el-option v-for="item in examineStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -309,35 +309,35 @@ export default {
       inputPerson: '',
       businessInfo: {
         city: { id: '' },
-        client: { id: 1 },
+        client: { id: '' },
         region: { id: '' },
         category: '',
         amount: '',
         projectImpls: [
           {
             amount: '',
-            bidDate: '2018-01-01',
-            bidDate2: '2018-01-01',
+            bidDate: '',
+            bidDate2: '',
             category: '',
-            developDate: '2018-01-01',
+            developDate: '',
             keyword: '',
-            signDate: '2018-01-01',
-            startDate: '2018-01-01'
+            signDate: '',
+            startDate: ''
           }
         ],
-        code: '编码',
-        billDate: '2018-01-01',
-        date: '2018-02-01',
+        code: '',
+        billDate: '',
+        date: '',
         executState: '',
         followState: '',
         examineState: '',
         name: '',
         source: '',
         type: '',
-        chargePerson: '业务线负责人',
-        followPerson: '项目跟进人',
-        chargePersonPhone: '13682571372',
-        followPersonPhone: '13233471372',
+        chargePerson: '',
+        followPerson: '',
+        chargePersonPhone: '',
+        followPersonPhone: '',
         oldCity: ''
       },
       cityOption: [],
@@ -433,7 +433,6 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log('daftaaaa', data)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
       this.cityOption = []
@@ -442,7 +441,7 @@ export default {
       })
       this.businessInfo.amount = this.businessInfo.projectImpls[0].amount
       this.businessInfo.category = this.businessInfo.projectImpls[0].category
-      this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id ).then((res) => {
+      this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
         }

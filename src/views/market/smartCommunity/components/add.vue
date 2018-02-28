@@ -193,7 +193,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="18" :lg="18">
-          <el-form-item label="小区配套设施：" class="checkbox-sel community-facility" prop="facility">
+          <el-form-item label="小区配套设施：" class="checkbox-sel community-facility" prop="facilityList">
             <p v-if="disabled">{{facilityWord}}</p>
             <el-checkbox-group v-else @change="change" v-model="mainMsg.facilityList">
               <el-checkbox :label="'公司'">公司</el-checkbox>
@@ -428,7 +428,7 @@ export default {
         builtArea: [{ required: true, message: '请输入总建筑面积', trigger: 'blur' }],
         communityType: [{ required: true, message: '请选择小区类型', trigger: 'blur' }],
         parkingNum: [{ required: true, message: '请输入车位总数', trigger: 'blur' }],
-        facilityList: [{ required: true, message: '请选择小区配套设施', trigger: 'blur' }]
+        facilityList: [{ required: true, message: '请选择小区配套设施', trigger: 'change' }]
       },
       tab: 'car',
       cityOption: [],
@@ -496,10 +496,10 @@ export default {
         category: 2
       },
       machineRoomObj: {
-        a: '2',
-        a1: '3',
-        b: '4',
-        b1: '5',
+        a: '',
+        a1: '',
+        b: '',
+        b1: '',
         c: '',
         category: 3
       },
@@ -514,7 +514,7 @@ export default {
     }
   },
   created() {
-    this.mainMsg.firstEntry = new Date()
+    // this.mainMsg.firstEntry = new Date()
     this.getInsertData()
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
