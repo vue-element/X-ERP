@@ -14,8 +14,8 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="入库单编号:">
-                <p v-if="disabled">{{paymentContract.inputNum}}</p>
-                <el-input v-else v-model="paymentContract.inputNum" placeholder="请输入您的账号"></el-input>
+                <p v-if="disabled">{{paymentContract.inputNumber}}</p>
+                <el-input v-else v-model="paymentContract.inputNumber" placeholder="请输入您的账号"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -90,7 +90,6 @@ export default {
     },
     toggleTab(tab) {
       this.actionTab = tab
-      console.log('tan', tab)
     }
   },
   computed: {}

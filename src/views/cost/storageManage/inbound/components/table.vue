@@ -193,14 +193,19 @@ export default {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         var data = res.data.data.content
         this.purchaseList = _.cloneDeep(data)
-        console.log('purchaseList', this.purchaseList)
-        this.purchaseList.forEach((item) => {
-          this.InboundList.push(item.inboundDetailes[0])
-        })
-        this.InboundList.forEach((item) => {
-          item.edit = true
-        })
-        console.log('InboundList', this.InboundList)
+        // for (var i = 0; i < this.purchaseList.length; i++) {
+        //   var obj = {
+        //     number: '',
+        //     model: '',
+        //     quality: '',
+        //     certificate: '',
+        //     purchaseList: {
+        //       id: this.purchaseList[i]['id']
+        //     },
+        //     edit: true
+        //   }
+        //   this.InboundList.push(obj)
+        // }
       })
     },
     editRow(row, index) {
@@ -211,6 +216,7 @@ export default {
     confirmEdit(row, index) {
       row.edit = false
       Vue.set(this.InboundList, index, row)
+      console.log(this.InboundList)
       console.log('row', JSON.stringify(row))
       this.$post('/inboundDetaile/save', row).then((res) => {
 
