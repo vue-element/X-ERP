@@ -96,7 +96,7 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="12">
-          <el-form-item label="业务分类:" prop="category">
+          <el-form-item label="业务分类:" prop="category" :error="businessInfo.projectImpls[0].category ? '': '请填写业务分类'">
             <p v-if="disabled">{{businessInfo.projectImpls[0].category}}</p>
             <el-select v-else v-model="businessInfo.projectImpls[0].category" placeholder="请选择" @change="categoryChange">
               <el-option v-for="item in projectCategoryList" :label="item.value" :value="item.value" :key="item.id">
@@ -219,12 +219,12 @@
         </el-col>
       </el-row>
     </div>
-    <div class="form-module" v-show="action === 'edit'">
+    <div class="form-module">
       <h4 class="module-title">
         <p>合同信息</p>
       </h4>
       <el-row :gutter="40">
-        <el-col :xs="12" :sm="12" :lg="12">
+        <el-col :xs="12" :sm="12" :lg="12" v-show="action === 'edit'">
           <el-form-item label="合同原始金额:">
             <p>{{contractInfo.originalAmount}}</p>
           </el-form-item>
@@ -235,7 +235,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40">
+      <el-row :gutter="40" v-show="action === 'edit'">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同总金额:">
             <p>{{contractInfo.contractTotalAmount}}</p>
@@ -247,7 +247,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="40">
+      <el-row :gutter="40"  v-show="action === 'edit'">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="合同开工时间:">
             <p>{{contractInfo.startDate}}</p>
@@ -309,35 +309,35 @@ export default {
       inputPerson: '',
       businessInfo: {
         city: { id: '' },
-        client: { id: '' },
+        client: { id: 1 },
         region: { id: '' },
         category: '',
         amount: '',
         projectImpls: [
           {
             amount: '',
-            bidDate: '',
-            bidDate2: '',
+            bidDate: '2018-01-01',
+            bidDate2: '2018-01-01',
             category: '',
-            developDate: '',
+            developDate: '2018-01-01',
             keyword: '',
-            signDate: '',
-            startDate: ''
+            signDate: '2018-01-01',
+            startDate: '2018-01-01'
           }
         ],
-        code: '',
-        billDate: '',
-        date: '',
+        code: '编码',
+        billDate: '2018-01-01',
+        date: '2018-02-01',
         executState: '',
         followState: '',
         examineState: '',
         name: '',
         source: '',
         type: '',
-        chargePerson: '',
-        followPerson: '',
-        chargePersonPhone: '',
-        followPersonPhone: '',
+        chargePerson: '业务线负责人',
+        followPerson: '项目跟进人',
+        chargePersonPhone: '13682571372',
+        followPersonPhone: '13233471372',
         oldCity: ''
       },
       cityOption: [],
@@ -348,28 +348,20 @@ export default {
       executStateList: [],
       projectCategoryList: [],
       examineStateList: [],
-      contractInfo: {
-        originalAmount: '',
-        changeAmount: '',
-        contractTotalAmount: '',
-        signDate: '',
-        startDate: '',
-        endDate: ''
-      },
+      contractInfo: {},
       dateline: '',
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
         region: [{ required: true, validator: validateRegion, trigger: 'change' }],
         city: [{ required: true, validator: validateCity, trigger: 'change' }],
-        amount: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }],
-        category: [{ required: true, message: '请选择业务分类', trigger: 'change' }],
+        amount: [{ required: true, message: '请输入金额', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入业务分类', trigger: 'blur' }],
         chargePerson: [{ required: true, message: '请输入业务线负责人', trigger: 'blur' }],
         chargePersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         followPerson: [{ required: true, message: '请输入项目具体跟进人', trigger: 'blur' }],
         followPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
-        followState: [{ required: true, message: '请选择商机跟进状态', trigger: 'change' }],
-        executState: [{ required: true, message: '请选择商机执行状态', trigger: 'change' }],
-        examineState: [{ required: true, message: '请选择商机审批状态', trigger: 'change' }]
+        followState: [{ required: true, message: '请输入商机跟进状态', trigger: 'change' }],
+        executState: [{ required: true, message: '请输入商机执行状态', trigger: 'change' }]
       },
       temp: {}
     }
@@ -432,19 +424,16 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
+      this.$get('/contractInfo/findAllByBussiness/1').then((res) => {
+        this.contractInfo = res.data.data
+        console.log('res.daa', res)
+      })
       var data = _.cloneDeep(this.editData.editData)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
-      })
-      this.businessInfo.amount = this.businessInfo.projectImpls[0].amount
-      this.businessInfo.category = this.businessInfo.projectImpls[0].category
-      this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
-        if (res.data.success === true && res.data.data) {
-          this.contractInfo = res.data.data
-        }
       })
     },
     toggleEditBtn() {
