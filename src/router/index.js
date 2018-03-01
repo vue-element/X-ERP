@@ -50,7 +50,7 @@ export const asyncRouterMap = [
       { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
       { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
       { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
-      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' } }
+      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
     ]
   },
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },

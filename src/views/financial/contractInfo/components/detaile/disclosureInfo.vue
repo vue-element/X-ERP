@@ -85,7 +85,7 @@
     <div class="list form-module" style="margin-top:20px;">
       <h4 class="module-title">
         <p>回款计划</p>
-        <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
+        <el-button type="text" class="up-files common-btn" @click="clickPlanBox" v-show="btn">新增回款</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable">
@@ -196,9 +196,11 @@ export default {
       state: false,
       editWord: '编辑',
       disabled: false,
+      btn: false,
       loading: false,
       sourceFundsList: [],
       contractBasis: {
+        id: '',
         sourceFunds: '',
         materialCost: '',
         artificialCost: '',
@@ -206,7 +208,10 @@ export default {
         manageCost: '',
         tax: '',
         profit: '',
-        profitRate: ''
+        profitRate: '',
+        contractInfo: {
+          id: ''
+        }
       },
       // 回款计划
       receiveData: [],
@@ -238,12 +243,12 @@ export default {
   },
   created() {
     this.getInsertData()
-    this.getPaymentPlan()
     // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
     var contractMsg = sessionStorage.getItem('contractMsg')
     if (contractMsg) {
       this.disabled = false
       this.state = true
+      this.btn = true
     } else {
       this.disabled = true
     }
@@ -262,17 +267,20 @@ export default {
       this.sourceFundsList = [{ value: '酬金制' }, { value: '包干制' }, { value: '本体金' }]
     },
     add() {
-      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      contractMsg.contractBasis.sourceFunds = this.contractBasis.sourceFunds
-      contractMsg.contractBasis.artificialCost = this.contractBasis.artificialCost
-      contractMsg.contractBasis.comprehensiveCost = this.contractBasis.comprehensiveCost
-      contractMsg.contractBasis.manageCost = this.contractBasis.manageCost
-      contractMsg.contractBasis.tax = this.contractBasis.tax
-      contractMsg.contractBasis.profit = this.contractBasis.profit
-      contractMsg.contractBasis.profitRate = this.contractBasis.profitRate
-      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
       this.loading = true
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      // contractMsg.contractBasis.sourceFunds = this.contractBasis.sourceFunds
+      // contractMsg.contractBasis.artificialCost = this.contractBasis.artificialCost
+      // contractMsg.contractBasis.comprehensiveCost = this.contractBasis.comprehensiveCost
+      // contractMsg.contractBasis.manageCost = this.contractBasis.manageCost
+      // contractMsg.contractBasis.tax = this.contractBasis.tax
+      // contractMsg.contractBasis.profit = this.contractBasis.profit
+      // contractMsg.contractBasis.profitRate = this.contractBasis.profitRate
+      this.contractBasis.id = contractMsg.contractBasis.id
+      this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
+      console.log(JSON.stringify(this.contractBasis))
       this.$post('/contractBasis/save', contractMsg).then((res) => {
+        console.log(res)
         this.loading = false
         if (res.data.success === true) {
           this.$message({
@@ -285,8 +293,10 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      this.$get('/contractBasis/findAllBycontractBasis/' + data.id).then((res) => {
-        // console.log(res)
+      console.log(data)
+      this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+        console.log(res)
+        // this.contractBasis = res.data.data.
       })
     },
     toggleEditBtn() {
@@ -338,10 +348,6 @@ export default {
         amount: '',
         date: ''
       }
-    },
-    getPaymentPlan() {
-      var contractMsg = sessionStorage.getItem('contractMsg')
-      console.log(contractMsg.contractBasis.id)
     },
     submitUpload() {
       this.$refs.upload.submit()
