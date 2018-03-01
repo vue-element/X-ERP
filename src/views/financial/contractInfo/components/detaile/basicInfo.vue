@@ -108,19 +108,19 @@
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同金额：">
                 <p v-if="disabled">{{contractInfo.originalAmount}}</p>
-                <el-input v-else v-model="contractInfo.originalAmount" type="text" placeholder="请输入合同金额"></el-input>
+                <el-input v-else v-model="contractInfo.originalAmount" @change="originalAmount" type="text" placeholder="请输入合同金额" min='0'></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="变更金额：">
                 <p v-if="disabled">{{contractInfo.changeAmount}}</p>
-                <el-input v-else v-model="contractInfo.changeAmount" type="text" placeholder="请输入变更金额"></el-input>
+                <el-input v-else v-model="contractInfo.changeAmount" @change="changeAmount" type="text" placeholder="请输入变更金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item label="合同总额：">
                 <p v-if="disabled">{{contractInfo.contractTotalAmount}}</p>
-                <el-input v-else v-model="contractInfo.contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
+                <el-input v-else v-model="contractInfo.contractTotalAmount" @change="contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -137,6 +137,7 @@
 <script>
 import _ from 'lodash'
 import { winHeight } from '@/utils'
+import { outputmoney } from '@/utils'
 export default {
   props: ['editData'],
   data() {
@@ -222,7 +223,6 @@ export default {
       this.contractInfo.endDate = this.contractInfo.limit[1]
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
         var contractMsg = res.data.data
-        console.log(contractMsg)
         sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
         this.loading = false
         if (res.data.success === true) {
@@ -254,6 +254,7 @@ export default {
         this.editWord = '取消编辑'
       }
     },
+    // 重置
     reset() {
       if (this.action === 'add') {
         this.cityOption = []
@@ -286,12 +287,23 @@ export default {
         this.editInfo()
       }
     },
+    // 取消功能
+    cancel() {
+      this.$emit('cancel')
+    },
     cityChange(val) {
       var len = val.length
       this.contractInfo.city.id = val[len - 1]
     },
-    cancel() {
-      this.$emit('cancel')
+    // 金额输入后格式化
+    originalAmount(val) {
+      this.contractInfo.originalAmount = outputmoney(val)
+    },
+    changeAmount(val) {
+      this.contractInfo.changeAmount = outputmoney(val)
+    },
+    contractTotalAmount(val) {
+      this.contractInfo.contractTotalAmount = outputmoney(val)
     }
   },
   mounted() {
