@@ -85,7 +85,7 @@
     <div class="list form-module" style="margin-top:20px;">
       <h4 class="module-title">
         <p>回款计划</p>
-        <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
+        <el-button type="text" class="up-files common-btn" @click="clickPlanBox" v-show="btn">新增回款</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable">
@@ -195,6 +195,7 @@ export default {
       state: false,
       editWord: '编辑',
       disabled: false,
+      btn: false,
       loading: false,
       sourceFundsList: [],
       contractBasis: {
@@ -246,6 +247,7 @@ export default {
     if (contractMsg) {
       this.disabled = false
       this.state = true
+      this.btn = true
     } else {
       this.disabled = true
     }
