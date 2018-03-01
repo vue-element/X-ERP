@@ -91,8 +91,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row class="limit" :gutter="40">
-            <!-- 第一种 -->
+          <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="8">
               <el-form-item class="range-date" label="合同期限：">
                 <p v-if="disabled">{{contractInfo.dateShow}}</p>
@@ -201,9 +200,11 @@ export default {
       this.disabled = true
       this.disabled = false
     },
+    // 获取下拉框数据
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
+        console.log(data)
         this.businessList = data.businessList
         this.cityList = data.cityList
         this.clientList = data.clientList
@@ -343,11 +344,6 @@ export default {
               vertical-align:middle;
             }
           }
-        }
-      }
-      .limit{
-        .el-form-item{
-          margin-top: 0;
         }
       }
     }
