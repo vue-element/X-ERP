@@ -213,25 +213,7 @@ export default {
         }
       },
       // 回款计划
-      receiveData: [{
-        1: '还钱',
-        2: '1000',
-        3: '2000',
-        4: '3000',
-        5: '4000'
-      }, {
-        1: '还钱',
-        2: '1000',
-        3: '2000',
-        4: '3000',
-        5: '4000'
-      }, {
-        1: '还钱',
-        2: '1000',
-        3: '2000',
-        4: '3000',
-        5: '4000'
-      }],
+      receiveData: [],
       planBox: false,
       paymentPlan: {
         paymentCondition: '',
@@ -264,7 +246,6 @@ export default {
     var contractMsg = sessionStorage.getItem('contractMsg')
     if (contractMsg) {
       this.disabled = false
-      this.state = true
       this.btn = true
     } else {
       this.disabled = true
@@ -274,13 +255,13 @@ export default {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
-      this.editInfo()
+      this.state = false
+      this.showInfo()
     } else {
       this.action = 'add'
     }
   },
   methods: {
-    // 获取下拉框数据
     getInsertData() {
       this.sourceFundsList = [{ value: '酬金制' }, { value: '包干制' }, { value: '本体金' }]
     },
@@ -289,9 +270,7 @@ export default {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
       this.contractBasis.id = contractMsg.contractBasis.id
       this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
-      console.log(this.contractBasis)
       this.$post('/contractBasis/save', this.contractBasis).then((res) => {
-        console.log(res)
         this.loading = false
         if (res.data.success === true) {
           this.$message({
@@ -300,46 +279,48 @@ export default {
           })
         }
       })
-      sessionStorage.removeItem('contractMsg')
     },
-    editInfo() {
+    showInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data.id)
-      this.$get('/contractBasis/findUpdateData/' + data.id).then((res) => {
-        console.log(res)
+      this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+        this.contractBasis = res.data.data.content[0]
       })
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.state = false
+        this.showInfo()
       } else {
         this.editWord = '取消编辑'
+        this.state = true
       }
     },
     reset() {
-      this.contractBasis = {
-        sourceFunds: '',
-        materialCost: '',
-        artificialCost: '',
-        comprehensiveCost: '',
-        manageCost: '',
-        tax: '',
-        profit: '',
-        profitRate: ''
+      if (this.action === 'add') {
+        this.contractBasis = {
+          sourceFunds: '',
+          materialCost: '',
+          artificialCost: '',
+          comprehensiveCost: '',
+          manageCost: '',
+          tax: '',
+          profit: '',
+          profitRate: ''
+        }
+      } else {
+        this.showInfo()
       }
     },
-    // 点击新增回款计划前判断是否有合同交底的ID
     clickPlanBox() {
-      this.planBox = true
-      // if (this.paymentPlan.contractBasis.id) {
-      //   this.planBox = true
-      // } else {
-      //   this.$message({
-      //     message: '请先输入合同交底信息'
-      //   })
-      // }
+      if (this.paymentPlan.contractBasis.id) {
+        this.planBox = true
+      } else {
+        this.$message({
+          message: '请先输入合同交底信息'
+        })
+      }
     },
     // 新增回款计划
     paymentPlanAdd() {

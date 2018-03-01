@@ -204,7 +204,6 @@ export default {
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
-        console.log(data)
         this.businessList = data.businessList
         this.cityList = data.cityList
         this.clientList = data.clientList
@@ -223,7 +222,6 @@ export default {
       this.contractInfo.endDate = this.contractInfo.limit[1]
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
         var contractMsg = res.data.data
-        console.log(contractMsg)
         sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
         this.loading = false
         if (res.data.success === true) {
