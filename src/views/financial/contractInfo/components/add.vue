@@ -14,7 +14,7 @@
 
     <div class="contractInfo-show">
       <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel"></basicInfo>
-      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData"></disclosureInfo>
+      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel"></disclosureInfo>
       <subContract v-if="tab === 'subContract'"></subContract>
       <change v-if="tab === 'change'"></change>
       <invoiceInfo v-if="tab === 'invoiceInfo'"></invoiceInfo>

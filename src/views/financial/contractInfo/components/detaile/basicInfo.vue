@@ -204,7 +204,6 @@ export default {
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
-        console.log(data)
         this.businessList = data.businessList
         this.cityList = data.cityList
         this.clientList = data.clientList
