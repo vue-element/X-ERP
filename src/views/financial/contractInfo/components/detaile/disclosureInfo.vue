@@ -120,14 +120,13 @@
         <el-form-item label="计划回款金额(元)：">
           <el-input v-model="paymentPlan.amount"></el-input>
         </el-form-item>
-        <el-form-item label="计划回款时间：">
+        <el-form-item class="single-date" label="计划回款时间：">
           <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="paymentPlanSave">保&nbsp;&nbsp;&nbsp;存</el-button>
-        <el-button type="info" @clici="paymentPlanReset">重&nbsp;&nbsp;&nbsp;置</el-button>
-        <el-button @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
+        <el-button size="small" type="primary" @click="paymentPlanAdd">保&nbsp;&nbsp;&nbsp;存</el-button>
+        <el-button size="small" @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
       </div>
     </el-dialog>
     <!-- 合同交底附加列表 -->
@@ -214,7 +213,25 @@ export default {
         }
       },
       // 回款计划
-      receiveData: [],
+      receiveData: [{
+        1: '还钱',
+        2: '1000',
+        3: '2000',
+        4: '3000',
+        5: '4000'
+      }, {
+        1: '还钱',
+        2: '1000',
+        3: '2000',
+        4: '3000',
+        5: '4000'
+      }, {
+        1: '还钱',
+        2: '1000',
+        3: '2000',
+        4: '3000',
+        5: '4000'
+      }],
       planBox: false,
       paymentPlan: {
         paymentCondition: '',
@@ -263,23 +280,17 @@ export default {
     }
   },
   methods: {
+    // 获取下拉框数据
     getInsertData() {
       this.sourceFundsList = [{ value: '酬金制' }, { value: '包干制' }, { value: '本体金' }]
     },
     add() {
       this.loading = true
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      // contractMsg.contractBasis.sourceFunds = this.contractBasis.sourceFunds
-      // contractMsg.contractBasis.artificialCost = this.contractBasis.artificialCost
-      // contractMsg.contractBasis.comprehensiveCost = this.contractBasis.comprehensiveCost
-      // contractMsg.contractBasis.manageCost = this.contractBasis.manageCost
-      // contractMsg.contractBasis.tax = this.contractBasis.tax
-      // contractMsg.contractBasis.profit = this.contractBasis.profit
-      // contractMsg.contractBasis.profitRate = this.contractBasis.profitRate
       this.contractBasis.id = contractMsg.contractBasis.id
       this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
-      console.log(JSON.stringify(this.contractBasis))
-      this.$post('/contractBasis/save', contractMsg).then((res) => {
+      console.log(this.contractBasis)
+      this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         console.log(res)
         this.loading = false
         if (res.data.success === true) {
@@ -293,10 +304,9 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
-      this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+      console.log(data.id)
+      this.$get('/contractBasis/findUpdateData/' + data.id).then((res) => {
         console.log(res)
-        // this.contractBasis = res.data.data.
       })
     },
     toggleEditBtn() {
@@ -322,16 +332,20 @@ export default {
     },
     // 点击新增回款计划前判断是否有合同交底的ID
     clickPlanBox() {
-      if (this.paymentPlan.contractBasis.id) {
-        this.planBox = true
-      } else {
-        this.$message({
-          message: '请先输入合同交底信息'
-        })
-      }
+      this.planBox = true
+      // if (this.paymentPlan.contractBasis.id) {
+      //   this.planBox = true
+      // } else {
+      //   this.$message({
+      //     message: '请先输入合同交底信息'
+      //   })
+      // }
     },
-    paymentPlanSave() {
+    // 新增回款计划
+    paymentPlanAdd() {
+      this.paymentPlan.contractBasis.id = this.contractBasis.id
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
+        console.log(res)
         this.planBox = false
         if (res.data.success === true) {
           this.$message({
@@ -341,13 +355,15 @@ export default {
         }
       })
     },
-    paymentPlanReset() {
-      this.paymentPlan = {
-        paymentCondition: '',
-        ratio: '',
-        amount: '',
-        date: ''
-      }
+    // 回款计划展示列表
+    paymentPlayShow() {
+    },
+    // 回款计划删除数据
+    deleteRow(id) {
+      var paymentPlanID = { id: [id] }
+      this.$post('/paymentPlan/delete/' + paymentPlanID).then((res) => {
+        console.log(res)
+      })
     },
     submitUpload() {
       this.$refs.upload.submit()
