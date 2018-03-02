@@ -400,6 +400,7 @@ export default {
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {
+              this.$emit('changeObj', false)
               this.$message({
                 message: '保存成功',
                 type: 'success'

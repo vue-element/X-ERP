@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
 import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
 import { setToken } from '@/utils/auth'
@@ -36,28 +35,28 @@ import { setToken } from '@/utils/auth'
 export default {
   name: 'login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于6位'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!isvalidUsername(value)) {
+    //     callback(new Error('请输入正确的用户名'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
+    // const validatePassword = (rule, value, callback) => {
+    //   if (value.length < 5) {
+    //     callback(new Error('密码不能小于6位'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       loginForm: {
         name: '',
         password: ''
       },
       loginRules: {
-        name: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        name: [{ required: true, trigger: 'blur', validator: '请输入用户名' }],
+        password: [{ required: true, trigger: 'blur', validator: '请输入密码' }]
       },
       loading: false,
       showDialog: false,

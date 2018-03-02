@@ -106,9 +106,6 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
-      this.$get('/contractInfo/findAllByBussiness/1').then((res) => {
-        console.log('data', res.data.data)
-      })
     },
     cityChange(val) {
       var len = val.length

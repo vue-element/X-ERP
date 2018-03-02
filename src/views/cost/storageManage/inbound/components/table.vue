@@ -54,7 +54,7 @@
                     <span v-else>{{scope.row.certificate}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" style="display: none">
                   <template slot-scope="scope">
                     <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                     <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
@@ -99,8 +99,8 @@
               <el-table-column label="品牌">
                 <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
               </el-table-column>
-              <el-table-column label="采购数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              <el-table-column label="采购单价">
+                <template slot-scope="scope"><span>{{scope.row.unitPrice}}</span></template>
               </el-table-column>
               <el-table-column label="数量">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
@@ -112,7 +112,7 @@
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
               <el-table-column label="合计">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+                <template slot-scope="scope"><span>{{scope.row.totalAmount}}</span></template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -133,7 +133,7 @@
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
@@ -181,7 +181,8 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false
+      checkLoading: false,
+      inboundCheck: []
     }
   },
   created() {
@@ -190,23 +191,19 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
-        var data = res.data.data.content
-        this.purchaseList = _.cloneDeep(data)
-        // for (var i = 0; i < this.purchaseList.length; i++) {
-        //   var obj = {
-        //     number: '',
-        //     model: '',
-        //     quality: '',
-        //     certificate: '',
-        //     purchaseList: {
-        //       id: this.purchaseList[i]['id']
-        //     },
-        //     edit: true
-        //   }
-        //   this.InboundList.push(obj)
-        // }
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.contractId).then((res) => {
+        var data = _.cloneDeep(res.data.data)
+        data.forEach((item) => {
+          item.edit = false
+          this.purchaseList.push(item.purchaseList)
+        })
+        this.InboundList = data
       })
+    },
+    getInboundCheck() {
+      // this.$get('/inboundCheck').then((res) => {
+      //   console.log(res)
+      // })
     },
     editRow(row, index) {
       console.log('row', row)
@@ -227,7 +224,16 @@ export default {
       this.$refs.upload.handleUpload()
     },
     submitCheck() {
-
+      var obj = {
+        nextStep: '',
+        nextStepPerson: '',
+        paymentContract: {
+          id: this.contractId
+        },
+        result: '提交审核',
+        time: ''
+      }
+      console.log(obj)
     },
     handleDownload() {
       this.downloadLoading = true
@@ -307,6 +313,7 @@ export default {
   }
   .commont-btn {
     text-align: right;
+    margin: 10px 0;
   }
 }
 
