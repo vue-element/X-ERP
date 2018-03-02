@@ -85,7 +85,7 @@
     <div class="list form-module" style="margin-top:20px;">
       <h4 class="module-title">
         <p>回款计划</p>
-        <el-button type="text" class="up-files common-btn" @click="clickPlanBox" v-show="btn">新增回款</el-button>
+        <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable">
@@ -94,14 +94,14 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="回款条件"></el-table-column>
-          <el-table-column align="center" prop="2" label="计划回款时间"></el-table-column>
-          <el-table-column align="center" prop="3" label="计划回款比例"></el-table-column>
-          <el-table-column align="center" prop="4" label="计划回款累计金额"></el-table-column>
-          <el-table-column align="center" prop="4" label="实际回款总金额"></el-table-column>
+          <el-table-column prop="paymentCondition" label="回款条件"></el-table-column>
+          <el-table-column prop="date" label="计划回款时间"></el-table-column>
+          <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
+          <el-table-column prop="" label="计划回款累计金额"></el-table-column>
+          <el-table-column prop="" label="实际回款总金额"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
-              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="paymentPlanModify(scope.row)" type="text" size="small">修改</el-button>
               <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -195,7 +195,6 @@ export default {
       state: false,
       editWord: '编辑',
       disabled: false,
-      btn: false,
       loading: false,
       sourceFundsList: [],
       contractBasis: {
@@ -247,7 +246,6 @@ export default {
     if (contractMsg) {
       this.disabled = false
       this.state = true
-      this.btn = true
     } else {
       this.disabled = true
     }
@@ -261,7 +259,8 @@ export default {
       this.action = 'add'
       this.state = false
     }
-    // this.paymentPlayShow()
+    // 渲染回款计划表格
+    this.paymentPlayShow()
   },
   methods: {
     getInsertData() {
@@ -338,14 +337,16 @@ export default {
     },
     // 新增回款计划
     paymentPlanAdd() {
-      this.paymentPlan.contractBasis.id = this.contractBasis.id
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
-        console.log(res)
         if (res.data.success === true) {
           this.$message({
             message: '保存成功',
             type: 'success'
           })
+          this.paymentPlayShow()
+          this.paymentPlan = {}
         }
         this.planBox = false
       })
@@ -355,18 +356,26 @@ export default {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
       var contractBasisID = contractMsg.contractBasis.id
       this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
-        for (var i = 0; i < res.data.data.content.length; i++) {
-          this.receiveData = res.data.data.content.length[i]
-          console.log(this.receiveData)
-        }
-        console.log(this.receiveData)
+        this.receiveData = res.data.data.content
+      })
+    },
+    paymentPlanModify(id) {
+      this.$get('/paymentPlan/findUpdateData/' + id.id).then((res) => {
+        this.clickPlanBox()
+        this.paymentPlan = res.data.data.paymentPlan
       })
     },
     // 回款计划删除数据
     deleteRow(id) {
       var paymentPlanID = { id: [id] }
-      this.$post('/paymentPlan/delete/' + paymentPlanID).then((res) => {
-        console.log(res)
+      this.$post('/paymentPlan/delete', paymentPlanID).then((res) => {
+        if (res.status === 200) {
+          this.paymentPlayShow()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
       })
     },
     submitUpload() {
