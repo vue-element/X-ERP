@@ -78,7 +78,7 @@
       <div class="btn" v-show="state">
         <div class="common-btn" @click="add" :loading="loading">保&nbsp;&nbsp;&nbsp;存</div>
         <div class="common-btn" @click="reset">重&nbsp;&nbsp;&nbsp;置</div>
-        <div class="common-btn">取&nbsp;&nbsp;&nbsp;消</div>
+        <div class="common-btn" @click="cancel">取&nbsp;&nbsp;&nbsp;消</div>
       </div>
     </el-form>
     <!-- 回款计划 -->
@@ -94,14 +94,14 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="回款条件"></el-table-column>
-          <el-table-column align="center" prop="2" label="计划回款时间"></el-table-column>
-          <el-table-column align="center" prop="3" label="计划回款比例"></el-table-column>
-          <el-table-column align="center" prop="4" label="计划回款累计金额"></el-table-column>
-          <el-table-column align="center" prop="4" label="实际回款总金额"></el-table-column>
+          <el-table-column prop="paymentCondition" label="回款条件"></el-table-column>
+          <el-table-column prop="date" label="计划回款时间"></el-table-column>
+          <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
+          <el-table-column prop="" label="计划回款累计金额"></el-table-column>
+          <el-table-column prop="" label="实际回款总金额"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
-              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="paymentPlanModify(scope.row)" type="text" size="small">修改</el-button>
               <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -120,14 +120,13 @@
         <el-form-item label="计划回款金额(元)：">
           <el-input v-model="paymentPlan.amount"></el-input>
         </el-form-item>
-        <el-form-item label="计划回款时间：">
+        <el-form-item class="single-date" label="计划回款时间：">
           <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="paymentPlanSave">保&nbsp;&nbsp;&nbsp;存</el-button>
-        <el-button type="info" @clici="paymentPlanReset">重&nbsp;&nbsp;&nbsp;置</el-button>
-        <el-button @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
+        <el-button size="small" type="primary" @click="paymentPlanAdd">保&nbsp;&nbsp;&nbsp;存</el-button>
+        <el-button size="small" @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
       </div>
     </el-dialog>
     <!-- 合同交底附加列表 -->
@@ -199,6 +198,7 @@ export default {
       loading: false,
       sourceFundsList: [],
       contractBasis: {
+        id: '',
         sourceFunds: '',
         materialCost: '',
         artificialCost: '',
@@ -206,7 +206,10 @@ export default {
         manageCost: '',
         tax: '',
         profit: '',
-        profitRate: ''
+        profitRate: '',
+        contractInfo: {
+          id: ''
+        }
       },
       // 回款计划
       receiveData: [],
@@ -238,7 +241,6 @@ export default {
   },
   created() {
     this.getInsertData()
-    this.getPaymentPlan()
     // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
     var contractMsg = sessionStorage.getItem('contractMsg')
     if (contractMsg) {
@@ -252,27 +254,32 @@ export default {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
-      this.editInfo()
+      this.showInfo()
     } else {
       this.action = 'add'
+      this.state = false
     }
+    // 渲染回款计划表格
+    this.paymentPlayShow()
   },
   methods: {
     getInsertData() {
       this.sourceFundsList = [{ value: '酬金制' }, { value: '包干制' }, { value: '本体金' }]
     },
     add() {
-      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      contractMsg.contractBasis.sourceFunds = this.contractBasis.sourceFunds
-      contractMsg.contractBasis.artificialCost = this.contractBasis.artificialCost
-      contractMsg.contractBasis.comprehensiveCost = this.contractBasis.comprehensiveCost
-      contractMsg.contractBasis.manageCost = this.contractBasis.manageCost
-      contractMsg.contractBasis.tax = this.contractBasis.tax
-      contractMsg.contractBasis.profit = this.contractBasis.profit
-      contractMsg.contractBasis.profitRate = this.contractBasis.profitRate
-      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
       this.loading = true
-      this.$post('/contractBasis/save', contractMsg).then((res) => {
+      if (this.editData.tabState === 'seeTab') {
+        var data = _.cloneDeep(this.editData.editData)
+        this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+          this.contractBasis.id = res.data.data.content[0].id
+          this.contractBasis.contractInfo.id = res.data.data.content[0].contractInfo.id
+        })
+      } else {
+        var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+        this.contractBasis.id = contractMsg.contractBasis.id
+        this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
+      }
+      this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         this.loading = false
         if (res.data.success === true) {
           this.$message({
@@ -281,38 +288,46 @@ export default {
           })
         }
       })
-      sessionStorage.removeItem('contractMsg')
     },
-    editInfo() {
+    showInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      this.$get('/contractBasis/findAllBycontractBasis/' + data.id).then((res) => {
-        // console.log(res)
+      this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+        this.contractBasis = res.data.data.content[0]
       })
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.state = false
+        this.showInfo()
       } else {
         this.editWord = '取消编辑'
+        this.state = true
       }
     },
     reset() {
-      this.contractBasis = {
-        sourceFunds: '',
-        materialCost: '',
-        artificialCost: '',
-        comprehensiveCost: '',
-        manageCost: '',
-        tax: '',
-        profit: '',
-        profitRate: ''
+      if (this.action === 'add') {
+        this.contractBasis = {
+          sourceFunds: '',
+          materialCost: '',
+          artificialCost: '',
+          comprehensiveCost: '',
+          manageCost: '',
+          tax: '',
+          profit: '',
+          profitRate: ''
+        }
+      } else {
+        this.showInfo()
       }
+    },
+    cancel() {
+      this.$emit('cancel')
     },
     // 点击新增回款计划前判断是否有合同交底的ID
     clickPlanBox() {
-      if (this.paymentPlan.contractBasis.id) {
+      if (this.contractBasis.id) {
         this.planBox = true
       } else {
         this.$message({
@@ -320,28 +335,48 @@ export default {
         })
       }
     },
-    paymentPlanSave() {
+    // 新增回款计划
+    paymentPlanAdd() {
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
-        this.planBox = false
         if (res.data.success === true) {
           this.$message({
             message: '保存成功',
             type: 'success'
           })
+          this.paymentPlayShow()
+          this.paymentPlan = {}
         }
+        this.planBox = false
       })
     },
-    paymentPlanReset() {
-      this.paymentPlan = {
-        paymentCondition: '',
-        ratio: '',
-        amount: '',
-        date: ''
-      }
+    // 回款计划展示列表
+    paymentPlayShow() {
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      var contractBasisID = contractMsg.contractBasis.id
+      this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+        this.receiveData = res.data.data.content
+      })
     },
-    getPaymentPlan() {
-      var contractMsg = sessionStorage.getItem('contractMsg')
-      console.log(contractMsg.contractBasis.id)
+    paymentPlanModify(id) {
+      this.$get('/paymentPlan/findUpdateData/' + id.id).then((res) => {
+        this.clickPlanBox()
+        this.paymentPlan = res.data.data.paymentPlan
+      })
+    },
+    // 回款计划删除数据
+    deleteRow(id) {
+      var paymentPlanID = { id: [id] }
+      this.$post('/paymentPlan/delete', paymentPlanID).then((res) => {
+        if (res.status === 200) {
+          this.paymentPlayShow()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
     },
     submitUpload() {
       this.$refs.upload.submit()
