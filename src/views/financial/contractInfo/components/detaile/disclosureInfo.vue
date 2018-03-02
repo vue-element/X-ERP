@@ -78,7 +78,7 @@
       <div class="btn" v-show="state">
         <div class="common-btn" @click="add" :loading="loading">保&nbsp;&nbsp;&nbsp;存</div>
         <div class="common-btn" @click="reset">重&nbsp;&nbsp;&nbsp;置</div>
-        <div class="common-btn">取&nbsp;&nbsp;&nbsp;消</div>
+        <div class="common-btn" @click="cancel">取&nbsp;&nbsp;&nbsp;消</div>
       </div>
     </el-form>
     <!-- 回款计划 -->
@@ -246,6 +246,7 @@ export default {
     var contractMsg = sessionStorage.getItem('contractMsg')
     if (contractMsg) {
       this.disabled = false
+      this.state = true
       this.btn = true
     } else {
       this.disabled = true
@@ -255,11 +256,12 @@ export default {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
-      this.state = false
       this.showInfo()
     } else {
       this.action = 'add'
+      this.state = false
     }
+    // this.paymentPlayShow()
   },
   methods: {
     getInsertData() {
@@ -267,9 +269,17 @@ export default {
     },
     add() {
       this.loading = true
-      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      this.contractBasis.id = contractMsg.contractBasis.id
-      this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
+      if (this.editData.tabState === 'seeTab') {
+        var data = _.cloneDeep(this.editData.editData)
+        this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+          this.contractBasis.id = res.data.data.content[0].id
+          this.contractBasis.contractInfo.id = res.data.data.content[0].contractInfo.id
+        })
+      } else {
+        var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+        this.contractBasis.id = contractMsg.contractBasis.id
+        this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
+      }
       this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         this.loading = false
         if (res.data.success === true) {
@@ -313,8 +323,12 @@ export default {
         this.showInfo()
       }
     },
+    cancel() {
+      this.$emit('cancel')
+    },
+    // 点击新增回款计划前判断是否有合同交底的ID
     clickPlanBox() {
-      if (this.paymentPlan.contractBasis.id) {
+      if (this.contractBasis.id) {
         this.planBox = true
       } else {
         this.$message({
@@ -327,17 +341,26 @@ export default {
       this.paymentPlan.contractBasis.id = this.contractBasis.id
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
         console.log(res)
-        this.planBox = false
         if (res.data.success === true) {
           this.$message({
             message: '保存成功',
             type: 'success'
           })
         }
+        this.planBox = false
       })
     },
     // 回款计划展示列表
     paymentPlayShow() {
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      var contractBasisID = contractMsg.contractBasis.id
+      this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+        for (var i = 0; i < res.data.data.content.length; i++) {
+          this.receiveData = res.data.data.content.length[i]
+          console.log(this.receiveData)
+        }
+        console.log(this.receiveData)
+      })
     },
     // 回款计划删除数据
     deleteRow(id) {
