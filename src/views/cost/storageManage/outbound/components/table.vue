@@ -47,7 +47,7 @@
           </el-table-column>
         </el-table>
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click="submitCheck">提交审核</el-button>
+          <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
           <el-button :loading="false">通过审核</el-button>
@@ -60,7 +60,7 @@
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="outboundCheck" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
@@ -118,7 +118,6 @@ export default {
   props: ['editShow', 'outboundId', 'actionTab'],
   data() {
     return {
-      outboundList: [],
       purchaseList: [],
       uploadDetail: [],
       isDisabled: false,
@@ -135,7 +134,9 @@ export default {
       },
       maxNumber: 0,
       formLabelWidth: '120px',
-      inboundCheck: []
+      outboundList: [],
+      outboundCheck: [],
+      disableCheck: false
     }
   },
   created() {
@@ -230,7 +231,21 @@ export default {
     },
     // 出库审核
     submitCheck() {
-
+      // var obj = {
+      //   step: '1',
+      //   stepPerson: '1',
+      //   nextStep: '2',
+      //   nextStepPerson: '',
+      //   paymentContract: {
+      //     id: this.contractId
+      //   },
+      //   result: '提交审核',
+      //   time: ''
+      // }
+      // console.log('submit', JSON.stringify(obj))
+      // this.$post('inboundCheck/save', obj).then((res) => {
+      //   this.getInboundCheck()
+      // })
     },
     purchaseChange(val) {
       this.purchaseList.forEach((item) => {
@@ -251,6 +266,16 @@ export default {
     }
   },
   watch: {
+    outboundList(list) {
+      list.forEach((item) => {
+        if (item.edit === true) {
+          console.log('isEditing')
+          this.disableCheck = true
+        } else {
+          this.disableCheck = false
+        }
+      })
+    }
   }
 }
 </script>

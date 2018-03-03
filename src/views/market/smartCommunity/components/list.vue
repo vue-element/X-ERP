@@ -1,22 +1,22 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange"  v-loading.body="listLoading" element-loading-text="拼命加载中">
-    <el-table-column type="selection"></el-table-column>
-    <el-table-column align="center" prop="0" fixed label="序号">
-      <template slot-scope="scope">
-       {{scope.$index  + 1}}
-     </template>
+  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange"
+  v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+    <el-table-column type="selection" width="40" fixed></el-table-column>
+    <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
+      <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="client.name" label="公司名称"></el-table-column>
-   <el-table-column prop="city.name" label="城市"></el-table-column>
-   <el-table-column prop="region.name" label="地区"></el-table-column>
-   <el-table-column prop="name" label="项目名称"></el-table-column>
-   <el-table-column prop="archFormat" label="建筑业态"></el-table-column>
-   <el-table-column prop="builtArea" label="总建筑面积"></el-table-column>
-   <el-table-column prop="chargeArea" label="总收费面积"></el-table-column>
-   <el-table-column prop="roomNum" label="总户数"></el-table-column>
-   <el-table-column prop="parkingNum" label="车位总数"></el-table-column>
-   <el-table-column prop="contractMode" label="合约模式"></el-table-column>
+   <el-table-column prop="client.name" label="客户名称" width="200" fixed ></el-table-column>
+   <el-table-column prop="city.name" label="城市" width="100"></el-table-column>
+   <el-table-column prop="region.name" label="地区" width="100"></el-table-column>
+   <el-table-column prop="name" label="项目名称" width="120" fixed></el-table-column>
+    <el-table-column prop="address" label="项目地址"></el-table-column>
+   <el-table-column prop="buildNum" label="楼栋及单位数量" width="100"></el-table-column>
+   <el-table-column prop="archFormat" label="建筑业态" width="100"></el-table-column>
+   <el-table-column prop="builtArea" label="总建筑面积(平方)" width="100"></el-table-column>
+   <el-table-column prop="chargeArea" label="总收费面积(平方)" width="100"></el-table-column>
+   <el-table-column prop="roomNum" label="户数" width="80"></el-table-column>
+   <el-table-column prop="contractMode" label="合约模式" width="100"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>

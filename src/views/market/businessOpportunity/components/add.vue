@@ -20,7 +20,8 @@
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="所属年月:" class="single-date">
             <p v-if="disabled">{{businessInfo.date}}</p>
-            <el-date-picker v-else type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="请选择日期" v-model="businessInfo.date"></el-date-picker>
+            <!-- <el-date-picker v-else type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="请选择日期" v-model="businessInfo.date" @change="dateChange"></el-date-picker> -->
+            <el-date-picker v-else type="month" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择日期" v-model="businessInfo.date" @change="dateChange"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="8" :lg="8">
@@ -397,6 +398,7 @@ export default {
         if (valid) {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
+          console.log(JSON.stringify(this.businessInfo))
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {
@@ -483,6 +485,12 @@ export default {
     amountChange(val) {
       this.businessInfo.amount = outputmoney(val)
       this.businessInfo.projectImpls[0].amount = outputmoney(val)
+    },
+    //  所属年月日转化为年月格式
+    dateChange(date) {
+      var d = new Date(date)
+      var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
+      this.businessInfo.date = newDate
     }
   },
   watch: {
