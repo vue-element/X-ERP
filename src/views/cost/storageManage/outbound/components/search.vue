@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="日期:" class="range-date">
+            <el-form-item label="出库日期:" class="range-date">
               <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -106,7 +106,8 @@ export default {
           }
         }
       }
-      this.$emit('search', this.searchData)
+      console.log('serach', searchData)
+      this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}
