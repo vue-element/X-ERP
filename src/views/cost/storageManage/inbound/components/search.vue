@@ -70,7 +70,6 @@ export default {
         orderNumber: ''
       },
       businessList: [],
-      categoryList: [],
       rules: {}
     }
   },
@@ -82,17 +81,6 @@ export default {
       this.$get('/paymentContract/findInsertData').then((res) => {
         var data = res.data.data
         this.businessList = data.businessList
-        this.categoryList = [{
-          value: '科技-智慧社区工程全委'
-        }, {
-          value: '科技-智慧社区改造'
-        }, {
-          value: '科技-物联网大平台'
-        }, {
-          value: '科技-设计服务'
-        }, {
-          value: '科技-技术服务'
-        }]
       })
     },
     search() {
