@@ -184,6 +184,7 @@
 <script>
 import _ from 'lodash'
 import { winHeight } from '@/utils'
+import { mapState } from 'vuex'
 export default {
   props: ['editData'],
   data() {
@@ -196,7 +197,9 @@ export default {
       editWord: '编辑',
       disabled: false,
       loading: false,
+      // 资金来源
       sourceFundsList: [],
+      // 合同交底信息
       contractBasis: {
         id: '',
         sourceFunds: '',
@@ -223,6 +226,7 @@ export default {
           id: ''
         }
       },
+      contractBasisID: '',
       // 附件上传
       tableData: [],
       upFiles: false,
@@ -240,6 +244,7 @@ export default {
     }
   },
   created() {
+    // console.log(this.$store.state.contractMsg.contractMsg)
     this.getInsertData()
     // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
     var contractMsg = sessionStorage.getItem('contractMsg')
@@ -255,11 +260,13 @@ export default {
       this.editShow = true
       this.disabled = true
       this.showInfo()
+      this.paymentPlayShow()
     } else {
       this.action = 'add'
+      this.paymentPlayShow()
     }
     // 渲染回款计划表格
-    this.paymentPlayShow()
+    // this.paymentPlayShow()
   },
   methods: {
     getInsertData() {
@@ -270,6 +277,7 @@ export default {
       if (this.editData.tabState === 'seeTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+          console.log(res)
           this.contractBasis.id = res.data.data.content[0].id
           this.contractBasis.contractInfo.id = res.data.data.content[0].contractInfo.id
         })
@@ -291,7 +299,11 @@ export default {
     showInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+        console.log(res)
         this.contractBasis = res.data.data.content[0]
+        this.paymentPlan.contractBasis.id = res.data.data.content[0].id
+        this.contractBasisID = res.data.data.content[0].id
+        console.log(this.contractBasisID)
       })
     },
     toggleEditBtn() {
@@ -336,8 +348,12 @@ export default {
     },
     // 新增回款计划
     paymentPlanAdd() {
-      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
+      if (this.editData.tabState === 'seeTab') {
+        this.showInfo()
+      } else {
+        var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+        this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
+      }
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
         if (res.data.success === true) {
           this.$message({
@@ -352,9 +368,10 @@ export default {
     },
     // 回款计划展示列表
     paymentPlayShow() {
-      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-      var contractBasisID = contractMsg.contractBasis.id
-      this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+      console.log('this.contractBasisID', this.contractBasisID)
+      // console.log(contractBasisID)
+      this.$get('/paymentPlan/findAllByContractBasis/' + this.contractBasisID).then((res) => {
+        console.log('res', res)
         this.receiveData = res.data.data.content
       })
     },
@@ -393,6 +410,9 @@ export default {
     window.addEventListener('resize', () => {
       this.$refs.ele.style.height = winHeight() - 230 + 'px'
     })
+  },
+  computed: {
+    ...mapState(['contractMsg'])
   }
 }
 </script>

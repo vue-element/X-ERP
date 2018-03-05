@@ -222,6 +222,7 @@ export default {
       this.contractInfo.startDate = this.contractInfo.limit[0]
       this.contractInfo.endDate = this.contractInfo.limit[1]
       this.$post('/contractInfo/save', this.contractInfo).then((res) => {
+        // this.$store.commit('getContractMsg', res.data.data)
         var contractMsg = res.data.data
         sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
         this.loading = false
