@@ -130,7 +130,7 @@
           </button>
         </div>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="paymentList" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">
            {{scope.$index + 1}}
@@ -192,7 +192,10 @@ export default {
   methods: {
     getPurchaseList() {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
-        this.purchaseList = res.data.data.content
+        if (res.data.success === true) {
+          this.purchaseList = res.data.data.content
+          console.log('purchaseList', this.purchaseList)
+        }
       })
     },
     addMaterial() {

@@ -549,7 +549,7 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
-              if (this.action === 'edit') {
+              if (this.action === 'edgit it') {
                 this.$emit('toggleTab')
               }
             }

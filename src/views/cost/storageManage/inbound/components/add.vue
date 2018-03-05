@@ -73,7 +73,6 @@ export default {
   created() {
     if (this.editData.tabState === 'addTab') {
       this.action = 'add'
-      this.getInsertData()
     } else {
       this.action = 'edit'
       this.editInfo()

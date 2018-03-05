@@ -180,6 +180,8 @@ export default {
                 type: 'success'
               })
               this.$emit('changeObj', false)
+              // this.editShow = true
+              // this.disabled = true
               if (this.action === 'edit') {
                 this.$emit('toggleTab')
               }
@@ -207,28 +209,9 @@ export default {
       }
     },
     getInsertData() {
-      this.categoryList = [
-        { value: '中海物业' },
-        { value: '外部物业' },
-        { value: '中海地产' },
-        { value: '外部地产' },
-        { value: '其他客户' }
-      ]
-      this.typeList = [
-        { value: '多层' },
-        { value: '高层' },
-        { value: '小高层' },
-        { value: '别墅' },
-        { value: '商业' },
-        { value: '写字楼' },
-        { value: '其他' }
-      ]
-      this.natureList = [
-        { value: '国有' },
-        { value: '上市公司' },
-        { value: '私有企业' },
-        { value: '其他' }
-      ]
+      this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
+      this.typeList = [{ value: '多层' }, { value: '高层' }, { value: '小高层' }, { value: '别墅' }, { value: '商业' }, { value: '写字楼' }, { value: '其他' }]
+      this.natureList = [{ value: '国有' }, { value: '上市公司' }, { value: '私有企业' }, { value: '其他' }]
     }
   },
   computed: {},

@@ -1,104 +1,58 @@
 <template>
   <div class="payment-contract">
-    <div v-show="actionTab === 'inboundInfo' || actionTab === 'officeCheck'">
-      <div class="form-module">
-        <h4 class="module-title">
-          <p>出库清单</p>
-          <div class="material-table-head fr">
-            <button @click="addOutbound">
-              <i class="iconfont icon-add"></i>
-              <span>新增出库</span>
-            </button>
-          </div>
-        </h4>
-        <el-row>
-          <el-col :xs="24" :sm="24" :lg="24">
-            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-              <el-table-column label="序号">
-                <template slot-scope="scope">{{scope.$index + 1}}</template>
-              </el-table-column>
-              <el-table-column label="物料名称">
-                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
-              </el-table-column>
-              <el-table-column label="规格型号">
-                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-              </el-table-column>
-              <el-table-column label="品牌">
-                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
-              </el-table-column>
-              <el-table-column label="出库数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-              <el-table-column label="操作">
-                <template slot-scope="scope">
-                  <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-                  <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
-                  <el-button @click.native.prevent='cancelRow(scope.row, scope.$index)' type="text">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-col>
-        </el-row>
-        <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click="submitCheck">提交审核</el-button>
+    <div class="form-module">
+      <h4 class="module-title">
+        <p @click="uploadTableShow = false">出库清单</p>
+        <div class="material-table-head fr">
+          <button @click="showDialog">
+            <i class="iconfont icon-add"></i>
+            <span>新增出库</span>
+          </button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
+      </h4>
+      <div>
+        <el-table class="basic-form" style="width: 100%" :data="outboundList" v-loading.body="listLoading">
+          <el-table-column label="序号">
+            <template slot-scope="scope">
+             {{scope.$index + 1}}
+            </template>
+          </el-table-column>
+          <el-table-column label="物料名称">
+            <template slot-scope="scope">
+              <span>{{scope.row.name}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="品牌">
+            <template slot-scope="scope">
+              <span>{{scope.row.brand}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="规格型号">
+            <template slot-scope="scope">
+              <span>{{scope.row.model}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="出库数量">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+              <span v-else>{{scope.row.number}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+              <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+              <el-button @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
+          <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
+        </div>
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
           <el-button :loading="false">通过审核</el-button>
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
-        </div>
-        <div v-show="uploadTableShow">
-          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
-        </div>
-      </div>
-      <!--审核动态  -->
-    </div>
-    <!-- <div v-show="actionTab === 'officeCheck'"></div> -->
-    <div v-show="actionTab === 'costCheck'">
-      <div class="form-module">
-        <h4 class="module-title">
-          <p>入库成本核算</p>
-        </h4>
-        <el-row>
-          <el-col :xs="24" :sm="24" :lg="24">
-            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-              <el-table-column label="序号">
-                <template slot-scope="scope">{{scope.$index + 1}}</template>
-              </el-table-column>
-              <el-table-column label="物料名称">
-                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
-              </el-table-column>
-              <el-table-column label="规格型号">
-                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-              </el-table-column>
-              <el-table-column label="品牌">
-                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
-              </el-table-column>
-              <el-table-column label="采购数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-              <el-table-column label="数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-              <el-table-column label="单个成本">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-              <el-table-column label="单个抵扣税金">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-              <el-table-column label="合计">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-              </el-table-column>
-            </el-table>
-          </el-col>
-        </el-row>
-        <div class="commont-btn">
-          <el-button :loading="false">通过审核</el-button>
-          <el-button :loading="false">导出出库单</el-button>
-          <el-button :loading="false">退回填写</el-button>
-        </div>
-        <div v-show="uploadTableShow">
-          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
         </div>
       </div>
     </div>
@@ -106,7 +60,7 @@
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="outboundCheck" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
@@ -133,118 +87,194 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 弹窗框 -->
+    <el-dialog title="收货地址" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+      <el-form :model="outboundInfo">
+        <el-form-item label="采购清单" :label-width="formLabelWidth">
+          <el-select v-model="outboundInfo.purchaseList.id" placeholder="请选择采购清单" @change="purchaseChange">
+            <el-option v-for="item in purchaseList" :label="item.name" :value="item.id" :key="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="出库数量" :label-width="formLabelWidth">
+          <el-input v-model="outboundInfo.number" auto-complete="off" type="number" :max="maxNumber" min="0" @change="numberChange" :disabled="!outboundInfo.purchaseList.id"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible=false">取 消</el-button>
+        <el-button type="primary" @click.native.prevent="addOutbound">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/common.vue'
 import _ from 'lodash'
-import { parseTime } from '@/utils'
 import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['contractId', 'editShow', 'actionTab'],
+  props: ['editShow', 'outboundId', 'actionTab'],
   data() {
     return {
       purchaseList: [],
-      InboundList: [],
+      uploadDetail: [],
       isDisabled: false,
       uploadTableShow: false,
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false
+      checkLoading: false,
+      dialogFormVisible: false,
+      outboundInfo: {
+        purchaseList: { id: '' },
+        outboundList: { id: '' },
+        number: ''
+      },
+      maxNumber: 0,
+      formLabelWidth: '120px',
+      outboundList: [],
+      outboundCheck: [],
+      disableCheck: false
     }
   },
   created() {
-    console.log('editShow', this.contractId)
     this.getPurchaseList()
+    if (this.outboundId) {
+      this.getOutboundList()
+    }
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
-        var data = res.data.data.content
-        this.purchaseList = _.cloneDeep(data)
-        console.log('purchaseList', this.purchaseList)
-        this.purchaseList.forEach((item) => {
-          this.InboundList.push(item.inboundDetailes[0])
-        })
-        this.InboundList.forEach((item) => {
-          item.edit = true
-        })
-        console.log('InboundList', this.InboundList)
+      this.$get('/purchaseList').then((res) => {
+        if (res.data.success === true) {
+          this.purchaseList = res.data.data.content
+        }
       })
     },
-    addOutbound() {
-
+    getOutboundList() {
+      var outboundList = []
+      this.$get('/outboundDetaile/findByOutboundList/' + this.outboundId).then((res) => {
+        var data = res.data.data.content
+        data.forEach((item) => {
+          item.name = item.purchaseList.name
+          item.brand = item.purchaseList.brand
+          item.model = item.purchaseList.model
+          outboundList.push(item)
+        })
+        this.outboundList = outboundList
+      })
+    },
+    showDialog() {
+      if (!this.outboundId) {
+        this.$message({
+          message: '请先填写出库信息',
+          type: 'warning'
+        })
+        this.dialogFormVisible = false
+      } else {
+        this.dialogFormVisible = true
+      }
+    },
+    addOutbound() { // 新增出库清单
+      this.outboundInfo.outboundList.id = this.outboundId
+      var objectList = [this.outboundInfo]
+      this.saveOutbound(objectList)
+      this.dialogFormVisible = false
+    },
+    confirmEdit(row, index) { // 修改出库清单
+      row.edit = !row.edit
+      Vue.set(this.outboundList, index, row)
+      var outboundInfo = {
+        id: row.id,
+        purchaseList: { id: row.purchaseList.id },
+        outboundList: { id: this.outboundId },
+        number: row.number
+      }
+      var objectList = [outboundInfo]
+      this.saveOutbound(objectList)
+    },
+    saveOutbound(list) { // 保存出库清单
+      var obj = {
+        objectList: list
+      }
+      this.$post('/outboundDetaile/save', obj).then((res) => {
+        if (res.data.success === true) {
+          this.getOutboundList()
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.outboundInfo = {
+            purchaseList: { id: '' },
+            outboundList: { id: '' },
+            number: ''
+          }
+        }
+      })
     },
     editRow(row, index) {
-      console.log('row', row)
-      row.edit = true
-      Vue.set(this.InboundList, index, row)
+      row.edit = !row.edit
+      Vue.set(this.outboundList, index, row)
     },
-    confirmEdit(row, index) {
-      row.edit = false
-      Vue.set(this.InboundList, index, row)
-      console.log('row', JSON.stringify(row))
-      this.$post('/inboundDetaile/save', row).then((res) => {
-
-      })
-    },
-    cancelRow() {},
-    uploadMaterial() {
-      this.uploadTableShow = true
-      this.$refs.upload.handleUpload()
-    },
-    submitCheck() {
-
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '物料名称', '品牌', '规格型号', '单位', '单价', '数量', '总金额']
-        const filterVal = ['name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
-        const list = []
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
-        this.downloadLoading = false
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
-    },
-    selected(data) {
-      this.uploadDetail.forEach((item) => {
-        var obj = {}
-        obj = {
-          name: item['物料名称'],
-          brand: item['品牌'],
-          model: item['规格型号'],
-          unit: item['单位'],
-          unitPrice: item['单价'],
-          number: item['数量'],
-          totalAmount: item['总金额']
+    deleteRow(id, index) {
+      this.$post('/outboundDetaile/delete', { id: [id] }).then((res) => {
+        if (res.data.success === true) {
+          this.getOutboundList()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
         }
-        this.$post('/purchaseList/save', obj).then((res) => {
-          console.log('res', res)
-          this.getPurchaseList()
-        })
       })
+    },
+    // 出库审核
+    submitCheck() {
+      // var obj = {
+      //   step: '1',
+      //   stepPerson: '1',
+      //   nextStep: '2',
+      //   nextStepPerson: '',
+      //   paymentContract: {
+      //     id: this.contractId
+      //   },
+      //   result: '提交审核',
+      //   time: ''
+      // }
+      // console.log('submit', JSON.stringify(obj))
+      // this.$post('inboundCheck/save', obj).then((res) => {
+      //   this.getInboundCheck()
+      // })
+    },
+    purchaseChange(val) {
+      this.purchaseList.forEach((item) => {
+        if (item.id === val) {
+          this.outboundInfo.number = item.number
+          this.maxNumber = _.cloneDeep(item.number)
+        }
+      })
+    },
+    numberChange(val) {
+      val = parseInt(val)
+      var maxNumber = parseInt(this.maxNumber)
+      if (val > maxNumber) {
+        this.outboundInfo.number = maxNumber
+      } else if (val < 0) {
+        this.outboundInfo.number = 0
+      }
     }
   },
   watch: {
-    actionTab(data) {
-      console.log(data)
+    outboundList(list) {
+      list.forEach((item) => {
+        if (item.edit === true) {
+          console.log('isEditing')
+          this.disableCheck = true
+        } else {
+          this.disableCheck = false
+        }
+      })
     }
   }
 }
@@ -278,6 +308,7 @@ export default {
   }
   .commont-btn {
     text-align: right;
+    margin: 10px 0;
   }
 }
 

@@ -2,22 +2,25 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号">
-          <template slot-scope="scope">
-           {{scope.$index + 1}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="applicationTime" label="合同编号"></el-table-column>
-        <el-table-column prop="applicationPerson" label="采购清单编号"></el-table-column>
-        <el-table-column prop="orderNumber" label="入库单号"></el-table-column>
-        <el-table-column prop="business.code" label="办事处"></el-table-column>
-        <el-table-column prop="optCost" label="供应商"></el-table-column>
+        <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
+        <el-table-column prop="contractInfo.name" label="合同编号"></el-table-column>
+        <el-table-column prop="code" label="采购清单编号"></el-table-column>
+        <el-table-column prop="code" label="出库单编号"></el-table-column>
+        <el-table-column prop="contractInfo.name" label="项目"></el-table-column>
+        <el-table-column prop="region.name" label="办事处"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <!-- <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button> -->
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">审核</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">导出</el-button>
+            <el-dropdown>
+              <el-button class="el-dropdown-link" type="text">更多</el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="a" @click.native.prevent="" type="text">审核</el-dropdown-item>
+                <el-dropdown-item command="b" @click.native.prevent="" type="text">导出</el-dropdown-item>
+                <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -30,6 +33,7 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  name: 'paymentContractList',
   props: ['searchData'],
   data() {
     return {
@@ -57,17 +61,15 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/paymentContract/search?size=' + pageSize + '&page=' + page
+      var url = '/outboundList/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.listLoading = false
-        } else {
-          this.listLoading = false
         }
       }).catch(() => {
         this.listLoading = false
@@ -83,7 +85,7 @@ export default {
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/paymentContract/delete', projectID).then(res => {
+      this.$post('/outboundList/delete', projectID).then(res => {
         if (res.data.success === true) {
           this.getSupplierData()
           this.$message({
@@ -94,12 +96,15 @@ export default {
       })
     },
     seeRow(id) {
-      this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
+      this.$get('/outboundList/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         this.$emit('editRow', data)
       })
     }
   },
+  // handleCommand(command) {
+  //   console.log('command', command)
+  // },
   watch: {
   },
   computed: {

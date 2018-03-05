@@ -48,7 +48,6 @@ export default {
   },
   data() {
     return {
-      path: 'listTab',
       downloadLoading: false,
       tab: 'listTab',
       editData: {},

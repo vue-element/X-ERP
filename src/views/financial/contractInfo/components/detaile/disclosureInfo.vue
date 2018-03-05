@@ -264,6 +264,7 @@ export default {
     } else {
       this.action = 'add'
       this.paymentPlayShow()
+      this.state = false
     }
     // 渲染回款计划表格
     // this.paymentPlayShow()
@@ -377,7 +378,6 @@ export default {
     },
     paymentPlanModify(id) {
       this.$get('/paymentPlan/findUpdateData/' + id.id).then((res) => {
-        console.log(res)
         this.clickPlanBox()
         this.paymentPlan = res.data.data.paymentPlan
       })

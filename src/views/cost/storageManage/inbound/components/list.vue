@@ -9,8 +9,8 @@
         </el-table-column>
         <el-table-column prop="applicationTime" label="合同编号"></el-table-column>
         <el-table-column prop="applicationPerson" label="采购清单编号"></el-table-column>
-        <el-table-column prop="orderNumber" label="入库单号"></el-table-column>
-        <el-table-column prop="business.code" label="办事处"></el-table-column>
+        <el-table-column prop="inputNumber" label="入库单号"></el-table-column>
+        <el-table-column prop="business.name" label="办事处"></el-table-column>
         <el-table-column prop="optCost" label="供应商"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">

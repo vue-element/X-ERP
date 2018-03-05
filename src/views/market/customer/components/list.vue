@@ -1,20 +1,19 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%"  :data="clientList" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中">
-    <!-- <el-table-column type="selection"></el-table-column> -->
-    <el-table-column align="center" prop="0" fixed label="序号">
+  <el-table style="width: 100%"  :data="clientList" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+    <el-table-column  fixed="left" align="center" prop="0" label="序号" width="60">
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="name" fixed label="客户名称"></el-table-column>
-   <el-table-column prop="category" fixed label="客户类型"></el-table-column>
-   <el-table-column prop="type" fixed label="业态"></el-table-column>
-   <el-table-column prop="nature" label="企业性质" sortable></el-table-column>
-   <el-table-column prop="person" label="联系人" sortable></el-table-column>
-   <el-table-column prop="position" label="职位"></el-table-column>
-   <el-table-column prop="phone" label="联系人电话"></el-table-column>
-   <el-table-column prop="qq" label="QQ"></el-table-column>
-   <el-table-column prop="email" label="E-mail"></el-table-column>
-   <el-table-column prop="address" label="客户地址"></el-table-column>
+   <el-table-column prop="name" label="客户名称"></el-table-column>
+   <el-table-column prop="category" label="客户类型" width="100"></el-table-column>
+   <el-table-column prop="type" label="业态" width="180"></el-table-column>
+   <el-table-column prop="nature" label="企业性质" width="100"></el-table-column>
+   <el-table-column prop="person" label="联系人" width="100"></el-table-column>
+   <el-table-column prop="phone" label="联系人电话" width="140"></el-table-column>
+   <el-table-column prop="position" label="职位" width="140"></el-table-column>
+   <!-- <el-table-column prop="qq" label="QQ" width="180"></el-table-column>
+   <el-table-column prop="email" label="E-mail" width="180"></el-table-column>
+   <el-table-column prop="address" label="客户地址" width="180"></el-table-column> -->
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>

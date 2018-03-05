@@ -54,7 +54,7 @@
                     <span v-else>{{scope.row.certificate}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" style="display: none">
                   <template slot-scope="scope">
                     <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                     <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
@@ -65,20 +65,16 @@
           </el-col>
         </el-row>
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click="submitCheck">提交审核</el-button>
+          <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
           <el-button :loading="false">通过审核</el-button>
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
-        <div v-show="uploadTableShow">
-          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
-        </div>
       </div>
       <!--审核动态  -->
     </div>
-    <!-- <div v-show="actionTab === 'officeCheck'"></div> -->
     <div v-show="actionTab === 'costCheck'">
       <div class="form-module">
         <h4 class="module-title">
@@ -99,8 +95,8 @@
               <el-table-column label="品牌">
                 <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
               </el-table-column>
-              <el-table-column label="采购数量">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              <el-table-column label="采购单价">
+                <template slot-scope="scope"><span>{{scope.row.unitPrice}}</span></template>
               </el-table-column>
               <el-table-column label="数量">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
@@ -112,7 +108,7 @@
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
               <el-table-column label="合计">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+                <template slot-scope="scope"><span>{{scope.row.totalAmount}}</span></template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -124,39 +120,33 @@
           <el-button :loading="false">导出出库成本核算表</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
-        <div v-show="uploadTableShow">
-          <upload-excel-component @on-selected-file='selected' ref="upload"></upload-excel-component>
-        </div>
       </div>
     </div>
     <div class="form-module">
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column label="审核步骤">
-          <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-        </el-table-column>
-        <el-table-column label="品牌">
-          <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
         </el-table-column>
         <el-table-column label="操作人">
-          <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.stepPerson}}</span></template>
         </el-table-column>
         <el-table-column label="操作时间">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.time}}</span></template>
         </el-table-column>
         <el-table-column label="审核结果">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.result}}</span></template>
         </el-table-column>
         <el-table-column label="下一步骤">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.nextStep}}</span></template>
         </el-table-column>
         <el-table-column label="下一步骤审核人">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.nextStepPerson}}</span></template>
         </el-table-column>
       </el-table>
     </div>
@@ -166,7 +156,6 @@
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/common.vue'
 import _ from 'lodash'
-import { parseTime } from '@/utils'
 import Vue from 'vue'
 
 export default {
@@ -181,31 +170,29 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false
+      checkLoading: false,
+      disableCheck: false,
+      inboundCheck: []
     }
   },
   created() {
-    console.log('editShow', this.contractId)
     this.getPurchaseList()
+    this.getInboundCheck()
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
-        var data = res.data.data.content
-        this.purchaseList = _.cloneDeep(data)
-        // for (var i = 0; i < this.purchaseList.length; i++) {
-        //   var obj = {
-        //     number: '',
-        //     model: '',
-        //     quality: '',
-        //     certificate: '',
-        //     purchaseList: {
-        //       id: this.purchaseList[i]['id']
-        //     },
-        //     edit: true
-        //   }
-        //   this.InboundList.push(obj)
-        // }
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.contractId).then((res) => {
+        var data = _.cloneDeep(res.data.data)
+        console.log('data', data)
+        data.forEach((item) => {
+          item.edit = false
+          item.number = item.purchaseList.number
+          item.model = item.purchaseList.model
+          item.certificate = '有'
+          item.quality = '完好'
+          this.purchaseList.push(item.purchaseList)
+        })
+        this.InboundList = data
       })
     },
     editRow(row, index) {
@@ -216,64 +203,52 @@ export default {
     confirmEdit(row, index) {
       row.edit = false
       Vue.set(this.InboundList, index, row)
-      console.log(this.InboundList)
-      console.log('row', JSON.stringify(row))
       this.$post('/inboundDetaile/save', row).then((res) => {
 
       })
     },
-    uploadMaterial() {
-      this.uploadTableShow = true
-      this.$refs.upload.handleUpload()
-    },
-    submitCheck() {
-
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '物料名称', '品牌', '规格型号', '单位', '单价', '数量', '总金额']
-        const filterVal = ['name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
-        const list = []
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
-        this.downloadLoading = false
+    // 审核动态
+    getInboundCheck() {
+      this.$get('/inboundCheck/findAllByPaymentContract/' + this.contractId).then((res) => {
+        console.log('res', res)
+        if (res.data.success === true && res.data.data !== null) {
+          this.inboundCheck = [res.data.data]
+        } else {
+          this.inboundCheck = []
+        }
       })
     },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
-    },
-    selected(data) {
-      this.uploadDetail.forEach((item) => {
-        var obj = {}
-        obj = {
-          name: item['物料名称'],
-          brand: item['品牌'],
-          model: item['规格型号'],
-          unit: item['单位'],
-          unitPrice: item['单价'],
-          number: item['数量'],
-          totalAmount: item['总金额']
-        }
-        this.$post('/purchaseList/save', obj).then((res) => {
-          console.log('res', res)
-          this.getPurchaseList()
-        })
+    submitCheck() {
+      var obj = {
+        step: '1',
+        stepPerson: '1',
+        nextStep: '2',
+        nextStepPerson: '',
+        paymentContract: {
+          id: this.contractId
+        },
+        result: '提交审核',
+        time: ''
+      }
+      console.log('submit', JSON.stringify(obj))
+      this.$post('inboundCheck/save', obj).then((res) => {
+        this.getInboundCheck()
       })
     }
   },
   watch: {
     actionTab(data) {
       console.log(data)
+    },
+    InboundList(list) {
+      list.forEach((item) => {
+        if (item.edit === true) {
+          console.log('isEditing')
+          this.disableCheck = true
+        } else {
+          this.disableCheck = false
+        }
+      })
     }
   }
 }
@@ -307,6 +282,7 @@ export default {
   }
   .commont-btn {
     text-align: right;
+    margin: 10px 0;
   }
 }
 
