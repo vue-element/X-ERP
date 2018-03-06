@@ -12,10 +12,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
-import {
-  mapActions
-} from 'vuex'
+import { mapActions } from 'vuex'
 import {
   Navbar,
   Sidebar,
@@ -36,21 +33,6 @@ export default {
     }
   },
   methods: {
-    getUserInfo() {
-      var name = Cookies.get('username')
-      var password = Cookies.get('password')
-      var userInfo = {
-        name,
-        password
-      }
-      console.log('userInfo', userInfo)
-      this.$post('/login', userInfo, false).then((res) => {
-        if (res.data.success === true) {
-          this.setToken('11111')
-          this.$store.commit('login', userInfo)
-        }
-      })
-    },
     ...mapActions([
       'setToken',
       'login'

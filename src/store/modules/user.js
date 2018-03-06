@@ -1,4 +1,4 @@
-import { logout, getUserInfo } from '@/api/login'
+import { logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -61,6 +61,7 @@ const user = {
             reject('error')
           }
           const data = response.data
+          console.log('response.data', response.data)
           commit('SET_ROLES', data.role)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
@@ -114,3 +115,11 @@ const user = {
 }
 
 export default user
+export function getUserInfo(token) {
+  return new Promise((resolve, reject) => {
+    resolve({
+      data: { username: 'admin', name: 'admin', 'role': ['admin'] }
+      // console.log('getUserInfo', data)
+    })
+  })
+}

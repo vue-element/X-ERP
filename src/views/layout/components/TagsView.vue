@@ -17,7 +17,6 @@
 
 <script>
 import ScrollPane from '@/components/ScrollPane'
-
 export default {
   components: { ScrollPane },
   data() {
@@ -118,7 +117,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
   position: fixed;
-  // z-index: 101;
+  z-index: 101;
   height: 40px;
   width: auto;
   left: 220px;
@@ -187,12 +186,10 @@ export default {
   height: 40px;
 }
 .tags-view-wrapper {
-  // height: 40px;
   .tags-view-item {
     .el-icon-close {
       width: 16px;
       height: 16px;
-      // font-size: 20px;
       vertical-align: 2px;
       margin-left: 8px;
       border-radius: 50%;
