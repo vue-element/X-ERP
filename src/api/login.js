@@ -30,6 +30,14 @@ export function getUserInfo(token) {
   return new Promise((resolve, reject) => {
     resolve({
       data: { username: 'admin', name: 'admin', 'role': ['admin'] }
+      // console.log('getUserInfo', data)
     })
   })
 }
+// export function getUserInfo(userInfo) {
+//   return request({
+//      url: '/login',
+//      method: 'post',
+//      params: { userInfo }
+//    })
+// }

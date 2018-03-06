@@ -28,6 +28,7 @@
 <script>
 import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
+// import { getUserInfo } from '@/api/login'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
@@ -64,6 +65,7 @@ export default {
         name,
         password
       }
+      // console.log('getUserInfo', getUserInfo(userInfo))
       this.$post('/login', userInfo, false).then((res) => {
         if (res.data.success === true) {
           var userInfo = res.data.data

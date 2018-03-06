@@ -35,13 +35,6 @@ import { setToken } from '@/utils/auth'
 export default {
   name: 'login',
   data() {
-    // const validateUsername = (rule, value, callback) => {
-    //   if (!isvalidUsername(value)) {
-    //     callback(new Error('请输入正确的用户名'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     // const validatePassword = (rule, value, callback) => {
     //   if (value.length < 5) {
     //     callback(new Error('密码不能小于6位'))
@@ -112,7 +105,7 @@ export default {
             } else {
               this.$message({
                 message: '登陆失败，请重新登陆',
-                type: 'success'
+                type: 'error'
               })
             }
           }).catch(() => {
