@@ -6,39 +6,41 @@
           <p>新增开票信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="合同编码：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择" filterable>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="合同编码：" prop="contractInfo">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择合同编码" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="发票抬头名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <el-input v-model="ruleForm.name" placeholder="请输入发票抬头名称" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票金额：" prop="amount">
-              <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="发票号码：" prop="number">
+              <el-input v-model="ruleForm.number" placeholder="请输入发票号码" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="开票金额：" prop="amount">
+              <el-input v-model="ruleForm.amount" placeholder="请输入开票金额" :disabled="disabled"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票日期：" prop="date" class="single-date">
               <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="8">
-            <el-form-item label="开票内容：" prop="content">
-              <el-input v-model="ruleForm.content" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="开票内容：">
+              <el-input v-model="ruleForm.content" placeholder="请输入开票内容" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -57,6 +59,13 @@ export default {
   name: 'invoiceAdd',
   props: ['editData'],
   data() {
+    var validateContractInfo = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('合同编码不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       loading: false,
@@ -72,7 +81,13 @@ export default {
         },
         number: '发票号码'
       },
-      rules: {}
+      rules: {
+        contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
+        name: [{ required: true, message: '请输入发票抬头名称', trigger: 'blur' }],
+        number: [{ required: true, message: '请输入发票号码', trigger: 'blur' }],
+        amount: [{ required: true, message: '请输入开票金额', trigger: 'blur' }],
+        date: [{ required: true, message: '请选择开票日期', trigger: 'blur' }]
+      }
     }
   },
   created() {
