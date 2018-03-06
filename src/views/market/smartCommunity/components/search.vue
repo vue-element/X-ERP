@@ -118,14 +118,14 @@ export default {
           if (key === 'date') {
             searchData['date'] = this.searchData['date'][0]
             searchData['date1'] = this.searchData['date'][1]
+          } else if (key === 'firstEntry') {
+            searchData['firstEntry'] = this.searchData['firstEntry'][0]
+            searchData['firstEntry1'] = this.searchData['firstEntry'][1]
           } else {
             searchData[key] = this.searchData[key]
           }
         }
       }
-      searchData['firstEntry'] = this.searchData['firstEntry'][0]
-      searchData['firstEntry1'] = this.searchData['firstEntry'][1]
-      console.log('search', searchData)
       this.$emit('searchWord', searchData)
     },
     searchAll() {
