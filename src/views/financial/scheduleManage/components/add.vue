@@ -22,7 +22,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="项目所属阶段:">
+            <el-form-item label="项目所属阶段:" prop="stage">
               <el-select v-model="ruleForm.stage" placeholder="请选择">
                <el-option v-for="item in stageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
@@ -30,7 +30,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="完工百分比:">
+            <el-form-item label="完工百分比:" prop="finishPercentage">
               <el-select v-model="ruleForm.finishPercentage" placeholder="请选择">
                <el-option v-for="item in finishPercentageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
@@ -40,7 +40,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="项目状态:">
+            <el-form-item label="项目状态:" prop="status">
               <el-select v-model="ruleForm.status" placeholder="请选择">
                <el-option v-for="item in statusList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
@@ -69,6 +69,27 @@ export default {
   name: 'scheduleManageAdd',
   props: ['editData'],
   data() {
+    var validateStage = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('项目所属阶段不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var validateFinishPercentage = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('完工百分比不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var validateStatus = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('项目状态不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       loading: false,
@@ -84,7 +105,11 @@ export default {
         status: '项目状态',
         time: '更新时间'
       },
-      rules: {}
+      rules: {
+        stage: [{ required: true, validator: validateStage, trigger: 'change' }],
+        finishPercentage: [{ required: true, validator: validateFinishPercentage, trigger: 'change' }],
+        status: [{ required: true, validator: validateStatus, trigger: 'change' }]
+      }
     }
   },
   created() {
@@ -114,19 +139,23 @@ export default {
       this.ruleForm = data.contractSchedule
     },
     save() {
-      this.loading = true
-      this.ruleForm.time = new Date()
-      this.$post('/ContractSchedule/save', this.ruleForm).then(res => {
-        if (res.data.success === true) {
-          console.log('this.ruleForm', this.ruleForm)
-          this.loading = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.ruleForm.time = new Date()
+          this.$post('/ContractSchedule/save', this.ruleForm).then(res => {
+            if (res.data.success === true) {
+              console.log('this.ruleForm', this.ruleForm)
+              this.loading = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              if (this.editData.tabState === 'editTab') {
+                this.$emit('toggleTab')
+              }
+            }
           })
-          if (this.editData.tabState === 'editTab') {
-            this.$emit('toggleTab')
-          }
         }
       })
     },

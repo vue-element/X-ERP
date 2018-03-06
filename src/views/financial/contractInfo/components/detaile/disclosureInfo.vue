@@ -27,31 +27,31 @@
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="材料成本：">
               <p v-if="disabled">{{contractBasis.materialCost}}</p>
-              <el-input v-else v-model="contractBasis.materialCost" placeholder="请输入材料成本"></el-input>
+              <el-input v-else v-model="contractBasis.materialCost" @change="materialCost" placeholder="请输入材料成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="人工成本：">
               <p v-if="disabled">{{contractBasis.artificialCost}}</p>
-              <el-input v-else v-model="contractBasis.artificialCost" placeholder="请输入人工成本"></el-input>
+              <el-input v-else v-model="contractBasis.artificialCost" @change="artificialCost" placeholder="请输入人工成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="综合成本：">
               <p v-if="disabled">{{contractBasis.comprehensiveCost}}</p>
-              <el-input v-else v-model="contractBasis.comprehensiveCost" placeholder="请输入综合成本"></el-input>
+              <el-input v-else v-model="contractBasis.comprehensiveCost" @change="comprehensiveCost" placeholder="请输入综合成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="管理费用：">
               <p v-if="disabled">{{contractBasis.manageCost}}</p>
-              <el-input v-else v-model="contractBasis.manageCost" placeholder="请输入管理费用"></el-input>
+              <el-input v-else v-model="contractBasis.manageCost" @change="manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="8">
             <el-form-item label="税金：">
               <p v-if="disabled">{{contractBasis.tax}}</p>
-              <el-input v-else v-model="contractBasis.tax" placeholder="请输入税金"></el-input>
+              <el-input v-else v-model="contractBasis.tax" @change="tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -125,7 +125,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" type="primary" @click="paymentPlanAdd">保&nbsp;&nbsp;&nbsp;存</el-button>
+        <el-button size="small" type="primary" @click="paymentPlanSave">保&nbsp;&nbsp;&nbsp;存</el-button>
         <el-button size="small" @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
       </div>
     </el-dialog>
@@ -184,6 +184,7 @@
 <script>
 import _ from 'lodash'
 import { winHeight } from '@/utils'
+import { outputmoney } from '@/utils'
 import { mapState } from 'vuex'
 export default {
   props: ['editData'],
@@ -226,7 +227,6 @@ export default {
           id: ''
         }
       },
-      contractBasisID: '',
       // 附件上传
       tableData: [],
       upFiles: false,
@@ -244,8 +244,8 @@ export default {
     }
   },
   created() {
-    // console.log(this.$store.state.contractMsg.contractMsg)
     this.getInsertData()
+    // console.log(this.$store.state.contractMsg.contractMsg)
     // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
     var contractMsg = sessionStorage.getItem('contractMsg')
     if (contractMsg) {
@@ -259,15 +259,13 @@ export default {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
+      this.state = false
       this.showInfo()
-      this.paymentPlayShow()
     } else {
       this.action = 'add'
-      this.paymentPlayShow()
-      this.state = false
     }
     // 渲染回款计划表格
-    // this.paymentPlayShow()
+    this.paymentPlayShow()
   },
   methods: {
     getInsertData() {
@@ -278,15 +276,20 @@ export default {
       if (this.editData.tabState === 'seeTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
-          console.log(res)
-          this.contractBasis.id = res.data.data.content[0].id
-          this.contractBasis.contractInfo.id = res.data.data.content[0].contractInfo.id
+          if (res.data.success === true) {
+            this.contractBasis.id = res.data.data.content[0].id
+            this.contractBasis.contractInfo.id = res.data.data.content[0].contractInfo.id
+            this.disclosureAdd()
+          }
         })
       } else {
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.contractBasis.id = contractMsg.contractBasis.id
         this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
+        this.disclosureAdd()
       }
+    },
+    disclosureAdd() {
       this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         this.loading = false
         if (res.data.success === true) {
@@ -300,11 +303,8 @@ export default {
     showInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
-        console.log(res)
         this.contractBasis = res.data.data.content[0]
         this.paymentPlan.contractBasis.id = res.data.data.content[0].id
-        this.contractBasisID = res.data.data.content[0].id
-        console.log(this.contractBasisID)
       })
     },
     toggleEditBtn() {
@@ -348,14 +348,25 @@ export default {
       }
     },
     // 新增回款计划
-    paymentPlanAdd() {
+    paymentPlanSave() {
       if (this.editData.tabState === 'seeTab') {
-        this.showInfo()
+        var data = _.cloneDeep(this.editData.editData)
+        this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+          if (res.data.success === true) {
+            this.paymentPlan.contractBasis.id = res.data.data.content[0].id
+            this.paymentPlanAdd()
+          }
+        })
       } else {
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
+        this.paymentPlanAdd()
       }
+    },
+    paymentPlanAdd() {
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
+        console.log(res)
+        this.planBox = false
         if (res.data.success === true) {
           this.$message({
             message: '保存成功',
@@ -364,17 +375,28 @@ export default {
           this.paymentPlayShow()
           this.paymentPlan = {}
         }
-        this.planBox = false
       })
     },
     // 回款计划展示列表
     paymentPlayShow() {
-      console.log('this.contractBasisID', this.contractBasisID)
-      // console.log(contractBasisID)
-      this.$get('/paymentPlan/findAllByContractBasis/' + this.contractBasisID).then((res) => {
-        console.log('res', res)
-        this.receiveData = res.data.data.content
-      })
+      if (this.editData.tabState === 'seeTab') {
+        var data = _.cloneDeep(this.editData.editData)
+        this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
+          if (res.data.success === true) {
+            var contractBasisID = res.data.data.content[0].id
+            this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+              this.receiveData = res.data.data.content
+              console.log(this.receiveData)
+            })
+          }
+        })
+      } else {
+        var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+        var contractBasisID = contractMsg.contractBasis.id
+        this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+          this.receiveData = res.data.data.content
+        })
+      }
     },
     paymentPlanModify(id) {
       this.$get('/paymentPlan/findUpdateData/' + id.id).then((res) => {
@@ -385,7 +407,7 @@ export default {
     // 回款计划删除数据
     deleteRow(id) {
       var paymentPlanID = { id: [id] }
-      this.$post('/paymentPlan/delete', paymentPlanID).then((res) => {
+      this.$post('/paymentPlan/delete/', paymentPlanID).then((res) => {
         if (res.status === 200) {
           this.paymentPlayShow()
           this.$message({
@@ -395,6 +417,23 @@ export default {
         }
       })
     },
+    // 数字格式化
+    materialCost(val) {
+      this.contractBasis.materialCost = outputmoney(val)
+    },
+    artificialCost(val) {
+      this.contractBasis.artificialCost = outputmoney(val)
+    },
+    comprehensiveCost(val) {
+      this.contractBasis.comprehensiveCost = outputmoney(val)
+    },
+    manageCost(val) {
+      this.contractBasis.manageCost = outputmoney(val)
+    },
+    tax(val) {
+      this.contractBasis.tax = outputmoney(val)
+    },
+    // 附件上传
     submitUpload() {
       this.$refs.upload.submit()
     },
