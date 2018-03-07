@@ -377,14 +377,7 @@ export default {
   },
   created() {
     this.getInsertData()
-    if (this.editData.tabState === 'seeTab') {
-      this.action = 'edit'
-      this.editShow = true
-      this.disabled = true
-      this.editInfo()
-    } else {
-      this.action = 'add'
-    }
+    this.toggleAction()
     this.temp = _.cloneDeep(this.businessInfo)
   },
   computed: {
@@ -491,6 +484,18 @@ export default {
       var d = new Date(date)
       var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
       this.businessInfo.date = newDate
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.editInfo()
+      }
     }
   },
   watch: {

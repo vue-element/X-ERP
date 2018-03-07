@@ -20,7 +20,6 @@
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-        <!-- <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -121,8 +120,8 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
+        this.listLoading = false
         if (res.data.success === true) {
-          this.listLoading = false
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
@@ -135,6 +134,8 @@ export default {
             type: 'success'
           })
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     //  页码处理

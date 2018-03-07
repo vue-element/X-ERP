@@ -74,7 +74,7 @@ export default {
       this.tab = 'addTab'
       this.editData = {
         editData: data,
-        tabState: 'seeTab'
+        tabState: 'editTab'
       }
     },
     search(data) {

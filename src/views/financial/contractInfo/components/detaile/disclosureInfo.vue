@@ -255,7 +255,7 @@ export default {
       return
     }
     // 判断状态是查看还是新增
-    if (this.editData.tabState === 'seeTab') {
+    if (this.editData.tabState === 'editTab') {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
@@ -273,7 +273,7 @@ export default {
     },
     add() {
       this.loading = true
-      if (this.editData.tabState === 'seeTab') {
+      if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
           if (res.data.success === true) {
@@ -349,7 +349,7 @@ export default {
     },
     // 新增回款计划
     paymentPlanSave() {
-      if (this.editData.tabState === 'seeTab') {
+      if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
           if (res.data.success === true) {
@@ -379,7 +379,7 @@ export default {
     },
     // 回款计划展示列表
     paymentPlayShow() {
-      if (this.editData.tabState === 'seeTab') {
+      if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
           if (res.data.success === true) {

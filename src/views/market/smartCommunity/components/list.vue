@@ -95,15 +95,18 @@ export default {
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/project/search?size=' + pageSize + '&page=' + page
-      console.log(this.searchData)
       this.$post(url, this.searchData, false).then((res) => {
-        var data = res.data.data
-        this.projectData = data.content
-        this.total = data.totalElements
-        this.currentPage = data.number + 1
-        this.pageSize = data.size
         this.listLoading = false
-        this.$emit('exportData', this.projectData)
+        if (res.data.success === true) {
+          var data = res.data.data
+          this.projectData = data.content
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
+          this.$emit('exportData', this.projectData)
+        }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     //  页码处理

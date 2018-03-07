@@ -125,7 +125,7 @@ export default {
       typeList: [],
       natureList: [],
       client: {
-        address: 'sss',
+        address: '',
         category: '',
         email: '',
         name: '',
@@ -154,9 +154,9 @@ export default {
     }
   },
   created() {
-    this.temp = _.cloneDeep(this.client)
     this.getInsertData()
     this.toggleAction()
+    this.temp = _.cloneDeep(this.client)
   },
   mounted() {
   },
@@ -186,11 +186,7 @@ export default {
       })
     },
     reset() {
-      if (this.action === 'add') {
-        this.client = _.cloneDeep(this.temp)
-      } else {
-        this.client = _.cloneDeep(this.editData.editData)
-      }
+      this.client = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('changeObj', false)
@@ -200,7 +196,7 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.client = _.cloneDeep(this.editData.editData)
+        this.client = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
       }
@@ -215,7 +211,6 @@ export default {
         this.action = 'add'
         this.disabled = false
         this.editShow = false
-        this.client = _.cloneDeep(this.temp)
       } else {
         this.action = 'edit'
         this.disabled = true
@@ -226,18 +221,9 @@ export default {
   },
   computed: {},
   watch: {
-    editData() {
-      this.toggleAction()
-    },
     client: {
       handler(obj) {
-        var temp = {} // 区分新增与编辑之间的初始化的对象
-        if (this.action === 'add') {
-          temp = _.cloneDeep(this.temp)
-        } else {
-          temp = _.cloneDeep(this.editData.editData)
-        }
-        if (isObjectValueEqual(obj, temp)) {
+        if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)

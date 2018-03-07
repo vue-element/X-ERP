@@ -69,14 +69,16 @@ export default {
       var url = '/supply/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
+          this.listLoading = false
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.listLoading = false
           this.$emit('exportData', data.content)
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     handleCurrentChange(val) {
@@ -101,9 +103,10 @@ export default {
     },
     seeRow(id) {
       this.$get('/supply/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        // console.log('data', data)
-        this.$emit('editRow', data)
+        if (res.data.success === true) {
+          var data = res.data.data
+          this.$emit('editRow', data)
+        }
       })
     }
   },

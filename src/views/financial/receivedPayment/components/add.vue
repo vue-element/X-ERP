@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编码：" prop="contractInfo">
-              <el-select v-model="paymentManage.contractInfo.id" placeholder="请选择合同编码">
+              <el-select v-model="paymentManage.contractBilling.contractInfo.id" placeholder="请选择合同编码">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -72,11 +72,11 @@ export default {
       contractBillingList: [],
       contractInfoList: [],
       paymentManage: {
-        contractInfo: {
-          id: ''
-        },
         contractBilling: {
-          id: ''
+          id: '',
+          contractInfo: {
+            id: ''
+          }
         },
         amount: '',
         date: ''
@@ -136,7 +136,10 @@ export default {
         console.log('isaddTab')
         this.paymentManage = {
           contractBilling: {
-            id: ''
+            id: '',
+            contractInfo: {
+              id: ''
+            }
           },
           amount: '',
           date: ''

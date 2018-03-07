@@ -9,11 +9,15 @@
         </button>
         <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
-          <span>查看明细</span>
+          <span>查看</span>
         </button>
-        <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+        <button @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
+        </button>
+        <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+          <i class="iconfont icon-seeAll"></i>
+          <span>查看明细</span>
         </button>
         <button @click="delSelectData" v-show="deleteShow">
           <i class="iconfont icon-delete"></i>
@@ -31,7 +35,7 @@
   <div class="compotent-tab">
     <AddComponent v-if="tab === 'addTab'" :editData="editData"  @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
     <ListComponent v-if="tab === 'listTab'" ref="del" :searchData="searchData" @exportData="exportData" @editRow="editRow"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>
@@ -54,6 +58,7 @@ export default {
       deleteShow: false,
       selArr: [],
       exprotList: [],
+      editData: {},
       isChange: false
     }
   },
@@ -72,10 +77,25 @@ export default {
       this.tab = tab
     },
     addBtn() {
-      this.toggleTab('addTab')
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
+      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
+        if (this.isChange === true) { // 有值的变化
+          this.showPopWin(() => {
+            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else { // 没有值的变化
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
       }
     },
     delSelectData() {
@@ -94,7 +114,7 @@ export default {
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
-        tabState: 'seeTab'
+        tabState: 'editTab'
       }
     },
     searchWord(data) {

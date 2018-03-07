@@ -11,14 +11,10 @@
    <el-table-column prop="person" label="联系人" width="100"></el-table-column>
    <el-table-column prop="phone" label="联系人电话" width="140"></el-table-column>
    <el-table-column prop="position" label="职位" width="140"></el-table-column>
-   <!-- <el-table-column prop="qq" label="QQ" width="180"></el-table-column>
-   <el-table-column prop="email" label="E-mail" width="180"></el-table-column>
-   <el-table-column prop="address" label="客户地址" width="180"></el-table-column> -->
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-        <!-- <el-button type="text" size="small" @click.native.prevent="editRow(scope.row.id)">编辑</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -56,13 +52,6 @@ export default {
     resize() {
       this.height = winHeight() - 210
     },
-    // handleSelectionChange(arr) {
-    //   var selArr = []
-    //   arr.forEach((item) => {
-    //     selArr.push(item.id)
-    //   })
-    //   this.$emit('selData', selArr)
-    // },
     seeRow(id) {
       this.$get('/client/findUpdateData/' + id).then((res) => {
         var data = res.data.data
@@ -72,7 +61,7 @@ export default {
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/client/delete', projectID).then((res) => {
-        if (res.status === 200) {
+        if (res.data.success === 200) {
           this.clientData()
           this.$message({
             message: '删除成功',
@@ -81,31 +70,23 @@ export default {
         }
       })
     },
-    editRow(id) {
-      this.$get('/client/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        console.log('data', data)
-        // this.$emit('editRow', data)
-      })
-    },
     clientData() {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/client?size=' + pageSize + '&page=' + page
-      console.log(this.searchData)
       this.$get(url, this.searchData).then((res) => {
+        this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
           this.clientList = data.content
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.listLoading = false
           this.$emit('exportData', this.clientList)
-        } else {
-          this.listLoading = false
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     //  页码处理

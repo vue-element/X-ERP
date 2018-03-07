@@ -189,8 +189,8 @@ export default {
     save() {
       this.loading = true
       this.$post('/price/save', this.priceInfo).then(res => {
+        this.loading = false
         if (res.data.success === true) {
-          this.loading = false
           this.$message({
             message: '保存成功',
             type: 'success'
@@ -199,6 +199,8 @@ export default {
             this.$emit('toggleTab')
           }
         }
+      }).catch(() => {
+        this.loading = false
       })
     },
     reset() {

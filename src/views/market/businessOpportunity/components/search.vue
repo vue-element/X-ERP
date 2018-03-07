@@ -135,9 +135,9 @@ export default {
         followState: '',
         executState: '',
         examineState: '',
-        date: '',
+        date: [],
         billDate: '',
-        modifydDate: ''
+        modifydDate: []
       },
       cityOption: [0, 1, 3],
       clientList: [],
@@ -174,7 +174,6 @@ export default {
           }
         }
       }
-      console.log('search', searchData)
       this.$emit('searchWord', searchData)
     },
     searchAll() {
