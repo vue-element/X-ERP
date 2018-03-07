@@ -8,8 +8,8 @@ import qs from 'qs'
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://10.51.36.108:8081',
-  baseURL: 'http://202.105.96.131:8081',
-  // baseURL: 'http://202.105.96.131:8083',
+  // baseURL: 'http://202.105.96.131:8081',
+  baseURL: 'http://202.105.96.131:8083',
   timeout: 5000 // 请求超时时间
 })
 
