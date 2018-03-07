@@ -125,7 +125,7 @@ export default {
       typeList: [],
       natureList: [],
       client: {
-        address: '',
+        address: 'sss',
         category: '',
         email: '',
         name: '',
@@ -154,16 +154,9 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
-    if (this.editData.tabState === 'seeTab') {
-      this.action = 'edit'
-      this.client = _.cloneDeep(this.editData.editData)
-      this.editShow = true
-      this.disabled = true
-    } else {
-      this.action = 'add'
-    }
     this.temp = _.cloneDeep(this.client)
+    this.getInsertData()
+    this.toggleAction()
   },
   mounted() {
   },
@@ -193,7 +186,11 @@ export default {
       })
     },
     reset() {
-      this.client = _.cloneDeep(this.temp)
+      if (this.action === 'add') {
+        this.client = _.cloneDeep(this.temp)
+      } else {
+        this.client = _.cloneDeep(this.editData.editData)
+      }
     },
     cancel() {
       this.$emit('changeObj', false)
@@ -203,7 +200,7 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.client = _.cloneDeep(this.editData.editData)
       } else {
         this.editWord = '取消编辑'
       }
@@ -212,13 +209,35 @@ export default {
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.typeList = [{ value: '多层' }, { value: '高层' }, { value: '小高层' }, { value: '别墅' }, { value: '商业' }, { value: '写字楼' }, { value: '其他' }]
       this.natureList = [{ value: '国有' }, { value: '上市公司' }, { value: '私有企业' }, { value: '其他' }]
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+        this.client = _.cloneDeep(this.temp)
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.client = _.cloneDeep(this.editData.editData)
+      }
     }
   },
   computed: {},
   watch: {
+    editData() {
+      this.toggleAction()
+    },
     client: {
       handler(obj) {
-        if (isObjectValueEqual(obj, this.temp)) {
+        var temp = {} // 区分新增与编辑之间的初始化的对象
+        if (this.action === 'add') {
+          temp = _.cloneDeep(this.temp)
+        } else {
+          temp = _.cloneDeep(this.editData.editData)
+        }
+        if (isObjectValueEqual(obj, temp)) {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)

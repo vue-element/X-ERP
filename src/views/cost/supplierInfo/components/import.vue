@@ -33,7 +33,7 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .invoice-import.form-container{
-  margin-top: 50px;
+  // margin-top: 50px;
   .form-module{
     .el-row{
       margin-bottom:10px;

@@ -175,7 +175,7 @@ export default {
         }
       }
       console.log('search', searchData)
-      // this.$emit('searchWord', searchData)
+      this.$emit('searchWord', searchData)
     },
     searchAll() {
       var searchData = {}

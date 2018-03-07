@@ -9,11 +9,15 @@
         </button> -->
         <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
           <i class="iconfont icon-seeAll"></i>
-          <span>查看明细</span>
+          <span>查看</span>
         </button>
-        <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
+        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
+        </button>
+        <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+          <i class="iconfont icon-seeAll"></i>
+          <span>查看明细</span>
         </button>
       </div>
       <div class="export-btn fr">
@@ -25,15 +29,16 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    <transition name="fade" mode="out-in">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    </transition>
   </div>
 </div>
 </template>
 
 <script>
-import { winHeight } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
@@ -57,24 +62,16 @@ export default {
       isChange: false
     }
   },
+  created() {
+  },
   mounted() {
   },
-  created() {
-    this.resize()
-    window.addEventListener('resize', () => {
-      this.resize()
-    })
-  },
   methods: {
-    resize() {
-      this.height = winHeight() - 210
-    },
     toggleTab(tab) {
       if (this.tab === 'addTab' && this.isChange === true) {
         this.showPopWin(() => {
           this.tab = tab
         })
-        this.isChange = false
         return
       }
       this.tab = tab
@@ -83,21 +80,31 @@ export default {
       this.toggleTab('listTab')
     },
     addBtn() {
-      this.tab = 'addTab'
+      if (this.editData.tabState === 'editTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = 'addTab'
+          this.editData = {
+            editData: {},
+            tabState: 'addTab'
+          }
+        })
+        return
+      }
+      this.toggleTab('addTab')
       this.editData = {
         editData: {},
         tabState: 'addTab'
       }
     },
     seeRow(data) {
-      this.tab = 'addTab'
+      this.toggleTab('addTab')
       this.editData = {
         editData: data,
-        tabState: 'seeTab'
+        tabState: 'editTab'
       }
     },
     searchWord(data) {
-      this.tab = 'listTab'
+      this.toggleTab('listTab')
       this.searchData = data
     },
     showPopWin(callback) {
@@ -106,7 +113,9 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         callback()
+        this.isChange = false
       }).catch(() => {
+        this.isChange = true
       })
     },
     changeObj(status) {

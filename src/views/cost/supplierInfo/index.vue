@@ -7,41 +7,38 @@
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button :class="tab === 'listTab' ? 'is-active' : ''"  @click="toggleTab('listTab')">
             <i class="iconfont icon-seeAll"></i>
-            <span>查看明细</span>
+            <span>查看</span>
           </button>
-          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <!-- <button>
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
+          </button>
         </div>
         <div class="export-btn fr">
-          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
+          <!-- <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
-          </button>
+          </button> -->
           <button @click="handleDownload()" :loading="downloadLoading">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
         </div>
       </div>
     </div>
-    <!-- <keep-alive :include='cachedViews'>
-      <router-view></router-view>
-    </keep-alive> -->
     <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"  @exportData="exportData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
     </div>
@@ -69,75 +66,78 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {},
-      list: [
-        {
-          id: 1,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 2,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 3,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        }
-      ]
+      isChange: false,
+      exprotList: []
     }
   },
   created() {
   },
   mounted() {},
   methods: {
+    toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
+      this.tab = tab
+    },
     addBtn() {
-      this.tab = 'addTab'
+      this.toggleTab('addTab')
       this.editData = {
         editData: {},
         tabState: 'addTab'
       }
     },
     editRow(data) {
+      this.toggleTab('addTab')
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
-      this.tab = 'addTab'
     },
     search(data) {
       this.searchData = data
-      this.tab = 'listTab'
+      this.toggleTab('listTab')
     },
-    toggleTab(tab) {
-      this.tab = tab
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false // 对象变化，按确定键，isChange还原为false
+      }).catch(() => {
+        this.isChange = true // 对象变化，弹窗出，取消键，isChange依旧为true
+      })
+    },
+    changeObj(res) {
+      this.isChange = res
+    },
+    exportData(data) {
+      this.exprotList = data
     },
     dataImpore() {
       this.toggleTab('importTab')
     },
-    handleDownload() {
+    handleDownload(Arr) {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-        const list = this.list
-        // if (list) {
-        //   list = this.list
-        // } else {
-        //   list = []
-        // }
-        // console.log('list', list)
+        const tHeader = ['供应商名称', '合作商类别', '企业法人', '营业执照号', '注册资金', '企业性质', '供货周期', '供货区域', '物资类别', '业务联系人', '联系电话',
+          'QQ', '注册地址', '现址', '开户银行', '银行账号', '发票类型', '税率', '供应商类别', '供应商类型', '评审状态', '结算方式', '合作开始日期', '评审到期日期']
+        const filterVal = ['name', 'cooperativeType', 'enterprisePerson', 'licenseNumber', 'regCapital', 'enterpriseNature', 'supplyCycle', 'region', 'materialCategory', 'person',
+          'phone', 'qq', 'regAddress', 'address', 'bank', 'bankAccount', 'invoiceType', 'taxRate', 'type', 'category', 'reviewState', 'settlementMethod', 'startDate', 'endDate']
+        console.log('exprotList', this.exprotList)
+        var list = []
+        if (Arr) {
+          list = this.exprotList
+        } else {
+          list = []
+        }
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
+        export_json_to_excel(tHeader, data, '供应商信息')
         this.downloadLoading = false
       })
     },

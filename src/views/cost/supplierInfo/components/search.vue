@@ -64,11 +64,11 @@ export default {
       disabled: false,
       contractInfoList: [],
       searchData: {
-        name: '兴海物联',
+        name: '',
         cooperativeType: '',
         materialCategory: '',
-        reviewState: '合格',
-        person: '廖淑萍'
+        reviewState: '',
+        person: ''
       },
       rules: {}
     }
@@ -78,25 +78,18 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.cooperativeTypeList = [
-        { value: '物资供应商' },
-        { value: '业务分包商' }
-      ]
-      this.materialCategoryList = [
-        { value: '主材' },
-        { value: '线材' },
-        { value: '工器具' },
-        { value: '辅材' },
-        { value: '其他' },
-        { value: '行政类' }
-      ]
-      this.reviewStateList = [
-        { value: '合格' },
-        { value: '新引进' }
-      ]
+      this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
+      this.materialCategoryList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
+      this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
     },
     search() {
-      this.$emit('search', this.searchData)
+      var searchData = {}
+      for (var key in this.searchData) {
+        if (this.searchData[key]) {
+          searchData[key] = this.searchData[key]
+        }
+      }
+      this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}

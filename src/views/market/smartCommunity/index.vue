@@ -69,7 +69,6 @@ export default {
         this.showPopWin(() => {
           this.tab = tab
         })
-        this.isChange = false
         return
       }
       this.tab = tab
@@ -117,7 +116,9 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         callback()
+        this.isChange = false
       }).catch(() => {
+        this.isChange = true
       })
     },
     changeObj(res) {

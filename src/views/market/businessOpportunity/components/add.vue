@@ -509,7 +509,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style  rel="stylesheet/scss" lang="scss" scoped>@import "src/styles/mixin.scss";
+<style  rel="stylesheet/scss" lang="scss" scoped>
+@import "src/styles/mixin.scss";
 .busniess-add {
   .edit-btn {
     margin: 0;

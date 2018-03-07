@@ -9,13 +9,13 @@
           <p>基础信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供应商名称:" prop="name">
               <p v-if="disabled">{{supplyInfo.name}}</p>
               <el-input v-else v-model="supplyInfo.name" placeholder="请输入供应商名称"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="合作商类别:" prop="cooperativeType">
               <p v-if="disabled">{{supplyInfo.cooperativeType}}</p>
               <el-select v-else v-model="supplyInfo.cooperativeType" placeholder="请选择合作商类别" filterable>
@@ -24,35 +24,27 @@
              </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="企业法人:" prop="enterprisePerson">
               <p v-if="disabled">{{supplyInfo.enterprisePerson}}</p>
               <el-input v-else v-model="supplyInfo.enterprisePerson" placeholder="请输入企业法人"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="营业执照号:" prop="licenseNumber">
               <p v-if="disabled">{{supplyInfo.licenseNumber}}</p>
               <el-input v-else v-model="supplyInfo.licenseNumber" placeholder="请输入营业执照号"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="注册资金:">
               <p v-if="disabled">{{supplyInfo.regCapital}}</p>
-              <el-input v-else v-model="supplyInfo.regCapital" placeholder="请输入注册资金"></el-input>
+              <el-input v-else v-model="supplyInfo.regCapital" @change="amountChange" placeholder="请输入注册资金"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="注册地址:" prop="regAddress">
-              <p v-if="disabled">{{supplyInfo.regAddress}}</p>
-              <el-input v-else v-model="supplyInfo.regAddress" placeholder="请输入注册地址"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="企业性质:" prop="enterpriseNature">
               <p v-if="disabled">{{supplyInfo.enterpriseNature}}</p>
               <el-select v-else v-model="supplyInfo.enterpriseNature" placeholder="请选择企业性质" filterable>
@@ -61,21 +53,21 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供货周期:">
               <p v-if="disabled">{{supplyInfo.supplyCycle}}</p>
               <el-input v-else v-model="supplyInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供货区域:" prop="region">
               <p v-if="disabled">{{supplyInfo.region}}</p>
               <el-input v-else v-model="supplyInfo.region" placeholder="请输入供货区域"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="物资类别:" prop="materialCategory">
               <p v-if="disabled">{{supplyInfo.materialCategory}}</p>
               <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别" filterable>
@@ -84,30 +76,38 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="现址:">
-              <p v-if="disabled">{{supplyInfo.address}}</p>
-              <el-input v-else v-model="supplyInfo.address" placeholder="请输入现址"></el-input>
-            </el-form-item>
-          </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="业务联系人:" prop="person">
               <p v-if="disabled">{{supplyInfo.person}}</p>
               <el-input v-else v-model="supplyInfo.person" placeholder="请输入业务联系人"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="联系电话:" prop="phone">
               <p v-if="disabled">{{supplyInfo.phone}}</p>
               <el-input v-else v-model="supplyInfo.phone" placeholder="请输入联系电话"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="QQ:">
               <p v-if="disabled">{{supplyInfo.qq}}</p>
               <el-input v-else v-model="supplyInfo.qq" placeholder="请输入QQ"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form-item label="注册地址:" prop="regAddress" class="address">
+              <p v-if="disabled">{{supplyInfo.regAddress}}</p>
+              <el-input v-else v-model="supplyInfo.regAddress" placeholder="请输入注册地址"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form-item label="现址:" class="address">
+              <p v-if="disabled">{{supplyInfo.address}}</p>
+              <el-input v-else v-model="supplyInfo.address" placeholder="请输入现址"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -117,13 +117,13 @@
           <p>付款信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="开户银行:" prop="bank">
               <p v-if="disabled">{{supplyInfo.bank}}</p>
               <el-input v-else v-model="supplyInfo.bank" placeholder="请输入开户银行"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="银行账号:" prop="bankAccount">
               <p v-if="disabled">{{supplyInfo.bankAccount}}</p>
               <el-input v-else v-model="supplyInfo.bankAccount" placeholder="请输入银行账号"></el-input>
@@ -131,7 +131,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="发票类型:" prop="invoiceType">
               <p v-if="disabled">{{supplyInfo.invoiceType}}</p>
               <el-select v-else v-model="supplyInfo.invoiceType" placeholder="请选择发票类型" filterable>
@@ -140,7 +140,7 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="税率:" prop="taxRate">
               <p v-if="disabled">{{supplyInfo.taxRate}}</p>
               <el-input v-else v-model="supplyInfo.taxRate" placeholder="请输入税率"></el-input>
@@ -153,7 +153,7 @@
           <p>评审信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类别:" prop="type">
               <p v-if="disabled">{{supplyInfo.type}}</p>
               <el-select v-else v-model="supplyInfo.type" placeholder="请选择供应商类别" filterable>
@@ -162,7 +162,7 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类型:" prop="category">
               <p v-if="disabled">{{supplyInfo.category}}</p>
               <el-select v-else v-model="supplyInfo.category" placeholder="请选择供应商类型" filterable>
@@ -171,7 +171,9 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="评审状态:" prop="reviewState">
               <p v-if="disabled">{{supplyInfo.reviewState}}</p>
               <el-select v-else v-model="supplyInfo.reviewState" placeholder="请选择评审状态" filterable>
@@ -180,9 +182,7 @@
              </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="结算方式:">
               <p v-if="disabled">{{supplyInfo.settlementMethod}}</p>
               <el-select v-else v-model="supplyInfo.settlementMethod" placeholder="请选择结算方式" filterable>
@@ -191,13 +191,15 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="合作开始日期:" class="single-date">
               <p v-if="disabled">{{supplyInfo.startDate}}</p>
               <el-date-picker v-else type="date" v-model="supplyInfo.startDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
+          <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="评审到期日期:" class="single-date">
               <p v-if="disabled">{{supplyInfo.endDate}}</p>
               <el-date-picker v-else type="date"v-model="supplyInfo.endDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
@@ -216,10 +218,19 @@
 
 <script>
 import _ from 'lodash'
+import { outputmoney, isObjectValueEqual } from '@/utils'
+import { validatePhone, validateMobile } from '@/utils/validate'
 export default {
   name: 'supplierAdd',
   props: ['editData'],
   data() {
+    const validPhone = (rule, value, callback) => {
+      if ((!validateMobile(value)) && (!validatePhone(value))) {
+        callback(new Error('请输入正确的手机或电话号码'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
@@ -238,7 +249,7 @@ export default {
         person: '',
         phone: '',
         qq: '',
-        regAddress: '',
+        regAddress: 'sssssss',
         regCapital: '',
         region: '',
         supplyCycle: '',
@@ -267,11 +278,11 @@ export default {
         enterprisePerson: [{ required: true, message: '请输入企业法人', trigger: 'blur' }],
         licenseNumber: [{ required: true, message: '请输入营业执照号', trigger: 'blur' }],
         regAddress: [{ required: true, message: '请输入注册地址', trigger: 'blur' }],
-        enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'blur' }],
+        enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'change' }],
         region: [{ required: true, message: '请输入供货区域', trigger: 'blur' }],
-        materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'blur' }],
+        materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
         person: [{ required: true, message: '请输入业务联系人', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入联系电话', trigger: 'blur' }],
+        phone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         bank: [{ required: true, message: '请输入开户银行', trigger: 'blur' }],
         bankAccount: [{ required: true, message: '请输入银行账号', trigger: 'blur' }],
         invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
@@ -284,22 +295,11 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
-    if (this.editData.tabState === 'addTab') {
-      this.action = 'add'
-    } else {
-      this.action = 'edit'
-      this.disabled = true
-      this.editShow = true
-      this.supplyInfo = this.editData.editData.supply
-    }
     this.temp = _.cloneDeep(this.supplyInfo)
+    this.getInsertData()
+    this.toggleAction() // 当前组件是新增状态还是编辑状态
   },
   methods: {
-    // editInfo() {
-    //   var data = _.cloneDeep(this.editData.editData)
-    //   this.supplyInfo = data.supply
-    // },
     save() {
       this.$refs.supplyInfo.validate(valid => {
         if (valid) {
@@ -311,6 +311,7 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
+              this.$emit('changeObj', false)
               if (this.action === 'edit') {
                 this.$emit('toggleTab')
               }
@@ -329,7 +330,11 @@ export default {
       })
     },
     reset() {
-      this.supplyInfo = _.cloneDeep(this.temp)
+      if (this.action === 'add') {
+        this.supplyInfo = _.cloneDeep(this.temp)
+      } else {
+        this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
+      }
     },
     cancel() {
       this.$emit('toggleTab')
@@ -352,9 +357,48 @@ export default {
       this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]
       this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
       this.settlementMethodList = [{ value: '月结' }, { value: '货到付款' }, { value: '其他' }]
+    },
+    amountChange(val) {
+      this.supplyInfo.regCapital = outputmoney(val)
+    },
+    toggleAction() { // 当前组件是新增状态还是编辑状态
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+        this.supplyInfo = _.cloneDeep(this.temp)
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
+      }
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    editData() {
+      this.toggleAction()
+    },
+    supplyInfo: {
+      handler(obj) {
+        var temp = {}
+        if (this.action === 'add') {
+          temp = _.cloneDeep(this.temp)
+        } else {
+          temp = _.cloneDeep(this.editData.editData.supply)
+        }
+        // console.log('obj', obj)
+        // console.log('temp', temp)
+        if (isObjectValueEqual(obj, temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
@@ -365,6 +409,21 @@ export default {
     margin: 0;
     button {
       float: right;
+    }
+  }
+}
+</style>
+<style  rel="stylesheet/scss" lang="scss">
+@import "src/styles/mixin.scss";
+.supply-add.form-container {
+  .el-form {
+    .el-form-item.address{
+      label.el-form-item__label {
+        width: 8.5%!important;
+      }
+      .el-form-item__content{
+        width: 88.5%!important;
+      }
     }
   }
 }

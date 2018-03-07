@@ -18,7 +18,6 @@
           </button>
         </div>
       </h4>
-      <!-- <div  v-show="!uploadTableShow"> -->
       <div>
         <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
           <el-table-column label="序号">
