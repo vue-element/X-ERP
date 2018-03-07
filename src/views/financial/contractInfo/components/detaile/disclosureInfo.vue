@@ -198,7 +198,6 @@ export default {
       editWord: '编辑',
       disabled: false,
       loading: false,
-      // 资金来源
       sourceFundsList: [],
       // 合同交底信息
       contractBasis: {
@@ -253,6 +252,7 @@ export default {
       this.state = true
     } else {
       this.disabled = true
+      return
     }
     // 判断状态是查看还是新增
     if (this.editData.tabState === 'seeTab') {
