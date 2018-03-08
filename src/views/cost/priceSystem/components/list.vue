@@ -59,14 +59,17 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/price/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.listLoading = false
+          this.$emit('exportData', data.content)
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     handleCurrentChange(val) {
@@ -91,8 +94,10 @@ export default {
     },
     seeRow(id) {
       this.$get('/price/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        this.$emit('editRow', data)
+        if (res.data.success === true) {
+          var data = res.data.data
+          this.$emit('editRow', data)
+        }
       })
     }
   },

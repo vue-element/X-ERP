@@ -137,7 +137,10 @@ export default {
         console.log('isaddTab')
         this.paymentManage = {
           contractBilling: {
-            id: ''
+            id: '',
+            contractInfo: {
+              id: ''
+            }
           },
           amount: '',
           date: ''

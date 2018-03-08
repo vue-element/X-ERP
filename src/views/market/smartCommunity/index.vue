@@ -9,11 +9,15 @@
         </button>
         <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
           <i class="iconfont icon-seeAll"></i>
-          <span>查看明细</span>
+          <span>查看</span>
         </button>
-        <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
+        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
+        </button>
+        <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+          <i class="iconfont icon-seeAll"></i>
+          <span>查看明细</span>
         </button>
         <button v-show="deleteShow" @click="delSelectData">
           <i class="iconfont icon-delete"></i>
@@ -29,9 +33,11 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-    <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    <transition name="fade" mode="out-in">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    </transition>
   </div>
 </div>
 </template>
@@ -82,17 +88,32 @@ export default {
       }
     },
     addBtn() {
-      this.toggleTab('addTab')
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
+      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
+        if (this.isChange === true) { // 有值的变化
+          this.showPopWin(() => {
+            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else { // 没有值的变化
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
       }
     },
     seeRow(data) {
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
-        tabState: 'seeTab'
+        tabState: 'editTab'
       }
     },
     delSelectData() {

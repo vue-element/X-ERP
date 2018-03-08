@@ -10,19 +10,19 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="申请人:">
+            <el-form-item label="申请人:" prop="applicationPerson">
               <p v-if="disabled">{{paymentContract.applicationPerson}}</p>
               <el-input v-else v-model="paymentContract.applicationPerson" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="申请时间:" class="single-date">
+            <el-form-item label="申请时间:" class="single-date" prop="applicationTime">
               <p v-if="disabled">{{paymentContract.applicationTime}}</p>
               <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="业务线:">
+            <el-form-item label="业务线:" prop="category">
               <p v-if="disabled">{{paymentContract.category}}</p>
               <el-select v-else v-model="paymentContract.category" placeholder="请选择" filterable>
                <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
@@ -33,13 +33,13 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="申请部门:">
+            <el-form-item label="申请部门:" prop="department">
               <p v-if="disabled">{{paymentContract.department}}</p>
               <el-input v-else v-model="paymentContract.department" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="商机编号:">
+            <el-form-item label="商机编号:" prop="business">
               <p v-if="disabled">{{paymentContract.business.code}}</p>
               <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
@@ -64,7 +64,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="支付对象:">
+            <el-form-item label="支付对象:" prop="paymentObject">
               <p v-if="disabled">{{paymentContract.paymentObject}}</p>
               <el-select v-else v-model="paymentContract.paymentObject" placeholder="请选择" filterable>
                 <el-option label="个人" value="个人"></el-option>
@@ -73,13 +73,13 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="应付金额:">
+            <el-form-item label="应付金额:" prop="payableAmount">
               <p v-if="disabled">{{paymentContract.payableAmount}}</p>
               <el-input v-else v-model="paymentContract.payableAmount" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="到付时间:" class="single-date">
+            <el-form-item label="到付时间:" class="single-date" prop="payTime">
                 <p v-if="disabled">{{paymentContract.payTime}}</p>
               <el-date-picker v-else type="date" v-model="paymentContract.payTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
@@ -87,10 +87,10 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="发货状态:">
+            <el-form-item label="发货状态:" prop="deliveryStatus">
               <p v-if="disabled">{{paymentContract.deliveryStatus}}</p>
               <el-select v-else v-model="paymentContract.deliveryStatus" placeholder="请选择" filterable>
-               <el-option label="在办理" value="在办理"></el-option>
+               <el-option label="未发货" value="未发货"></el-option>
                <el-option label="已发货" value="已发货"></el-option>
                <el-option label="已到货" value="已到货"></el-option>
                <el-option label="已退货" value="已退货"></el-option>
@@ -139,12 +139,20 @@
 
 <script>
 import _ from 'lodash'
+import { isObjectValueEqual } from '@/utils'
 import tableComponent from './table.vue'
 export default {
   name: 'paymentContractAdd',
   props: ['editData'],
   components: { tableComponent },
   data() {
+    var validateBusiness = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请选择商机信息'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
@@ -153,71 +161,76 @@ export default {
       editShow: false,
       paymentContract: {
         applicationPerson: '廖淑萍',
-        applicationTime: '2018-01-10',
+        applicationTime: '',
         business: { id: '' },
-        category: '科技-智慧社区改造',
-        deliveryStatus: '已发货',
-        department: '财务部',
-        mention: '是',
-        optCost: '优化成本',
+        category: '',
+        deliveryStatus: '未发货',
+        department: '',
+        mention: '',
+        optCost: '',
         payTime: '',
-        payableAmount: '200',
-        paymentObject: '个人',
-        term: '一个月'
+        payableAmount: '',
+        paymentObject: '供应商',
+        term: ''
       },
       businessList: [],
       categoryList: [],
       contractId: '',
-      rules: {}
+      rules: {
+        applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }],
+        applicationTime: [{ required: true, message: '请输入申请时间', trigger: 'blur' }],
+        category: [{ required: true, message: '请选择业务线', trigger: 'change' }],
+        department: [{ required: true, message: '请选择申请部门', trigger: 'blur' }],
+        business: [{ required: true, validator: validateBusiness, trigger: 'change' }],
+        paymentObject: [{ required: true, message: '请选择支付对象', trigger: 'change' }],
+        payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
+        payTime: [{ required: true, message: '请输入到付时间', trigger: 'blur' }],
+        deliveryStatus: [{ required: true, message: '请选择发货状态', trigger: 'change' }]
+      },
+      temp: {}
     }
   },
   created() {
-    if (this.editData.tabState === 'addTab') {
-      this.action = 'add'
-      this.getInsertData()
-    } else {
-      this.action = 'edit'
-      this.editInfo()
-      this.disabled = true
-      this.editShow = true
-    }
+    this.getInsertData()
+    this.toggleAction()
+    this.temp = _.cloneDeep(this.paymentContract)
   },
   methods: {
-    editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.paymentContract = data.paymentContractList
-      this.businessList = data.businessList
-      this.contractId = this.paymentContract.id
-    },
     save() {
-      this.loading = true
-      this.$post('/paymentContract/save', this.paymentContract).then(res => {
-        this.loading = false
-        if (res.data.success === true) {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
+      this.$refs.paymentContract.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.$post('/paymentContract/save', this.paymentContract).then(res => {
+            this.loading = false
+            if (res.data.success === true) {
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              // if (this.action === 'edit') {
+              //   this.$emit('toggleTab')
+              // }
+              this.disabled = true
+              this.editShow = true
+              this.contractId = res.data.data.id
+              this.$emit('changeObj', false)
+            } else {
+              this.$message({
+                message: '保存失败',
+                type: 'success'
+              })
+            }
+          }).catch(() => {
+            this.loading = false
           })
-          if (this.action === 'edit') {
-            this.$emit('toggleTab')
-          }
-          this.contractId = res.data.data.id
         } else {
-          this.$message({
-            message: '保存失败',
-            type: 'success'
-          })
+          return false
         }
-      }).catch(() => {
-        this.loading = false
       })
     },
     reset() {
-      if (this.action === 'add') {
-        console.log('add')
-      } else {
-        this.editInfo()
-      }
+      console.log('this.temp', this.temp)
+      this.paymentContract = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('toggleTab')
@@ -226,34 +239,50 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.paymentContract = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
       }
     },
-    // uploadList(data) {
-    //   console.log('uploadList', this.purchaseList)
-    //   this.paymentContract.purchaseList = data
-    // },
     getInsertData() {
       this.$get('/paymentContract/findInsertData').then((res) => {
         var data = res.data.data
         this.businessList = data.businessList
-        this.categoryList = [{
-          value: '科技-智慧社区工程全委'
-        }, {
-          value: '科技-智慧社区改造'
-        }, {
-          value: '科技-物联网大平台'
-        }, {
-          value: '科技-设计服务'
-        }, {
-          value: '科技-技术服务'
-        }]
+        this.categoryList = [{ value: '科技-智慧社区工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大平台' }, { value: '科技-设计服务' }, { value: '科技-技术服务' }]
       })
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
+        this.contractId = this.paymentContract.id
+      }
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    disabled(status) {
+      if (status === false) {
+        this.$emit('changeObj', true)
+      }
+    },
+    paymentContract: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 

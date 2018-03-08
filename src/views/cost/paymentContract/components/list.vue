@@ -1,21 +1,25 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号">
-          <template slot-scope="scope">
-           {{scope.$index + 1}}
-          </template>
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+        <el-table-column prop="0" label="序号" fixed width="60">
+          <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="applicationTime" label="申请时间"></el-table-column>
-        <el-table-column prop="applicationPerson" label="申请人"></el-table-column>
-        <el-table-column prop="orderNumber" label="订单编号"></el-table-column>
-        <el-table-column prop="business.code" label="商机编号"></el-table-column>
-        <el-table-column prop="optCost" label="优化成本"></el-table-column>
-        <el-table-column prop="category" label="业务线"></el-table-column>
-        <el-table-column prop="department" label="使用部门"></el-table-column>
-        <el-table-column prop="business.name" label="使用项目"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="business.name" label="使用项目" fixed width="140"></el-table-column>
+        <el-table-column prop="category" label="业务线" fixed width="160"></el-table-column>
+        <el-table-column prop="business.code" label="商机编号" width="100"></el-table-column>
+        <el-table-column prop="applicationPerson" label="申请人"  width="100"></el-table-column>
+        <el-table-column prop="applicationTime" label="申请时间" width="100"></el-table-column>
+        <el-table-column prop="orderNumber" label="订单编号" width="140"></el-table-column>
+        <el-table-column prop="optCost" label="优化成本" width="120"></el-table-column>
+        <el-table-column prop="department" label="申请部门" width="120"></el-table-column>
+        <el-table-column prop="paymentObject" label="支付对象" width="100"></el-table-column>
+        <el-table-column prop="payableAmount" label="应付金额" width="100"></el-table-column>
+        <el-table-column prop="payTime" label="到付时间" width="100"></el-table-column>
+        <el-table-column prop="deliveryStatus" label="发货状态" width="100"></el-table-column>
+        <el-table-column prop="mention" label="是否自提" width="100"></el-table-column>
+        <el-table-column prop="term" label="账期" width="100"></el-table-column>
+        <el-table-column label="操作" fixed="right" width="120">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
@@ -68,6 +72,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
+          this.$emit('exportData', data.content)
         }
       }).catch(() => {
         this.listLoading = false

@@ -80,20 +80,25 @@ export default {
       this.toggleTab('listTab')
     },
     addBtn() {
-      if (this.editData.tabState === 'editTab' && this.isChange === true) {
-        this.showPopWin(() => {
-          this.tab = 'addTab'
-          this.editData = {
-            editData: {},
-            tabState: 'addTab'
-          }
-        })
-        return
-      }
-      this.toggleTab('addTab')
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
+      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
+        if (this.isChange === true) { // 有值的变化
+          this.showPopWin(() => {
+            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else { // 没有值的变化
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
       }
     },
     seeRow(data) {

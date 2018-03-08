@@ -195,7 +195,7 @@
         <el-col :xs="24" :sm="18" :lg="18">
           <el-form-item label="小区配套设施：" class="checkbox-sel community-facility" prop="facilityList">
             <p v-if="disabled">{{facilityWord}}</p>
-            <el-checkbox-group v-else @change="change" v-model="mainMsg.facilityList">
+            <el-checkbox-group v-else @change="facilityChange" v-model="mainMsg.facilityList">
               <el-checkbox :label="'公司'">公司</el-checkbox>
               <el-checkbox :label="'会所'">会所</el-checkbox>
               <el-checkbox :label="'球场'">球场</el-checkbox>
@@ -426,7 +426,7 @@ export default {
         roomNum: [{ required: true, message: '请输入总户数', trigger: 'blur' }],
         address: [{ required: true, message: '请输入项目地址', trigger: 'blur' }],
         builtArea: [{ required: true, message: '请输入总建筑面积', trigger: 'blur' }],
-        communityType: [{ required: true, message: '请选择小区类型', trigger: 'blur' }],
+        communityType: [{ required: true, message: '请选择小区类型', trigger: 'change' }],
         parkingNum: [{ required: true, message: '请输入车位总数', trigger: 'blur' }],
         facilityList: [{ required: true, message: '请选择小区配套设施', trigger: 'change' }]
       },
@@ -447,7 +447,7 @@ export default {
         client: {
           id: ''
         },
-        address: '',
+        address: '22222',
         archFormat: '',
         basementParkingFee: '',
         basementParkingNum: '',
@@ -510,29 +510,16 @@ export default {
         category: 4
       },
       facilityWord: '',
-      temp: {}
+      temp: {} // 保存新增，编辑的初始化对象
     }
   },
   created() {
-    // this.mainMsg.firstEntry = new Date()
     this.getInsertData()
-    if (this.editData.tabState === 'seeTab') {
-      this.action = 'edit'
-      this.editInfo()
-      this.editShow = true
-      this.disabled = true
-    } else {
-      this.action = 'add'
-      this.temp = _.cloneDeep(this.mainMsg)
-    }
+    this.toggleAction()
+    this.temp = _.cloneDeep(this.mainMsg)
   },
   mounted() {},
   methods: {
-    change() {
-      console.log(this.mainMsg.facilityList)
-      this.disabled = true
-      this.disabled = false
-    },
     add(mainMsg) {
       this.$refs[mainMsg].validate((valid) => {
         if (valid) {
@@ -549,7 +536,7 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
-              if (this.action === 'edgit it') {
+              if (this.action === 'edit') {
                 this.$emit('toggleTab')
               }
             }
@@ -567,6 +554,7 @@ export default {
         this.elevatorObj = { a: '', b: '', category: 2 }
         this.machineRoomObj = { a: '', a1: '', b: '', b1: '', c: '', category: 3 }
         this.otherObj = { a: '', b: '', c: '', category: 4 }
+        this.cityOption = []
       } else {
         this.editInfo()
       }
@@ -577,11 +565,9 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log('data', data)
       this.mainMsg = data.project
       this.facilityWord = _.cloneDeep(this.mainMsg.facility)
       this.mainMsg.facilityList = this.mainMsg.facility.split('、')
-      this.temp = _.cloneDeep(this.mainMsg)
       data.project.projectDesigns.forEach((item) => {
         if (item.category === '0') {
           this.carObj = item
@@ -619,12 +605,28 @@ export default {
       })
       this.archFormatList = [{ name: '多层' }, { name: '高层' }, { name: '小高层' }, { name: '别墅' }, { name: '商业' }, { name: '写字楼' }]
     },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.editInfo()
+      }
+    },
     cityChange(val) {
       var len = val.length
       this.mainMsg.city.id = val[len - 1]
     },
     amountChange(val) {
       this.mainMsg.manageFee = outputmoney(val)
+    },
+    facilityChange() {
+      this.disabled = true
+      this.disabled = false
     }
   },
   computed: {},

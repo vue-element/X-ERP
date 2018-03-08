@@ -244,7 +244,7 @@ export default {
         address: '',
         enterpriseNature: '',
         enterprisePerson: '',
-        licenseNumber: '',
+        licenseNumber: 'sssss',
         materialCategory: '',
         person: '',
         phone: '',
@@ -295,9 +295,9 @@ export default {
     }
   },
   created() {
-    this.temp = _.cloneDeep(this.supplyInfo)
     this.getInsertData()
     this.toggleAction() // 当前组件是新增状态还是编辑状态
+    this.temp = _.cloneDeep(this.supplyInfo)
   },
   methods: {
     save() {
@@ -330,11 +330,7 @@ export default {
       })
     },
     reset() {
-      if (this.action === 'add') {
-        this.supplyInfo = _.cloneDeep(this.temp)
-      } else {
-        this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
-      }
+      this.supplyInfo = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('toggleTab')
@@ -343,7 +339,7 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.supplyInfo = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
       }
@@ -366,7 +362,6 @@ export default {
         this.action = 'add'
         this.disabled = false
         this.editShow = false
-        this.supplyInfo = _.cloneDeep(this.temp)
       } else {
         this.action = 'edit'
         this.disabled = true
@@ -377,20 +372,14 @@ export default {
   },
   computed: {},
   watch: {
-    editData() {
-      this.toggleAction()
+    disabled(status) {
+      if (status === false) {
+        this.$emit('changeObj', true)
+      }
     },
     supplyInfo: {
       handler(obj) {
-        var temp = {}
-        if (this.action === 'add') {
-          temp = _.cloneDeep(this.temp)
-        } else {
-          temp = _.cloneDeep(this.editData.editData.supply)
-        }
-        // console.log('obj', obj)
-        // console.log('temp', temp)
-        if (isObjectValueEqual(obj, temp)) {
+        if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)

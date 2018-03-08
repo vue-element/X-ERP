@@ -226,7 +226,7 @@ export default {
   },
   created() {
     this.getInsertData()
-    if (this.editData.tabState === 'seeTab') {
+    if (this.editData.tabState === 'editTab') {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
