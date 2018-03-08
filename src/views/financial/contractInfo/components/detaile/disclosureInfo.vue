@@ -9,7 +9,7 @@
           <p>资金来源</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="资金来源：">
               <p v-if="disabled">{{contractBasis.sourceFunds}}</p>
               <el-select v-else v-model="contractBasis.sourceFunds" placeholder="请选择资金来源">
@@ -24,31 +24,35 @@
           <p>交底支出</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="材料成本：">
               <p v-if="disabled">{{contractBasis.materialCost}}</p>
               <el-input v-else v-model="contractBasis.materialCost" @change="materialCost" placeholder="请输入材料成本"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="人工成本：">
               <p v-if="disabled">{{contractBasis.artificialCost}}</p>
-              <el-input v-else v-model="contractBasis.artificialCost" @change="artificialCost" placeholder="请输入人工成本"></el-input>
+              <el-input v-else v-model.number="contractBasis.artificialCost" @change="artificialCost" placeholder="请输入人工成本"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="综合成本：">
               <p v-if="disabled">{{contractBasis.comprehensiveCost}}</p>
               <el-input v-else v-model="contractBasis.comprehensiveCost" @change="comprehensiveCost" placeholder="请输入综合成本"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="管理费用：">
               <p v-if="disabled">{{contractBasis.manageCost}}</p>
               <el-input v-else v-model="contractBasis.manageCost" @change="manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税金：">
               <p v-if="disabled">{{contractBasis.tax}}</p>
               <el-input v-else v-model="contractBasis.tax" @change="tax" placeholder="请输入税金"></el-input>
@@ -61,21 +65,21 @@
           <p>计划利润</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="毛利润">
-              <p v-if="disabled">{{contractBasis.tax}}</p>
+              <p v-if="disabled">{{contractBasis.profit}}</p>
               <el-input v-else v-model="contractBasis.profit" placeholder="请输入毛利润"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="8">
+          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="毛利润率">
-              <p v-if="disabled">{{contractBasis.tax}}</p>
+              <p v-if="disabled">{{contractBasis.profitRate}}</p>
               <el-input v-else v-model="contractBasis.profitRate" placeholder="请输入毛利润率"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </div>
-      <div class="btn" v-show="state">
+      <div class="btn" v-show="!disabled">
         <div class="common-btn" @click="add" :loading="loading">保&nbsp;&nbsp;&nbsp;存</div>
         <div class="common-btn" @click="reset">重&nbsp;&nbsp;&nbsp;置</div>
         <div class="common-btn" @click="cancel">取&nbsp;&nbsp;&nbsp;消</div>
@@ -88,13 +92,13 @@
         <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column prop="paymentCondition" label="回款条件"></el-table-column>
+          <el-table-column prop="paymentCondition" label="回款条件" width="300"></el-table-column>
           <el-table-column prop="date" label="计划回款时间"></el-table-column>
           <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
           <el-table-column prop="" label="计划回款累计金额"></el-table-column>
@@ -115,10 +119,10 @@
           <el-input v-model="paymentPlan.paymentCondition"></el-input>
         </el-form-item>
         <el-form-item label="计划回款比例(%)：">
-          <el-input v-model="paymentPlan.ratio"></el-input>
+          <el-input v-model="paymentPlan.ratio" @change="ratio"></el-input>
         </el-form-item>
         <el-form-item label="计划回款金额(元)：">
-          <el-input v-model="paymentPlan.amount"></el-input>
+          <el-input v-model="paymentPlan.amount" @change="amount"></el-input>
         </el-form-item>
         <el-form-item class="single-date" label="计划回款时间：">
           <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
@@ -136,14 +140,14 @@
         <el-button class="up-files common-btn" type="text" @click="upFiles = true">附件上传</el-button>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="tableData" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="附件名称"></el-table-column>
-          <el-table-column align="center" prop="2" label="附件说明"></el-table-column>
+          <el-table-column align="center" prop="1" label="附件名称" width="300"></el-table-column>
+          <el-table-column align="center" prop="2" label="附件说明" width="350"></el-table-column>
           <el-table-column align="center" prop="3" label="上传人"></el-table-column>
           <el-table-column align="center" prop="4" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
@@ -183,7 +187,6 @@
 
 <script>
 import _ from 'lodash'
-import { winHeight } from '@/utils'
 import { outputmoney } from '@/utils'
 import { mapState } from 'vuex'
 export default {
@@ -194,7 +197,6 @@ export default {
       currentPage: 1,
       action: 'add',
       editShow: false,
-      state: false,
       editWord: '编辑',
       disabled: false,
       loading: false,
@@ -244,25 +246,23 @@ export default {
   },
   created() {
     this.getInsertData()
-    // console.log(this.$store.state.contractMsg.contractMsg)
-    // 组件加载出来判断合同基础信息是否填写了 有继续填写 没有则禁用
-    var contractMsg = sessionStorage.getItem('contractMsg')
-    if (contractMsg) {
-      this.disabled = false
-      this.state = true
-    } else {
-      this.disabled = true
-      return
-    }
     // 判断状态是查看还是新增
     if (this.editData.tabState === 'seeTab') {
       this.action = 'edit'
       this.editShow = true
       this.disabled = true
-      this.state = false
       this.showInfo()
     } else {
       this.action = 'add'
+      // this.delSession()
+      // var contractMsg = this.$store.state.contractMsg.contractMsg
+      var contractMsg = sessionStorage.getItem('contractMsg')
+      if (contractMsg) {
+        this.disabled = false
+      } else {
+        this.disabled = true
+        return
+      }
     }
     // 渲染回款计划表格
     this.paymentPlayShow()
@@ -283,6 +283,7 @@ export default {
           }
         })
       } else {
+        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.contractBasis.id = contractMsg.contractBasis.id
         this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
@@ -311,11 +312,9 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.state = false
         this.showInfo()
       } else {
         this.editWord = '取消编辑'
-        this.state = true
       }
     },
     reset() {
@@ -358,6 +357,7 @@ export default {
           }
         })
       } else {
+        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
         this.paymentPlanAdd()
@@ -386,11 +386,11 @@ export default {
             var contractBasisID = res.data.data.content[0].id
             this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
               this.receiveData = res.data.data.content
-              console.log(this.receiveData)
             })
           }
         })
       } else {
+        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         var contractBasisID = contractMsg.contractBasis.id
         this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
@@ -417,6 +417,9 @@ export default {
         }
       })
     },
+    delSession() {
+      sessionStorage.removeItem('contractMsg')
+    },
     // 数字格式化
     materialCost(val) {
       this.contractBasis.materialCost = outputmoney(val)
@@ -433,6 +436,12 @@ export default {
     tax(val) {
       this.contractBasis.tax = outputmoney(val)
     },
+    ratio(val) {
+      this.paymentPlan.ratio = outputmoney(val)
+    },
+    amount(val) {
+      this.paymentPlan.amount = outputmoney(val)
+    },
     // 附件上传
     submitUpload() {
       this.$refs.upload.submit()
@@ -445,10 +454,6 @@ export default {
     }
   },
   mounted() {
-    this.$refs.ele.style.height = winHeight() - 230 + 'px'
-    window.addEventListener('resize', () => {
-      this.$refs.ele.style.height = winHeight() - 230 + 'px'
-    })
   },
   computed: {
     ...mapState(['contractMsg'])
@@ -459,7 +464,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .disclosure-info-container.form-container{
-  overflow-y:auto;
   margin-top:140px;
   &::-webkit-scrollbar{
     width:0;

@@ -106,12 +106,11 @@ export default {
       }
     },
     editRow(data) {
+      this.tab = 'addTab'
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
-      this.tab = 'addTab'
     },
     search(data) {
       this.searchData = data

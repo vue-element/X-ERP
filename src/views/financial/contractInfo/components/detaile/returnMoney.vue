@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计回款金额：">
-              <el-input v-model="contractReceived.amount"></el-input>
+              <p>{{contractReceived.amount}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -19,8 +19,8 @@
         <p>回款详情</p>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="contractReceivedData" :height="height" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="180" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
@@ -38,9 +38,10 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  props: ['editData'],
   data() {
     return {
-      tableData: [],
+      contractReceivedData: [],
       height: 100,
       currentPage: 1,
       contractReceived: {
@@ -53,10 +54,18 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
+    this.getContractReceived()
   },
   methods: {
     resize() {
       this.height = winHeight() - 475
+    },
+    getContractReceived() {
+      // var contractReceivedID = this.editData.editData.id
+      // console.log(contractReceivedID)
+      // this.$get('/ContractReceived/findAllByContractInfo/' + contractReceivedID).then((res) => {
+      //   console.log(res)
+      // })
     }
   }
 }

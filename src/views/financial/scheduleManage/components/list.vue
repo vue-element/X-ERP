@@ -1,14 +1,14 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+        <el-table-column prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同名称"></el-table-column>
+        <el-table-column prop="contractInfo.name" label="合同名称" width="200"></el-table-column>
         <el-table-column prop="stage" label="项目所属阶段"></el-table-column>
         <el-table-column prop="finishPercentage" label="完工百分比"></el-table-column>
         <el-table-column prop="billingPercentage" label="开票百分比"></el-table-column>

@@ -1,19 +1,19 @@
 <template>
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中">
-        <el-table-column align="center" prop="0" label="序号">
+      <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+        <el-table-column align="center" prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="code" label="合同编码"></el-table-column>
-        <el-table-column prop="name" label="合同名称"></el-table-column>
-        <el-table-column prop="region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="term" label="合同所属期"></el-table-column>
-        <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
-        <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>
-        <el-table-column prop="receivedAmount" label="已回款金额"></el-table-column>
-        <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
+        <el-table-column prop="code" label="合同编码" width="100"></el-table-column>
+        <el-table-column prop="name" label="合同名称" width="200"></el-table-column>
+        <el-table-column prop="region.name" label="所属办事处" width="100"></el-table-column>
+        <el-table-column prop="term" label="合同所属期" width="100"></el-table-column>
+        <el-table-column prop="changeAmount" label="变更后合同金额" width="160"></el-table-column>
+        <el-table-column prop="invoicedAmount" label="已开票金额" width="120"></el-table-column>
+        <el-table-column prop="receivedAmount" label="已回款金额" width="120"></el-table-column>
+        <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" width="120"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>

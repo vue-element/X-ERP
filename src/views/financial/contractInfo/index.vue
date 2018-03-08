@@ -31,7 +31,7 @@
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
       <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel"></addComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @changeObj="changeObj"></addComponent>
     </div>
   </div>
 </template>
@@ -83,6 +83,9 @@ export default {
     },
     cancel() {
       this.tab = 'listTab'
+    },
+    changeObj(status) {
+      console.log(status)
     }
   },
   computed: {

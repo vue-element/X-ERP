@@ -1,21 +1,21 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+        <el-table-column prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同名称"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="name" label="发票抬头名称"></el-table-column>
-        <el-table-column prop="amount" label="开票金额"></el-table-column>
-        <el-table-column prop="date" label="开票日期"></el-table-column>
-        <el-table-column prop="number" label="发票号码"></el-table-column>
-        <el-table-column prop="content" label="开票内容"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column prop="contractInfo.name" label="合同名称" width="180"></el-table-column>
+        <el-table-column prop="contractInfo.region.name" label="所属办事处" width="120"></el-table-column>
+        <el-table-column prop="name" label="发票抬头名称" width="180"></el-table-column>
+        <el-table-column prop="amount" label="开票金额" width="120"></el-table-column>
+        <el-table-column prop="date" label="开票日期" width="120"></el-table-column>
+        <el-table-column prop="number" label="发票号码" width="120"></el-table-column>
+        <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>

@@ -6,7 +6,7 @@
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="client.name" label="客户名称" width="200" fixed ></el-table-column>
+   <el-table-column prop="client.name" label="客户名称" width="200"></el-table-column>
    <el-table-column prop="city.name" label="城市" width="100"></el-table-column>
    <el-table-column prop="region.name" label="地区" width="100"></el-table-column>
    <el-table-column prop="name" label="项目名称" width="120" fixed></el-table-column>

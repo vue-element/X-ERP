@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-add form-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-form :model="paymentData" :rules="rules" ref="paymentData">
       <div class="form-module">
         <h4 class="module-title">
           <p>新增付款信息:</p>
@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择合同编号" filterable>
+              <el-select v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -16,38 +16,38 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="人工成本投入：" prop="artificialCost">
-              <el-input v-model="ruleForm.artificialCost" placeholder="请输入人工成本投入" :disabled="disabled"></el-input>
+              <el-input v-model="paymentData.artificialCost" placeholder="请输入人工成本投入" @change="artificialCost"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="材料成本投入：" prop="materialCost">
-              <el-input v-model="ruleForm.materialCost" placeholder="请输入材料成本投入" :disabled="disabled"></el-input>
+              <el-input v-model="paymentData.materialCost" placeholder="请输入材料成本投入" @change="materialCost"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="综合成本投入：" class="single-date" prop="comprehensiveCost">
-              <el-input v-model="ruleForm.comprehensiveCost" placeholder="请输入综合成本投入" :disabled="disabled"></el-input>
+              <el-input v-model="paymentData.comprehensiveCost" placeholder="请输入综合成本投入" @change="comprehensiveCost"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="管理费用：" prop="manageCost">
-              <el-input v-model="ruleForm.manageCost" placeholder="请输入管理费用" :disabled="disabled"></el-input>
+              <el-input v-model="paymentData.manageCost" placeholder="请输入管理费用" @change="manageCost"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="稅金：" prop="tax">
-              <el-input v-model="ruleForm.tax" placeholder="请输入税金" :disabled="disabled"></el-input>
+              <el-input v-model="paymentData.tax" placeholder="请输入税金" @change="tax"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="投入日期：" class="single-date" prop="inputDate">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="paymentData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,6 +63,7 @@
 
 <script>
 import _ from 'lodash'
+import { outputmoney } from '@/utils'
 export default {
   name: 'paymentAdd',
   props: ['editData'],
@@ -78,7 +79,7 @@ export default {
       loading: false,
       disabled: false,
       contractInfoList: [],
-      ruleForm: {
+      paymentData: {
         contractInfo: {
           id: ''
         },
@@ -101,6 +102,7 @@ export default {
     }
   },
   created() {
+    console.log(this.editData.editData)
     if (this.editData.tabState === 'addTab') {
       this.getInsertData()
     } else {
@@ -118,15 +120,15 @@ export default {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.contractInfoList = data.contractInfoList
-      this.ruleForm = data.contractPayment
+      this.paymentData = data.contractPayment
     },
     save() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.paymentData.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/ContractPayment/save', this.ruleForm).then(res => {
+          this.$post('/ContractPayment/save', this.paymentData).then(res => {
             if (res.data.success === true) {
-              console.log('this.ruleForm', this.ruleForm)
+              console.log('this.paymentData', this.paymentData)
               this.loading = false
               this.$message({
                 message: '保存成功',
@@ -142,7 +144,7 @@ export default {
     },
     reset() {
       if (this.editData.tabState === 'addTab') {
-        this.ruleForm = {
+        this.paymentData = {
           amount: '',
           content: '',
           contractInfo: {
@@ -158,14 +160,24 @@ export default {
     },
     cancel() {
       this.$emit('toggleTab')
+    },
+    artificialCost(val) {
+      this.paymentData.artificialCost = outputmoney(val)
+    },
+    materialCost(val) {
+      this.paymentData.materialCost = outputmoney(val)
+    },
+    comprehensiveCost(val) {
+      this.paymentData.comprehensiveCost = outputmoney(val)
+    },
+    manageCost(val) {
+      this.paymentData.manageCost = outputmoney(val)
+    },
+    tax(val) {
+      this.paymentData.tax = outputmoney(val)
     }
   },
   computed: {}
-  // watch: {
-  //   $route() {
-  //
-  //   }
-  // }
 }
 </script>
 

@@ -110,13 +110,13 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同金额：" prop="originalAmount">
                 <p v-if="disabled">{{contractInfo.originalAmount}}</p>
-                <el-input v-else v-model="contractInfo.originalAmount" @change="originalAmount" type="text" placeholder="请输入合同金额" min='0'></el-input>
+                <el-input v-else v-model.number="contractInfo.originalAmount" @change="originalAmount" placeholder="请输入合同金额" min='0'></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="变更金额：">
                 <p v-if="disabled">{{contractInfo.changeAmount}}</p>
-                <el-input v-else v-model="contractInfo.changeAmount" @change="changeAmount" type="text" placeholder="请输入变更金额"></el-input>
+                <el-input v-else v-model="contractInfo.changeAmount" @change="changeAmount" placeholder="请输入变更金额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -124,7 +124,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同总额：">
                 <p v-if="disabled">{{contractInfo.contractTotalAmount}}</p>
-                <el-input v-else v-model="contractInfo.contractTotalAmount" @change="contractTotalAmount" type="text" placeholder="请输入合同总额"></el-input>
+                <el-input v-else v-model="contractInfo.contractTotalAmount" @change="contractTotalAmount" placeholder="请输入合同总额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -190,19 +190,11 @@ export default {
       contractInfo: {
         code: '',
         name: '',
-        business: {
-          id: ''
-        },
+        business: { id: '' },
         category: '',
-        client: {
-          id: ''
-        },
-        city: {
-          id: ''
-        },
-        region: {
-          id: ''
-        },
+        client: { id: '' },
+        city: { id: '' },
+        region: { id: '' },
         text: '',
         signDate: '',
         term: '',
@@ -227,7 +219,7 @@ export default {
         signDate: [{ required: true, message: '请选择签订日期', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
         limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
-        originalAmount: [{ required: true, message: '请输入合同金额', trigger: 'blur' }]
+        originalAmount: [{ required: true, message: '请输入合同金额' }]
       },
       temp: {}
     }
@@ -281,7 +273,6 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
-              this.$emit('changeObj', false)
             }
           }).catch(() => {
             this.loading = false
@@ -297,7 +288,7 @@ export default {
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
-      var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join('-')
+      var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.dateShow = dateShow
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
     },
