@@ -29,14 +29,14 @@
         </div>
       </el-dialog>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="附件名称"></el-table-column>
-          <el-table-column align="center" prop="2" label="附件说明"></el-table-column>
+          <el-table-column align="center" prop="1" label="附件名称" width="300"></el-table-column>
+          <el-table-column align="center" prop="2" label="附件说明" width="300"></el-table-column>
           <el-table-column align="center" prop="3" label="上传人"></el-table-column>
           <el-table-column align="center" prop="4" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">

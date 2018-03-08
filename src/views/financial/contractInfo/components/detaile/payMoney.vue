@@ -8,24 +8,28 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="项目累计投入金额：">
-              <el-input v-model="contractPayment.name"></el-input>
+              <p v-model="contractPayment.name"></p>
+              <!-- <el-input v-model="contractPayment.name"></el-input> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="材料累计投入金额：">
-              <el-input v-model="contractPayment.materialCost"></el-input>
+              <p v-model="contractPayment.materialCost"></p>
+              <!-- <el-input v-model="contractPayment.materialCost"></el-input> -->
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="人工累计投入金额：">
-              <el-input v-model="contractPayment.artificialCost"></el-input>
+              <p v-model="contractPayment.artificialCost"></p>
+              <!-- <el-input v-model="contractPayment.artificialCost"></el-input> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="综合累计投入金额：">
-              <el-input v-model="contractPayment.comprehensiveCost"></el-input>
+              <p v-model="contractPayment.comprehensiveCost"></p>
+              <!-- <el-input v-model="contractPayment.comprehensiveCost"></el-input> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -36,8 +40,8 @@
         <p>信息资料</p>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="100">
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>

@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票抬头名称">
-              <el-input v-model="invoceInfo.name" placeholder="请输入开票抬头名称"></el-input>
+              <p>{{invoceInfo.name}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计开票金额">
-              <el-input v-model="invoceInfo.amount" placeholder="请输入累计开票金额"></el-input>
+              <p>{{invoceInfo.amount}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -24,16 +24,16 @@
         <p>开票详情</p>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-          <el-table-column align="center" prop="0" label="序号">
+        <el-table class="basic-form" style="width: 100%" :data="invoceInfoData" :height="height" ref="multipleTable" border>
+          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="开票金额"></el-table-column>
-          <el-table-column align="center" prop="2" label="开票日期"></el-table-column>
-          <el-table-column align="center" prop="3" label="开票号码"></el-table-column>
-          <el-table-column align="center" prop="4" label="开票内容"></el-table-column>
+          <el-table-column prop="amount" label="开票金额"></el-table-column>
+          <el-table-column prop="date" label="开票日期"></el-table-column>
+          <el-table-column prop="number" label="开票号码"></el-table-column>
+          <el-table-column prop="content" label="开票内容" width="400"></el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
   :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
@@ -45,11 +45,15 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  props: ['editData'],
   data() {
     return {
-      tableData: [],
+      invoceInfoData: [],
       height: 100,
       currentPage: 1,
+      total: 5,
+      pageSizes: [12, 15, 16],
+      pageSize: 15,
       invoceInfo: {
         name: '',
         amount: ''
@@ -61,10 +65,34 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
+    if (this.editData.tabState === 'seeTab') {
+      this.getInvoceInfo()
+    } else {
+      this.invoceInfo = {
+        name: '',
+        amount: ''
+      }
+    }
   },
   methods: {
     resize() {
       this.height = winHeight() - 475
+    },
+    getInvoceInfo() {
+      var basicInfoID = this.editData.editData.id
+      this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
+        this.invoceInfo.name = res.data.data.content[0].name
+        this.invoceInfoData = res.data.data.content
+      })
+    },
+    getInvoceInfoData() {
+      // var basicInfoID = this.editData.editData.id
+      // var pageSize = this.pageSize || 15
+      // var page = this.currentPage - 1 || 0
+      // var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
+      // this.$post(url, basicInfoID, false).then((res) => {
+      //   console.log(res)
+      // })
     }
   }
 }

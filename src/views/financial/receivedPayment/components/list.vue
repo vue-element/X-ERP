@@ -1,14 +1,14 @@
 <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-        <el-table-column align="center" prop="0" label="序号">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+        <el-table-column align="center" prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
         <el-table-column prop="contractBilling.contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="contractBilling.contractInfo.name" label="合同名称"></el-table-column>
+        <el-table-column prop="contractBilling.contractInfo.name" label="合同名称" width="240"></el-table-column>
         <el-table-column prop="contractBilling.contractInfo.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="contractBilling.number" label="发票号码"></el-table-column>
         <el-table-column prop="amount" label="回款金额"></el-table-column>
@@ -69,7 +69,6 @@ export default {
         if (res.data.success === true) {
           this.listLoading = false
           var data = res.data.data
-          console.log('data', data)
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
@@ -98,6 +97,7 @@ export default {
       })
     },
     editRow(id) {
+      console.log(id)
       this.$get('/ContractReceived/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         this.$emit('editRow', data)

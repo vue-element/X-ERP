@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-add form-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-form :model="invoiceData" :rules="rules" ref="invoiceData">
       <div class="form-module">
         <h4 class="module-title">
           <p>新增开票信息:</p>
@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编码：" prop="contractInfo">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择合同编码" filterable>
+              <el-select v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -16,31 +16,31 @@
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="发票抬头名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入发票抬头名称" :disabled="disabled"></el-input>
+              <el-input v-model="invoiceData.name" placeholder="请输入发票抬头名称"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入发票号码" :disabled="disabled"></el-input>
+              <el-input v-model.number="invoiceData.number" placeholder="请输入发票号码"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票金额：" prop="amount">
-              <el-input v-model="ruleForm.amount" placeholder="请输入开票金额" :disabled="disabled"></el-input>
+              <el-input v-model="invoiceData.amount" placeholder="请输入开票金额" @change="amount"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票日期：" prop="date" class="single-date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="invoiceData.date"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票内容：">
-              <el-input v-model="ruleForm.content" placeholder="请输入开票内容" :disabled="disabled"></el-input>
+              <el-input v-model="invoiceData.content" placeholder="请输入开票内容"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -55,36 +55,30 @@
 </template>
 
 <script>
+import { outputmoney } from '@/utils'
 export default {
   name: 'invoiceAdd',
   props: ['editData'],
   data() {
-    var validateContractInfo = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('合同编码不能为空'))
-      } else {
-        callback()
-      }
-    }
     return {
       action: 'add',
       loading: false,
       disabled: false,
       contractInfoList: [],
       originData: {},
-      ruleForm: {
-        amount: '开票金额',
-        content: '开票内容',
-        name: '发票抬头名称',
+      invoiceData: {
+        amount: '',
+        content: '',
+        name: '',
         contractInfo: {
-          id: 1
+          id: ''
         },
-        number: '发票号码'
+        number: ''
       },
       rules: {
-        contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
+        contractInfo: [{ required: true, message: '请输入合同编码', trigger: 'change' }],
         name: [{ required: true, message: '请输入发票抬头名称', trigger: 'blur' }],
-        number: [{ required: true, message: '请输入发票号码', trigger: 'blur' }],
+        number: [{ required: true, message: '请输入发票号码' }, { type: 'number', message: '请输入数字' }],
         amount: [{ required: true, message: '请输入开票金额', trigger: 'blur' }],
         date: [{ required: true, message: '请选择开票日期', trigger: 'blur' }]
       }
@@ -108,18 +102,15 @@ export default {
       })
     },
     editInfo() {
-      console.log(this.editData.editData)
       var data = this.editData.editData
       this.contractInfoList = data.contractInfoList
       this.originData = data.contractBilling
-      this.ruleForm = data.contractBilling
+      this.invoiceData = data.contractBilling
     },
     save() {
       this.loading = true
-      console.log('ruleForm', JSON.stringify(this.ruleForm))
-      this.$post('/contractBilling/save', this.ruleForm).then(res => {
+      this.$post('/contractBilling/save', this.invoiceData).then(res => {
         if (res.data.success === true) {
-          console.log('this.ruleForm', this.ruleForm)
           this.loading = false
           this.$message({
             message: '保存成功',
@@ -133,8 +124,7 @@ export default {
     },
     reset() {
       if (this.editData.tabState === 'addTab') {
-        console.log('isaddTab')
-        this.ruleForm = {
+        this.invoiceData = {
           amount: '',
           content: '',
           contractInfo: {
@@ -145,12 +135,14 @@ export default {
           number: ''
         }
       } else {
-        console.log('originData', this.originData)
-        this.ruleForm = this.originData
+        this.invoiceData = this.originData
       }
     },
     cancel() {
       this.$emit('toggleTab')
+    },
+    amount(val) {
+      this.invoiceData.amount = outputmoney(val)
     }
   },
   computed: {}

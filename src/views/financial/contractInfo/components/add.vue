@@ -17,9 +17,9 @@
       <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel"></disclosureInfo>
       <subContract v-if="tab === 'subContract'"></subContract>
       <change v-if="tab === 'change'"></change>
-      <invoiceInfo v-if="tab === 'invoiceInfo'"></invoiceInfo>
-      <returnMoney v-if="tab === 'returnMoney'"></returnMoney>
-      <payMoney v-if="tab === 'payMoney'"></payMoney>
+      <invoiceInfo v-if="tab === 'invoiceInfo'" :editData="editData"></invoiceInfo>
+      <returnMoney v-if="tab === 'returnMoney'" :editData="editData"></returnMoney>
+      <payMoney v-if="tab === 'payMoney'" :editData="editData"></payMoney>
     </div>
   </div>
 </template>
@@ -58,6 +58,9 @@ export default {
     },
     cancel () {
       this.$emit('cancel')
+    },
+    changeObj() {
+      this.$emit('changeObj')
     }
   }
 }

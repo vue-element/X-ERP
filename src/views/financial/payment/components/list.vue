@@ -1,21 +1,21 @@
 <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable">
-        <el-table-column align="center" prop="0" label="序号">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+        <el-table-column align="center" prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
         <el-table-column align="center" prop="contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column align="center" prop="contractInfo.name" label="合同名称"></el-table-column>
-        <el-table-column align="center" prop="contractInfo.region.name" label="所属办事处"></el-table-column>
-        <el-table-column align="center" prop="artificialCost" label="人工成本投入"></el-table-column>
-        <el-table-column align="center" prop="materialCost" label="材料成本投入"></el-table-column>
-        <el-table-column align="center" prop="comprehensiveCost" label="综合成本投入"></el-table-column>
-        <el-table-column align="center" prop="manageCost" label="管理费用"></el-table-column>
-        <el-table-column align="center" prop="tax" label="税金"></el-table-column>
-          <el-table-column align="center" prop="inputDate" label="投入日期"></el-table-column>
+        <el-table-column align="center" prop="contractInfo.name" label="合同名称" width="200"></el-table-column>
+        <el-table-column align="center" prop="contractInfo.region.name" label="所属办事处" width="120"></el-table-column>
+        <el-table-column align="center" prop="artificialCost" label="人工成本投入" width="120"></el-table-column>
+        <el-table-column align="center" prop="materialCost" label="材料成本投入" width="120"></el-table-column>
+        <el-table-column align="center" prop="comprehensiveCost" label="综合成本投入" width="120"></el-table-column>
+        <el-table-column align="center" prop="manageCost" label="管理费用" width="120"></el-table-column>
+        <el-table-column align="center" prop="tax" label="税金" width="120"></el-table-column>
+          <el-table-column align="center" prop="inputDate" label="投入日期" width="120"></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>

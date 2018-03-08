@@ -69,27 +69,6 @@ export default {
   name: 'scheduleManageAdd',
   props: ['editData'],
   data() {
-    var validateStage = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('项目所属阶段不能为空'))
-      } else {
-        callback()
-      }
-    }
-    var validateFinishPercentage = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('完工百分比不能为空'))
-      } else {
-        callback()
-      }
-    }
-    var validateStatus = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('项目状态不能为空'))
-      } else {
-        callback()
-      }
-    }
     return {
       action: 'add',
       loading: false,
@@ -106,9 +85,9 @@ export default {
         time: '更新时间'
       },
       rules: {
-        stage: [{ required: true, validator: validateStage, trigger: 'change' }],
-        finishPercentage: [{ required: true, validator: validateFinishPercentage, trigger: 'change' }],
-        status: [{ required: true, validator: validateStatus, trigger: 'change' }]
+        stage: [{ required: true, message: '项目所属阶段不能为空', trigger: 'change' }],
+        finishPercentage: [{ required: true, message: '完工百分比不能为空', trigger: 'change' }],
+        status: [{ required: true, message: '项目状态不能为空', trigger: 'change' }]
       }
     }
   },
