@@ -1,23 +1,21 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
         <el-table-column prop="0" label="序号">
-          <template slot-scope="scope">
-           {{scope.$index + 1}}
-          </template>
+          <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="applicationTime" label="合同编号"></el-table-column>
-        <el-table-column prop="applicationPerson" label="采购清单编号"></el-table-column>
+        <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
+        <el-table-column prop="code" label="付款合同编号"></el-table-column>
         <el-table-column prop="inputNumber" label="入库单号"></el-table-column>
         <el-table-column prop="business.name" label="办事处"></el-table-column>
-        <el-table-column prop="optCost" label="供应商"></el-table-column>
+        <el-table-column prop="supply.name" label="供应商"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">审核</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">导出</el-button>
+            <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button>
+            <el-button @click.native.prevent="exportRow(scope.row.id)" type="text">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,6 +92,8 @@ export default {
         }
       })
     },
+    checkRow() {},
+    exportRow() {},
     seeRow(id) {
       this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
         var data = res.data.data

@@ -1,6 +1,6 @@
-<template>
+:sm:md<template>
   <div class="payment-contract-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="editShow" >
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="paymentContract" :rules="rules" ref="paymentContract">
@@ -9,19 +9,19 @@
           <p>基础信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="申请人:" prop="applicationPerson">
               <p v-if="disabled">{{paymentContract.applicationPerson}}</p>
               <el-input v-else v-model="paymentContract.applicationPerson" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="申请时间:" class="single-date" prop="applicationTime">
               <p v-if="disabled">{{paymentContract.applicationTime}}</p>
               <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="业务线:" prop="category">
               <p v-if="disabled">{{paymentContract.category}}</p>
               <el-select v-else v-model="paymentContract.category" placeholder="请选择" filterable>
@@ -32,30 +32,44 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="申请部门:" prop="department">
               <p v-if="disabled">{{paymentContract.department}}</p>
               <el-input v-else v-model="paymentContract.department" placeholder="请输入您的账号"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="商机编号:" prop="business">
-              <p v-if="disabled">{{paymentContract.business.code}}</p>
-              <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
-               <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
+          <el-col :sm="24" :md="8" :lg="8">
+            <el-form-item label="合同编号:" prop="contractInfo">
+              <p v-if="disabled">{{paymentContract.contractInfo.code}}</p>
+              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择" filterable>
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="使用项目:">
-              <p v-if="disabled">{{paymentContract.business.name}}</p>
-              <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
-               <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
+          <el-col :sm="24" :md="8" :lg="8">
+            <el-form-item label="供应商:" prop="supply">
+              <p v-if="disabled">{{paymentContract.supply.name}}</p>
+              <el-select v-else v-model="paymentContract.supply.id" placeholder="请选择" filterable>
+               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="8" :lg="8">
+            <el-form-item label="所属项目:" prop="project">
+              <p v-if="disabled">{{paymentContract.project}}</p>
+              <el-input v-else v-model="paymentContract.project" placeholder="请输入使用项目"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="8" :lg="8">
+           <el-form-item label="付款合同编码:" prop="code">
+             <p v-if="disabled">{{paymentContract.code}}</p>
+             <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同编码"></el-input>
+           </el-form-item>
+         </el-col>
         </el-row>
       </div>
       <div class="form-module">
@@ -63,7 +77,7 @@
           <p>开票付款信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="支付对象:" prop="paymentObject">
               <p v-if="disabled">{{paymentContract.paymentObject}}</p>
               <el-select v-else v-model="paymentContract.paymentObject" placeholder="请选择" filterable>
@@ -72,13 +86,13 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="应付金额:" prop="payableAmount">
               <p v-if="disabled">{{paymentContract.payableAmount}}</p>
-              <el-input v-else v-model="paymentContract.payableAmount" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="paymentContract.payableAmount" placeholder="请输入您的账号" @change="amountChange"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="到付时间:" class="single-date" prop="payTime">
                 <p v-if="disabled">{{paymentContract.payTime}}</p>
               <el-date-picker v-else type="date" v-model="paymentContract.payTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
@@ -86,7 +100,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="发货状态:" prop="deliveryStatus">
               <p v-if="disabled">{{paymentContract.deliveryStatus}}</p>
               <el-select v-else v-model="paymentContract.deliveryStatus" placeholder="请选择" filterable>
@@ -97,7 +111,7 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="是否自提:">
               <p v-if="disabled">{{paymentContract.mention}}</p>
               <el-select v-else v-model="paymentContract.mention" placeholder="请选择" filterable>
@@ -106,7 +120,7 @@
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="账期:">
               <p v-if="disabled">{{paymentContract.term}}</p>
               <el-select v-else v-model="paymentContract.term" placeholder="请选择" filterable>
@@ -119,7 +133,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="优化成本:">
               <p v-if="disabled">{{paymentContract.optCost}}</p>
               <el-input v-else v-model="paymentContract.optCost" placeholder="请输入您的账号"></el-input>
@@ -139,7 +153,7 @@
 
 <script>
 import _ from 'lodash'
-import { isObjectValueEqual } from '@/utils'
+import { isObjectValueEqual, outputmoney } from '@/utils'
 import tableComponent from './table.vue'
 export default {
   name: 'paymentContractAdd',
@@ -148,7 +162,14 @@ export default {
   data() {
     var validateBusiness = (rules, value, callback) => {
       if (!value.id) {
-        callback(new Error('请选择商机信息'))
+        callback(new Error('请选择关联合同'))
+      } else {
+        callback()
+      }
+    }
+    var validateSupply = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请选择供应商信息'))
       } else {
         callback()
       }
@@ -162,7 +183,8 @@ export default {
       paymentContract: {
         applicationPerson: '廖淑萍',
         applicationTime: '',
-        business: { id: '' },
+        contractInfo: { id: '' },
+        supply: { id: '' },
         category: '',
         deliveryStatus: '未发货',
         department: '',
@@ -171,20 +193,26 @@ export default {
         payTime: '',
         payableAmount: '',
         paymentObject: '供应商',
-        term: ''
+        term: '',
+        code: '',
+        project: ''
       },
-      businessList: [],
+      contractInfoList: [],
       categoryList: [],
+      supplyList: [],
       contractId: '',
       rules: {
         applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }],
         applicationTime: [{ required: true, message: '请输入申请时间', trigger: 'blur' }],
         category: [{ required: true, message: '请选择业务线', trigger: 'change' }],
         department: [{ required: true, message: '请选择申请部门', trigger: 'blur' }],
-        business: [{ required: true, validator: validateBusiness, trigger: 'change' }],
+        contractInfo: [{ required: true, validator: validateBusiness, trigger: 'change' }],
+        supply: [{ required: true, validator: validateSupply, trigger: 'change' }],
         paymentObject: [{ required: true, message: '请选择支付对象', trigger: 'change' }],
         payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
         payTime: [{ required: true, message: '请输入到付时间', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入付款合同编码', trigger: 'blur' }],
+        project: [{ required: true, message: '请输入使用项目', trigger: 'blur' }],
         deliveryStatus: [{ required: true, message: '请选择发货状态', trigger: 'change' }]
       },
       temp: {}
@@ -200,6 +228,7 @@ export default {
       this.$refs.paymentContract.validate((valid) => {
         if (valid) {
           this.loading = true
+          console.log(JSON.stringify(this.paymentContract))
           this.$post('/paymentContract/save', this.paymentContract).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -207,9 +236,6 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
-              // if (this.action === 'edit') {
-              //   this.$emit('toggleTab')
-              // }
               this.disabled = true
               this.editShow = true
               this.contractId = res.data.data.id
@@ -217,7 +243,7 @@ export default {
             } else {
               this.$message({
                 message: '保存失败',
-                type: 'success'
+                type: 'error'
               })
             }
           }).catch(() => {
@@ -247,7 +273,8 @@ export default {
     getInsertData() {
       this.$get('/paymentContract/findInsertData').then((res) => {
         var data = res.data.data
-        this.businessList = data.businessList
+        this.contractInfoList = data.contractInfoList
+        this.supplyList = data.supplyList
         this.categoryList = [{ value: '科技-智慧社区工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大平台' }, { value: '科技-设计服务' }, { value: '科技-技术服务' }]
       })
     },
@@ -263,6 +290,10 @@ export default {
         this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
         this.contractId = this.paymentContract.id
       }
+    },
+    amountChange(val) {
+      console.log(val)
+      this.paymentContract.payableAmount = outputmoney(val)
     }
   },
   computed: {},

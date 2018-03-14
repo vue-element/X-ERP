@@ -1,184 +1,193 @@
 <template>
-<div class="bid-wrapper">
-  <div class="costing-form-tags">
-    <ul>
-      <li :class="tab === 'primaryMaterial' ? 'is-active' : ''" @click="toggleTab('primaryMaterial')">
-        <el-select v-model="value" placeholder="主材报价表">
-          <el-option v-for="item in primary" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </li>
-      <li :class="tab === 'auxiliaryMaterial' ? 'is-active' : ''" @click="toggleTab('auxiliaryMaterial')">
-        <el-select v-model="value" placeholder="辅材报价表">
-          <el-option v-for="item in assist" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </li>
-      <li :class="tab === 'materialSummary' ? 'is-active' : ''" @click="toggleTab('materialSummary')">主材汇总表</li>
-      <li :class="tab === 'manualSummary' ? 'is-active' : ''" @click="toggleTab('manualSummary')">人工汇总表</li>
-      <li :class="tab === 'techService' ? 'is-active' : ''" @click="toggleTab('techService')">技术服务报价表</li>
-      <li :class="tab === 'costBudget' ? 'is-active' : ''" @click="toggleTab('costBudget')">成本预算表</li>
-      <li :class="tab === 'priceSummary' ? 'is-active' : ''" @click="toggleTab('priceSummary')">报价汇总表</li>
-    </ul>
+<div class="app-container">
+  <div class="form-head-attached clearfix">
+    <div class="form-inner">
+      <div class="crud-btn fl">
+        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
+          <i class="iconfont icon-search"></i>
+          <span>查询</span>
+        </button>
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+          <i class="iconfont icon-seeAll"></i>
+          <span>查看</span>
+        </button>
+        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+          <i class="iconfont icon-add"></i>
+          <span>新增</span>
+        </button>
+        <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+          <i class="iconfont icon-seeAll"></i>
+          <span>查看明细</span>
+        </button>
+        <button v-show="deleteShow" @click="delSelectData">
+          <i class="iconfont icon-delete"></i>
+          <span>删除</span>
+        </button>
+      </div>
+      <div class="export-btn fr">
+        <button v-show="tab === 'listTab'" @click="handleDownload()">
+          <i class="iconfont icon-export"></i>
+          <span>数据导出</span>
+        </button>
+      </div>
+    </div>
   </div>
-  <!-- <router-view></router-view> -->
-  <primaryMaterial v-show="tab === 'primaryMaterial'"></primaryMaterial>
-  <auxiliaryMaterial v-show="tab === 'auxiliaryMaterial'"></auxiliaryMaterial>
-  <materialSummary v-show="tab === 'materialSummary'"></materialSummary>
-  <manualSummary v-show="tab === 'manualSummary'"></manualSummary>
-  <techService v-show="tab === 'techService'"></techService>
-  <costBudget v-show="tab === 'costBudget'"></costBudget>
-  <priceSummary v-show="tab === 'priceSummary'"></priceSummary>
+  <div class="compotent-tab" >
+    <transition name="fade" mode="out-in">
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    </transition>
+  </div>
 </div>
 </template>
 
 <script>
-import primaryMaterial from './components/primaryMaterial'
-import auxiliaryMaterial from './components/auxiliaryMaterial'
-import materialSummary from './components/materialSummary'
-import manualSummary from './components/manualSummary'
-import techService from './components/techService'
-import costBudget from './components/costBudget'
-import priceSummary from './components/priceSummary'
+import AddComponent from './components/add'
+import ListComponent from './components/list'
+import SearchComponent from './components/search'
 export default {
-  name: 'bidManage',
+  name: 'smartCommunity',
   components: {
-    primaryMaterial,
-    auxiliaryMaterial,
-    materialSummary,
-    manualSummary,
-    techService,
-    costBudget,
-    priceSummary
+    AddComponent,
+    ListComponent,
+    SearchComponent
   },
   data() {
     return {
-      primary: [{
-        value: '数据机房',
-        label: '数据机房'
-      }, {
-        value: '综合布线',
-        label: '综合布线'
-      }, {
-        value: '终端系统',
-        label: '终端系统'
-      }, {
-        value: '添加',
-        label: '添加'
-      }],
-      assist: [{
-        value: '辅材表1',
-        label: '辅材表1'
-      }, {
-        value: '辅材表2',
-        label: '辅材表2'
-      }, {
-        value: '辅材表3',
-        label: '辅材表3'
-      }, {
-        value: '添加',
-        label: '添加'
-      }],
-      value: '',
-      tab: 'materialSummary'
+      searchData: {},
+      editData: {},
+      listData: '',
+      tab: 'listTab',
+      selArr: [],
+      deleteShow: false,
+      exprotList: [],
+      isChange: false
     }
+  },
+  mounted() {
+  },
+  created() {
   },
   methods: {
     toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
       this.tab = tab
+    },
+    selData(selArr) {
+      this.selArr = selArr
+      if (this.selArr.length > 0) {
+        this.deleteShow = true
+      } else {
+        this.deleteShow = false
+      }
+    },
+    addBtn() {
+      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
+        if (this.isChange === true) { // 有值的变化
+          this.showPopWin(() => {
+            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else { // 没有值的变化
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
+      }
+    },
+    seeRow(data) {
+      this.toggleTab('addTab')
+      this.editData = {
+        editData: data,
+        tabState: 'editTab'
+      }
+    },
+    delSelectData() {
+      var id = { id: this.selArr }
+      this.$post('/project/delete', id).then((res) => {
+        console.log('res', res)
+        this.$refs.del.getProjectData()
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+      })
+    },
+    searchWord(data) {
+      this.toggleTab('listTab')
+      this.searchData = data
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
+    },
+    changeObj(res) {
+      this.isChange = res
+    },
+    exportData(data) {
+      this.exprotList = data
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单位数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
+          '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
+        const filterVal = ['id', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
+          'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']
+        const list = this.exprotList
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '智慧社区数据库')
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      var list = ['client', 'region', 'city']
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (list.indexOf(j) !== -1) {
+            return v[j]['name']
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
-  computed: {
-
-  }
+  computed: {}
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>@import "src/styles/mixin.scss";
-.bid-wrapper {
-    .costing-form-tags {
-        @include boxSizing;
-        width: 100%;
-        height: 40px;
-        margin-top: 10px;
-        border: solid 1px #d2d2d2;
-        color: #828282;
-        vertical-align: middle;
-    }
-    ul {
-        @include flex;
-        li {
-            width: 148px;
-            height: 28px;
-            line-height: 30px;
-            margin: 5px;
-            text-align: center;
-            border: solid 1px #d2d2d2;
-						overflow: hidden;
-            cursor: pointer;
-        }
-        li.is-active {
-            border: solid 1px #35d5ba;
-            color: #35d5ba;
-        }
-    }
+<style  rel="stylesheet/scss" lang="scss" scoped>
+@import "src/styles/mixin.scss";
+.app-container {
+  width: 100%;
+  @include scrolling;
 }
-</style>
-
-<style rel="stylesheet/scss" lang="scss">@import "src/styles/mixin.scss";
-.bid-wrapper {
-    .el-select {
-        .el-input__inner {
-            height: 28px!important;
-            vertical-align: top;
-            border: 0;
-            color: #828282!important;
-            @include placeholderColor(#828282);
-            text-align: center;
-        }
-        i.el-select__caret {
-            color: #828282;
-        }
-    }
-    li.is-active .el-input__inner {
-        @include placeholderColor(#35d5ba);
-    }
-    li.is-active i.el-select__caret {
-        color: #35d5ba!important;
-    }
-    .table-header {
-        width: 100%;
-        height: 30px;
-        line-height: 30px;
-        margin: 20px 0;
-        background-color: #ffffff;
-        font-size: 14px;
-        text-align: center;
-        position: relative;
-        .table-attached {
-            position: absolute;
-            right: 0;
-            top: 0;
-            li {
-                display: inline-block;
-                margin: 0 12px;
-                color: #828282;
-                cursor: pointer;
-            }
-        }
-    }
-    table {
-        border-left: 1px solid #828282;
-        border-top: 1px solid #828282;
-        tr {
-            td {
-                border-right: 1px solid #828282;
-                border-bottom: 1px solid #828282;
-                text-align: center;
-                height: 30px;
-                line-height: 30px;
-            }
-        }
-    }
+.basic-form {
+  .el-table__fixed-body-wrapper {
+    margin: 28px 0;
+  }
 }
 </style>

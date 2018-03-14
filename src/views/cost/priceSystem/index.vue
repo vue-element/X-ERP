@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
       <SearchComponent v-show="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
@@ -61,34 +61,12 @@ export default {
   },
   data() {
     return {
-      path: 'listTab',
       downloadLoading: false,
       tab: 'listTab',
       editData: {},
       searchData: {},
-      list: [
-        {
-          id: 1,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 2,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 3,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        }
-      ]
+      isChange: false,
+      exprotList: []
     }
   },
   created() {

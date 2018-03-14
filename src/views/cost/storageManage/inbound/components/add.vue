@@ -20,20 +20,20 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="供应商:">
-                <p v-if="disabled">{{paymentContract.applicationPerson}}</p>
-                <el-input v-else v-model="paymentContract.applicationPerson" placeholder="请输入您的账号"></el-input>
+                <p v-if="disabled">{{paymentContract.supply.name}}</p>
+                <el-input v-else v-model="paymentContract.supply.name" placeholder="请输入您的账号"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="办事处:">
+              <!-- <el-form-item label="办事处:">
                 <p v-if="disabled">{{paymentContract.business.name}}</p>
                 <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
                  <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
-              </el-form-item>
+              </el-form-item> -->
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="入库日期:" class="single-date">
@@ -66,6 +66,8 @@ export default {
       paymentContract: {},
       businessList: [],
       categoryList: [],
+      supplyList: [],
+      contractInfoList: [],
       contractId: '',
       rules: {}
     }
@@ -83,8 +85,11 @@ export default {
   methods: {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
+      console.log('data', data)
       this.paymentContract = data.paymentContractList
-      this.businessList = data.businessList
+      this.supplyList = data.supplyList
+      this.contractInfoList = data.contractInfoList
+      // this.businessList = data.businessList
       this.contractId = this.paymentContract.id
     },
     toggleTab(tab) {

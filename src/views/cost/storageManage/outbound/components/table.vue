@@ -13,24 +13,16 @@
       <div>
         <el-table class="basic-form" style="width: 100%" :data="outboundList" v-loading.body="listLoading">
           <el-table-column label="序号">
-            <template slot-scope="scope">
-             {{scope.$index + 1}}
-            </template>
+            <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
           <el-table-column label="物料名称">
-            <template slot-scope="scope">
-              <span>{{scope.row.name}}</span>
-            </template>
+            <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
           </el-table-column>
           <el-table-column label="品牌">
-            <template slot-scope="scope">
-              <span>{{scope.row.brand}}</span>
-            </template>
+            <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
           </el-table-column>
           <el-table-column label="规格型号">
-            <template slot-scope="scope">
-              <span>{{scope.row.model}}</span>
-            </template>
+            <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
           </el-table-column>
           <el-table-column label="出库数量">
             <template slot-scope="scope">
@@ -65,25 +57,22 @@
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column label="审核步骤">
-          <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-        </el-table-column>
-        <el-table-column label="品牌">
-          <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
         </el-table-column>
         <el-table-column label="操作人">
-          <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.stepPerson}}</span></template>
         </el-table-column>
         <el-table-column label="操作时间">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.time}}</span></template>
         </el-table-column>
         <el-table-column label="审核结果">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.result}}</span></template>
         </el-table-column>
         <el-table-column label="下一步骤">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.nextStep}}</span></template>
         </el-table-column>
         <el-table-column label="下一步骤审核人">
-          <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.nextStepPerson}}</span></template>
         </el-table-column>
       </el-table>
     </div>
@@ -143,6 +132,7 @@ export default {
     this.getPurchaseList()
     if (this.outboundId) {
       this.getOutboundList()
+      this.getOutboundCheck()
     }
   },
   methods: {
@@ -202,15 +192,15 @@ export default {
       this.$post('/outboundDetaile/save', obj).then((res) => {
         if (res.data.success === true) {
           this.getOutboundList()
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
           this.outboundInfo = {
             purchaseList: { id: '' },
             outboundList: { id: '' },
             number: ''
           }
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
         }
       })
     },
@@ -229,23 +219,33 @@ export default {
         }
       })
     },
-    // 出库审核
+    // 获取审核动态数组
+    getOutboundCheck() {
+      this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
+        console.log('res', res)
+        if (res.data.success === true) {
+          this.outboundCheck = res.data.data
+        }
+      })
+    },
+    // 保存出库审核
     submitCheck() {
-      // var obj = {
-      //   step: '1',
-      //   stepPerson: '1',
-      //   nextStep: '2',
-      //   nextStepPerson: '',
-      //   paymentContract: {
-      //     id: this.contractId
-      //   },
-      //   result: '提交审核',
-      //   time: ''
-      // }
-      // console.log('submit', JSON.stringify(obj))
-      // this.$post('inboundCheck/save', obj).then((res) => {
-      //   this.getInboundCheck()
-      // })
+      var obj = {
+        step: '1',
+        stepPerson: '1',
+        nextStep: '2',
+        nextStepPerson: '',
+        outboundList: {
+          id: this.outboundId
+        },
+        result: '提交审核',
+        time: ''
+      }
+      console.log('submit', JSON.stringify(obj))
+      this.$post('/outboundCheck/save', obj).then((res) => {
+        console.log(res)
+        this.getOutboundCheck()
+      })
     },
     purchaseChange(val) {
       this.purchaseList.forEach((item) => {

@@ -188,6 +188,7 @@ export default {
           item.edit = false
           item.number = item.purchaseList.number
           item.model = item.purchaseList.model
+          item.model = item.purchaseList.model
           item.certificate = '有'
           item.quality = '完好'
           this.purchaseList.push(item.purchaseList)
@@ -211,10 +212,8 @@ export default {
     getInboundCheck() {
       this.$get('/inboundCheck/findAllByPaymentContract/' + this.contractId).then((res) => {
         console.log('res', res)
-        if (res.data.success === true && res.data.data !== null) {
-          this.inboundCheck = [res.data.data]
-        } else {
-          this.inboundCheck = []
+        if (res.data.success === true) {
+          this.inboundCheck = res.data.data
         }
       })
     },
@@ -231,7 +230,8 @@ export default {
         time: ''
       }
       console.log('submit', JSON.stringify(obj))
-      this.$post('inboundCheck/save', obj).then((res) => {
+      this.$post('/inboundCheck/save', obj).then((res) => {
+        console.log(res)
         this.getInboundCheck()
       })
     }

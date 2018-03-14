@@ -9,88 +9,92 @@
           <p>基础信息:</p>
         </h4>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="产品名称:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="产品名称:" prop="name">
               <p v-if="disabled">{{priceInfo.name}}</p>
-              <el-input v-else v-model="priceInfo.name" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="单位:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="单位:" prop="unit">
               <p v-if="disabled">{{priceInfo.unit}}</p>
-              <el-input v-else v-model="priceInfo.unit" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.unit" placeholder="请输入单位"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="产品类型:">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="产品类型:" prop="type">
               <p v-if="disabled">{{priceInfo.type}}</p>
-              <el-select v-else v-model="priceInfo.type" placeholder="请选择" filterable>
+              <el-select v-else v-model="priceInfo.type" placeholder="请选择产品类型">
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="系统:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="系统:" prop="system">
               <p v-if="disabled">{{priceInfo.system}}</p>
-              <el-select v-else v-model="priceInfo.system" placeholder="请选择" filterable>
+              <el-select v-else v-model="priceInfo.system" placeholder="请选择系统">
                <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="规格型号:">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="规格型号:" prop="specModel">
               <p v-if="disabled">{{priceInfo.specModel}}</p>
-              <el-input v-else v-model="priceInfo.specModel" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.specModel" placeholder="请输入规格型号"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="品牌:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="品牌:" prop="brand">
               <p v-if="disabled">{{priceInfo.brand}}</p>
-              <el-input v-else v-model="priceInfo.brand" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.brand" placeholder="请输入品牌"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="供应商:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="供应商:" prop="supply">
               <p v-if="disabled">{{priceInfo.supply.name}}</p>
-              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择" filterable>
+              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" filterable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="产品最新报价（元）:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="产品最新报价（元）:" prop="productQuotation">
               <p v-if="disabled">{{priceInfo.productQuotation}}</p>
-              <el-input v-else v-model="priceInfo.productQuotation" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.productQuotation" placeholder="请输入产品最新报价" @change="amountChange"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="区域:">
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="区域:" prop="region">
               <p v-if="disabled">{{priceInfo.region.name}}</p>
-              <el-select v-else v-model="priceInfo.region.id" placeholder="请选择" filterable>
+              <el-select v-else v-model="priceInfo.region.id" placeholder="请选择区域" filterable>
                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
-            <el-form-item label="供货周期（天）:">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="供货周期（天）:" prop="supplyCycle">
               <p v-if="disabled">{{priceInfo.supplyCycle}}</p>
-              <el-input v-else v-model="priceInfo.supplyCycle" placeholder="请输入您的账号"></el-input>
+              <el-input v-else v-model="priceInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :xs="24" :sm="8" :lg="8">
+          <el-col :ms="24" :md="24" :lg="24">
             <el-form-item label="参考描述:" class="ref-describe">
               <p class="textarea" v-if="disabled">{{priceInfo.description}}</p>
-              <el-input v-else v-model="priceInfo.description" placeholder="请输入您的账号" type="textarea"></el-input>
+              <el-input v-else v-model="priceInfo.description" placeholder="请输入参考描述" type="textarea"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -121,11 +125,25 @@
 
 <script>
 import _ from 'lodash'
-import { parseTime } from '@/utils'
+import { parseTime, outputmoney, isObjectValueEqual } from '@/utils'
 export default {
   name: 'supplierAdd',
   props: ['editData'],
   data() {
+    var validateSupply = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请选择供应商信息'))
+      } else {
+        callback()
+      }
+    }
+    var validateRegion = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请选择区域信息'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
@@ -133,49 +151,53 @@ export default {
       disabled: false,
       editShow: false,
       priceInfo: {
-        brand: '品牌',
-        code: '产品编码',
-        description: '参数描述',
-        name: '产品名称',
-        productQuotation: '产品报价',
-        region: { id: 2 },
-        specModel: '规格型号',
-        supply: { id: 20 },
-        supplyCycle: '供货周期',
-        system: '消防系统',
-        type: '主材',
-        unit: '个'
+        brand: '',
+        code: '',
+        description: 'sss',
+        name: '',
+        productQuotation: '',
+        region: { id: null },
+        specModel: '',
+        supply: { id: null },
+        supplyCycle: '',
+        system: '',
+        type: '',
+        unit: ''
       },
       regionList: [],
       supplyList: [],
       systemList: [],
       typeList: [],
-      rules: {},
-      historyPrice: [{
-        1: '600.00',
-        2: '罗艺',
-        3: '2017-12-20'
-      }, {
-        1: '600.00',
-        2: '罗艺',
-        3: '2017-12-20'
-      }, {
-        1: '600.00',
-        2: '罗艺',
-        3: '2017-12-20'
-      }]
+      historyPrice: [],
+      rules: {
+        name: [{ required: true, message: '请输入产品名称', trigger: 'blur' }],
+        unit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择产品类型', trigger: 'change' }],
+        system: [{ required: true, message: '请输入系统', trigger: 'change' }],
+        specModel: [{ required: true, message: '请输入规格型号', trigger: 'blur' }],
+        brand: [{ required: true, message: '请输入品牌', trigger: 'blur' }],
+        supply: [{ required: true, validator: validateSupply, trigger: 'change' }],
+        productQuotation: [{ required: true, message: '请输入产品最新报价', trigger: 'blur' }],
+        region: [{ required: true, validator: validateRegion, trigger: 'change' }],
+        supplyCycle: [{ required: true, message: '请输入供货周期', trigger: 'blur' }],
+        applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }]
+      },
+      temp: {}
     }
   },
   created() {
     this.getInsertData()
     if (this.editData.tabState === 'addTab') {
       this.action = 'add'
+      this.disabled = false
+      this.editShow = false
     } else {
       this.action = 'edit'
       this.editInfo()
       this.disabled = true
       this.editShow = true
     }
+    this.temp = _.cloneDeep(this.priceInfo)
   },
   methods: {
     editInfo() {
@@ -187,40 +209,38 @@ export default {
       })
     },
     save() {
-      this.loading = true
-      this.$post('/price/save', this.priceInfo).then(res => {
-        this.loading = false
-        if (res.data.success === true) {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
+      this.$refs.priceInfo.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          console.log('priceInfo', JSON.stringify(this.priceInfo))
+          this.$post('/price/save', this.priceInfo).then(res => {
+            this.loading = false
+            if (res.data.success === true) {
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              if (this.action === 'edit') {
+                this.$emit('toggleTab')
+              }
+            } else {
+              this.$message({
+                message: '保存失败',
+                type: 'error'
+              })
+            }
+          }).catch(() => {
+            this.loading = false
+            this.$message({
+              message: '保存失败',
+              type: 'error'
+            })
           })
-          if (this.action === 'edit') {
-            this.$emit('toggleTab')
-          }
         }
-      }).catch(() => {
-        this.loading = false
       })
     },
     reset() {
-      if (this.action === 'add') {
-        this.priceInfo = {
-          brand: '',
-          code: '',
-          description: '',
-          name: '',
-          productQuotation: '',
-          region: { id: '' },
-          specModel: '',
-          supply: { id: '' },
-          supplyCycle: '',
-          system: '',
-          type: ''
-        }
-      } else {
-        this.editInfo()
-      }
+      this.priceInfo = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('toggleTab')
@@ -263,9 +283,29 @@ export default {
         { value: '其他' },
         { value: '行政类' }
       ]
+    },
+    amountChange(val) {
+      this.priceInfo.productQuotation = outputmoney(val)
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    disabled(status) {
+      if (status === false) {
+        this.$emit('changeObj', true)
+      }
+    },
+    priceInfo: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
@@ -278,10 +318,18 @@ export default {
       float: right;
     }
   }
+}
+</style>
+<style  rel="stylesheet/scss" lang="scss">
+@import "src/styles/mixin.scss";
+.supply-add.form-container{
   .el-form-item.ref-describe {
     width: 100%;
     .el-form-item__label {
-      width: 10%!important;
+      width: 13%!important;
+    }
+    .el-form-item__content {
+      width: 82%!important;
     }
   }
 }

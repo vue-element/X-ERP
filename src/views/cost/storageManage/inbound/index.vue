@@ -12,12 +12,6 @@
             <span>查看明细</span>
           </button>
         </div>
-        <div class="export-btn fr">
-          <button @click="handleDownload" :loading="downloadLoading">
-            <i class="iconfont icon-export"></i>
-            <span>数据导出</span>
-          </button>
-        </div>
       </div>
     </div>
     <div class="compotent-tab">
