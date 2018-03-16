@@ -1,10 +1,10 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
         <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同编号"></el-table-column>
-        <el-table-column prop="code" label="采购清单编号"></el-table-column>
+        <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
+        <el-table-column prop="orderNumber" label="采购计划单号"></el-table-column>
         <el-table-column prop="code" label="出库单编号"></el-table-column>
         <el-table-column prop="contractInfo.name" label="项目"></el-table-column>
         <el-table-column prop="region.name" label="办事处"></el-table-column>

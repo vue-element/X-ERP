@@ -1,19 +1,22 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
-        <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-        <el-table-column prop="code" label="产品编号"></el-table-column>
-        <el-table-column prop="name" label="产品名称"></el-table-column>
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+        <el-table-column prop="0" label="序号" width="60" fixed>
+          <template slot-scope="scope">{{scope.$index + 1}}</template>
+        </el-table-column>
+        <el-table-column prop="code" label="产品编号" width="100"></el-table-column>
+        <el-table-column prop="name" label="产品名称" width="100"></el-table-column>
         <el-table-column prop="type" label="产品类型"></el-table-column>
-        <el-table-column prop="system" label="系统"></el-table-column>
-        <el-table-column prop="specModel" label="规格型号"></el-table-column>
-        <el-table-column prop="brand" label="品牌"></el-table-column>
-        <el-table-column prop="supply.name" label="供应商"></el-table-column>
-        <el-table-column prop="productQuotation" label="最新报价"></el-table-column>
-        <el-table-column prop="supply.category" label="供应商类型"></el-table-column>
-        <el-table-column prop="supply.unit" label="单位"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="system" label="系统" width="100"></el-table-column>
+        <el-table-column prop="specModel" label="规格型号" width="100"></el-table-column>
+        <el-table-column prop="brand" label="品牌" width="100"></el-table-column>
+        <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
+        <el-table-column prop="supply.category" label="供应商类型" width="100"></el-table-column>
+        <el-table-column prop="supplyCycle" label="供货周期" width="100"></el-table-column>
+        <el-table-column prop="productQuotation" label="最新报价" width="100"></el-table-column>
+        <el-table-column prop="unit" label="单位" width="100"></el-table-column>
+        <el-table-column label="操作" fixed="right" width="100">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>

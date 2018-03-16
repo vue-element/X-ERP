@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column label="数量">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+              <input v-if="scope.row.edit" type="text" v-model.number="scope.row.number" placeholder="请填写">
               <span v-else>{{scope.row.number}}</span>
             </template>
           </el-table-column>
@@ -100,14 +100,14 @@
         </el-table-column>
         <el-table-column label="开票日期">
           <template slot-scope="scope">
-            <el-date-picker  v-if="scope.row.edit" type="date" format="yyyy-MM-dd"  v-model="scope.row.date" placeholder="选择日期"></el-date-picker>
-            <span v-else>{{scope.row.date | parseTime('{y}-{m}-{d}')}}</span>
+            <el-date-picker  v-if="scope.row.edit" type="date" format="yyyy-MM-dd"  value-format="yyyy-MM-dd" v-model="scope.row.date" placeholder="选择日期"></el-date-picker>
+            <span v-else>{{scope.row.date}}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票金额">
           <template slot-scope="scope">
             <input v-if="scope.row.edit" type="text" v-model="scope.row.amount" placeholder="请填写">
-            <span v-else>{{scope.row.amount }}</span>
+            <span v-else>{{scope.row.amount}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -138,14 +138,14 @@
         </el-table-column>
         <el-table-column label="付票日期">
           <template slot-scope="scope">
-            <el-date-picker  v-if="scope.row.edit" type="date" format="yyyy-MM-dd"  v-model="scope.row.date" placeholder="选择日期"></el-date-picker>
-            <span v-else>{{scope.row.date | parseTime('{y}-{m}-{d}')}}</span>
+            <el-date-picker  v-if="scope.row.edit" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="scope.row.date" placeholder="选择日期"></el-date-picker>
+            <span v-else>{{scope.row.date}}</span>
           </template>
         </el-table-column>
         <el-table-column label="付票金额">
           <template slot-scope="scope">
             <input v-if="scope.row.edit" type="text" v-model="scope.row.amount" placeholder="请填写">
-            <span v-else>{{scope.row.amount }}</span>
+            <span v-else>{{scope.row.amount}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">

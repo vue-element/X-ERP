@@ -2,7 +2,7 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="toggleTab('inboundInfo')">入库填写</li>
+        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="toggleTab('inboundInfo')">出库填写</li>
         <li :class="actionTab === 'officeCheck' ? 'is-active' : ''" @click="toggleTab('officeCheck')">办事处审核</li>
         <li :class="actionTab === 'costCheck' ? 'is-active' : ''" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
@@ -39,8 +39,8 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="采购计划单号:" class="single-date">
-                <p v-if="disabled">{{outboundInfo.applicationTime}}</p>
-                <el-input v-else v-model="outboundInfo.applicationPerson" placeholder="请输入您的账号"></el-input>
+                <p v-if="disabled">{{outboundInfo.orderNumber}}</p>
+                <el-input v-else v-model="outboundInfo.orderNumber" placeholder="请输入您的账号"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -96,6 +96,7 @@ export default {
       editShow: false,
       outboundInfo: {
         code: '出库单编号',
+        orderNumber: '',
         contractInfo: { id: '' },
         date: '',
         project: { id: '' },
@@ -134,13 +135,14 @@ export default {
       this.$post('/outboundList/save', this.outboundInfo).then(res => {
         this.loading = false
         if (res.data.success === true) {
+          this.outboundInfo = res.data.data
+          this.disabled = true
+          this.editShow = true
+          this.outboundId = res.data.data
           this.$message({
             message: '保存成功',
             type: 'success'
           })
-          this.disabled = true
-          this.editShow = true
-          this.outboundId = res.data.data
         } else {
           this.$message({
             message: '保存失败',
