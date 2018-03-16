@@ -61,7 +61,7 @@ export default {
     deleteRow(id) {
       var projectID = { id: [id] }
       this.$post('/client/delete', projectID).then((res) => {
-        if (res.data.success === 200) {
+        if (res.data.success === true) {
           this.clientData()
           this.$message({
             message: '删除成功',

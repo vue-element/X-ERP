@@ -192,7 +192,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="40">
-        <el-col :xs="24" :sm="18" :lg="18">
+        <el-col :xs="24" :sm="24" :lg="24">
           <el-form-item label="小区配套设施：" class="checkbox-sel community-facility" prop="facilityList">
             <p v-if="disabled">{{facilityWord}}</p>
             <el-checkbox-group v-else @change="facilityChange" v-model="mainMsg.facilityList">
@@ -536,13 +536,22 @@ export default {
                 message: '保存成功',
                 type: 'success'
               })
-              if (this.action === 'edit') {
-                this.$emit('toggleTab')
+              // this.editShow = true
+              this.disabled = true
+              this.$emit('changeObj', false)
+              if (this.action === 'add') {
+                setTimeout(() => {
+                  this.$emit('toggleTab')
+                }, 500)
               }
             }
           })
         } else {
-          return false
+          this.$message({
+            message: '信息未填写完整',
+            type: 'warning'
+          })
+          // return false
         }
       })
     },
@@ -590,10 +599,7 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
-        this.editWord = '编辑'
         this.editInfo()
-      } else {
-        this.editWord = '取消编辑'
       }
     },
     getInsertData() {
@@ -631,6 +637,13 @@ export default {
   },
   computed: {},
   watch: {
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+      } else {
+        this.editWord = '编辑'
+      }
+    },
     mainMsg: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
@@ -720,7 +733,7 @@ export default {
   .el-form-item.community-facility {
     label.el-form-item__label {
       margin-top: 0!important;
-      width: 18%!important;
+      width: 13.5%!important;
       line-height: 30px;
     }
   }

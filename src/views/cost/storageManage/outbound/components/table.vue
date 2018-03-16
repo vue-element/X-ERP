@@ -18,11 +18,11 @@
           <el-table-column label="物料名称">
             <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
           </el-table-column>
-          <el-table-column label="品牌">
-            <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
-          </el-table-column>
           <el-table-column label="规格型号">
             <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
+          </el-table-column>
+          <el-table-column label="品牌">
+            <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
           </el-table-column>
           <el-table-column label="出库数量">
             <template slot-scope="scope">
@@ -77,7 +77,7 @@
       </el-table>
     </div>
     <!-- 弹窗框 -->
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+    <el-dialog title="出库清单" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
       <el-form :model="outboundInfo">
         <el-form-item label="采购清单" :label-width="formLabelWidth">
           <el-select v-model="outboundInfo.purchaseList.id" placeholder="请选择采购清单" @change="purchaseChange">

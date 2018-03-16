@@ -65,9 +65,9 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
-           <el-form-item label="付款合同编码:" prop="code">
+           <el-form-item label="付款合同号:" prop="code">
              <p v-if="disabled">{{paymentContract.code}}</p>
-             <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同编码"></el-input>
+             <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同号"></el-input>
            </el-form-item>
          </el-col>
         </el-row>
@@ -211,7 +211,7 @@ export default {
         paymentObject: [{ required: true, message: '请选择支付对象', trigger: 'change' }],
         payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
         payTime: [{ required: true, message: '请输入到付时间', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入付款合同编码', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入付款合同号', trigger: 'blur' }],
         project: [{ required: true, message: '请输入使用项目', trigger: 'blur' }],
         deliveryStatus: [{ required: true, message: '请选择发货状态', trigger: 'change' }]
       },
@@ -250,6 +250,10 @@ export default {
             this.loading = false
           })
         } else {
+          this.$message({
+            message: '信息未填写完整',
+            type: 'warning'
+          })
           return false
         }
       })

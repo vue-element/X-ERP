@@ -168,15 +168,18 @@ export default {
           this.$post('/client/save', this.client).then((res) => {
             this.loading = false
             if (res.data.success === true) {
+              this.temp = _.cloneDeep(this.client)
               this.$message({
                 message: '保存成功',
                 type: 'success'
               })
-              this.$emit('changeObj', false)
               // this.editShow = true
-              // this.disabled = true
-              if (this.action === 'edit') {
-                this.$emit('toggleTab')
+              this.disabled = true
+              this.$emit('changeObj', false)
+              if (this.action === 'add') {
+                setTimeout(() => {
+                  this.$emit('toggleTab')
+                }, 500)
               }
             }
           }).catch(() => {
@@ -194,12 +197,7 @@ export default {
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      if (this.disabled === true) {
-        this.editWord = '编辑'
-        this.client = _.cloneDeep(this.temp)
-      } else {
-        this.editWord = '取消编辑'
-      }
+      this.client = _.cloneDeep(this.temp)
     },
     getInsertData() {
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
@@ -221,6 +219,13 @@ export default {
   },
   computed: {},
   watch: {
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+      } else {
+        this.editWord = '编辑'
+      }
+    },
     client: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {

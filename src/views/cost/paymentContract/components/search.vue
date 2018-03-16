@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-search form-container">
-    <el-form :model="searchData" :rules="rules" ref="searchData">
+    <el-form :model="searchData" ref="searchData">
       <div class="form-module">
         <h4 class="module-title">
           <p>查询条件:</p>

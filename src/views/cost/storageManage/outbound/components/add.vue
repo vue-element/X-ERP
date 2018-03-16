@@ -19,20 +19,20 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同编号:">
-                <p v-if="disabled">{{outboundInfo.contractInfo.name}}</p>
+                <p v-if="disabled">{{outboundInfo.contractInfo.code}}</p>
                 <el-select v-else v-model="outboundInfo.contractInfo.id" placeholder="请选择" filterable>
-                 <el-option v-for="item in contractList" :label="item.name" :value="item.id" :key="item.id">
+                 <el-option v-for="item in contractList" :label="item.code" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="办事处:">
-                <p v-if="disabled">{{outboundInfo.region.name}}</p>
-                <el-select v-else v-model="outboundInfo.region.id" placeholder="请选择" filterable>
-                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
-                 </el-option>
-               </el-select>
+              <el-form-item label="项目:">
+                <p v-if="disabled">{{outboundInfo.contractInfo.name}}</p>
+               <el-select v-else v-model="outboundInfo.contractInfo.id" placeholder="请选择" filterable>
+                <el-option v-for="item in contractList" :label="item.name" :value="item.id" :key="item.id">
+                </el-option>
+              </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -44,10 +44,10 @@
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="项目:">
-                <p v-if="disabled">{{outboundInfo.project.name}}</p>
-                <el-select v-else v-model="outboundInfo.project.id" placeholder="请选择" filterable>
-                 <el-option v-for="item in projectList" :label="item.name" :value="item.id" :key="item.id">
+              <el-form-item label="办事处:">
+                <p v-if="disabled">{{outboundInfo.region.name}}</p>
+                <el-select v-else v-model="outboundInfo.region.id" placeholder="请选择" filterable>
+                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
               </el-form-item>
@@ -99,7 +99,6 @@ export default {
         orderNumber: '',
         contractInfo: { id: '' },
         date: '',
-        project: { id: '' },
         region: { id: '' }
       },
       contractList: [],
@@ -176,6 +175,7 @@ export default {
         var data = res.data.data
         console.log('data', data)
         this.contractList = data.contractInfoList
+        console.log('this.contractList', this.contractList)
         this.projectList = data.projectList
         this.regionList = data.regionList
       })

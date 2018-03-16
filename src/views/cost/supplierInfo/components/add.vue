@@ -143,7 +143,10 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="税率:" prop="taxRate">
               <p v-if="disabled">{{supplyInfo.taxRate}}</p>
-              <el-input v-else v-model="supplyInfo.taxRate" placeholder="请输入税率"></el-input>
+              <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率">
+               <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -272,6 +275,7 @@ export default {
       typeList: [],
       reviewStateList: [],
       settlementMethodList: [],
+      taxRateList: [],
       rules: {
         name: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
         cooperativeType: [{ required: true, message: '请选择合作商类别', trigger: 'change' }],
@@ -286,7 +290,7 @@ export default {
         bank: [{ required: true, message: '请输入开户银行', trigger: 'blur' }],
         bankAccount: [{ required: true, message: '请输入银行账号', trigger: 'blur' }],
         invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
-        taxRate: [{ required: true, message: '请输入税率', trigger: 'blur' }],
+        taxRate: [{ required: true, message: '请输入税率', trigger: 'change' }],
         type: [{ required: true, message: '请选择供应商类别', trigger: 'change' }],
         category: [{ required: true, message: '请选择供应商类型', trigger: 'change' }],
         reviewState: [{ required: true, message: '请选择评审状态', trigger: 'change' }]
@@ -353,6 +357,7 @@ export default {
       this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]
       this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
       this.settlementMethodList = [{ value: '月结' }, { value: '货到付款' }, { value: '其他' }]
+      this.taxRateList = [{ value: '0%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
     },
     amountChange(val) {
       this.supplyInfo.regCapital = outputmoney(val)

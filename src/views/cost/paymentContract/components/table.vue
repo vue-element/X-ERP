@@ -32,22 +32,16 @@
               <span v-else>{{scope.row.name}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="品牌">
-            <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写">
-              <span v-else>{{scope.row.brand}}</span>
-            </template>
-          </el-table-column>
           <el-table-column label="规格型号">
             <template slot-scope="scope">
               <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
               <span v-else>{{scope.row.model}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单位">
+          <el-table-column label="品牌">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写">
-              <span v-else>{{scope.row.unit}}</span>
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写">
+              <span v-else>{{scope.row.brand}}</span>
             </template>
           </el-table-column>
           <el-table-column label="单价">
@@ -66,6 +60,12 @@
             <template slot-scope="scope">
               <input v-if="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写">
               <span v-else>{{scope.row.totalAmount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="单位">
+            <template slot-scope="scope">
+              <input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写">
+              <span v-else>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -122,7 +122,7 @@
     <!-- 付款合同 -->
     <div class="form-module" v-show="editShow">
       <h4 class="module-title">
-        <p>付款信息   </p>
+        <p>付款信息</p>
         <div class="material-table-head fr">
           <button @click="addPayment">
             <i class="iconfont icon-add"></i>
@@ -192,21 +192,33 @@ export default {
   methods: {
     getPurchaseList() {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
-        this.purchaseList = res.data.data.content
+        if (res.data.success === true) {
+          this.purchaseList = res.data.data.content
+        }
       })
     },
     addMaterial() {
-      var obj = {
-        name: '',
-        brand: '',
-        model: '',
-        unit: '',
-        unitPrice: '',
-        number: '',
-        totalAmount: '',
-        edit: true
+      if (this.contractId) {
+        var obj = {
+          paymentContract: {
+            id: this.contractId
+          },
+          name: '',
+          brand: '',
+          model: '',
+          unit: '',
+          unitPrice: '',
+          number: '',
+          totalAmount: '',
+          edit: true
+        }
+        this.purchaseList.push(obj)
+      } else {
+        this.$message({
+          message: '请先保存基础信息与付款信息',
+          type: 'warning'
+        })
       }
-      this.purchaseList.push(obj)
     },
     editRow(row, index) {
       row.edit = !row.edit
@@ -215,13 +227,10 @@ export default {
     confirmEdit(row, index) {
       row.edit = !row.edit
       Vue.set(this.purchaseList, index, row)
-      this.saveMaterial(this.purchaseList)
+      this.saveMaterial([row])
     },
     saveMaterial(list) {
       if (this.contractId) {
-        list.forEach((item) => {
-          item.paymentContract = { id: this.contractId }
-        })
         this.$post('/purchaseList/save', { objectList: list }).then((res) => {
           if (res.data.success === true) {
             this.$message({
@@ -238,21 +247,23 @@ export default {
         this.$post('/purchaseList/delete', { id: [id] }).then((res) => {
           if (res.data.success === true) {
             this.getPurchaseList()
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
+            // this.$message({
+            //   message: '删除成功',
+            //   type: 'success'
+            // })
           }
         })
-      } else {
-        this.purchaseList.splice(index, 1)
       }
     },
     selected(data) {
       this.uploadDetail = data.results
+      var list = []
       this.uploadDetail.forEach((item) => {
         var obj = {}
         obj = {
+          paymentContract: {
+            id: this.contractId
+          },
           name: item['物料名称'],
           brand: item['品牌'],
           model: item['规格型号'],
@@ -261,19 +272,27 @@ export default {
           number: item['数量'],
           totalAmount: item['总金额']
         }
-        this.purchaseList.push(obj)
+        list.push(obj)
       })
+      this.saveMaterial(list)
     },
     uploadMaterial() {
-      this.uploadTableShow = true
-      this.$refs.upload.handleUpload()
+      if (this.contractId) {
+        this.uploadTableShow = true
+        this.$refs.upload.handleUpload()
+      } else {
+        this.$message({
+          message: '请先保存基础信息与付款信息',
+          type: 'warning'
+        })
+      }
     },
     handleDownload() {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '物料名称', '品牌', '规格型号', '单位', '单价', '数量', '总金额']
-        const filterVal = ['name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
+        const tHeader = ['序号', '物料名称', '规格型号', '品牌', '单价', '数量', '总金额', '单位']
+        const filterVal = ['index', 'name', 'model', 'brand', 'unitPrice', 'number', 'totalAmount', 'unit']
         const list = []
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, this.filename)
@@ -385,13 +404,13 @@ export default {
     }
   },
   watch: {
-    contractId(data) {
-      console.log('my contractId', data)
-      this.purchaseList.forEach((item) => {
-        item.paymentContract = { id: data }
-      })
-      this.saveMaterial(this.purchaseList)
-    }
+    // contractId(data) {
+    //   console.log('my contractId', data)
+    //   this.purchaseList.forEach((item) => {
+    //     item.paymentContract = { id: data }
+    //   })
+    //   this.saveMaterial(this.purchaseList)
+    // }
   }
 }
 </script>

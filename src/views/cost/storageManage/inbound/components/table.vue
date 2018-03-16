@@ -5,65 +5,57 @@
         <h4 class="module-title">
           <p>入库验收</p>
         </h4>
-        <el-row>
-          <el-col :xs="24" :sm="24" :lg="12">
-            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-              <el-table-column label="发货明细">
-                <el-table-column label="序号">
-                  <template slot-scope="scope">{{scope.$index + 1}}</template>
-                </el-table-column>
-                <el-table-column label="物料名称">
-                  <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
-                </el-table-column>
-                <el-table-column label="规格型号">
-                  <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-                </el-table-column>
-                <el-table-column label="品牌">
-                  <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
-                </el-table-column>
-                <el-table-column label="采购数量">
-                  <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-                </el-table-column>
-              </el-table-column>
-            </el-table>
-          </el-col>
-          <el-col :xs="24" :sm="24" :lg="12">
-            <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
-              <el-table-column label="验收明细">
-                <el-table-column label="实收数量">
-                  <template slot-scope="scope">
-                    <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
-                    <span v-else>{{scope.row.number}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="核对型号">
-                  <template slot-scope="scope">
-                    <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
-                    <span v-else>{{scope.row.model}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="质量外观">
-                  <template slot-scope="scope">
-                    <input v-if="scope.row.edit" type="text" v-model="scope.row.quality" placeholder="请填写">
-                    <span v-else>{{scope.row.quality}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="合格证">
-                  <template slot-scope="scope">
-                    <input v-if="scope.row.edit" type="text" v-model="scope.row.certificate" placeholder="请填写">
-                    <span v-else>{{scope.row.certificate}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" style="display: none">
-                  <template slot-scope="scope">
-                    <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-                    <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
-                  </template>
-                </el-table-column>
-              </el-table-column>
-            </el-table>
-          </el-col>
-        </el-row>
+        <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+          <el-table-column label="发货明细">
+            <el-table-column label="序号">
+              <template slot-scope="scope">{{scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column label="物料名称">
+              <template slot-scope="scope"><span>{{scope.row.purchaseList.name}}</span></template>
+            </el-table-column>
+            <el-table-column label="规格型号">
+              <template slot-scope="scope"><span>{{scope.row.purchaseList.model}}</span></template>
+            </el-table-column>
+            <el-table-column label="品牌">
+              <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
+            </el-table-column>
+            <el-table-column label="采购数量">
+              <template slot-scope="scope"><span>{{scope.row.purchaseList.number}}</span></template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="验收明细">
+            <el-table-column label="实收数量">
+              <template slot-scope="scope">
+                <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+                <span v-else>{{scope.row.number}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="核对型号">
+              <template slot-scope="scope">
+                <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
+                <span v-else>{{scope.row.model}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="质量外观">
+              <template slot-scope="scope">
+                <input v-if="scope.row.edit" type="text" v-model="scope.row.quality" placeholder="请填写">
+                <span v-else>{{scope.row.quality}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="合格证">
+              <template slot-scope="scope">
+                <input v-if="scope.row.edit" type="text" v-model="scope.row.certificate" placeholder="请填写">
+                <span v-else>{{scope.row.certificate}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" style="display: none">
+              <template slot-scope="scope">
+                <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+                <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
+              </template>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
           <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
         </div>
@@ -82,32 +74,32 @@
         </h4>
         <el-row>
           <el-col :xs="24" :sm="24" :lg="24">
-            <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-              <el-table-column label="序号">
+            <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading" border>
+              <el-table-column label="序号" width="60" fixed>
                 <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
-              <el-table-column label="物料名称">
-                <template slot-scope="scope"><span>{{scope.row.name}}</span></template>
+              <el-table-column label="物料名称" width="120">
+                <template slot-scope="scope"><span>{{scope.row.purchaseList.name}}</span></template>
               </el-table-column>
-              <el-table-column label="规格型号">
+              <el-table-column label="规格型号" width="120">
                 <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
               </el-table-column>
-              <el-table-column label="品牌">
-                <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
+              <el-table-column label="品牌" width="100">
+                <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
               </el-table-column>
-              <el-table-column label="采购单价">
-                <template slot-scope="scope"><span>{{scope.row.unitPrice}}</span></template>
+              <el-table-column label="采购单价" width="100">
+                <template slot-scope="scope"><span>{{scope.row.purchaseList.unitPrice}}</span></template>
               </el-table-column>
-              <el-table-column label="数量">
+              <el-table-column label="数量" width="100">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
-              <el-table-column label="单个成本">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              <el-table-column label="单个成本" width="100">
+                <template slot-scope="scope"><span>{{scope.row.unitCost}}</span></template>
               </el-table-column>
-              <el-table-column label="单个抵扣税金">
-                <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
+              <el-table-column label="单个抵扣税金" width="100">
+                <template slot-scope="scope"><span>{{scope.row.unitTaxFee}}</span></template>
               </el-table-column>
-              <el-table-column label="合计">
+              <el-table-column label="合计" width="100" fixed="right">
                 <template slot-scope="scope"><span>{{scope.row.totalAmount}}</span></template>
               </el-table-column>
             </el-table>
@@ -127,7 +119,7 @@
         <p>审核动态</p>
       </h4>
       <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading">
-        <el-table-column label="序号">
+        <el-table-column label="序号" width="40">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column label="审核步骤">
@@ -155,6 +147,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/common.vue'
+import { returnFloat } from '@/utils'
 import _ from 'lodash'
 import Vue from 'vue'
 
@@ -183,18 +176,25 @@ export default {
     getPurchaseList() {
       this.$get('/inboundDetaile/findAllByPaymentContract/' + this.contractId).then((res) => {
         var data = _.cloneDeep(res.data.data)
-        console.log('data', data)
+        console.log('purchaselist', data)
         data.forEach((item) => {
-          item.edit = false
-          item.number = item.purchaseList.number
-          item.model = item.purchaseList.model
-          item.model = item.purchaseList.model
-          item.certificate = '有'
-          item.quality = '完好'
-          this.purchaseList.push(item.purchaseList)
+          item.number = item.number ? item.number : item.purchaseList.number
+          item.model = item.model ? item.model : item.purchaseList.model
+          item.certificate = item.certificate ? item.certificate : '有'
+          item.quality = item.quality ? item.quality : '完好'
+          // 税金、成本、合计计算
+          var taxRate = item.purchaseList.paymentContract.supply.taxRate // 税率
+          var unitPrice = item.purchaseList.unitPrice // 单价
+          item.unitCost = this.unitCost(taxRate, unitPrice) // 单个成本
+          item.unitTaxFee = unitPrice - item.unitCost
+          item.totalAmount = returnFloat(item.unitCost * item.number)
         })
         this.InboundList = data
       })
+    },
+    unitCost (taxRate, unitPrice) {
+      taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
+      return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
     editRow(row, index) {
       console.log('row', row)
@@ -204,14 +204,24 @@ export default {
     confirmEdit(row, index) {
       row.edit = false
       Vue.set(this.InboundList, index, row)
-      this.$post('/inboundDetaile/save', row).then((res) => {
-
+      var obj = {
+        id: row.id,
+        certificate: row.certificate,
+        model: row.model,
+        number: row.number,
+        purchaseList: {
+          id: row.purchaseList.id
+        },
+        quality: row.quality
+      }
+      this.$post('/inboundDetaile/save', obj).then((res) => {
+        this.getPurchaseList()
       })
     },
     // 审核动态
     getInboundCheck() {
       this.$get('/inboundCheck/findAllByPaymentContract/' + this.contractId).then((res) => {
-        console.log('res', res)
+        // console.log('res', res)
         if (res.data.success === true) {
           this.inboundCheck = res.data.data
         }
@@ -232,7 +242,8 @@ export default {
       console.log('submit', JSON.stringify(obj))
       this.$post('/inboundCheck/save', obj).then((res) => {
         console.log(res)
-        this.getInboundCheck()
+        // this.getPurchaseList()
+        // this.getInboundCheck()
       })
     }
   },
