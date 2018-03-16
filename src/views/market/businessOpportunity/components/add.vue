@@ -39,6 +39,12 @@
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="8" :lg="8">
+          <el-form-item label="商机编号:" prop="code">
+            <p v-if="disabled">{{businessInfo.code}}</p>
+            <el-input v-else v-model="businessInfo.code" disabled></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="商机类型:">
             <p v-if="disabled">{{businessInfo.type}}</p>
             <el-select v-else v-model="businessInfo.type" placeholder="请选择商机类型">
@@ -47,6 +53,8 @@
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="商机来源:">
             <p v-if="disabled">{{businessInfo.source}}</p>
@@ -56,8 +64,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
         <el-col :xs="24" :sm="8" :lg="8">
           <el-form-item label="客户信息:">
             <p v-if="disabled">{{businessInfo.client.name}}</p>
@@ -73,6 +79,8 @@
             <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="40">
         <el-col :xs="12" :sm="8" :lg="8">
           <el-form-item label="区域:" prop="region" required>
             <p v-if="disabled">{{businessInfo.region.name}}</p>
@@ -393,6 +401,7 @@ export default {
           this.businessInfo.oldCity = this.cityOption.join('-')
           console.log(JSON.stringify(this.businessInfo))
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
+            console.log(res)
             this.loading = false
             if (res.data.success === true) {
               this.$emit('changeObj', false)
@@ -481,9 +490,9 @@ export default {
     },
     //  所属年月日转化为年月格式
     dateChange(date) {
-      var d = new Date(date)
-      var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
-      this.businessInfo.date = newDate
+      // var d = new Date(date)
+      // var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
+      // this.businessInfo.date = newDate
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {

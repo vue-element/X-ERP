@@ -23,6 +23,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       var token = getToken()
       config.headers['X-Token'] = token
+      // console.log(token)
     }
     // console.log('config', config)
     return config
@@ -87,14 +88,18 @@ export function get(url, params = {}) {
 }
 
 // post 请求方法
-export function post(url, data = {}, isJson = true) {
+export function post(url, data = {}, isJson = true, enctype) {
   return new Promise((resolve, reject) => {
     var config = {}
     // console.log('isJson', isJson)
     if (isJson) {
       config.headers = { 'Content-Type': 'application/json;charset=utf-8' }
     } else {
-      config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
+      if (enctype) {
+        config.headers = { 'Content-Type': 'multipart/form-data' }
+      } else {
+        config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
+      }
       data = qs.stringify(data)
     }
     // console.log('config', config)

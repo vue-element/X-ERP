@@ -31,7 +31,7 @@
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
       <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @changeObj="changeObj"></addComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')"></addComponent>
     </div>
   </div>
 </template>
@@ -64,6 +64,7 @@ export default {
     // 点击新增
     addBtn() {
       this.tab = 'addTab'
+      this.delSession()
       this.editData = {
         editData: {},
         tabState: 'addTab'
@@ -84,8 +85,11 @@ export default {
     cancel() {
       this.tab = 'listTab'
     },
-    changeObj(status) {
-      console.log(status)
+    delSession() {
+      sessionStorage.removeItem('contractMsg')
+    },
+    back(tab) {
+      this.tab = tab
     }
   },
   computed: {

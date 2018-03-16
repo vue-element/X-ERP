@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-add form-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-form :model="scheduleManageData" :rules="rules" ref="scheduleManageData">
       <div class="form-module">
         <h4 class="module-title">
           <p>新增开票信息:</p>
@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编码:">
-              <p>{{ruleForm.contractInfo.code}}</p>
+              <p>{{scheduleManageData.contractInfo.code}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称:">
-                <p>{{ruleForm.contractInfo.name}}</p>
+                <p>{{scheduleManageData.contractInfo.name}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -23,7 +23,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="项目所属阶段:" prop="stage">
-              <el-select v-model="ruleForm.stage" placeholder="请选择">
+              <el-select v-model="scheduleManageData.stage" placeholder="请选择">
                <el-option v-for="item in stageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -31,7 +31,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="完工百分比:" prop="finishPercentage">
-              <el-select v-model="ruleForm.finishPercentage" placeholder="请选择">
+              <el-select v-model="scheduleManageData.finishPercentage" placeholder="请选择">
                <el-option v-for="item in finishPercentageList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -41,7 +41,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="项目状态:" prop="status">
-              <el-select v-model="ruleForm.status" placeholder="请选择">
+              <el-select v-model="scheduleManageData.status" placeholder="请选择">
                <el-option v-for="item in statusList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -49,7 +49,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="上次更新时间:">
-              <p>{{ruleForm.time | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</p>
+              <p>{{scheduleManageData.time | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -77,7 +77,7 @@ export default {
       stageList: [],
       finishPercentageList: [],
       statusList: [],
-      ruleForm: {
+      scheduleManageData: {
         billingPercentage: '开票百分比',
         finishPercentage: '完工百分比',
         stage: '项目所属阶段',
@@ -88,17 +88,14 @@ export default {
         stage: [{ required: true, message: '项目所属阶段不能为空', trigger: 'change' }],
         finishPercentage: [{ required: true, message: '完工百分比不能为空', trigger: 'change' }],
         status: [{ required: true, message: '项目状态不能为空', trigger: 'change' }]
-      }
+      },
+      temp: {}
     }
   },
   created() {
     this.getInsertData()
-    if (this.editData.tabState === 'addTab') {
-      this.action = 'add'
-    } else {
-      this.action = 'edit'
-      this.editInfo()
-    }
+    this.toggleAction()
+    this.temp = _.cloneDeep(this.scheduleManageData)
   },
   methods: {
     getInsertData() {
@@ -115,16 +112,15 @@ export default {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.contractInfoList = data.contractInfoList
-      this.ruleForm = data.contractSchedule
+      this.scheduleManageData = data.contractSchedule
     },
     save() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.scheduleManageData.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.ruleForm.time = new Date()
-          this.$post('/ContractSchedule/save', this.ruleForm).then(res => {
+          this.scheduleManageData.time = new Date()
+          this.$post('/contractSchedule/save', this.scheduleManageData).then(res => {
             if (res.data.success === true) {
-              console.log('this.ruleForm', this.ruleForm)
               this.loading = false
               this.$message({
                 message: '保存成功',
@@ -139,19 +135,13 @@ export default {
       })
     },
     reset() {
+      this.scheduleManageData = _.cloneDeep(this.temp)
+    },
+    toggleAction() {
       if (this.editData.tabState === 'addTab') {
-        console.log('isaddTab')
-        this.ruleForm = {
-          amount: '',
-          content: '',
-          contractInfo: {
-            id: 1
-          },
-          date: '',
-          name: '',
-          number: ''
-        }
+        this.action = 'add'
       } else {
+        this.action = 'edit'
         this.editInfo()
       }
     },
@@ -165,4 +155,9 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.invoice-add{
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+}
 </style>

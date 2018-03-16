@@ -13,10 +13,10 @@
     </div>
 
     <div class="contractInfo-show">
-      <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel"></basicInfo>
-      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel"></disclosureInfo>
-      <subContract v-if="tab === 'subContract'"></subContract>
-      <change v-if="tab === 'change'"></change>
+      <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel" @back="back"></basicInfo>
+      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @back="back"></disclosureInfo>
+      <subContract v-if="tab === 'subContract'" :editData="editData"></subContract>
+      <change v-if="tab === 'change'" :editData="editData"></change>
       <invoiceInfo v-if="tab === 'invoiceInfo'" :editData="editData"></invoiceInfo>
       <returnMoney v-if="tab === 'returnMoney'" :editData="editData"></returnMoney>
       <payMoney v-if="tab === 'payMoney'" :editData="editData"></payMoney>
@@ -59,8 +59,8 @@ export default {
     cancel () {
       this.$emit('cancel')
     },
-    changeObj() {
-      this.$emit('changeObj')
+    back() {
+      this.$emit('back')
     }
   }
 }

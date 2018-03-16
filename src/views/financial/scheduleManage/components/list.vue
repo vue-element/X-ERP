@@ -2,7 +2,7 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
-        <el-table-column prop="0" label="序号" width="60" fixed>
+        <el-table-column prop="0" label="序号" width="80" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
@@ -13,9 +13,9 @@
         <el-table-column prop="finishPercentage" label="完工百分比"></el-table-column>
         <el-table-column prop="billingPercentage" label="开票百分比"></el-table-column>
         <el-table-column prop="status" label="项目状态"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="240">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>
+            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -54,11 +54,10 @@ export default {
       this.height = winHeight() - 210
     },
     getScheduleData() {
-      console.log('searchData', this.searchData)
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/ContractSchedule/search?size=' + pageSize + '&page=' + page
+      var url = '/contractSchedule/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         if (res.data.success === true) {
           var data = res.data.data
@@ -80,7 +79,7 @@ export default {
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/ContractSchedule/delete', projectID).then(res => {
+      this.$post('/contractSchedule/delete', projectID).then(res => {
         if (res.data.success === true) {
           this.getScheduleData()
           this.$message({
@@ -91,8 +90,7 @@ export default {
       })
     },
     editRow(id) {
-      this.$get('/ContractSchedule/findUpdateData/' + id).then((res) => {
-        console.log('res', res)
+      this.$get('/contractSchedule/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         this.$emit('editRow', data)
       })

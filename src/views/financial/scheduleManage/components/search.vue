@@ -51,14 +51,13 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/ContractSchedule/findInsertData').then(res => {
+      this.$get('/contractSchedule/findInsertData').then(res => {
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.contractInfoList
         }
       })
     },
     search() {
-      // console.log('search', this.ruleForm )
       this.$emit('search', this.ruleForm)
     },
     searchAll() {
@@ -72,4 +71,9 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.invoice-search{
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+}
 </style>

@@ -3,33 +3,10 @@
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同变更附件列表</p>
-        <div class="up-files common-btn" @click="upFiles=true">附件上传</div>
+        <div class="up-files common-btn" @click="upFilesBtn">附件上传</div>
       </h4>
-      <!-- 变更附件上传 -->
-     <el-dialog title="变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
-        <el-form>
-          <el-form-item label="附件说明">
-            <el-input type="text" v-model="fileForm.desc"></el-input>
-          </el-form-item>
-          <el-form-item label="附件人">
-            <el-input type="text" v-model="fileForm.author"></el-input>
-          </el-form-item>
-          <el-form-item label="上传时间" prop="name">
-             <el-date-picker v-model="fileForm.date" type="date" placeholder="选择日期"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="上传附件" prop="name">
-            <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer" >
-          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交</el-button>
-        </div>
-      </el-dialog>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+        <el-table class="basic-form" style="width: 100%" :data="changeData" :height="height" ref="multipleTable" border>
           <el-table-column align="center" prop="0" label="序号" width="60" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
@@ -42,13 +19,30 @@
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
               <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
       </div>
+      <!-- 变更附件上传弹窗 -->
+      <el-dialog title="变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
+        <el-form>
+          <el-form-item label="附件说明">
+            <el-input type="text" v-model="fileForm.describtion"></el-input>
+          </el-form-item>
+          <el-form-item label="上传附件" prop="name">
+            <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer" >
+          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -56,25 +50,18 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  props: ['editData'],
   data() {
     return {
-      tableData: [],
+      changeData: [],
       height: 100,
       currentPage: 1,
-      // 文件上传地址----------------------------------------
       upFiles: false,
       fileForm: {
         desc: '',
         author: '',
         date: ''
-      },
-      // 后台传输接口
-      importFileUrl: 'http:dtc.com/cpy/add',
-      upLoadData: {
-        cpyId: '123456',
-        occurTime: '2018-01'
-      },
-      fileList: []
+      }
     }
   },
   created() {
@@ -86,6 +73,16 @@ export default {
   methods: {
     resize() {
       this.height = winHeight() - 335
+    },
+    upFilesBtn() {
+      var contractMsg = sessionStorage.getItem('contractMsg')
+      if (this.editData.tabState === 'addTab' && contractMsg === null) {
+        this.$message({
+          message: '请先输入合同基础信息'
+        })
+      } else {
+        this.upFiles = true
+      }
     },
     submitUpload() {
       this.$refs.upload.submit()

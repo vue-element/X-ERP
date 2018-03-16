@@ -99,12 +99,11 @@ export default {
       }
     },
     editRow(data) {
+      this.tab = 'addTab'
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
-      this.tab = 'addTab'
     },
     search(data) {
       this.searchData = data
@@ -124,12 +123,6 @@ export default {
         const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
         const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
         const list = this.list
-        // if (list) {
-        //   list = this.list
-        // } else {
-        //   list = []
-        // }
-        // console.log('list', list)
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, this.filename)
         this.downloadLoading = false

@@ -1,23 +1,23 @@
 <template>
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
-        <el-table-column align="center" prop="0" label="序号" width="60" fixed>
+        <el-table-column prop="0" label="序号" width="80" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="code" label="合同编码" width="100"></el-table-column>
-        <el-table-column prop="name" label="合同名称" width="200"></el-table-column>
-        <el-table-column prop="region.name" label="所属办事处" width="100"></el-table-column>
-        <el-table-column prop="term" label="合同所属期" width="100"></el-table-column>
-        <el-table-column prop="changeAmount" label="变更后合同金额" width="160"></el-table-column>
-        <el-table-column prop="invoicedAmount" label="已开票金额" width="120"></el-table-column>
-        <el-table-column prop="receivedAmount" label="已回款金额" width="120"></el-table-column>
-        <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" width="120"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
+        <el-table-column prop="name" label="合同名称" width="240"></el-table-column>
+        <el-table-column prop="region.name" label="所属办事处" width="140"></el-table-column>
+        <el-table-column prop="term" label="合同所属期" width="140"></el-table-column>
+        <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
+        <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>
+        <el-table-column prop="receivedAmount" label="已回款金额"></el-table-column>
+        <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -53,17 +53,11 @@ export default {
       this.height = winHeight() - 220
     },
     getContractInfoData() {
-      var searchData = this.searchData
-      for (var key in searchData) {
-        if (searchData[key] === '') {
-          delete searchData[key]
-        }
-      }
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/contractInfo/search?size=' + pageSize + '&page=' + page
-      this.$post(url, searchData, false).then((res) => {
+      this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
         for (var i = 0; i < data.content.length; i++) {
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount

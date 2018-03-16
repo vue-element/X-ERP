@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计回款金额：">
-              <p>{{contractReceived.amount}}</p>
+              <p>{{contractReceived.totalAmount}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -20,13 +20,13 @@
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="contractReceivedData" :height="height" ref="multipleTable" border>
-          <el-table-column align="center" prop="0" label="序号" width="180" fixed>
+          <el-table-column prop="0" label="序号" width="180" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="回款金额"></el-table-column>
-          <el-table-column align="center" prop="2" label="回款日期"></el-table-column>
+          <el-table-column prop="amount" label="回款金额"></el-table-column>
+          <el-table-column prop="date" label="回款日期"></el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
   :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
@@ -45,7 +45,7 @@ export default {
       height: 100,
       currentPage: 1,
       contractReceived: {
-        amount: ''
+        totalAmount: ''
       }
     }
   },
@@ -54,18 +54,25 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getContractReceived()
+    if (this.editData.tabState === 'editTab') {
+      this.getContractReceived()
+    } else {
+      this.contractReceived = {
+        totalAmount: ''
+      }
+    }
   },
   methods: {
     resize() {
       this.height = winHeight() - 475
     },
     getContractReceived() {
-      // var contractReceivedID = this.editData.editData.id
-      // console.log(contractReceivedID)
-      // this.$get('/ContractReceived/findAllByContractInfo/' + contractReceivedID).then((res) => {
-      //   console.log(res)
-      // })
+      var contractReceivedID = this.editData.editData.id
+      this.$get('/contractReceived/findAllByContractInfo/' + contractReceivedID).then((res) => {
+        console.log(res)
+        this.contractReceived.totalAmount = res.data.data.totalAmount
+        this.contractReceivedData = res.data.data.contractReceivedList.content
+      })
     }
   }
 }

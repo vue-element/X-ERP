@@ -24,7 +24,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">编辑</el-button>
+            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -63,22 +63,22 @@ export default {
       this.height = winHeight() - 210
     },
     getScheduleData() {
-      console.log('searchData', this.searchData)
+      // console.log('searchData', this.searchData)
       // console.log (typeof(this.searchData.date) === object)
-      this.listLoading = true
-      var pageSize = this.pageSize || 15
-      var page = this.currentPage - 1 || 0
-      var url = '/ContractSchedule/search/search?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then(res => {
-        if (res.data.success === true) {
-          var data = res.data.data
-          this.total = data.totalElements
-          this.currentPage = data.number + 1
-          this.pageSize = data.size
-          this.tableData = data.content
-          this.listLoading = false
-        }
-      })
+      // this.listLoading = true
+      // var pageSize = this.pageSize || 15
+      // var page = this.currentPage - 1 || 0
+      // var url = '/ContractSchedule/search/search?size=' + pageSize + '&page=' + page
+      // this.$post(url, this.searchData, false).then(res => {
+      //   if (res.data.success === true) {
+      //     var data = res.data.data
+      //     this.total = data.totalElements
+      //     this.currentPage = data.number + 1
+      //     this.pageSize = data.size
+      //     this.tableData = data.content
+      //     this.listLoading = false
+      //   }
+      // })
     },
     handleCurrentChange(val) {
       this.currentPage = val
@@ -117,5 +117,4 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-
 </style>

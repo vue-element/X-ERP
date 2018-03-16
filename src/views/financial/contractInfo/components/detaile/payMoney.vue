@@ -7,29 +7,37 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="项目累计投入金额：">
-              <p v-model="contractPayment.name"></p>
-              <!-- <el-input v-model="contractPayment.name"></el-input> -->
+            <el-form-item label="项目累计投入：">
+              <p>{{contractPayment.totalAmount}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="材料累计投入金额：">
-              <p v-model="contractPayment.materialCost"></p>
-              <!-- <el-input v-model="contractPayment.materialCost"></el-input> -->
+            <el-form-item label="材料累计投入：">
+              <p>{{contractPayment.totalMaterialCost}}</p>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="人工累计投入金额：">
-              <p v-model="contractPayment.artificialCost"></p>
-              <!-- <el-input v-model="contractPayment.artificialCost"></el-input> -->
+            <el-form-item label="人工累计投入：">
+              <p>{{contractPayment.totalArtificialCost}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="综合累计投入金额：">
-              <p v-model="contractPayment.comprehensiveCost"></p>
-              <!-- <el-input v-model="contractPayment.comprehensiveCost"></el-input> -->
+            <el-form-item label="综合累计投入：">
+              <p>{{contractPayment.totalComprehensiveCost}}</p>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="管理累计投入：">
+              <p>{{contractPayment.totalManageCost}}</p>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="税金累计投入：">
+              <p>{{contractPayment.totalTax}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -37,20 +45,22 @@
     </el-form>
     <div class="list form-module">
       <h4 class="module-title">
-        <p>信息资料</p>
+        <p>付款详情</p>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+        <el-table class="basic-form" style="width: 100%" :data="paymentData" :height="height" ref="multipleTable" border>
           <el-table-column align="center" prop="0" label="序号" width="100">
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="投入金额"></el-table-column>
-          <el-table-column align="center" prop="2" label="投入日期"></el-table-column>
-          <el-table-column align="center" prop="3" label="材料投入金额"></el-table-column>
-          <el-table-column align="center" prop="4" label="人工投入金额"></el-table-column>
-          <el-table-column align="center" prop="5" label="综合投入金额"></el-table-column>
+          <el-table-column prop="" label="投入金额"></el-table-column>
+          <el-table-column prop="inputDate" label="投入日期"></el-table-column>
+          <el-table-column prop="materialCost" label="材料投入金额"></el-table-column>
+          <el-table-column prop="artificialCost" label="人工投入金额"></el-table-column>
+          <el-table-column prop="comprehensiveCost" label="综合投入金额"></el-table-column>
+          <el-table-column prop="manageCost" label="管理费用"></el-table-column>
+          <el-table-column prop="tax" label="税金"></el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
@@ -62,16 +72,19 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
+  props: ['editData'],
   data() {
     return {
-      tableData: [],
+      paymentData: [],
       height: 100,
       currentPage: 1,
       contractPayment: {
-        name: '',
-        materialCost: '',
-        artificialCost: '',
-        comprehensiveCost: ''
+        totalAmount: '',
+        totalMaterialCost: '',
+        totalArtificialCost: '',
+        totalComprehensiveCost: '',
+        totalManageCost: '',
+        totalTax: ''
       }
     }
   },
@@ -80,10 +93,35 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
+    if (this.editData.tabState === 'editTab') {
+      this.getContractPayment()
+    } else {
+      this.contractPayment = {
+        totalAmount: '',
+        totalMaterialCost: '',
+        totalArtificialCost: '',
+        totalComprehensiveCost: '',
+        totalManageCost: '',
+        totalTax: ''
+      }
+    }
   },
   methods: {
     resize() {
-      this.height = winHeight() - 532
+      this.height = winHeight() - 562
+    },
+    getContractPayment() {
+      var paymentID = this.editData.editData.id
+      this.$get('/contractPayment/findAllByContractInfo/' + paymentID).then((res) => {
+        // console.log(res)
+        this.paymentData = res.data.data.contractPaymentList.content
+        this.contractPayment.totalAmount = res.data.data.totalAmount
+        this.contractPayment.totalMaterialCost = res.data.data.totalMaterialCost
+        this.contractPayment.totalArtificialCost = res.data.data.totalArtificialCost
+        this.contractPayment.totalComprehensiveCost = res.data.data.totalComprehensiveCost
+        this.contractPayment.totalManageCost = res.data.data.totalManageCost
+        this.contractPayment.totalTax = res.data.data.totalTax
+      })
     }
   }
 }
@@ -94,6 +132,9 @@ export default {
 .contractPayment-container.form-container{
   border:none;
   margin-top:140px;
+  &::-webkit-scrollbar{
+    width: 0;
+  }
   .total.form-module{
     .el-row{
       margin-bottom:10px;
@@ -101,14 +142,14 @@ export default {
         .item {
           margin-top: 20px;
           label {
-            color: #000;
-            width: 18%;
-            line-height: 16px;
-            word-wrap: wrap;
-            font-size: 14px;
-            vertical-align:middle;
-            display:inline-block;
-            text-align:right;
+            // color: #000;
+            // width: 18%;
+            // line-height: 16px;
+            // word-wrap: wrap;
+            // font-size: 14px;
+            // vertical-align:middle;
+            // display:inline-block;
+            // text-align:right;
           }
           input {
             width: 50%;
