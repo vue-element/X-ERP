@@ -105,7 +105,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机审批状态:">
             <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-input v-else v-model="businessInfo.examineState" placeholder="请输入项目关键信息"></el-input>
+            <el-input type="textarea" v-else v-model="businessInfo.examineState" placeholder="请输入项目关键信息"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -332,7 +332,7 @@ export default {
         date: '',
         name: '',
         sourcePerson: '',
-        examineState: '',
+        examineState: '商机线索',
         keyword: '',
         firstPerson: '',
         firstPersonPhone: '',
@@ -385,6 +385,7 @@ export default {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
+            console.log(res)
             this.loading = false
             if (res.data.success === true) {
               this.$emit('changeObj', false)

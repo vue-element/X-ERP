@@ -42,7 +42,7 @@ export default {
       contractInfoList: [],
       ruleForm: {
         contractInfo: {
-          id: 1
+          id: ''
         }
       },
       rules: {}
@@ -75,7 +75,9 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .invoice-search.form-container{
-  margin-top: 50px;
+  &::-webkit-scrollbar{
+    width: 0;
+  }
   .form-module{
     .el-row{
       margin-bottom:10px;

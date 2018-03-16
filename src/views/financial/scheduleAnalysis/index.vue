@@ -172,7 +172,4 @@ export default {
     margin: 28px 0;
   }
 }
-.contract-list {
-  margin-top: 50px;
-}
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="invoice-add form-container">
+  <div class="payment-add form-container">
+    <div class="commont-btn edit-btn" v-show="editShow">
+      <el-button @click="toggleEditBtn">{{editWord}}</el-button>
+    </div>
     <el-form :model="paymentData" :rules="rules" ref="paymentData">
       <div class="form-module">
         <h4 class="module-title">
@@ -8,7 +11,8 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
-              <el-select v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable>
+              <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -16,43 +20,49 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="人工成本投入：" prop="artificialCost">
-              <el-input v-model="paymentData.artificialCost" placeholder="请输入人工成本投入" @change="artificialCost"></el-input>
+              <p v-if="disabled">{{paymentData.artificialCost}}</p>
+              <el-input v-else v-model="paymentData.artificialCost" placeholder="请输入人工成本投入"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="材料成本投入：" prop="materialCost">
-              <el-input v-model="paymentData.materialCost" placeholder="请输入材料成本投入" @change="materialCost"></el-input>
+              <p v-if="disabled">{{paymentData.materialCost}}</p>
+              <el-input v-else v-model="paymentData.materialCost" placeholder="请输入材料成本投入"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="综合成本投入：" class="single-date" prop="comprehensiveCost">
-              <el-input v-model="paymentData.comprehensiveCost" placeholder="请输入综合成本投入" @change="comprehensiveCost"></el-input>
+              <p v-if="disabled">{{paymentData.comprehensiveCost}}</p>
+              <el-input v-else v-model="paymentData.comprehensiveCost" placeholder="请输入综合成本投入"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="管理费用：" prop="manageCost">
-              <el-input v-model="paymentData.manageCost" placeholder="请输入管理费用" @change="manageCost"></el-input>
+              <p v-if="disabled">{{paymentData.manageCost}}</p>
+              <el-input v-else v-model="paymentData.manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="稅金：" prop="tax">
-              <el-input v-model="paymentData.tax" placeholder="请输入税金" @change="tax"></el-input>
+              <p v-if="disabled">{{paymentData.tax}}</p>
+              <el-input v-else v-model="paymentData.tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="投入日期：" class="single-date" prop="inputDate">
-              <el-date-picker type="date" placeholder="选择日期" v-model="paymentData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+              <p v-if="disabled">{{paymentData.inputDate}}</p>
+              <el-date-picker v-else type="date" placeholder="选择日期" v-model="paymentData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn">
+      <div class="commont-btn" v-show="!disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -76,7 +86,10 @@ export default {
       }
     }
     return {
+      action: 'add',
       loading: false,
+      editShow: false,
+      editWord: '编辑',
       disabled: false,
       contractInfoList: [],
       paymentData: {
@@ -98,20 +111,18 @@ export default {
         manageCost: [{ required: true, message: '请输入管理费用', trigger: 'blur' }],
         tax: [{ required: true, message: '请输入税金', trigger: 'blur' }],
         inputDate: [{ required: true, message: '请选择投入日期', trigger: 'change' }]
-      }
+      },
+      temp: {}
     }
   },
   created() {
-    console.log(this.editData.editData)
-    if (this.editData.tabState === 'addTab') {
-      this.getInsertData()
-    } else {
-      this.editInfo()
-    }
+    this.getInsertData()
+    this.toggleAction()
+    this.temp = _.cloneDeep(this.paymentData)
   },
   methods: {
     getInsertData() {
-      this.$get('/ContractPayment/findInsertData').then(res => {
+      this.$get('/contractPayment/findInsertData').then(res => {
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.contractInfoList
         }
@@ -126,9 +137,13 @@ export default {
       this.$refs.paymentData.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/ContractPayment/save', this.paymentData).then(res => {
+          Number(this.paymentData.artificialCost)
+          Number(this.paymentData.materialCost)
+          Number(this.paymentData.comprehensiveCost)
+          Number(this.paymentData.manageCost)
+          Number(this.paymentData.tax)
+          this.$post('/contractPayment/save', this.paymentData).then(res => {
             if (res.data.success === true) {
-              console.log('this.paymentData', this.paymentData)
               this.loading = false
               this.$message({
                 message: '保存成功',
@@ -143,19 +158,25 @@ export default {
       })
     },
     reset() {
+      this.paymentData = _.cloneDeep(this.temp)
+    },
+    toggleAction() {
       if (this.editData.tabState === 'addTab') {
-        this.paymentData = {
-          amount: '',
-          content: '',
-          contractInfo: {
-            id: ''
-          },
-          date: '',
-          name: '',
-          number: ''
-        }
+        this.action = 'add'
       } else {
+        this.action = 'edit'
+        this.editShow = true
+        this.disabled = true
         this.editInfo()
+      }
+    },
+    toggleEditBtn() {
+      this.disabled = !this.disabled
+      if (this.disabled === true) {
+        this.editWord = '编辑'
+        this.editInfo()
+      } else {
+        this.editWord = '取消编辑'
       }
     },
     cancel() {
@@ -176,11 +197,15 @@ export default {
     tax(val) {
       this.paymentData.tax = outputmoney(val)
     }
-  },
-  computed: {}
+  }
 }
 </script>
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.payment-add{
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+}
 </style>

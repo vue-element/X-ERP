@@ -10,19 +10,20 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编码：" prop="contractInfo">
-              <p v-if="disabled">{{paymentManage.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentManage.contractBilling.contractInfo.id" placeholder="请选择合同编码">
+            <el-form-item label="合同编号：" prop="contractInfo">
+              <p v-if="disabled">{{contractInfo.name}}</p>
+              <el-select v-else v-model="contractInfo.id" placeholder="请选择合同编码"  filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-             </el-select>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="开票编码：" prop="contractBilling">
               <p v-if="disabled">{{paymentManage.contractBilling.name}}</p>
-              <el-select v-else v-model="paymentManage.contractBilling.id" placeholder="请选择开票编码" label="开票内容：">
+              <el-input v-else v-model="paymentManage.code" placeholder="请输入开票编码"></el-input>
+             <!--  <el-select v-else v-model="paymentManage.contractBilling.id" placeholder="请选择开票编码" label="开票内容：">
                 <el-option v-for="item in contractBillingList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-             </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -36,7 +37,7 @@
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="回款金额：" prop="amount">
               <p v-if="disabled">{{paymentManage.amount}}</p>
-              <el-input v-else v-model.number="paymentManage.amount" placeholder="请输入回款金额" @change="amount"></el-input>
+              <el-input v-else v-model="paymentManage.amount" placeholder="请输入回款金额" @change="amount"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -65,15 +66,16 @@ export default {
       action: 'add',
       contractBillingList: [],
       contractInfoList: [],
+      contractInfo: {
+        id: ''
+      },
       paymentManage: {
         contractBilling: {
-          id: '',
-          contractInfo: {
-            id: ''
-          }
+          id: ''
         },
         amount: '',
-        date: ''
+        date: '',
+        code: ''
       },
       rules: {
         contractInfo: [{ required: true, message: '请选择合同编码', trigger: 'change' }],
@@ -85,19 +87,12 @@ export default {
   },
   created() {
     this.getInsertData()
-    console.log(this.editData.tabState)
-    if (this.editData.tabState === 'addTab') {
-      this.editShow = false
-      this.action = 'add'
-    } else {
-      this.disabled = true
-      this.action = 'edit'
-      this.editInfo()
-    }
+    this.toggleAction()
+    this.temp = _.cloneDeep(this.paymentManage)
   },
   methods: {
     getInsertData() {
-      this.$get('/ContractReceived/findInsertData').then((res) => {
+      this.$get('/contractReceived/findInsertData').then((res) => {
         console.log(res)
         if (res.data.success === true) {
           this.contractBillingList = res.data.data.contractBillingList
@@ -115,9 +110,9 @@ export default {
       this.$refs.paymentManage.validate((valid) => {
         if (valid) {
           this.loading = true
-          console.log(111)
+          this.paymentManage.contractBilling.contractInfo.id = this.contractInfo.id
           console.log(this.paymentManage)
-          this.$post('/ContractReceived/save', this.paymentManage).then(res => {
+          this.$post('/contractReceived/save', this.paymentManage).then(res => {
             if (res.data.success === true) {
               this.loading = false
               this.$message({
@@ -133,21 +128,7 @@ export default {
       })
     },
     reset() {
-      if (this.action === 'add') {
-        console.log('isaddTab')
-        this.paymentManage = {
-          contractBilling: {
-            id: '',
-            contractInfo: {
-              id: ''
-            }
-          },
-          amount: '',
-          date: ''
-        }
-      } else {
-        this.editInfo()
-      }
+      this.paymentManage = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('toggleTab')
@@ -161,6 +142,16 @@ export default {
         this.editWord = '取消编辑'
       }
     },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.editShow = false
+        this.action = 'add'
+      } else {
+        this.disabled = true
+        this.action = 'edit'
+        this.editInfo()
+      }
+    },
     amount(val) {
       this.paymentManage.amount = outputmoney(val)
     }
@@ -172,11 +163,8 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .invoice-add{
-  .edit-btn{
-    margin: 0;
-    button{
-      float: right;
-    }
+  &::-webkit-scrollbar{
+    width: 0;
   }
 }
 </style>

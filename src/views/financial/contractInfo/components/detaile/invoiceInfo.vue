@@ -13,7 +13,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计开票金额">
-              <p>{{invoceInfo.amount}}</p>
+              <p>{{invoceInfo.totalAmount}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -32,7 +32,7 @@
           </el-table-column>
           <el-table-column prop="amount" label="开票金额"></el-table-column>
           <el-table-column prop="date" label="开票日期"></el-table-column>
-          <el-table-column prop="number" label="开票号码"></el-table-column>
+          <el-table-column prop="number" label="发票号码"></el-table-column>
           <el-table-column prop="content" label="开票内容" width="400"></el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
@@ -56,7 +56,7 @@ export default {
       pageSize: 15,
       invoceInfo: {
         name: '',
-        amount: ''
+        totalAmount: ''
       }
     }
   },
@@ -65,12 +65,12 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    if (this.editData.tabState === 'seeTab') {
+    if (this.editData.tabState === 'editTab') {
       this.getInvoceInfo()
     } else {
       this.invoceInfo = {
         name: '',
-        amount: ''
+        totalAmount: ''
       }
     }
   },
@@ -81,8 +81,8 @@ export default {
     getInvoceInfo() {
       var basicInfoID = this.editData.editData.id
       this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
-        this.invoceInfo.name = res.data.data.content[0].name
-        this.invoceInfoData = res.data.data.content
+        this.invoceInfoData = res.data.data.contractBillingList.content
+        this.invoceInfo.totalAmount = res.data.data.totalAmount
       })
     },
     getInvoceInfoData() {

@@ -107,7 +107,6 @@ export default {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
       this.tab = 'addTab'
     },
     search(data) {
@@ -153,8 +152,6 @@ export default {
     $route() {
       var path = this.$route.path
       this.path = path.split('/').pop()
-      // console.log(this.path)
-      // console.log(this.$route.path)
     }
   }
 }

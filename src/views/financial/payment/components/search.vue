@@ -1,6 +1,6 @@
 <template>
-  <div class="invoice-search form-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+  <div class="payment-search form-container">
+    <el-form :model="searchData" ref="searchData">
       <div class="form-module">
         <h4 class="module-title">
           <p>查询条件:</p>
@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo_id">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号">
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -16,7 +16,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称 ：" prop="contractInfo_id" class="single-date">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -40,36 +40,45 @@ export default {
       loading: false,
       disabled: false,
       contractInfoList: [],
-      ruleForm: {
-        contractInfo_id: 1
-      },
-      rules: {}
+      searchData: {
+        contractInfo_id: ''
+      }
     }
   },
   created() {
-    console.log('search created')
     this.getInsertData()
   },
   methods: {
     getInsertData() {
-      this.$get('/ContractPayment/findInsertData').then(res => {
+      this.$get('/contractPayment/findInsertData').then(res => {
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.contractInfoList
         }
       })
     },
     search() {
-      this.$emit('search', this.ruleForm)
+      sessionStorage.setItem('paymentSearchData', JSON.stringify(this.searchData))
+      this.$emit('search', this.searchData)
     },
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    },
+    keepPaymentSearch() {
+      var searchData = JSON.parse(sessionStorage.getItem('paymentSearchData'))
+      for (var key in searchData) {
+        this.searchData[key] = searchData[key]
+      }
     }
-  },
-  computed: {}
+  }
 }
 </script>
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.payment-search{
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+}
 </style>

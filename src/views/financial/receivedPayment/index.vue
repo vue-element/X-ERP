@@ -114,9 +114,7 @@ export default {
     },
     search(data) {
       this.searchData = data
-      // this.searchData.date = (this.searchData.date).toISOS tring().slice(0,10)
       this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
-      // console.log('searchData.date', this.searchData.date)
       this.tab = 'listTab'
     },
     dataImpore() {
@@ -129,12 +127,6 @@ export default {
         const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
         const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
         const list = this.list
-        // if (list) {
-        //   list = this.list
-        // } else {
-        //   list = []
-        // }
-        // console.log('list', list)
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, this.filename)
         this.downloadLoading = false

@@ -20,7 +20,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="业务分类：" prop="name">
-              <el-select v-model="searchData.category" placeholder="请选择业务类别">
+              <el-select v-model="searchData.category" clearable placeholder="请选择业务类别">
                 <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -39,7 +39,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="所属区域：" prop="name">
-              <el-select v-model="searchData.region_id" placeholder="请选择所属区域">
+              <el-select v-model="searchData.region_id" clearable placeholder="请选择所属区域">
                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -48,7 +48,7 @@
       </div>
       <div class="commont-btn">
         <el-button @click="search">查  询</el-button>
-        <el-button @click="search">查询所有</el-button>
+        <el-button @click="searchAll">查询所有</el-button>
       </div>
     </el-form>
   </div>
@@ -74,6 +74,7 @@ export default {
   },
   created() {
     this.getFindInsertData()
+    this.keepSearchWord()
   },
   methods: {
     getFindInsertData() {
@@ -89,7 +90,26 @@ export default {
       ]
     },
     search() {
-      this.$emit('search', this.searchData)
+      var searchData = {}
+      for (var key in this.searchData) {
+        if (this.searchData[key] === '') {
+          delete this.searchData[key]
+        } else {
+          searchData[key] = this.searchData[key]
+        }
+      }
+      sessionStorage.setItem('contractInfoSearchData', JSON.stringify(searchData))
+      this.$emit('search', searchData)
+    },
+    searchAll() {
+      var searchData = {}
+      this.$emit('search', searchData)
+    },
+    keepSearchWord() {
+      var searchData = JSON.parse(sessionStorage.getItem('contractInfoSearchData'))
+      for (var key in searchData) {
+        this.searchData[key] = searchData[key]
+      }
     }
   },
   mounted() {
@@ -97,8 +117,6 @@ export default {
     window.addEventListener('resize', () => {
       this.$refs.ele.style.height = winHeight() - 180 + 'px'
     })
-  },
-  computed: {
   }
 }
 </script>
@@ -106,20 +124,9 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .contractInfo-search.form-container{
-  overflow-y:auto;
   margin-top:90px;
   &::-webkit-scrollbar{
-    width:0;
-  }
-  .form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-        }
-      }
-    }
+    width: 0;
   }
 }
 </style>

@@ -93,7 +93,7 @@
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable" border>
-          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
+          <el-table-column prop="0" label="序号" width="80" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
@@ -101,12 +101,13 @@
           <el-table-column prop="paymentCondition" label="回款条件" width="300"></el-table-column>
           <el-table-column prop="date" label="计划回款时间"></el-table-column>
           <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
+          <el-table-column prop="amount" label="计划回款金额"></el-table-column>
           <el-table-column prop="" label="计划回款累计金额"></el-table-column>
           <el-table-column prop="" label="实际回款总金额"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="paymentPlanModify(scope.row)" type="text" size="small">修改</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -119,10 +120,10 @@
           <el-input v-model="paymentPlan.paymentCondition"></el-input>
         </el-form-item>
         <el-form-item label="计划回款比例(%)：">
-          <el-input v-model="paymentPlan.ratio" @change="ratio"></el-input>
+          <el-input v-model="paymentPlan.ratio"></el-input>
         </el-form-item>
         <el-form-item label="计划回款金额(元)：">
-          <el-input v-model="paymentPlan.amount" @change="amount"></el-input>
+          <el-input v-model="paymentPlan.amount"></el-input>
         </el-form-item>
         <el-form-item class="single-date" label="计划回款时间：">
           <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
@@ -140,41 +141,35 @@
         <el-button class="up-files common-btn" type="text" @click="upFiles = true">附件上传</el-button>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="tableData" ref="multipleTable" border>
-          <el-table-column align="center" prop="0" label="序号" width="60" fixed>
+        <el-table class="basic-form" style="width: 100%" :data="fileData" ref="multipleTable" border>
+          <el-table-column prop="0" label="序号" width="80" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="1" label="附件名称" width="300"></el-table-column>
-          <el-table-column align="center" prop="2" label="附件说明" width="350"></el-table-column>
-          <el-table-column align="center" prop="3" label="上传人"></el-table-column>
-          <el-table-column align="center" prop="4" label="上传时间"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column prop="1" label="附件名称" width="300"></el-table-column>
+          <el-table-column prop="2" label="附件说明" width="350"></el-table-column>
+          <el-table-column prop="3" label="上传人"></el-table-column>
+          <el-table-column prop="4" label="上传时间"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="modify(scope.row.id)" type="text" size="small">修改</el-button>
               <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </div>
-    <!-- 合同交底文件上传 -->
+    <!-- 附件件上传弹窗 -->
     <el-dialog title="合同交底附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
       <el-form>
         <el-form-item label="附件说明">
-          <el-input type="text" v-model="fileForm.desc"></el-input>
-        </el-form-item>
-        <el-form-item label="附件人">
-          <el-input type="text" v-model="fileForm.author"></el-input>
-        </el-form-item>
-        <el-form-item label="上传时间" prop="name">
-           <el-date-picker v-model="fileForm.date" type="date" placeholder="选择日期"></el-date-picker>
+          <el-input type="textarea" v-model="fileForm.describtion"></el-input>
         </el-form-item>
         <el-form-item label="上传附件" prop="name">
-          <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+          <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
           </el-upload>
         </el-form-item>
       </el-form>
@@ -229,19 +224,12 @@ export default {
         }
       },
       // 附件上传
-      tableData: [],
+      fileData: [],
       upFiles: false,
       fileForm: {
-        desc: '',
-        author: '',
-        date: ''
-      },
-      importFileUrl: 'http:dtc.com/cpy/add',
-      upLoadData: {
-        cpyId: '123456',
-        occurTime: '2018-01'
-      },
-      fileList: []
+        describtion: '',
+        file: ''
+      }
     }
   },
   created() {
@@ -254,7 +242,6 @@ export default {
       this.showInfo()
     } else {
       this.action = 'add'
-      // this.delSession()
       // var contractMsg = this.$store.state.contractMsg.contractMsg
       var contractMsg = sessionStorage.getItem('contractMsg')
       if (contractMsg) {
@@ -298,6 +285,9 @@ export default {
             message: '保存成功',
             type: 'success'
           })
+          if (this.action === 'edit') {
+            this.$emit('back')
+          }
         }
       })
     },
@@ -353,6 +343,7 @@ export default {
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
           if (res.data.success === true) {
             this.paymentPlan.contractBasis.id = res.data.data.content[0].id
+            console.log(this.paymentPlan.contractBasis.id)
             this.paymentPlanAdd()
           }
         })
@@ -365,7 +356,6 @@ export default {
     },
     paymentPlanAdd() {
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
-        console.log(res)
         this.planBox = false
         if (res.data.success === true) {
           this.$message({
@@ -373,7 +363,15 @@ export default {
             type: 'success'
           })
           this.paymentPlayShow()
-          this.paymentPlan = {}
+          this.paymentPlan = {
+            paymentCondition: '',
+            ratio: '',
+            amount: '',
+            date: '',
+            contractBasis: {
+              id: ''
+            }
+          }
         }
       })
     },
@@ -399,7 +397,7 @@ export default {
       }
     },
     paymentPlanModify(id) {
-      this.$get('/paymentPlan/findUpdateData/' + id.id).then((res) => {
+      this.$get('/paymentPlan/findUpdateData/' + id).then((res) => {
         this.clickPlanBox()
         this.paymentPlan = res.data.data.paymentPlan
       })
@@ -417,9 +415,6 @@ export default {
         }
       })
     },
-    delSession() {
-      sessionStorage.removeItem('contractMsg')
-    },
     // 数字格式化
     materialCost(val) {
       this.contractBasis.materialCost = outputmoney(val)
@@ -435,12 +430,6 @@ export default {
     },
     tax(val) {
       this.contractBasis.tax = outputmoney(val)
-    },
-    ratio(val) {
-      this.paymentPlan.ratio = outputmoney(val)
-    },
-    amount(val) {
-      this.paymentPlan.amount = outputmoney(val)
     },
     // 附件上传
     submitUpload() {
@@ -468,12 +457,6 @@ export default {
   &::-webkit-scrollbar{
     width:0;
   }
-  .edit-btn{
-    margin: 0;
-    button{
-      float: right;
-    }
-  }
   .btn{
     text-align:center;
     div.common-btn{
@@ -482,7 +465,6 @@ export default {
     }
   }
   .list.form-module{
-    margin-bottom:0;
     .module-title{
       position:relative;
       .up-files{

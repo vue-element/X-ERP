@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="合同编码：" prop="contractInfo.id">
-              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
+              <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择合同编码">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -16,19 +16,19 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="发票抬头名称：" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <el-input v-model="ruleForm.name" placeholder="请输入发票抬头名称" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="发票号码：" prop="number">
-              <el-input v-model="ruleForm.number" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <el-input v-model="ruleForm.number" placeholder="请输入发票号码" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="开票金额：" prop="amount">
-              <el-input v-model="ruleForm.amount" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <el-input v-model="ruleForm.amount" placeholder="请输入开票金额" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
@@ -38,7 +38,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="8">
             <el-form-item label="开票内容：" prop="content">
-              <el-input v-model="ruleForm.content" placeholder="请输入您的账号" :disabled="disabled"></el-input>
+              <el-input v-model="ruleForm.content" placeholder="请输入开票内容" :disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,13 +63,13 @@ export default {
       contractInfoList: [],
       originData: {},
       ruleForm: {
-        amount: '开票金额',
-        content: '开票内容',
-        name: '发票抬头名称',
+        amount: '',
+        content: '',
+        name: '',
         contractInfo: {
-          id: 1
+          id: ''
         },
-        number: '发票号码'
+        number: ''
       },
       rules: {}
     }
@@ -90,7 +90,6 @@ export default {
       })
     },
     editInfo() {
-      console.log(this.editData.editData)
       var data = this.editData.editData
       this.contractInfoList = data.contractInfoList
       this.originData = data.contractBilling
@@ -100,7 +99,6 @@ export default {
       this.loading = true
       this.$post('/contractBilling/save', this.ruleForm).then(res => {
         if (res.data.success === true) {
-          console.log('this.ruleForm', this.ruleForm)
           this.loading = false
           this.$message({
             message: '保存成功',
@@ -114,7 +112,6 @@ export default {
     },
     reset() {
       if (this.editData.tabState === 'addTab') {
-        console.log('isaddTab')
         this.ruleForm = {
           amount: '',
           content: '',
@@ -126,7 +123,6 @@ export default {
           number: ''
         }
       } else {
-        console.log('originData', this.originData)
         this.ruleForm = this.originData
       }
     },
@@ -141,7 +137,9 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .invoice-add.form-container{
-  margin-top: 50px;
+  &::-webkit-scrollbar{
+    width: 0;
+  }
   .form-module{
     .el-row{
       margin-bottom:10px;
