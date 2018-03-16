@@ -10,7 +10,7 @@
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="商机编码：" prop="code">
+              <el-form-item label="商机编码：" prop="businessCode">
                 <p v-if="disabled">{{contractInfo.business.code}}</p>
                 <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable clearable>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
@@ -18,7 +18,7 @@
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="商机名称：" prop="name">
+              <el-form-item label="商机名称：" prop="businessName">
                 <p v-if="disabled">{{contractInfo.business.name}}</p>
                 <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable clearable>
                   <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
@@ -29,12 +29,15 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同编码：">
-                <p v-if="disabled">{{contractInfo.code}}</p>
-                <el-input v-else v-model="contractInfo.code" disabled></el-input>
+                <p v-if="disabled">{{contractInfo.business.code}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder=" " disabled>
+                  <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
+                </el-select>
+                <!-- <el-input v-else v-model="contractInfo.code" disabled></el-input> -->
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="合同名称：">
+              <el-form-item label="合同名称：" prop="name">
                 <p v-if="disabled">{{contractInfo.name}}</p>
                 <el-input v-else v-model="contractInfo.name" placeholder="请输入合同名称"></el-input>
               </el-form-item>
@@ -91,7 +94,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item class="single-date" label="签订时间：">
                 <p v-if="disabled">{{contractInfo.signDate}}</p>
-                <el-date-picker v-else v-model="contractInfo.signDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" disabled></el-date-picker>
+                <el-date-picker v-else v-model="contractInfo.signDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
