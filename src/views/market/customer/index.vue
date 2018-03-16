@@ -124,7 +124,7 @@ export default {
       })
     },
     changeObj(status) {
-      console.log('status', status)
+      // console.log('status', status)
       this.isChange = status
     },
     exportData(data) {

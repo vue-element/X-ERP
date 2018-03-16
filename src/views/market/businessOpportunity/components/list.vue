@@ -6,17 +6,16 @@
      <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
    <el-table-column prop="name" fixed label="商机名称" width="100"></el-table-column>
-   <el-table-column prop="code" fixed label="商机编号" width="100"></el-table-column>
-   <el-table-column prop="client.name" fixed label="客户名称" width="200"></el-table-column>
-   <el-table-column prop="region.name" fixed label="区域" width="100"></el-table-column>
-   <el-table-column prop="projectImpls[0].category" label="业务分类"></el-table-column>
-   <el-table-column prop="date" label="所属日期" width="120"></el-table-column>
-   <el-table-column prop="projectImpls[0].amount" label="预计成交金额" width="140"></el-table-column>
-   <el-table-column prop="chargePerson" label="业务线负责人" width="120"></el-table-column>
-   <el-table-column prop="followPerson" label="项目跟进人" width="120"></el-table-column>
-   <el-table-column prop="followState" label="商机跟进状态" width="120"></el-table-column>
-   <el-table-column prop="executState" label="商机执行状态" width="120"></el-table-column>
-   <el-table-column prop="examineState" label="商机审批状态" width="120"></el-table-column>
+   <el-table-column prop="code" fixed label="商机编号" width="140"></el-table-column>
+   <el-table-column prop="client.name" label="客户名称" width="200"></el-table-column>
+   <el-table-column prop="client.category" label="客户类别" width="200"></el-table-column>
+   <el-table-column prop="region.name" label="区域" width="100"></el-table-column>
+   <el-table-column prop="businessCategory.name" label="业务分类"></el-table-column>
+   <el-table-column prop="startDate" label="预计启动时间" width="140"></el-table-column>
+   <el-table-column prop="amount" label="预计成交金额" width="140"></el-table-column>
+   <el-table-column prop="businessPerson.name" label="业务负责人" width="120"></el-table-column>
+   <el-table-column prop="executeState" label="商机执行状态" width="120"></el-table-column>
+      <el-table-column fixed="right" prop="examineState" label="商机审批状态" width="120"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
