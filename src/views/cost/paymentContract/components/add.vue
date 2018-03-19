@@ -23,9 +23,9 @@
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="业务线:" prop="category">
-              <p v-if="disabled">{{paymentContract.category}}</p>
-              <el-select v-else v-model="paymentContract.category" placeholder="请选择" filterable>
-               <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
+              <p v-if="disabled">{{paymentContract.category.name}}</p>
+              <el-select v-else v-model="paymentContract.category.id" placeholder="请选择" filterable>
+               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -185,7 +185,7 @@ export default {
         applicationTime: '',
         contractInfo: { id: '' },
         supply: { id: '' },
-        category: '',
+        category: { id: '' },
         deliveryStatus: '未发货',
         department: '',
         mention: '',
@@ -198,7 +198,7 @@ export default {
         project: ''
       },
       contractInfoList: [],
-      categoryList: [],
+      businessCtgList: [],
       supplyList: [],
       contractId: '',
       rules: {
@@ -279,7 +279,8 @@ export default {
         var data = res.data.data
         this.contractInfoList = data.contractInfoList
         this.supplyList = data.supplyList
-        this.categoryList = [{ value: '科技-智慧社区工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大平台' }, { value: '科技-设计服务' }, { value: '科技-技术服务' }]
+        this.businessCtgList = data.businessCtgList
+        // this.businessCtgList = [{ value: '科技-智慧社区工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大平台' }, { value: '科技-设计服务' }, { value: '科技-技术服务' }]
       })
     },
     toggleAction() {

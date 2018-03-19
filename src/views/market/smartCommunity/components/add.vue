@@ -531,19 +531,12 @@ export default {
           this.$post('/project/save', this.mainMsg).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              this.$emit('changeObj', false)
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              // this.editShow = true
-              this.disabled = true
-              this.$emit('changeObj', false)
-              if (this.action === 'add') {
-                setTimeout(() => {
-                  this.$emit('toggleTab')
-                }, 500)
-              }
+              this.temp = _.cloneDeep(res.data.data)
+              this.mainMsg = res.data.data
+              this.editInfo()
+              this.successSave()
+            } else {
+              this.failSave()
             }
           })
         } else {
@@ -551,7 +544,6 @@ export default {
             message: '信息未填写完整',
             type: 'warning'
           })
-          // return false
         }
       })
     },
@@ -573,11 +565,9 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.mainMsg = data.project
       this.facilityWord = _.cloneDeep(this.mainMsg.facility)
       this.mainMsg.facilityList = this.mainMsg.facility.split('、')
-      data.project.projectDesigns.forEach((item) => {
+      this.mainMsg.projectDesigns.forEach((item) => {
         if (item.category === '0') {
           this.carObj = item
         } else if (item.category === '1') {
@@ -590,7 +580,7 @@ export default {
           this.otherObj = item
         }
       })
-      var cityOption = data.project.oldCity.split('-')
+      var cityOption = this.mainMsg.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
@@ -620,8 +610,28 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
+        this.mainMsg = _.cloneDeep(this.editData.editData.project)
         this.editInfo()
       }
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
     },
     cityChange(val) {
       var len = val.length
@@ -640,6 +650,7 @@ export default {
     disabled (status) {
       if (status === false) {
         this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
       } else {
         this.editWord = '编辑'
       }

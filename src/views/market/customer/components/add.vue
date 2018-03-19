@@ -168,19 +168,11 @@ export default {
           this.$post('/client/save', this.client).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              this.temp = _.cloneDeep(this.client)
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              // this.editShow = true
-              this.disabled = true
-              this.$emit('changeObj', false)
-              if (this.action === 'add') {
-                setTimeout(() => {
-                  this.$emit('toggleTab')
-                }, 500)
-              }
+              this.client = res.data.data
+              this.temp = _.cloneDeep(res.data.data)
+              this.successSave()
+            } else {
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -215,17 +207,28 @@ export default {
         this.editShow = true
         this.client = _.cloneDeep(this.editData.editData)
       }
-    }
-  },
-  computed: {},
-  watch: {
-    disabled (status) {
-      if (status === false) {
-        this.editWord = '取消编辑'
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
       } else {
-        this.editWord = '编辑'
+        this.editShow = true
+        this.disabled = true
       }
     },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
+    }
+  },
+  watch: {
     client: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
@@ -235,6 +238,14 @@ export default {
         }
       },
       deep: true
+    },
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
+      }
     }
   }
 }

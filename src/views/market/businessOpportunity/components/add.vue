@@ -3,6 +3,7 @@
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
   <el-button @click="toggleEditBtn">{{editWord}}</el-button>
+  <el-button @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">
     <!-- 基本信息 -->
@@ -13,8 +14,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="创建人:">
-            <p v-if="disabled">{{userInfo.account.name}}</p>
-            <el-input v-else placeholder="请输入创建人" v-model="userInfo.account.name" disabled></el-input>
+            <p v-if="disabled">{{businessInfo.createPerson}}</p>
+            <el-input v-else placeholder="请输入创建人" v-model="businessInfo.createPerson" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
@@ -63,6 +64,17 @@
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
+          <el-form-item label="业务分类:" prop="businessCategory">
+            <p v-if="disabled">{{businessInfo.businessCategory.name}}</p>
+            <el-select v-else v-model="businessInfo.businessCategory.id" placeholder="请选择">
+              <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
             <p v-if="disabled">{{businessInfo.client.name}}</p>
             <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable>
@@ -71,8 +83,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户类别:">
             <p v-if="disabled">{{businessInfo.client.category}}</p>
@@ -82,6 +92,8 @@
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
             <p v-if="disabled">{{businessInfo.client.phone}}</p>
@@ -91,21 +103,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="业务分类:" prop="businessCategory">
-            <p v-if="disabled">{{businessInfo.businessCategory.name}}</p>
-            <el-select v-else v-model="businessInfo.businessCategory.id" placeholder="请选择" @change="categoryChange">
-              <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机审批状态:">
             <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-input type="textarea" v-else v-model="businessInfo.examineState" placeholder="请输入项目关键信息"></el-input>
+            <el-input :rows="2" v-else v-model="businessInfo.examineState" placeholder="请输入项目关键信息" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,7 +120,7 @@
         <el-col :sm="24" :md="24" :lg="24">
           <el-form-item label="项目需求描述:" class="pro_describe">
             <p v-if="disabled">{{businessInfo.keyword}}</p>
-            <el-input v-else v-model="businessInfo.keyword" placeholder="请输入项目需求描述"></el-input>
+            <el-input v-else v-model="businessInfo.keyword" placeholder="请输入项目需求描述" type="textarea"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -151,25 +152,25 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <!-- <el-row :gutter="40">
+      <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="合同签订时间:">
-            <p v-if="disabled">{{businessInfo.projectImpls[0].amount}}</p>
-              <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.projectImpls[0].bidDate"  placeholder="选择日期" disabled></el-date-picker>
+          <el-form-item label="合同签订时间:" class="single-date">
+            <p v-if="disabled">{{contractInfo.signDate}}</p>
+              <el-date-picker v-else type="date" v-model="contractInfo.signDate"  value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="自动生成" disabled></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="实际合同金额:">
-            <p v-if="disabled">{{businessInfo.projectImpls[0].amount}}</p>
-            <el-input v-else v-model="businessInfo.projectImpls[0].amount" @change="amountChange" placeholder="请输入"  min='0' disabled></el-input>
+            <p v-if="disabled">{{contractInfo.contractTotalAmount}}</p>
+            <el-input v-else v-model="contractInfo.contractTotalAmount" placeholder="自动生成"  min='0' disabled></el-input>
           </el-form-item>
         </el-col>
-      </el-row> -->
+      </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机执行状态:">
             <p v-if="disabled">{{businessInfo.executeState}}</p>
-            <el-select v-else v-model="businessInfo.executeState" placeholder="请选择" @change="categoryChange">
+            <el-select v-else v-model="businessInfo.executeState" placeholder="请选择">
               <el-option v-for="item in executeStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -204,7 +205,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="设计负责人:">
+          <el-form-item label="设计负责人:" prop="businessPerson">
             <p v-if="disabled">{{businessInfo.designPerson.name}}</p>
             <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人">
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
@@ -224,7 +225,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="成本负责人:">
+          <el-form-item label="成本负责人:" prop="costPerson">
             <p v-if="disabled">{{businessInfo.costPerson.name}}</p>
             <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人">
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
@@ -244,7 +245,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="工程负责人:">
+          <el-form-item label="工程负责人:" prop="projectPerson">
             <p v-if="disabled">{{businessInfo.projectPerson.name}}</p>
             <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人">
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
@@ -264,7 +265,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="项目经理:">
+          <el-form-item label="项目经理:" prop="projectManager">
             <p v-if="disabled">{{businessInfo.projectManager.name}}</p>
             <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理">
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
@@ -306,7 +307,11 @@ export default {
     var validateCity = this.validateMsg('请选择城市信息')
     var validateClient = this.validateMsg('请选择客户信息')
     var validateCategory = this.validateMsg('请选择业务分类信息')
-    var validatePerson = this.validateMsg('请选择业务负责人')
+    var businessPerson = this.validateMsg('请选择业务负责人')
+    var designPerson = this.validateMsg('请选择设计负责人')
+    var costPerson = this.validateMsg('请选择成本负责人')
+    var projectPerson = this.validateMsg('请选择项目负责人')
+    var projectManager = this.validateMsg('请选择项目经理')
     const validPhone = (rule, value, callback) => {
       if ((!validateMobile(value)) && (!validatePhone(value))) {
         callback(new Error('请输入正确的手机或电话号码'))
@@ -321,6 +326,10 @@ export default {
       disabled: false,
       editShow: false,
       inputPerson: '',
+      contractInfo: {
+        signDate: '',
+        contractTotalAmount: ''
+      },
       businessInfo: {
         city: { id: null },
         client: { id: null },
@@ -335,15 +344,35 @@ export default {
         examineState: '商机线索',
         keyword: '',
         firstPerson: '',
-        firstPersonPhone: '',
+        firstPersonPhone: '13682561462',
         startDate: '',
         amount: '',
         executeState: '',
-        businessPerson: { id: null },
-        designPerson: { id: null },
-        costPerson: { id: null },
-        projectPerson: { id: null },
-        projectManager: { id: null }
+        businessPerson: {
+          id: null,
+          name: '',
+          phone: ''
+        },
+        designPerson: {
+          id: null,
+          name: '',
+          phone: ''
+        },
+        costPerson: {
+          id: null,
+          name: '',
+          phone: ''
+        },
+        projectPerson: {
+          id: null,
+          name: '',
+          phone: ''
+        },
+        projectManager: {
+          id: null,
+          name: '',
+          phone: ''
+        }
       },
       cityOption: [],
       regionList: [],
@@ -363,7 +392,11 @@ export default {
         businessCategory: [{ required: true, validator: validateCategory, trigger: 'change' }],
         firstPerson: [{ required: true, message: '请输入甲方决策人', trigger: 'blur' }],
         firstPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
-        businessPerson: [{ required: true, validator: validatePerson, trigger: 'change' }]
+        businessPerson: [{ required: true, validator: businessPerson, trigger: 'change' }],
+        designPerson: [{ required: true, validator: designPerson, trigger: 'change' }],
+        costPerson: [{ required: true, validator: costPerson, trigger: 'change' }],
+        projectPerson: [{ required: true, validator: projectPerson, trigger: 'change' }],
+        projectManager: [{ required: true, validator: projectManager, trigger: 'change' }]
       },
       temp: {}
     }
@@ -386,17 +419,13 @@ export default {
           this.businessInfo.oldCity = this.cityOption.join('-')
           console.log(this.businessInfo)
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
-            console.log(res)
             this.loading = false
             if (res.data.success === true) {
-              this.$emit('changeObj', false)
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              if (this.action === 'edit') {
-                this.$emit('toggleTab')
-              }
+              this.businessInfo = res.data.data
+              this.temp = _.cloneDeep(res.data.data)
+              this.successSave()
+            } else {
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -404,26 +433,20 @@ export default {
         } else {
           this.$message({
             message: '信息未填写完整',
-            type: 'success'
+            type: 'warning'
           })
         }
       })
     },
     reset() {
-      if (this.action === 'add') {
-        this.businessInfo = _.cloneDeep(this.temp)
-        this.cityOption = []
-      } else {
-        this.editInfo()
-      }
+      this.businessInfo = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('changeObj', false)
       this.$emit('toggleTab')
     },
     editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
+      var data = this.editData.editData
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
       console.log(cityOption)
@@ -431,8 +454,6 @@ export default {
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
-      // this.businessInfo.amount = this.businessInfo.projectImpls[0].amount
-      // this.businessInfo.category = this.businessInfo.projectImpls[0].category
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
@@ -443,10 +464,15 @@ export default {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.businessInfo = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
+        console.log('this.temp', this.temp)
       }
+    },
+    passCheck() {
+      this.businessInfo.examineState = '有效商机'
+      this.add()
     },
     getInsertData() {
       this.$get('/bussiness/findInsertData').then((res) => {
@@ -458,23 +484,39 @@ export default {
         this.businessCtgList = data.businessCtgList
       })
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
+      this.businessInfo.createPerson = this.userInfo.account.name
     },
     cityChange(val) {
       var len = val.length
       this.businessInfo.city.id = val[len - 1]
     },
-    categoryChange(val) {
-      this.businessInfo.category = val
-    },
     amountChange(val) {
       this.businessInfo.amount = outputmoney(val)
-      // this.businessInfo.projectImpls[0].amount = outputmoney(val)
     },
     //  所属年月日转化为年月格式
     dateChange(date) {
       // var d = new Date(date)
       // var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
       // this.businessInfo.date = newDate
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
@@ -499,6 +541,14 @@ export default {
     }
   },
   watch: {
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
+      }
+    },
     businessInfo: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
