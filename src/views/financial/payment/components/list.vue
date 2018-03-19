@@ -68,7 +68,6 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.paymentData = data.content
-          this.paymentData.contractInfo.business.region.name = data.content.contractInfo.business.region.name
           this.listLoading = false
         }
       })

@@ -12,16 +12,16 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
               <p v-if="disabled">{{paymentData.contractInfo.code}}</p>
-              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" prop="contractInfo">
+            <el-form-item label="合同名称：">
               <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编码" filterable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -86,13 +86,7 @@ export default {
   name: 'paymentAdd',
   props: ['editData'],
   data() {
-    var validateContractInfo = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('合同信息不能为空'))
-      } else {
-        callback()
-      }
-    }
+    var validateContractInfo = this.validateMsg('合同信息不能为空')
     return {
       action: 'add',
       loading: false,
@@ -204,6 +198,15 @@ export default {
     },
     tax(val) {
       this.paymentData.tax = outputmoney(val)
+    },
+    validateMsg(errMsg) {
+      return (rule, value, callback) => {
+        if (!value.id) {
+          callback(new Error(errMsg))
+        } else {
+          callback()
+        }
+      }
     }
   }
 }

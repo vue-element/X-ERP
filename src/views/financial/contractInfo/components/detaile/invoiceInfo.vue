@@ -51,7 +51,7 @@ export default {
       pageSizes: [12, 15, 16],
       pageSize: 15,
       invoceInfo: {
-        totalAmount: ''
+        totalAmount: null
       }
     }
   },

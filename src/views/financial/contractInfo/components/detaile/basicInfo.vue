@@ -12,15 +12,15 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="商机编码：" prop="business">
                 <p v-if="disabled">{{contractInfo.business.code}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable clearable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="商机名称：" prop="business">
+              <el-form-item label="商机名称：">
                 <p v-if="disabled">{{contractInfo.business.name}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable clearable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable>
                   <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -30,7 +30,6 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同编码：">
                 <p v-if="disabled">{{contractInfo.code}}</p>
-                <!-- <el-input v-else v-model="contractInfo.code" placeholder="请输入合同名称" disabled></el-input> -->
                 <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
@@ -173,13 +172,8 @@ export default {
       textList: [],
       categoryList: [],
       contractInfo: {
-        // code: '',
         name: '',
         business: { id: '' },
-        // category: '',
-        // client: { id: '' },
-        // city: { id: '' },
-        // region: { id: '' },
         text: '',
         signDate: '',
         term: '',
@@ -193,7 +187,7 @@ export default {
         dateShow: ''
       },
       rules: {
-        business: [{ required: true, validator: validateBusiness, trigger: 'blur' }],
+        business: [{ required: true, validator: validateBusiness, trigger: 'change' }],
         name: [{ required: true, message: '请输入合同名称', trigger: 'blur' }],
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
@@ -259,13 +253,12 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
       this.contractInfo = data.contractInfo
-      // var cityOption = data.contractInfo.oldCity.split('-')
-      // this.cityOption = []
-      // cityOption.forEach((item) => {
-      //   this.cityOption.push(parseInt(item))
-      // })
+      var cityOption = data.contractInfo.oldCity.split('-')
+      this.cityOption = []
+      cityOption.forEach((item) => {
+        this.cityOption.push(parseInt(item))
+      })
       var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.dateShow = dateShow
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]

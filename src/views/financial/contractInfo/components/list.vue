@@ -59,7 +59,6 @@ export default {
       var url = '/contractInfo/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
-        console.log(data)
         for (var i = 0; i < data.content.length; i++) {
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount
           data.content[i].invoiceNoReceive = invoiceNoReceive

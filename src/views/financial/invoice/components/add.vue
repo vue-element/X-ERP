@@ -12,15 +12,15 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
               <p v-if="disabled">{{invoiceData.contractInfo.code}}</p>
-              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择商机编码" filterable clearable>
+              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择商机编码" filterable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" prop="contractInfo">
+            <el-form-item label="合同名称：">
               <p v-if="disabled">{{invoiceData.contractInfo.name}}</p>
-              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
+              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -45,15 +45,14 @@
             <el-form-item label="税率：" prop="taxRate">
               <p v-if="disabled">{{invoiceData.taxRate}}</p>
               <el-select v-else v-model="invoiceData.taxRate" placeholder="请选择税率">
-               <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
-               </el-option>
-             </el-select>
+                <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税金：" class="single-date">
               <p v-if="disabled">{{invoiceData.tax}}</p>
-              <el-input v-else v-model="invoiceData.tax" disabled></el-input>
+              <el-input v-else v-model="tax" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -61,7 +60,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="收入(不含税)：" class="single-date">
               <p v-if="disabled">{{invoiceData.tax}}</p>
-              <el-input v-else v-model="invoiceData.tax" disabled></el-input>
+              <el-input v-else v-model="invoiceData.income" disabled></el-input>
             </el-form-item>
           </el-col>
            <el-col :xs="24" :sm="12" :lg="12">
@@ -102,13 +101,7 @@ export default {
   name: 'invoiceAdd',
   props: ['editData'],
   data() {
-    var validateContractInfo = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('合同信息不能为空'))
-      } else {
-        callback()
-      }
-    }
+    var validateContractInfo = this.validateMsg('合同信息不能为空')
     return {
       action: 'add',
       loading: false,
@@ -125,7 +118,8 @@ export default {
           id: ''
         },
         number: '',
-        taxRate: ''
+        taxRate: '',
+        income: ''
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
@@ -150,7 +144,7 @@ export default {
           this.contractInfoList = res.data.data.contractInfoList
         }
       })
-      this.taxRateList = [{ value: '3%' }, { value: '7%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
+      this.taxRateList = [{ value: '3%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
     },
     editInfo() {
       var data = this.editData.editData
@@ -204,6 +198,19 @@ export default {
     },
     amount(val) {
       this.invoiceData.amount = outputmoney(val)
+    },
+    validateMsg(errMsg) {
+      return (rule, value, callback) => {
+        if (!value.id) {
+          callback(new Error(errMsg))
+        } else {
+          callback()
+        }
+      }
+    }
+  },
+  computed: {
+    tax() {
     }
   }
 }

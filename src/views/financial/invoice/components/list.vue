@@ -9,7 +9,7 @@
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号" width="120"></el-table-column>
         <el-table-column prop="contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="所属办事处"></el-table-column>
+        <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="name" label="发票抬头名称"></el-table-column>
         <el-table-column prop="amount" label="开票金额(含税)"></el-table-column>
         <el-table-column prop="" label="税率"></el-table-column>
@@ -64,6 +64,7 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements

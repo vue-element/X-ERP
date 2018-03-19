@@ -9,7 +9,7 @@
         </el-table-column>
         <el-table-column prop="contractBilling.contractInfo.code" label="合同编号"></el-table-column>
         <el-table-column prop="contractBilling.contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractBilling.contractInfo.region.name" label="所属办事处"></el-table-column>
+        <el-table-column prop="contractBilling.contractInfo.business.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="contractBilling.number" label="发票号码"></el-table-column>
         <el-table-column prop="amount" label="回款金额"></el-table-column>
         <el-table-column prop="date" label="回款日期"></el-table-column>
