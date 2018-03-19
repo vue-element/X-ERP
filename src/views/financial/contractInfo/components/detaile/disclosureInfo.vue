@@ -102,8 +102,7 @@
           <el-table-column prop="date" label="计划回款时间"></el-table-column>
           <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
           <el-table-column prop="amount" label="计划回款金额"></el-table-column>
-          <el-table-column prop="" label="计划回款累计金额"></el-table-column>
-          <el-table-column prop="" label="实际回款总金额"></el-table-column>
+          <el-table-column prop="cumulativeAmount" label="计划回款累计金额"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="paymentPlanModify(scope.row)" type="text" size="small">修改</el-button>

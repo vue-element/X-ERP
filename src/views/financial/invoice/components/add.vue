@@ -11,25 +11,26 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
-              <p v-if="disabled">{{invoiceData.contractInfo.name}}</p>
-              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <p v-if="disabled">{{invoiceData.contractInfo.code}}</p>
+              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择商机编码" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="发票抬头名称：" prop="name">
-              <p v-if="disabled">{{invoiceData.name}}</p>
-              <el-input v-else v-model="invoiceData.name" placeholder="请输入发票抬头名称"></el-input>
+            <el-form-item label="合同名称：" prop="contractInfo">
+              <p v-if="disabled">{{invoiceData.contractInfo.name}}</p>
+              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="发票号码：" prop="number">
-              <p v-if="disabled">{{invoiceData.number}}</p>
-              <el-input v-else v-model.number="invoiceData.number" placeholder="请输入发票号码"></el-input>
+            <el-form-item label="发票抬头名称：" prop="name">
+              <p v-if="disabled">{{invoiceData.name}}</p>
+              <el-input v-else v-model="invoiceData.name" placeholder="请输入发票抬头名称"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -41,9 +42,40 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="开票日期：" prop="date" class="single-date">
+            <el-form-item label="税率：" prop="taxRate">
+              <p v-if="disabled">{{invoiceData.taxRate}}</p>
+              <el-select v-else v-model="invoiceData.taxRate" placeholder="请选择税率">
+               <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="税金：" class="single-date">
+              <p v-if="disabled">{{invoiceData.tax}}</p>
+              <el-input v-else v-model="invoiceData.tax" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="收入(不含税)：" class="single-date">
+              <p v-if="disabled">{{invoiceData.tax}}</p>
+              <el-input v-else v-model="invoiceData.tax" disabled></el-input>
+            </el-form-item>
+          </el-col>
+           <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="开票号码：" prop="number">
+              <p v-if="disabled">{{invoiceData.number}}</p>
+              <el-input v-else v-model.number="invoiceData.number" placeholder="请输入发票号码"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item class="single-date" label="开票日期：">
               <p v-if="disabled">{{invoiceData.date}}</p>
-              <el-date-picker v-else type="date" placeholder="选择日期" v-model="invoiceData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+              <el-date-picker v-else v-model="invoiceData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -70,6 +102,13 @@ export default {
   name: 'invoiceAdd',
   props: ['editData'],
   data() {
+    var validateContractInfo = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('合同信息不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       loading: false,
@@ -77,6 +116,7 @@ export default {
       editShow: false,
       editWord: '编辑',
       contractInfoList: [],
+      taxRateList: [],
       invoiceData: {
         amount: '',
         content: '',
@@ -84,12 +124,14 @@ export default {
         contractInfo: {
           id: ''
         },
-        number: ''
+        number: '',
+        taxRate: ''
       },
       rules: {
-        contractInfo: [{ required: true, message: '请输入合同编码', trigger: 'change' }],
+        contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
         name: [{ required: true, message: '请输入发票抬头名称', trigger: 'blur' }],
         number: [{ required: true, message: '请输入发票号码' }, { type: 'number', message: '请输入数字' }],
+        taxRate: [{ required: true, message: '请选择税金', trigger: 'change' }],
         amount: [{ required: true, message: '请输入开票金额', trigger: 'blur' }],
         date: [{ required: true, message: '请选择开票日期', trigger: 'blur' }]
       },
@@ -108,6 +150,7 @@ export default {
           this.contractInfoList = res.data.data.contractInfoList
         }
       })
+      this.taxRateList = [{ value: '3%' }, { value: '7%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
     },
     editInfo() {
       var data = this.editData.editData
@@ -115,18 +158,22 @@ export default {
       this.invoiceData = data.contractBilling
     },
     save() {
-      this.loading = true
-      Number(this.invoiceData.amount)
-      this.$post('/contractBilling/save', this.invoiceData).then(res => {
-        if (res.data.success === true) {
-          this.loading = false
-          this.$message({
-            message: '保存成功',
-            type: 'success'
+      this.$refs.invoiceData.validate(valid => {
+        if (valid) {
+          this.loading = true
+          Number(this.invoiceData.amount)
+          this.$post('/contractBilling/save', this.invoiceData).then(res => {
+            if (res.data.success === true) {
+              this.loading = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              if (this.editData.tabState === 'editTab') {
+                this.$emit('toggleTab')
+              }
+            }
           })
-          if (this.editData.tabState === 'editTab') {
-            this.$emit('toggleTab')
-          }
         }
       })
     },

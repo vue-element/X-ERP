@@ -384,6 +384,7 @@ export default {
         if (valid) {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
+          console.log(this.businessInfo)
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             console.log(res)
             this.loading = false
@@ -422,8 +423,10 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
+      console.log(data)
       this.businessInfo = data.business
       var cityOption = data.business.oldCity.split('-')
+      console.log(cityOption)
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))

@@ -1,7 +1,7 @@
 <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" ref="multipleTable" border>
+      <el-table class="basic-form" style="width: 100%" :data="paymentData" :height="height" ref="multipleTable" border>
         <el-table-column prop="0" label="序号" width="80" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
@@ -9,7 +9,7 @@
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
         <el-table-column prop="contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="所属办事处"></el-table-column>
+        <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="artificialCost" label="人工成本投入"></el-table-column>
         <el-table-column prop="materialCost" label="材料成本投入"></el-table-column>
         <el-table-column prop="comprehensiveCost" label="综合成本投入"></el-table-column>
@@ -41,7 +41,7 @@ export default {
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      tableData: []
+      paymentData: []
     }
   },
   created() {
@@ -60,13 +60,15 @@ export default {
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/contractPayment/search?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then(res => {
+      this.$post(url, this.searchData, false).then((res) => {
+        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.tableData = data.content
+          this.paymentData = data.content
+          this.paymentData.contractInfo.business.region.name = data.content.contractInfo.business.region.name
           this.listLoading = false
         }
       })
