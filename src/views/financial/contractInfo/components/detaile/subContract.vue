@@ -12,7 +12,7 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="附件名称" width="300"></el-table-column>
+          <el-table-column prop="fileName" label="附件名称" width="300"></el-table-column>
           <el-table-column prop="describtion" label="附件说明" width="300"></el-table-column>
           <el-table-column prop="person" label="上传人"></el-table-column>
           <el-table-column prop="date" label="上传时间"></el-table-column>

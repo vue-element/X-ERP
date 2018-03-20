@@ -416,7 +416,6 @@ export default {
         if (valid) {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
-          console.log('businessInfo', this.businessInfo)
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {

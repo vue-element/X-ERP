@@ -54,7 +54,7 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="投入金额"></el-table-column>
+          <el-table-column prop="totalAmount" label="投入金额"></el-table-column>
           <el-table-column prop="inputDate" label="投入日期"></el-table-column>
           <el-table-column prop="materialCost" label="材料投入金额"></el-table-column>
           <el-table-column prop="artificialCost" label="人工投入金额"></el-table-column>
@@ -113,7 +113,6 @@ export default {
     getContractPayment() {
       var paymentID = this.editData.editData.id
       this.$get('/contractPayment/findAllByContractInfo/' + paymentID).then((res) => {
-        // console.log(res)
         this.paymentData = res.data.data.contractPaymentList.content
         this.contractPayment.totalAmount = res.data.data.totalAmount
         this.contractPayment.totalMaterialCost = res.data.data.totalMaterialCost

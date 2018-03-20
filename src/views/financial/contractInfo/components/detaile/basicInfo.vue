@@ -10,17 +10,17 @@
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="商机编码：" prop="businessCode">
+              <el-form-item label="商机编码：" prop="business">
                 <p v-if="disabled">{{contractInfo.business.code}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable clearable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="商机名称：" prop="businessName">
+              <el-form-item label="商机名称：">
                 <p v-if="disabled">{{contractInfo.business.name}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable clearable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable>
                   <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -29,11 +29,10 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同编码：">
-                <p v-if="disabled">{{contractInfo.business.code}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder=" " disabled>
+                <p v-if="disabled">{{contractInfo.code}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <!-- <el-input v-else v-model="contractInfo.code" disabled></el-input> -->
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -46,17 +45,17 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="业务类别：">
-                <p v-if="disabled">{{contractInfo.category}}</p>
-                <el-select v-else v-model="contractInfo.category" disabled>
-                  <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id" ></el-option>
+                <p v-if="disabled">{{contractInfo.business.businessCategory.name}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
+                  <el-option v-for="item in businessList" :label="item.businessCategory.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="客户类别：">
-                <p v-if="disabled">{{contractInfo.client.name}}</p>
-                <el-select v-else v-model="contractInfo.client.id" disabled>
-                  <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+                <p v-if="disabled">{{contractInfo.business.client.category}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
+                  <el-option v-for="item in businessList" :label="item.client.category" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -64,15 +63,17 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="城市：" prop="city">
-                <p v-if="disabled">{{contractInfo.city.name}}</p>
-                <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" disabled></el-cascader>
+                <p v-if="disabled">{{contractInfo.business.city.name}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
+                  <el-option v-for="item in businessList" :label="item.city.name" :value="item.id" :key="item.id"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="办事处：">
-                <p v-if="disabled">{{contractInfo.region.name}}</p>
-                <el-select v-else v-model="contractInfo.region.id" disabled>
-                  <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+                <p v-if="disabled">{{contractInfo.business.region.name}}</p>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
+                  <el-option v-for="item in businessList" :label="item.region.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -121,13 +122,13 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同金额：" prop="originalAmount">
                 <p v-if="disabled">{{contractInfo.originalAmount}}</p>
-                <el-input v-else v-model="originalAmount" placeholder="请输入合同金额"></el-input>
+                <el-input v-else v-model="contractInfo.originalAmount" placeholder="请输入合同金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="变更金额：">
                 <p v-if="disabled">{{contractInfo.changeAmount}}</p>
-                <el-input v-else v-model="changeAmount" placeholder="请输入变更金额"></el-input>
+                <el-input v-else v-model="contractInfo.changeAmount" placeholder="请输入变更金额"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -152,10 +153,10 @@
 <script>
 import _ from 'lodash'
 import { isObjectValueEqual } from '@/utils'
-// import { outputmoney } from '@/utils'
 export default {
   props: ['editData'],
   data() {
+    var validateBusiness = this.validateMsg('商机信息不能为空')
     return {
       action: 'add',
       height: 100,
@@ -170,16 +171,9 @@ export default {
       regionList: [],
       textList: [],
       categoryList: [],
-      originalAmount: '',
-      changeAmount: '',
       contractInfo: {
-        code: '',
         name: '',
         business: { id: '' },
-        category: '',
-        client: { id: '' },
-        city: { id: '' },
-        region: { id: '' },
         text: '',
         signDate: '',
         term: '',
@@ -193,12 +187,12 @@ export default {
         dateShow: ''
       },
       rules: {
-        code: [{ required: true, message: '请选择商机编号', trigger: 'blur' }],
+        business: [{ required: true, validator: validateBusiness, trigger: 'change' }],
         name: [{ required: true, message: '请输入合同名称', trigger: 'blur' }],
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
-        limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }]
-        // originalAmount: [{ required: true, message: '请输入合同金额' }]
+        limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
+        originalAmount: [{ required: true, message: '请输入合同金额' }]
       },
       temp: {}
     }
@@ -216,8 +210,8 @@ export default {
     // 获取下拉框数据
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
-        console.log(res)
         var data = res.data.data
+        console.log(data)
         this.businessList = data.businessList
         this.cityList = data.cityList
         this.clientList = data.clientList
@@ -236,9 +230,6 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
-          this.contractInfo.originalAmount = this.originalAmount
-          this.contractInfo.changeAmount = this.changeAmount
-          this.contractInfo.contractTotalAmount = this.contractTotalAmount
           console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             // this.$store.commit('getContractMsg', res.data.data)
@@ -271,6 +262,7 @@ export default {
       var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.dateShow = dateShow
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
+      this.contractInfo.contractTotalAmount = data.contractInfo.originalAmount + data.contractInfo.changeAmount
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -291,17 +283,24 @@ export default {
         this.action = 'add'
       }
     },
-    // 重置
     reset() {
       this.contractInfo = _.cloneDeep(this.temp)
     },
-    // 取消功能
     cancel() {
       this.$emit('cancel')
     },
     cityChange(val) {
       var len = val.length
       this.contractInfo.city.id = val[len - 1]
+    },
+    validateMsg(errMsg) {
+      return (rule, value, callback) => {
+        if (!value.id) {
+          callback(new Error(errMsg))
+        } else {
+          callback()
+        }
+      }
     }
   },
   watch: {
@@ -318,13 +317,13 @@ export default {
   },
   computed: {
     contractTotalAmount() {
-      if (!this.originalAmount && !this.changeAmount) {
-        return null
-      } else if (this.originalAmount && !this.changeAmount) {
+      if (!this.contractInfo.originalAmount && !this.contractInfo.changeAmount || !this.contractInfo.originalAmount && this.contractInfo.changeAmount) {
+        return 0
+      } else if (this.contractInfo.originalAmount && !this.contractInfo.changeAmount) {
         this.changeAmount = ''
-        return parseFloat(this.originalAmount)
+        return parseFloat(this.contractInfo.originalAmount)
       } else {
-        return parseFloat(this.originalAmount) + parseFloat(this.changeAmount)
+        return (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)
       }
     }
   }

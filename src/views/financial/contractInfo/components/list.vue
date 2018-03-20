@@ -8,7 +8,7 @@
         </el-table-column>
         <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
         <el-table-column prop="name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="region.name" label="所属办事处" width="140"></el-table-column>
+        <el-table-column prop="business.region.name" label="所属办事处" width="140"></el-table-column>
         <el-table-column prop="term" label="合同所属期" width="140"></el-table-column>
         <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
         <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>

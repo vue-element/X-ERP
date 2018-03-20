@@ -1,7 +1,7 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+      <el-table class="basic-form" style="width: 100%" :data="invoiceData" :height="height" v-loading.body="listLoading" border>
         <el-table-column prop="0" label="序号" width="80" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
@@ -9,16 +9,19 @@
         </el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号" width="120"></el-table-column>
         <el-table-column prop="contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractInfo.region.name" label="所属办事处"></el-table-column>
+        <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="name" label="发票抬头名称"></el-table-column>
-        <el-table-column prop="amount" label="开票金额"></el-table-column>
+        <el-table-column prop="amount" label="开票金额(含税)"></el-table-column>
+        <el-table-column prop="" label="税率"></el-table-column>
+        <el-table-column prop="" label="税金"></el-table-column>
+        <el-table-column prop="" label="收入(不含税)"></el-table-column>
         <el-table-column prop="date" label="开票日期"></el-table-column>
         <el-table-column prop="number" label="发票号码"></el-table-column>
-        <el-table-column prop="content" label="开票内容"></el-table-column>
+        <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -41,7 +44,7 @@ export default {
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      tableData: []
+      invoiceData: []
     }
   },
   created() {
@@ -61,12 +64,13 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.tableData = data.content
+          this.invoiceData = data.content
           this.listLoading = false
         }
       })

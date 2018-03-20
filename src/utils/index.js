@@ -155,7 +155,7 @@ export function scrollTo(element, to, duration) {
   const difference = to - element.scrollTop
   const perTick = difference / duration * 10
   setTimeout(() => {
-    console.log(new Date())
+    // console.log(new Date())
     element.scrollTop = element.scrollTop + perTick
     if (element.scrollTop === to) return
     scrollTo(element, to, duration - 10)
@@ -349,7 +349,7 @@ export function isObjectValueEqual(a1, b1) {
   for (var i = 0; i < aProps.length; i++) {
     var propName = aProps[i]
     if (a[propName] !== b[propName]) {
-      console.log('a[propName]', propName)
+      // console.log('a[propName]', propName)
       return false
     }
   }

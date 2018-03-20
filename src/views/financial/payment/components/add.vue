@@ -11,49 +11,57 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
-              <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+              <p v-if="disabled">{{paymentData.contractInfo.code}}</p>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable>
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="合同名称：">
+              <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编码" filterable>
+                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="人工成本投入：" prop="artificialCost">
               <p v-if="disabled">{{paymentData.artificialCost}}</p>
               <el-input v-else v-model="paymentData.artificialCost" placeholder="请输入人工成本投入"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="材料成本投入：" prop="materialCost">
               <p v-if="disabled">{{paymentData.materialCost}}</p>
               <el-input v-else v-model="paymentData.materialCost" placeholder="请输入材料成本投入"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="综合成本投入：" class="single-date" prop="comprehensiveCost">
               <p v-if="disabled">{{paymentData.comprehensiveCost}}</p>
               <el-input v-else v-model="paymentData.comprehensiveCost" placeholder="请输入综合成本投入"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="管理费用：" prop="manageCost">
               <p v-if="disabled">{{paymentData.manageCost}}</p>
               <el-input v-else v-model="paymentData.manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="稅金：" prop="tax">
               <p v-if="disabled">{{paymentData.tax}}</p>
               <el-input v-else v-model="paymentData.tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="投入日期：" class="single-date" prop="inputDate">
               <p v-if="disabled">{{paymentData.inputDate}}</p>
@@ -78,13 +86,7 @@ export default {
   name: 'paymentAdd',
   props: ['editData'],
   data() {
-    var validateContractInfo = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('合同编码不能为空'))
-      } else {
-        callback()
-      }
-    }
+    var validateContractInfo = this.validateMsg('合同信息不能为空')
     return {
       action: 'add',
       loading: false,
@@ -196,6 +198,15 @@ export default {
     },
     tax(val) {
       this.paymentData.tax = outputmoney(val)
+    },
+    validateMsg(errMsg) {
+      return (rule, value, callback) => {
+        if (!value.id) {
+          callback(new Error(errMsg))
+        } else {
+          callback()
+        }
+      }
     }
   }
 }

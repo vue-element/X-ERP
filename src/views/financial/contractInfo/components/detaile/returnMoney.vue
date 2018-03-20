@@ -71,7 +71,7 @@ export default {
       this.$get('/contractReceived/findAllByContractInfo/' + contractReceivedID).then((res) => {
         console.log(res)
         this.contractReceived.totalAmount = res.data.data.totalAmount
-        this.contractReceivedData = res.data.data.contractReceivedList.content
+        this.contractReceivedData = res.data.data.contractReceivedList
       })
     }
   }

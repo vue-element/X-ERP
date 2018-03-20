@@ -7,11 +7,6 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="开票抬头名称">
-              <p>{{invoceInfo.name}}</p>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="累计开票金额">
               <p>{{invoceInfo.totalAmount}}</p>
             </el-form-item>
@@ -30,6 +25,7 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
+          <el-table-column prop="name" label="开票抬头名称"></el-table-column>
           <el-table-column prop="amount" label="开票金额"></el-table-column>
           <el-table-column prop="date" label="开票日期"></el-table-column>
           <el-table-column prop="number" label="发票号码"></el-table-column>
@@ -55,8 +51,7 @@ export default {
       pageSizes: [12, 15, 16],
       pageSize: 15,
       invoceInfo: {
-        name: '',
-        totalAmount: ''
+        totalAmount: null
       }
     }
   },
@@ -81,6 +76,7 @@ export default {
     getInvoceInfo() {
       var basicInfoID = this.editData.editData.id
       this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
+        console.log(res)
         this.invoceInfoData = res.data.data.contractBillingList.content
         this.invoceInfo.totalAmount = res.data.data.totalAmount
       })
