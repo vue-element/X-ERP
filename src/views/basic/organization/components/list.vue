@@ -1,21 +1,20 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height"
+  <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height" @selection-change="handleSelectionChange"
   v-loading.body="listLoading" element-loading-text="拼命加载中" border>
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="business.code" label="商机编号" width="160"></el-table-column>
-   <el-table-column prop="business.name" label="商机名称" width="100"></el-table-column>
-   <el-table-column prop="business.amount" label="预计成交金额" width="120"></el-table-column>
-   <el-table-column prop="business.executeState" label="商机执行状态" width="120"></el-table-column>
-    <el-table-column prop="url" label="在线协作地址"></el-table-column>
-   <el-table-column fixed="right" label="操作" width="180">
+   <el-table-column prop="name" label="名称" width="200"></el-table-column>
+   <!-- <el-table-column prop="city.name" label="工号" width="100"></el-table-column> -->
+   <el-table-column prop="role.name" label="所属组织名称" width="120"></el-table-column>
+   <el-table-column prop="role.code" label="所属组织编号" width="120"></el-table-column>
+    <el-table-column prop="role.name" label="角色"></el-table-column>
+   <el-table-column prop="name" label="账户名" width="100"></el-table-column>
+   <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <!-- <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button> -->
-        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small">表格查看/编辑</el-button>
-        <el-button @click.native.prevent="exportExcel(scope.row)" type="text" size="small">表格导出</el-button>
-        <!-- <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button> -->
+        <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -25,10 +24,9 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
 import { winHeight } from '@/utils'
 export default {
-  name: 'smartCommunityList',
+  name: 'userList',
   props: ['searchData'],
   data() {
     return {
@@ -37,12 +35,12 @@ export default {
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      projectData: [],
+      userData: [],
       height: 100
     }
   },
   created() {
-    this.getProjectData()
+    this.getUserData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -54,29 +52,26 @@ export default {
     resize() {
       this.height = winHeight() - 210
     },
-    saveUrl(row) {
-      var bCode = row.business.code
-      // var url = row.url
-      window.open('http://localhost:8000', '_blank')
-      // window.open(url, '_blank')
-      Cookies.set('ethercalcUrl', bCode, { expires: 7 })
-      Cookies.set('ethercalcUrl', bCode, { expires: 7 })
-    },
-    exportExcel(row) {
-      var url = row.url
-      window.location.href = url + '.xlsx'
-    },
-    seeRow(id) {
-      this.$get('/project/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        this.$emit('seeRow', data)
+    handleSelectionChange(arr) {
+      var selArr = []
+      arr.forEach((item) => {
+        selArr.push(item.id)
       })
+      this.$emit('selData', selArr)
+    },
+    seeRow(row) {
+      // console.log('row', row)
+      this.$emit('seeRow', row)
+      // this.$get('/project/findUpdateData/' + id).then((res) => {
+      //   var data = res.data.data
+      //   this.$emit('seeRow', data)
+      // })
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/project/delete', projectID).then((res) => {
+      var userID = { id: [id] }
+      this.$post('/account/delete', userID).then((res) => {
         if (res.status === 200) {
-          this.getProjectData()
+          this.getUserData()
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -88,22 +83,24 @@ export default {
       this.$get('/project/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         console.log('data', data)
+        // this.$emit('editRow', data)
       })
     },
-    getProjectData() {
+    getUserData() {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/tenderOffer/search?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then((res) => {
+      var url = 'account?size=' + pageSize + '&page=' + page
+      // var url = '/project/search?size=' + pageSize + '&page=' + page
+      this.$get(url, this.searchData, false).then((res) => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
-          this.projectData = data.content
+          this.userData = data.content
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.$emit('exportData', this.projectData)
+          this.$emit('exportData', this.userData)
         }
       }).catch(() => {
         this.listLoading = false
@@ -112,11 +109,11 @@ export default {
     //  页码处理
     handleSizeChange(val) {
       this.pageSize = val
-      this.getProjectData()
+      this.getUserData()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getProjectData()
+      this.getUserData()
     }
   },
   computed: {}

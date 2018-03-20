@@ -7,18 +7,22 @@
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button> -->
-        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <!-- <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
-        </button>
+        </button> -->
         <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
+        <!-- <button v-show="deleteShow" @click="delSelectData">
+          <i class="iconfont icon-delete"></i>
+          <span>删除</span>
+        </button> -->
       </div>
       <div class="export-btn fr">
         <button v-show="tab === 'listTab'" @click="handleDownload()">
@@ -30,8 +34,8 @@
   </div>
   <div class="compotent-tab" >
     <transition name="fade" mode="out-in">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
     </transition>
   </div>
@@ -43,7 +47,7 @@ import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
 export default {
-  name: 'customer',
+  name: 'user',
   components: {
     AddComponent,
     ListComponent,
@@ -55,16 +59,15 @@ export default {
       editData: {},
       listData: '',
       tab: 'listTab',
-      oldTab: '',
       selArr: [],
-      height: 100,
+      deleteShow: false,
       exprotList: [],
       isChange: false
     }
   },
-  created() {
-  },
   mounted() {
+  },
+  created() {
   },
   methods: {
     toggleTab(tab) {
@@ -76,8 +79,13 @@ export default {
       }
       this.tab = tab
     },
-    listBtn() {
-      this.toggleTab('listTab')
+    selData(selArr) {
+      this.selArr = selArr
+      if (this.selArr.length > 0) {
+        this.deleteShow = true
+      } else {
+        this.deleteShow = false
+      }
     },
     addBtn() {
       if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
@@ -108,6 +116,17 @@ export default {
         tabState: 'editTab'
       }
     },
+    delSelectData() {
+      var id = { id: this.selArr }
+      this.$post('/project/delete', id).then((res) => {
+        console.log('res', res)
+        this.$refs.del.getProjectData()
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+      })
+    },
     searchWord(data) {
       this.toggleTab('listTab')
       this.searchData = data
@@ -123,9 +142,8 @@ export default {
         this.isChange = true
       })
     },
-    changeObj(status) {
-      // console.log('status', status)
-      this.isChange = status
+    changeObj(res) {
+      this.isChange = res
     },
     exportData(data) {
       this.exprotList = data
@@ -134,34 +152,38 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '客户名称', '客户类型', '业态', '企业性质', '联系人', '联系人电话', 'QQ', 'E-mail', '客户地址']
-        const filterVal = ['id', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
+        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单位数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
+          '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
+        const filterVal = ['id', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
+          'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']
         const list = this.exprotList
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '客户信息表')
+        export_json_to_excel(tHeader, data, '智慧社区数据库')
         this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
+      var list = ['client', 'region', 'city']
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j]
+          if (list.indexOf(j) !== -1) {
+            return v[j]['name']
+          } else {
+            return v[j]
+          }
         })
       )
     }
   },
-  computed: {
-  },
-  watch: {}
+  computed: {}
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .app-container {
   width: 100%;
-  @include scrolling
+  @include scrolling;
 }
 .basic-form {
   .el-table__fixed-body-wrapper {

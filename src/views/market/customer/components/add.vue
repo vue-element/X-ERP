@@ -49,8 +49,8 @@
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="在建项目数:" prop="projectNu">
-            <p v-if="disabled">{{client.projectNu}}</p>
-            <el-input v-else v-model="client.projectNu" placeholder="请输入在建项目数"></el-input>
+            <p v-if="disabled">{{client.projectNum}}</p>
+            <el-input v-else v-model="client.projectNum" placeholder="请输入在建项目数"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -133,7 +133,7 @@ export default {
         person: '',
         phone: '',
         position: '',
-        projectNu: '',
+        projectNum: '',
         qq: '',
         type: ''
       },

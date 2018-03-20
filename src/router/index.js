@@ -45,6 +45,12 @@ export default new Router({
 })
 // asyncRouterMap 代表那些需求动态判断权限并通过 addRouters 动态添加的页面。具体的会在 权限判断 页面介绍。
 export const asyncRouterMap = [
+  { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'person' },
+    children: [
+      { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }},
+      { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }}
+    ]
+  },
   { path: '/market', component: Layout, redirect: 'noredirect', name: 'market', meta: { title: '市场管理', icon: 'person', role: ['sc'] },
     children: [
       { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},

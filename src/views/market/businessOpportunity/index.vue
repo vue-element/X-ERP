@@ -19,7 +19,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button @click="delSelectData" v-show="deleteShow">
+        <button @click="delSelectData" v-show="deleteShow && tab === 'listTab'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -34,7 +34,7 @@
   </div>
   <div class="compotent-tab">
     <AddComponent v-if="tab === 'addTab'" :editData="editData"  @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" ref="del" :searchData="searchData" @exportData="exportData" @editRow="editRow"></ListComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData" @exportData="exportData" @editRow="editRow"></ListComponent>
     <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -53,7 +53,10 @@ export default {
   },
   data() {
     return {
-      searchData: {},
+      searchData: {
+        amount: 0,
+        amount1: 0
+      },
       tab: 'listTab',
       deleteShow: false,
       selArr: [],
@@ -75,6 +78,14 @@ export default {
         return
       }
       this.tab = tab
+    },
+    selData(selArr) {
+      this.selArr = selArr
+      if (this.selArr.length > 0) {
+        this.deleteShow = true
+      } else {
+        this.deleteShow = false
+      }
     },
     addBtn() {
       if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
@@ -99,10 +110,20 @@ export default {
       }
     },
     delSelectData() {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel()
+      }).catch(() => {
+        return false
+      })
+    },
+    confirmDel() {
       var id = { id: this.selArr }
       this.$post('/bussiness/delete', id).then((res) => {
-        this.$refs.del.getProjectData()
         if (res.data.success === true) {
+          this.$refs.del.getProjectData()
           this.$message({
             message: '删除成功',
             type: 'success'
