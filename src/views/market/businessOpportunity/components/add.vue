@@ -3,7 +3,7 @@
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
   <el-button @click="toggleEditBtn">{{editWord}}</el-button>
-  <el-button @click="passCheck">审批通过</el-button>
+  <el-button v-show="this.disabled === true" @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">
     <!-- 基本信息 -->
@@ -147,8 +147,8 @@
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="预计成交金额:">
-            <p v-if="disabled">{{businessInfo.amount}}</p>
-            <el-input v-else v-model="businessInfo.amount" @change="amountChange" placeholder="请输入预计成交金额" min='0'></el-input>
+            <p v-if="disabled">{{businessInfo.amount1}}</p>
+            <el-input v-else v-model="businessInfo.amount1" @change="amountChange" placeholder="请输入预计成交金额" min='0'></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -346,7 +346,8 @@ export default {
         firstPerson: '',
         firstPersonPhone: '13682561462',
         startDate: '',
-        amount: '',
+        amount: null,
+        amount1: '',
         executeState: '',
         businessPerson: {
           id: null,
@@ -380,8 +381,6 @@ export default {
       clientList: [],
       userList: [],
       businessCtgList: [],
-      followStateList: [],
-      examineStateList: [],
       executeStateList: [],
       rules: {
         name: [{ required: true, message: '请输入商机名称', trigger: 'blur' }],
@@ -417,11 +416,11 @@ export default {
         if (valid) {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
-          console.log(this.businessInfo)
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {
               this.businessInfo = res.data.data
+              this.editInfo()
               this.temp = _.cloneDeep(res.data.data)
               this.successSave()
             } else {
@@ -440,16 +439,15 @@ export default {
     },
     reset() {
       this.businessInfo = _.cloneDeep(this.temp)
+      this.editInfo()
     },
     cancel() {
       this.$emit('changeObj', false)
       this.$emit('toggleTab')
     },
     editInfo() {
-      var data = this.editData.editData
-      this.businessInfo = data.business
-      var cityOption = data.business.oldCity.split('-')
-      console.log(cityOption)
+      this.businessInfo.amount1 = outputmoney('' + this.businessInfo.amount)
+      var cityOption = this.businessInfo.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
@@ -467,7 +465,6 @@ export default {
         this.businessInfo = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
-        console.log('this.temp', this.temp)
       }
     },
     passCheck() {
@@ -491,7 +488,8 @@ export default {
       this.businessInfo.city.id = val[len - 1]
     },
     amountChange(val) {
-      this.businessInfo.amount = outputmoney(val)
+      this.businessInfo.amount = val
+      this.businessInfo.amount1 = outputmoney(val)
     },
     //  所属年月日转化为年月格式
     dateChange(date) {
@@ -527,6 +525,7 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
+        this.businessInfo = this.editData.editData.business
         this.editInfo()
       }
     },

@@ -1,56 +1,59 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <div class="commont-btn edit-btn" v-show="editShow">
+  <!-- <div class="commont-btn edit-btn" v-show="editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
-  </div>
-  <el-form :model="mainMsg" :rules="rules" ref="mainMsg">
+  </div> -->
+  <el-form :model="userMsg" :rules="rules" ref="userMsg">
     <div class="form-module">
       <h4 class="module-title">
-        <p>投标报价|基础信息</p>
+        <p>用户基础信息</p>
       </h4>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="商机编码" prop="business">
-            <p v-if="disabled">{{mainMsg.business.code}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机编码" filterable>
-              <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-            </el-select>
+          <el-form-item label="姓名:" prop="client">
+            <p v-if="disabled">{{userMsg.name}}</p>
+            <el-input v-else v-model="userMsg.name" placeholder="请输入账户名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="商机名称">
-            <p v-if="disabled">{{mainMsg.business.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称">
-              <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+          <el-form-item label="工号:" prop="region">
+            <p v-if="disabled">{{userMsg.name}}</p>
+            <el-input v-else v-model="userMsg.name" placeholder="请输入工号"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="客户名称">
-            <p v-if="disabled">{{mainMsg.business.client.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="自动生成" disabled>
-              <el-option v-for="item in businessList" :label="item.client.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+          <el-form-item label="所属组织名称:" prop="city">
+            <p v-if="disabled">{{userMsg.role.name}}</p>
+            <el-input v-else v-model="userMsg.role.name" placeholder="请输入工号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="预计成交金额">
-            <p v-if="disabled">{{mainMsg.business.amount}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="自动生成" disabled>
-              <el-option v-for="item in businessList" :label="item.amount" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+          <el-form-item label="所属组织编号:"  prop="name">
+            <p v-if="disabled">{{userMsg.role.code}}</p>
+            <el-input v-else v-model="userMsg.role.code" placeholder="请输入项目名称"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="40">
+        <el-col :xs="24" :sm="12" :lg="12">
+          <el-form-item label="角色:" prop="buildNum">
+            <p v-if="disabled">{{userMsg.role.name}}</p>
+            <el-input v-else v-model="userMsg.role.name" type="number" min="0" placeholder="请输入楼栋及单位数量"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="12">
+          <el-form-item label="账号:" prop="address">
+            <p v-if="disabled">{{userMsg.name}}</p>
+            <el-input v-else v-model="userMsg.name" placeholder="请输入项目地址"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </div>
     <div class="commont-btn" v-show="!disabled">
-      <el-button @click="add()" :loading="loading">提交</el-button>
+      <el-button @click="add('userMsg')" :loading="loading">提交</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>
@@ -61,64 +64,58 @@
 import _ from 'lodash'
 import { isObjectValueEqual } from '@/utils'
 export default {
-  name: 'smartCommunityAdd',
+  name: 'userAdd',
   props: ['editData'],
   data() {
-    const validateBusiness = (rule, value, callback) => {
-      if (!value.id) {
-        callback(new Error('请选择商机编号'))
-      } else {
-        callback()
-      }
-    }
     return {
       action: 'add',
       editWord: '编辑',
       loading: false,
       disabled: false,
       editShow: false,
-      rules: {
-        business: [{ required: true, validator: validateBusiness, trigger: 'change' }]
-      },
-      mainMsg: {
-        business: {
-          id: null
+      rules: {},
+      userMsg: {
+        name: '',
+        role: {
+          name: '',
+          code: ''
         }
       },
-      businessList: [],
       temp: {} // 保存新增，编辑的初始化对象
     }
   },
   created() {
-    this.getInsertData()
+    // this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.mainMsg)
+    this.temp = _.cloneDeep(this.userMsg)
   },
   mounted() {},
   methods: {
-    add() {
-      this.$refs.mainMsg.validate((valid) => {
+    add(userMsg) {
+      this.$refs[userMsg].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/tenderOffer/save', this.mainMsg).then((res) => {
+          this.$post('/project/save', this.userMsg).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              this.mainMsg = res.data.data
               this.temp = _.cloneDeep(res.data.data)
+              this.userMsg = res.data.data
+              this.editInfo()
               this.successSave()
             } else {
               this.failSave()
             }
-          }).catch(() => {
-            this.loading = false
           })
         } else {
-          return false
+          this.$message({
+            message: '信息未填写完整',
+            type: 'warning'
+          })
         }
       })
     },
     reset() {
-
+      this.userMsg = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('changeObj', false)
@@ -127,16 +124,30 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
-        this.editWord = '编辑'
-      } else {
-        this.editWord = '取消编辑'
+        this.userMsg = _.cloneDeep(this.temp)
+        this.editInfo()
       }
     },
     getInsertData() {
-      this.$get('/tenderOffer/findInsertData').then((res) => {
+      this.$get('/project/findInsertData').then((res) => {
         var data = res.data.data
-        this.businessList = data.businessList
+        this.cityList = data.cityList
+        this.clientList = data.clientList
+        this.regionList = data.regionList
       })
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        // console.log('editData', this.editData)
+        this.userMsg = _.cloneDeep(this.editData.editData)
+      }
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -156,22 +167,19 @@ export default {
         message: '保存失败',
         type: 'error'
       })
-    },
-    toggleAction() {
-      if (this.editData.tabState === 'addTab') {
-        this.action = 'add'
-        this.disabled = false
-        this.editShow = false
-      } else {
-        this.action = 'edit'
-        this.disabled = true
-        this.editShow = true
-      }
     }
   },
   computed: {},
   watch: {
-    mainMsg: {
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
+      }
+    },
+    userMsg: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
@@ -260,7 +268,7 @@ export default {
   .el-form-item.community-facility {
     label.el-form-item__label {
       margin-top: 0!important;
-      width: 18%!important;
+      width: 13.5%!important;
       line-height: 30px;
     }
   }

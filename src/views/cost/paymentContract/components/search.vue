@@ -7,46 +7,46 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
+            <el-form-item label="订单编号:">
+              <el-input v-model="searchData.orderCode" placeholder="请输入付款合同编号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="付款合同编号:">
               <el-input v-model="searchData.code" placeholder="请输入付款合同编号"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="合同编号:">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable>
+            <el-form-item label="商机编号:">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择商机编号" filterable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="使用项目:" >
+              <el-select v-model="paymentContract.contractInfo_id" placeholder="请选择所属项目" filterable>
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="40">
-          <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="所属项目:" >
-              <el-input v-model="searchData.project" placeholder="请输入所属项目"></el-input>
+          <el-col :xs="24" :md="12" :lg="12">
+            <el-form-item label="业务类型:">
+              <el-select v-model="paymentContract.b_ctg_id" placeholder="请选择业务类别" filterable>
+               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="使用部门:">
               <el-input v-model="searchData.department" placeholder="请输入使用部门"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="业务线:">
-              <el-select v-model="searchData.category" placeholder="请选择业务线" filterable>
-               <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
-               </el-option>
-             </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="供应商:" prop="supply">
-              <el-select v-model="search.supply_id" placeholder="请选择供应商" filterable>
-               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -62,6 +62,14 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
+            <el-form-item label="材料类型:">
+              <el-select v-model="paymentContract.m_ctg_id" placeholder="请选择材料类型" filterable>
+                <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
+                </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="申请时间:" class="range-date">
               <el-date-picker v-model="searchData.applicationTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
@@ -69,8 +77,8 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="采购总额:">
-              <el-input v-model="searchData.procurement" placeholder="请输入采购总额"></el-input>
+            <el-form-item label="采购金额:">
+              <el-input v-model="searchData.amount" placeholder="请输入付款合同编号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -91,15 +99,16 @@ export default {
       loading: false,
       disabled: false,
       searchData: {
-        project: '',
+        orderCode: '',
         code: '',
-        deliveryStatus: '',
-        category: '',
-        applicationTime: [],
+        project: '',
         department: '',
-        procurement: '',
+        b_ctg_id: '',
+        m_ctg_id: '',
+        deliveryStatus: '',
         contractInfo_id: '',
-        supply_id: ''
+        applicationTime: '',
+        amount: ''
       },
       contractInfoList: [],
       categoryList: [],

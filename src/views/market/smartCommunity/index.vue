@@ -19,7 +19,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button v-show="deleteShow" @click="delSelectData">
+        <button  v-show="deleteShow && tab === 'listTab'" @click="delSelectData">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -116,15 +116,27 @@ export default {
         tabState: 'editTab'
       }
     },
-    delSelectData() {
+    confirmDel() {
       var id = { id: this.selArr }
       this.$post('/project/delete', id).then((res) => {
         console.log('res', res)
-        this.$refs.del.getProjectData()
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
+        if (res.data.success === true) {
+          this.$refs.del.getProjectData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    delSelectData() {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel()
+      }).catch(() => {
+        return false
       })
     },
     searchWord(data) {

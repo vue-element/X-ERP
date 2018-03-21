@@ -548,8 +548,8 @@ export default {
       })
     },
     reset() {
+      this.mainMsg = _.cloneDeep(this.temp)
       if (this.action === 'add') {
-        this.mainMsg = _.cloneDeep(this.temp)
         this.carObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 0 }
         this.personObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 1 }
         this.elevatorObj = { a: '', b: '', category: 2 }
@@ -557,6 +557,8 @@ export default {
         this.otherObj = { a: '', b: '', c: '', category: 4 }
         this.cityOption = []
       } else {
+        this.mainMsg = _.cloneDeep(this.temp)
+        // this.mainMsg = _.cloneDeep(this.editData.editData.project)
         this.editInfo()
       }
     },
@@ -589,6 +591,7 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
+        this.mainMsg = _.cloneDeep(this.temp)
         this.editInfo()
       }
     },
@@ -610,6 +613,7 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
+        // this.mainMsg = _.cloneDeep(this.temp)
         this.mainMsg = _.cloneDeep(this.editData.editData.project)
         this.editInfo()
       }

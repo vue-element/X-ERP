@@ -71,7 +71,7 @@ export default {
         this.$emit('seeRow', data)
       })
     },
-    deleteRow(id) {
+    confirmDel(id) {
       var projectID = { id: [id] }
       this.$post('/project/delete', projectID).then((res) => {
         if (res.status === 200) {
@@ -81,6 +81,16 @@ export default {
             type: 'success'
           })
         }
+      })
+    },
+    deleteRow(id) {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel(id)
+      }).catch(() => {
+        return false
       })
     },
     editRow(id) {
