@@ -15,8 +15,8 @@
         <el-table-column prop="status" label="项目状态"></el-table-column>
         <el-table-column label="操作" width="240">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,15 +78,26 @@ export default {
       this.getScheduleData()
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/contractSchedule/delete', projectID).then(res => {
-        if (res.data.success === true) {
-          this.getScheduleData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var projectID = { id: [id] }
+        this.$post('/contractSchedule/delete', projectID).then(res => {
+          if (res.data.success === true) {
+            this.getScheduleData()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     editRow(id) {

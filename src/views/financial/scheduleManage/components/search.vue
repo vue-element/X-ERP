@@ -41,7 +41,7 @@ export default {
       disabled: false,
       contractInfoList: [],
       ruleForm: {
-        contractInfo_id: 1
+        contractInfo_id: ''
       },
       rules: {}
     }

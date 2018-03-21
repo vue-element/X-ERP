@@ -12,9 +12,9 @@
         <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
         <el-table-column prop="name" label="发票抬头名称"></el-table-column>
         <el-table-column prop="amount" label="开票金额(含税)"></el-table-column>
-        <el-table-column prop="" label="税率"></el-table-column>
-        <el-table-column prop="" label="税金"></el-table-column>
-        <el-table-column prop="" label="收入(不含税)"></el-table-column>
+        <el-table-column prop="taxRate" label="税率"></el-table-column>
+        <el-table-column prop="tax" label="税金"></el-table-column>
+        <el-table-column prop="income" label="收入(不含税)"></el-table-column>
         <el-table-column prop="date" label="开票日期"></el-table-column>
         <el-table-column prop="number" label="发票号码"></el-table-column>
         <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
@@ -64,13 +64,14 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
-        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.invoiceData = data.content
+          this.invoiceData.tax = data.content.amount * data.content.taxRate
+          this.invoiceData.income = data.content.amount - (data.content.amount * data.content.taxRate)
           this.listLoading = false
         }
       })
@@ -84,15 +85,26 @@ export default {
       this.getInvoiceData()
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/contractBilling/delete', projectID).then(res => {
-        if (res.data.success === true) {
-          this.getInvoiceData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var projectID = { id: [id] }
+        this.$post('/contractBilling/delete', projectID).then(res => {
+          if (res.data.success === true) {
+            this.getInvoiceData()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     editRow(id) {

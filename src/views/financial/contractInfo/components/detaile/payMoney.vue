@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="项目累计投入：">
-              <p>{{contractPayment.totalAmount}}</p>
+              <p>{{contractPayment.totalProAmount}}</p>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -97,7 +97,7 @@ export default {
       this.getContractPayment()
     } else {
       this.contractPayment = {
-        totalAmount: '',
+        totalProAmount: '',
         totalMaterialCost: '',
         totalArtificialCost: '',
         totalComprehensiveCost: '',
@@ -113,8 +113,9 @@ export default {
     getContractPayment() {
       var paymentID = this.editData.editData.id
       this.$get('/contractPayment/findAllByContractInfo/' + paymentID).then((res) => {
+        console.log(res)
         this.paymentData = res.data.data.contractPaymentList.content
-        this.contractPayment.totalAmount = res.data.data.totalAmount
+        this.contractPayment.totalProAmount = res.data.data.totalProAmount
         this.contractPayment.totalMaterialCost = res.data.data.totalMaterialCost
         this.contractPayment.totalArtificialCost = res.data.data.totalArtificialCost
         this.contractPayment.totalComprehensiveCost = res.data.data.totalComprehensiveCost

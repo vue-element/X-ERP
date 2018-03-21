@@ -5,6 +5,24 @@
         <h4 class="module-title">
           <p>查询条件</p>
         </h4>
+        <!-- <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="商机编码：" prop="business">
+              <p v-if="disabled">{{contractInfo.code}}</p>
+              <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable>
+                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="商机名称：">
+              <p v-if="disabled">{{contractInfo.name}}</p>
+              <el-select v-else v-model="contractInfo.id" placeholder="请选择商机名称" filterable>
+                <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row> -->
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：" prop="name">

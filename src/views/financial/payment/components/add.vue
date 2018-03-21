@@ -82,6 +82,7 @@
 <script>
 import _ from 'lodash'
 import { outputmoney } from '@/utils'
+import { isObjectValueEqual } from '@/utils'
 export default {
   name: 'paymentAdd',
   props: ['editData'],
@@ -130,11 +131,6 @@ export default {
         }
       })
     },
-    editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.contractInfoList = data.contractInfoList
-      this.paymentData = data.contractPayment
-    },
     save() {
       this.$refs.paymentData.validate((valid) => {
         if (valid) {
@@ -147,14 +143,13 @@ export default {
           this.$post('/contractPayment/save', this.paymentData).then(res => {
             if (res.data.success === true) {
               this.loading = false
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              if (this.editData.tabState === 'editTab') {
-                this.$emit('toggleTab')
-              }
+              this.temp = _.cloneDeep(res.data.data)
+              this.successSave()
+            } else {
+              this.failSave()
             }
+          }).catch(res => {
+            this.loading = false
           })
         }
       })
@@ -169,20 +164,35 @@ export default {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
-        this.editInfo()
+        this.paymentData = _.cloneDeep(this.editData.editData.contractPayment)
       }
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      if (this.disabled === true) {
-        this.editWord = '编辑'
-        this.editInfo()
-      } else {
-        this.editWord = '取消编辑'
-      }
+      this.paymentData = _.cloneDeep(this.temp)
     },
     cancel() {
+      this.$emit('changeObj', false)
       this.$emit('toggleTab')
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
     },
     artificialCost(val) {
       this.paymentData.artificialCost = outputmoney(val)
@@ -206,6 +216,26 @@ export default {
         } else {
           callback()
         }
+      }
+    }
+  },
+  watch: {
+    paymentData: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    },
+    disabled(status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', false)
+      } else {
+        this.editWord = '编辑'
       }
     }
   }

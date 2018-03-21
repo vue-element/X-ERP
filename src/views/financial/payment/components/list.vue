@@ -61,7 +61,6 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractPayment/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
-        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
@@ -81,15 +80,26 @@ export default {
       this.getPaymentData()
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/contractPayment/delete', projectID).then(res => {
-        if (res.data.success === true) {
-          this.getPaymentData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var projectID = { id: [id] }
+        this.$post('/contractPayment/delete', projectID).then(res => {
+          if (res.data.success === true) {
+            this.getPaymentData()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     editRow(id) {

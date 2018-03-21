@@ -7,7 +7,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编码：">
+            <el-form-item label="合同名称：">
               <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
@@ -15,17 +15,27 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="发票抬头名称：">
-              <el-input v-model="searchData.name" placeholder="请输入发票抬头名称"></el-input>
+            <el-form-item label="合同编码：">
+              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="发票抬头名称：">
+              <el-input v-model="searchData.name" placeholder="请输入发票抬头名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="发票号码：">
               <el-input v-model="searchData.number" placeholder="请输入发票号码"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="开票日期：" class="range-date">
               <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
