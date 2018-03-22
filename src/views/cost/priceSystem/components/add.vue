@@ -16,6 +16,12 @@
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="产品编号:">
+              <p v-if="disabled">{{priceInfo.code}}</p>
+              <el-input v-else v-model="priceInfo.code" placeholder="自动生成" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="单位:" prop="unit">
               <p v-if="disabled">{{priceInfo.unit}}</p>
               <el-input v-else v-model="priceInfo.unit" placeholder="请输入单位"></el-input>
@@ -67,26 +73,36 @@
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
-            <el-form-item label="产品最新报价（元）:" prop="productQuotation">
-              <p v-if="disabled">{{priceInfo.productQuotation}}</p>
-              <el-input v-else v-model="priceInfo.productQuotation" placeholder="请输入产品最新报价" @change="amountChange"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :ms="24" :md="12" :lg="12">
-            <el-form-item label="区域:" prop="region">
-              <p v-if="disabled">{{priceInfo.region.name}}</p>
-              <el-select v-else v-model="priceInfo.region.id" placeholder="请选择区域" filterable>
-               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="供应商类型:" prop="supply">
+              <p v-if="disabled">{{priceInfo.supply.type}}</p>
+              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
+               <el-option v-for="item in supplyList" :label="item.type" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
-            <el-form-item label="供货周期（天）:" prop="supplyCycle">
-              <p v-if="disabled">{{priceInfo.supplyCycle}}</p>
-              <el-input v-else v-model="priceInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
+            <el-form-item label="供应区域:" prop="supply">
+              <p v-if="disabled">{{priceInfo.supply.region}}</p>
+              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
+               <el-option v-for="item in supplyList" :label="item.region" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="供货周期（天）:" prop="supply">
+              <p v-if="disabled">{{priceInfo.supply.supplyCycle}}</p>
+              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
+               <el-option v-for="item in supplyList" :label="item.supplyCycle" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="产品最新报价（元）:" prop="productQuotation">
+              <p v-if="disabled">{{priceInfo.productQuotation}}</p>
+              <el-input v-else v-model="priceInfo.productQuotation" placeholder="请输入产品最新报价" @change="amountChange"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -125,7 +141,7 @@
 
 <script>
 import _ from 'lodash'
-import { parseTime, outputmoney, isObjectValueEqual } from '@/utils'
+import { outputmoney, isObjectValueEqual } from '@/utils'
 export default {
   name: 'supplierAdd',
   props: ['editData'],
@@ -187,27 +203,10 @@ export default {
   },
   created() {
     this.getInsertData()
-    if (this.editData.tabState === 'addTab') {
-      this.action = 'add'
-      this.disabled = false
-      this.editShow = false
-    } else {
-      this.action = 'edit'
-      this.editInfo()
-      this.disabled = true
-      this.editShow = true
-    }
+    this.toggleAction()
     this.temp = _.cloneDeep(this.priceInfo)
   },
   methods: {
-    editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.priceInfo = data.price
-      this.historyPrice = data.price.priceHistoryList
-      this.historyPrice.forEach((item) => {
-        item.time = parseTime(item.time, '{y}-{m}-{d}')
-      })
-    },
     save() {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
@@ -216,18 +215,9 @@ export default {
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              if (this.action === 'edit') {
-                this.$emit('toggleTab')
-              }
+              this.successSave()
             } else {
-              this.$message({
-                message: '保存失败',
-                type: 'error'
-              })
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -245,11 +235,14 @@ export default {
     cancel() {
       this.$emit('toggleTab')
     },
+    editInfo() {
+      this.historyPrice = this.priceInfo.priceHistoryList
+    },
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
-        this.editInfo()
+        this.priceInfo = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
       }
@@ -260,29 +253,41 @@ export default {
         this.regionList = data.regionList
         this.supplyList = data.supplyList
       })
-      this.systemList = [
-        { value: '停车场系统' },
-        { value: '监控系统' },
-        { value: '门禁系统' },
-        { value: '巡更系统' },
-        { value: '电子围栏系统' },
-        { value: '对讲系统' },
-        { value: '背景音乐系统' },
-        { value: '会议系统' },
-        { value: '机房工程系统' },
-        { value: '报警系统' },
-        { value: '消防系统' },
-        { value: '综合布线系统' },
-        { value: '通用类' }
-      ]
-      this.typeList = [
-        { value: '主材' },
-        { value: '线材' },
-        { value: '工器具' },
-        { value: '辅材' },
-        { value: '其他' },
-        { value: '行政类' }
-      ]
+      this.systemList = [{ value: '停车场系统' }, { value: '监控系统' }, { value: '门禁系统' }, { value: '巡更系统' }, { value: '电子围栏系统' }, { value: '对讲系统' },
+        { value: '背景音乐系统' }, { value: '会议系统' }, { value: '机房工程系统' }, { value: '报警系统' }, { value: '消防系统' }, { value: '综合布线系统' }, { value: '通用类' }]
+      this.typeList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+        this.disabled = false
+        this.editShow = false
+      } else {
+        this.action = 'edit'
+        this.disabled = true
+        this.editShow = true
+        this.priceInfo = _.cloneDeep(this.editData.editData.price)
+        this.editInfo()
+      }
     },
     amountChange(val) {
       this.priceInfo.productQuotation = outputmoney(val)
@@ -292,7 +297,10 @@ export default {
   watch: {
     disabled(status) {
       if (status === false) {
+        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
       }
     },
     priceInfo: {

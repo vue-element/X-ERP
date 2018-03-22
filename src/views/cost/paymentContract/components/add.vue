@@ -30,9 +30,9 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="付款合同编号:" prop="code">
+            <el-form-item label="付款合同编号:">
               <p v-if="disabled">{{paymentContract.code}}</p>
-              <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同号"></el-input>
+              <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同号" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,7 +60,10 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="使用部门:" prop="department">
               <p v-if="disabled">{{paymentContract.department}}</p>
-              <el-input v-else v-model="paymentContract.department" placeholder="请输入使用部门"></el-input>
+              <el-select v-else v-model="paymentContract.department" placeholder="请选择所属项目" filterable>
+               <el-option v-for="item in departmentList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
@@ -90,8 +93,8 @@
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="应付金额:">
-              <p v-if="disabled">{{paymentContract.payableAmount}}</p>
-              <el-input v-else v-model="paymentContract.payableAmount" placeholder="请输入应付金额" @change="amountChange"></el-input>
+              <p v-if="disabled">{{payableAmount}}</p>
+              <el-input v-else v-model="payableAmount" placeholder="请输入应付金额" @change="pAmountChange"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -105,7 +108,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="凭单号:">
               <p v-if="disabled">{{paymentContract.oddNumber}}</p>
-              <el-input v-else v-model="paymentContract.oddNumber" placeholder="请输入凭单号" @change="amountChange"></el-input>
+              <el-input v-else v-model="paymentContract.oddNumber" placeholder="请输入凭单号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -179,8 +182,8 @@
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="采购金额:" prop="amount">
-              <p v-if="disabled">{{paymentContract.amount}}</p>
-              <el-input v-else v-model="paymentContract.amount" placeholder="请输入采购金额" @change="amountChange"></el-input>
+              <p v-if="disabled">{{amount}}</p>
+              <el-input v-else v-model="amount" placeholder="请输入采购金额" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,7 +193,7 @@
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
       </div>
-      <table-component :contractId="contractId" :editShow="editShow"></table-component>
+      <table-component :contractId="contractId" :editShow="editShow" @purchaseAmount='purchaseAmount'></table-component>
     </el-form>
   </div>
 </template>
@@ -204,7 +207,7 @@ export default {
   props: ['editData'],
   components: { tableComponent },
   data() {
-    var validateBusiness = (rules, value, callback) => {
+    var validateContract = (rules, value, callback) => {
       if (!value.id) {
         callback(new Error('请选择商机编号'))
       } else {
@@ -220,7 +223,7 @@ export default {
     }
     var validateBusinessCategory = (rules, value, callback) => {
       if (!value.id) {
-        callback(new Error('请选择供应商信息'))
+        callback(new Error('请选择业务类别'))
       } else {
         callback()
       }
@@ -231,49 +234,50 @@ export default {
       loading: false,
       disabled: false,
       editShow: false,
+      supplyName: '',
+      amount: '',
+      payableAmount: '',
       paymentContract: {
-        amount: '采购金额',
-        applicationPerson: '申请人',
+        amount: null,
+        applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
         businessCategory: { id: null },
-        code: '付款合同编号',
+        code: '',
         contractInfo: { id: null },
+        supply: { id: null },
         deliveryStatus: '未发货',
-        department: '使用部门',
+        department: '财务管理部',
         inputCode: '入库单编号',
-        inputDate: '入库日期',
         materialCategory: { id: null },
         mention: '是',
         oddNumber: '',
         optCost: '优化成本',
-        orderCode: '订单编号',
+        orderCode: '',
         payTime: '2018-03-19',
-        payableAmount: '应付金额',
+        payableAmount: null,
         paymentObject: '供应商',
         procurement: '采购总额',
-        project: '使用项目',
         signNumber: '',
-        supply: '',
         term: ''
       },
       contractInfoList: [],
       businessCtgList: [],
       supplyList: [],
       materialCtgList: [],
+      departmentList: [],
       contractId: '',
       rules: {
         applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }],
         applicationTime: [{ required: true, message: '请输入申请时间', trigger: 'blur' }],
-        category: [{ required: true, message: '请选择业务线', trigger: 'change' }],
+        orderCode: [{ required: true, message: '请输入订单编号', trigger: 'blur' }],
+        contractInfo: [{ required: true, validator: validateContract, trigger: 'change' }],
         department: [{ required: true, message: '请选择申请部门', trigger: 'blur' }],
-        contractInfo: [{ required: true, validator: validateBusiness, trigger: 'change' }],
         businessCategory: [{ required: true, validator: validateBusinessCategory, trigger: 'change' }],
         supply: [{ required: true, validator: validateSupply, trigger: 'change' }],
         paymentObject: [{ required: true, message: '请选择支付对象', trigger: 'change' }],
         payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
         payTime: [{ required: true, message: '请输入到付时间', trigger: 'blur' }],
         code: [{ required: true, message: '请输入付款合同号', trigger: 'blur' }],
-        project: [{ required: true, message: '请输入使用项目', trigger: 'blur' }],
         deliveryStatus: [{ required: true, message: '请选择发货状态', trigger: 'change' }]
       },
       temp: {}
@@ -289,23 +293,17 @@ export default {
       this.$refs.paymentContract.validate((valid) => {
         if (valid) {
           this.loading = true
-          console.log(JSON.stringify(this.paymentContract))
           this.$post('/paymentContract/save', this.paymentContract).then(res => {
             this.loading = false
             if (res.data.success === true) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              this.disabled = true
-              this.editShow = true
+              this.temp = _.cloneDeep(res.data.data)
+              this.paymentContract = res.data.data
+              this.amount = outputmoney('' + this.paymentContract.amount)
+              this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
               this.contractId = res.data.data.id
-              this.$emit('changeObj', false)
+              this.successSave()
             } else {
-              this.$message({
-                message: '保存失败',
-                type: 'error'
-              })
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -320,7 +318,6 @@ export default {
       })
     },
     reset() {
-      console.log('this.temp', this.temp)
       this.paymentContract = _.cloneDeep(this.temp)
     },
     cancel() {
@@ -342,6 +339,27 @@ export default {
         this.supplyList = data.supplyList
         this.businessCtgList = data.businessCtgList
         this.materialCtgList = data.materialCtgList
+        this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
+          { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
+      })
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
       })
     },
     toggleAction() {
@@ -355,18 +373,32 @@ export default {
         this.editShow = true
         this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
         this.contractId = this.paymentContract.id
+        this.amount = outputmoney('' + this.paymentContract.amount)
+        this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
       }
     },
-    amountChange(val) {
-      console.log(val)
-      this.paymentContract.payableAmount = outputmoney(val)
+    pAmountChange(val) {
+      this.paymentContract.payableAmount = val
+      this.payableAmount = outputmoney('' + val)
+    },
+    purchaseAmount(val) {
+      this.amount = outputmoney('' + val)
+      this.paymentContract.amount = val
+      this.$post('/paymentContract/save', this.paymentContract).then((res) => {
+        if (res.data.success === true) {
+          // console.log('success')
+        }
+      })
     }
   },
   computed: {},
   watch: {
     disabled(status) {
       if (status === false) {
+        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
       }
     },
     paymentContract: {
@@ -374,8 +406,26 @@ export default {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {
+          if (obj.amount !== this.temp.amount) {
+            return
+          }
           this.$emit('changeObj', true)
         }
+        // 付款合同编号拼接
+        var supplyId = this.paymentContract.supply.id
+        var name = ''
+        if (supplyId) {
+          if (this.supplyList.length > 0) {
+            this.supplyList.forEach((item) => {
+              if (item.id === supplyId) {
+                name = item.name
+              }
+            })
+          } else {
+            name = this.paymentContract.supply.name
+          }
+        }
+        this.paymentContract.code = this.paymentContract.orderCode + '-' + name
       },
       deep: true
     }

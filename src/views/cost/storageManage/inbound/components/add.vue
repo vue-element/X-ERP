@@ -14,8 +14,8 @@
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="入库单编号:">
-                <p v-if="disabled">{{paymentContract.inputNumber}}</p>
-                <el-input v-else v-model="paymentContract.inputNumber" placeholder="请输入您的账号"></el-input>
+                <p v-if="disabled">{{paymentContract.inputCode}}</p>
+                <el-input v-else v-model="paymentContract.inputCode" placeholder="请输入您的账号"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -27,13 +27,14 @@
           </el-row>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <!-- <el-form-item label="办事处:">
-                <p v-if="disabled">{{paymentContract.business.name}}</p>
-                <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
+              <el-form-item label="办事处:">
+                <p v-if="disabled">{{paymentContract.department}}</p>
+                <el-input v-else v-model="paymentContract.department" placeholder="请输入您的账号"></el-input>
+                <!-- <el-select v-else v-model="paymentContract.business.id" placeholder="请选择" filterable>
                  <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
                  </el-option>
-               </el-select>
-              </el-form-item> -->
+               </el-select> -->
+              </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="入库日期:" class="single-date">
@@ -85,7 +86,6 @@ export default {
   methods: {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log('data', data)
       this.paymentContract = data.paymentContractList
       this.supplyList = data.supplyList
       this.contractInfoList = data.contractInfoList

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
 import { winHeight } from '@/utils'
 export default {
   name: 'smartCommunityList',
@@ -48,33 +47,29 @@ export default {
       this.resize()
     })
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     resize() {
       this.height = winHeight() - 210
     },
     saveUrl(row) {
       var bCode = row.business.code
-      // var url = row.url
-      window.open('http://localhost:8000', '_blank')
-      // window.open(url, '_blank')
-      Cookies.set('ethercalcUrl', bCode, { expires: 7 })
-      Cookies.set('ethercalcUrl', bCode, { expires: 7 })
+      var url = 'http://localhost:8000/_get_or_create?id=' + bCode
+      window.open(url, '_blank')
     },
     exportExcel(row) {
       var url = row.url
       window.location.href = url + '.xlsx'
     },
     seeRow(id) {
-      this.$get('/project/findUpdateData/' + id).then((res) => {
+      this.$get('/project/findUpdateData/' + id).then(res => {
         var data = res.data.data
         this.$emit('seeRow', data)
       })
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/project/delete', projectID).then((res) => {
+      this.$post('/project/delete', projectID).then(res => {
         if (res.status === 200) {
           this.getProjectData()
           this.$message({
@@ -85,7 +80,7 @@ export default {
       })
     },
     editRow(id) {
-      this.$get('/project/findUpdateData/' + id).then((res) => {
+      this.$get('/project/findUpdateData/' + id).then(res => {
         var data = res.data.data
         console.log('data', data)
       })
@@ -95,19 +90,21 @@ export default {
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/tenderOffer/search?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then((res) => {
-        this.listLoading = false
-        if (res.data.success === true) {
-          var data = res.data.data
-          this.projectData = data.content
-          this.total = data.totalElements
-          this.currentPage = data.number + 1
-          this.pageSize = data.size
-          this.$emit('exportData', this.projectData)
-        }
-      }).catch(() => {
-        this.listLoading = false
-      })
+      this.$post(url, this.searchData, false)
+        .then(res => {
+          this.listLoading = false
+          if (res.data.success === true) {
+            var data = res.data.data
+            this.projectData = data.content
+            this.total = data.totalElements
+            this.currentPage = data.number + 1
+            this.pageSize = data.size
+            this.$emit('exportData', this.projectData)
+          }
+        })
+        .catch(() => {
+          this.listLoading = false
+        })
     },
     //  页码处理
     handleSizeChange(val) {

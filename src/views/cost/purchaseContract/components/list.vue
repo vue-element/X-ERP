@@ -3,20 +3,18 @@
   <div class="table">
     <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
       <el-table-column prop="0" label="序号" fixed width="60">
-        <template slot-scope="scope">{{scope.$index + 1}}
-</template>
+        <template slot-scope="scope">{{scope.$index + 1}}</template>
        </el-table-column>
-       <el-table-column prop="project" label="所属项目" fixed width="140"></el-table-column>
-       <el-table-column prop="category" label="业务线"  min-width="160"></el-table-column>
-       <el-table-column prop="contractInfo.code" label="关联合同" width="100"></el-table-column>
-       <el-table-column prop="category" label="付款合同编号" fixed width="160"></el-table-column>
+       <el-table-column prop="contractInfo.name" label="所属项目" fixed width="140"></el-table-column>
+       <el-table-column prop="contractInfo.code" label="关联合同" width="120"></el-table-column>
+       <el-table-column prop="businessCategory.name" label="业务线"  width="160"></el-table-column>
+       <el-table-column prop="code" label="付款合同编号" fixed width="160"></el-table-column>
        <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
        <el-table-column prop="applicationPerson" label="申请人"  width="100"></el-table-column>
        <el-table-column prop="applicationTime" label="申请时间" width="100"></el-table-column>
-       <el-table-column prop="orderNumber" label="订单编号" width="140"></el-table-column>
-       <el-table-column prop="optCost" label="优化成本" width="120"></el-table-column>
        <el-table-column prop="department" label="申请部门" width="120"></el-table-column>
        <el-table-column prop="paymentObject" label="支付对象" width="100"></el-table-column>
+       <el-table-column prop="amount" label="采购金额" width="100"></el-table-column>
        <el-table-column prop="payableAmount" label="应付金额" width="100"></el-table-column>
        <el-table-column prop="payTime" label="到付时间" width="100"></el-table-column>
        <el-table-column prop="deliveryStatus" label="发货状态" width="100"></el-table-column>

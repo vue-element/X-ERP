@@ -77,13 +77,13 @@ export default {
       systemList: [],
       supplyList: [],
       searchData: {
-        code: '产品编码',
-        name: '产品名称',
-        type: '主材',
-        system: '停车场系统',
-        specModel: '规格型号',
-        brand: '品牌',
-        supply_id: 20
+        code: '',
+        name: '',
+        type: '',
+        system: '',
+        specModel: '',
+        brand: '',
+        supply_id: null
       },
       rules: {}
     }

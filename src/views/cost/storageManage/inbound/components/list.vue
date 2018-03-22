@@ -5,10 +5,9 @@
         <el-table-column prop="0" label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
+        <el-table-column prop="oddNumber" label="订单编号"></el-table-column>
         <el-table-column prop="code" label="付款合同编号"></el-table-column>
-        <el-table-column prop="inputNumber" label="入库单号"></el-table-column>
-        <el-table-column prop="business.name" label="办事处"></el-table-column>
+        <el-table-column prop="department" label="办事处"></el-table-column>
         <el-table-column prop="supply.name" label="供应商"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">

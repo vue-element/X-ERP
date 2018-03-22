@@ -78,25 +78,25 @@
               <el-table-column label="序号" width="60" fixed>
                 <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
-              <el-table-column label="物料名称" width="120">
+              <el-table-column label="物料名称" min-width="120">
                 <template slot-scope="scope"><span>{{scope.row.purchaseList.name}}</span></template>
               </el-table-column>
-              <el-table-column label="规格型号" width="120">
+              <el-table-column label="规格型号" min-width="120">
                 <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
               </el-table-column>
-              <el-table-column label="品牌" width="100">
+              <el-table-column label="品牌" min-width="100">
                 <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
               </el-table-column>
-              <el-table-column label="采购单价" width="100">
+              <el-table-column label="采购单价" min-width="100">
                 <template slot-scope="scope"><span>{{scope.row.purchaseList.unitPrice}}</span></template>
               </el-table-column>
-              <el-table-column label="数量" width="100">
+              <el-table-column label="数量" min-width="100">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
-              <el-table-column label="单个成本" width="100">
+              <el-table-column label="单个成本" min-width="100">
                 <template slot-scope="scope"><span>{{scope.row.unitCost}}</span></template>
               </el-table-column>
-              <el-table-column label="单个抵扣税金" width="100">
+              <el-table-column label="单个抵扣税金" min-width="160">
                 <template slot-scope="scope"><span>{{scope.row.unitTaxFee}}</span></template>
               </el-table-column>
               <el-table-column label="合计" width="100" fixed="right">
@@ -118,26 +118,26 @@
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading">
-        <el-table-column label="序号" width="40">
+      <el-table class="basic-form" style="width: 100%" :data="inboundCheck" v-loading.body="listLoading" border>
+        <el-table-column label="序号" width="60" fixed>
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column label="审核步骤">
+        <el-table-column label="审核步骤" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
         </el-table-column>
-        <el-table-column label="操作人">
+        <el-table-column label="操作人" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.stepPerson}}</span></template>
         </el-table-column>
-        <el-table-column label="操作时间">
+        <el-table-column label="操作时间" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.time}}</span></template>
         </el-table-column>
-        <el-table-column label="审核结果">
+        <el-table-column label="审核结果" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.result}}</span></template>
         </el-table-column>
-        <el-table-column label="下一步骤">
+        <el-table-column label="下一步骤" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.nextStep}}</span></template>
         </el-table-column>
-        <el-table-column label="下一步骤审核人">
+        <el-table-column label="下一步骤审核人" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.nextStepPerson}}</span></template>
         </el-table-column>
       </el-table>
@@ -186,7 +186,7 @@ export default {
           var taxRate = item.purchaseList.paymentContract.supply.taxRate // 税率
           var unitPrice = item.purchaseList.unitPrice // 单价
           item.unitCost = this.unitCost(taxRate, unitPrice) // 单个成本
-          item.unitTaxFee = unitPrice - item.unitCost
+          item.unitTaxFee = returnFloat(unitPrice - item.unitCost)
           item.totalAmount = returnFloat(item.unitCost * item.number)
         })
         this.InboundList = data
@@ -229,9 +229,9 @@ export default {
     },
     submitCheck() {
       var obj = {
-        step: '1',
-        stepPerson: '1',
-        nextStep: '2',
+        step: '',
+        stepPerson: '',
+        nextStep: '',
         nextStepPerson: '',
         paymentContract: {
           id: this.contractId
@@ -239,17 +239,14 @@ export default {
         result: '提交审核',
         time: ''
       }
-      console.log('submit', JSON.stringify(obj))
       this.$post('/inboundCheck/save', obj).then((res) => {
-        console.log(res)
-        // this.getPurchaseList()
-        // this.getInboundCheck()
+        this.getInboundCheck()
       })
     }
   },
   watch: {
     actionTab(data) {
-      console.log(data)
+      // console.log(data)
     },
     InboundList(list) {
       list.forEach((item) => {

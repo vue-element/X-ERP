@@ -455,6 +455,7 @@ export default {
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
+          // this.contractInfo.contractTotalAmount = outputmoney('' + this.businessInfo.contractTotalAmount)
         }
       })
     },
