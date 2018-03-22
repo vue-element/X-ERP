@@ -111,7 +111,7 @@ export default {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1002;
+    // z-index: 1002;
 }
 .project-name {
     width: 210px;

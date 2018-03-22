@@ -1,9 +1,9 @@
 <template>
-  <div class="invoice-add form-container">
+  <div class="received-add form-container">
     <div class="commont-btn edit-btn" v-show="editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
-    <el-form :model="receivedPaymentData" :rules="rules" ref="receivedPaymentData">
+    <el-form :model="receivedData" :rules="rules" ref="receivedData">
       <div class="form-module">
         <h4 class="module-title">
           <p>新增回款信息:</p>
@@ -11,16 +11,16 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <p v-if="disabled">{{receivedPaymentData.contractBilling.contractInfo.code}}</p>
-              <el-select v-else v-model="receivedPaymentData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
                 <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <p v-if="disabled">{{receivedPaymentData.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="receivedPaymentData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
                 <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -29,24 +29,24 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="发票号码：">
-              <p v-if="disabled">{{receivedPaymentData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedPaymentData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="回款日期：" class="single-date" prop="date">
-              <p v-if="disabled">{{receivedPaymentData.date}}</p>
-              <el-date-picker v-else v-model="receivedPaymentData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" ></el-date-picker>
+              <p v-if="disabled">{{receivedData.date}}</p>
+              <el-date-picker v-else v-model="receivedData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" ></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="回款金额：" prop="amount">
-              <p v-if="disabled">{{receivedPaymentData.amount}}</p>
-              <el-input v-else v-model="receivedPaymentData.amount" placeholder="请输入回款金额"></el-input>
+              <p v-if="disabled">{{receivedData.amount}}</p>
+              <el-input v-else v-model="receivedData.amount" placeholder="请输入回款金额"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -77,7 +77,7 @@ export default {
       action: 'add',
       contractBillingList: [],
       contractInfoList: [],
-      receivedPaymentData: {
+      receivedData: {
         contractBilling: {
           id: null
         },
@@ -95,7 +95,7 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.receivedPaymentData)
+    this.temp = _.cloneDeep(this.receivedData)
   },
   methods: {
     getInsertData() {
@@ -107,10 +107,10 @@ export default {
       })
     },
     save() {
-      this.$refs.receivedPaymentData.validate((valid) => {
+      this.$refs.receivedData.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/contractReceived/save', this.receivedPaymentData).then(res => {
+          this.$post('/contractReceived/save', this.receivedData).then(res => {
             if (res.data.success === true) {
               this.loading = false
               this.temp = _.cloneDeep(res.data.data)
@@ -125,7 +125,7 @@ export default {
       })
     },
     reset() {
-      this.receivedPaymentData = _.cloneDeep(this.temp)
+      this.receivedData = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('changeObj', false)
@@ -133,7 +133,7 @@ export default {
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      this.receivedPaymentData = _.cloneDeep(this.temp)
+      this.receivedData = _.cloneDeep(this.temp)
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
@@ -144,7 +144,7 @@ export default {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
-        this.receivedPaymentData = _.cloneDeep(this.editData.editData.contractReceived)
+        this.receivedData = _.cloneDeep(this.editData.editData.contractReceived)
       }
     },
     successSave() {
@@ -167,7 +167,7 @@ export default {
       })
     },
     amountChange(val) {
-      this.receivedPaymentData.amount = outputmoney(val)
+      this.receivedData.amount = outputmoney(val)
     },
     validateMsg(errMsg) {
       return (rule, value, callback) => {
@@ -180,7 +180,7 @@ export default {
     }
   },
   watch: {
-    receivedPaymentData: {
+    receivedData: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
@@ -205,7 +205,7 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-add{
+.received-add{
   &::-webkit-scrollbar{
     width: 0;
   }

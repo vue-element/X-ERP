@@ -61,21 +61,12 @@ export const asyncRouterMap = [
   },
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
     children: [
-      { path: 'contract-info', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
-      // { path: 'detaileInfo', component: _import('financial/contractInfo/detaileInfo'), meta: { pName: 'contractInfo', title: 'hh' }, hidden: true },
-      { path: 'invoice', component: _import('financial/invoice/index'), name: 'contrctInvoice', meta: { title: '合同开票管理' }},
-      // { path: 'invoice', component: _import('financial/invoice/index'), redirect: '/financial/invoice/list', name: 'contrctInvoice', meta: { title: '合同开票管理' }, hideChildren: true,
-      //   children: [
-      //     { path: 'list', component: _import('financial/invoice/list'), name: 'invoiceList', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
-      //     { path: 'add', component: _import('financial/invoice/add'), name: 'invoiceAdd', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }},
-      //     { path: 'search', component: _import('financial/invoice/search'), name: 'invoiceSearch', meta: { pName: 'contrctInvoice', title: '合同开票管理' }},
-      //     { path: 'import', component: _import('financial/invoice/import'), name: 'invoiceImport', meta: { pName: 'contrctInvoice', title: '合同开票管理', noCache: true }}
-      //   ]
-      // },
-      { path: 'received-payment', component: _import('financial/receivedPayment/index'), name: 'receivedPayment', meta: { title: '合同回款管理' }},
+      { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
+      { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }},
+      { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }},
       { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同付款管理' }},
-      { path: 'schedule-manage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
-      { path: 'schedule-analysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
+      { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
+      { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
   { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
