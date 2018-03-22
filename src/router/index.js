@@ -46,7 +46,7 @@ export default new Router({
 // asyncRouterMap 代表那些需求动态判断权限并通过 addRouters 动态添加的页面。具体的会在 权限判断 页面介绍。
 export const asyncRouterMap = [
   // 基础管理
-  { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'person' },
+  { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'pCenter' },
     children: [
       { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }},
       { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }}
@@ -88,7 +88,7 @@ export const asyncRouterMap = [
     ]
   },
   // 工程管理
-  { path: '/engineering', component: Layout, redirect: 'noredirect', name: 'engineering', meta: { title: '工程管理', icon: 'cost', role: ['cw'] },
+  { path: '/engineering', component: Layout, redirect: 'noredirect', name: 'engineering', meta: { title: '工程管理', icon: 'engineering', role: ['cw'] },
     children: [
       { path: 'engineer', component: _import('engineering/projectCenter/index'), name: 'engineer', meta: { title: '项目管理中心' }},
       { path: 'bidding', component: _import('engineering/biddingManagement/index'), name: 'bidding', meta: { title: '劳务招标管理' }},
