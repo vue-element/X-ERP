@@ -22,7 +22,9 @@
 
 .icon-edit:before { content: "\e67a"; }
 
-.icon-out:before { content: "\e658"; }
+.icon-pCenter:before { content: "\e68a"; }
+
+.icon-logout:before { content: "\e658"; }
 
 .icon-search:before { content: "\e72c"; }
 
@@ -45,6 +47,8 @@
 .icon-username:before { content: "\e777"; }
 
 .icon-setting:before { content: "\e618"; }
+
+.icon-engineering:before { content: "\e695"; }
 
 .icon-seeAll:before { content: "\e746"; }
 
