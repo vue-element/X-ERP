@@ -20,55 +20,53 @@
       </h4>
       <!-- <div  v-show="!uploadTableShow"> -->
       <div>
-        <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
-          <el-table-column label="序号">
-            <template slot-scope="scope">
-             {{scope.$index + 1}}
-            </template>
+        <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading" border>
+          <el-table-column label="序号" width="60">
+            <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
-          <el-table-column label="物料名称">
+          <el-table-column label="物料名称" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.name" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.name" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.name}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="规格型号">
+          <el-table-column label="规格型号" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.model" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.model}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="品牌">
+          <el-table-column label="品牌" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.brand" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.brand}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单价">
+          <el-table-column label="单价" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.unitPrice" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.unitPrice" placeholder="请填写" @change="unitPriceChange"></el-input>
               <span v-else>{{scope.row.unitPrice}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量">
+          <el-table-column label="数量" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model.number="scope.row.number" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model.number="scope.row.number" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.number}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="总金额">
+          <el-table-column label="总金额" min-width="160">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.totalAmount}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单位">
+          <el-table-column label="单位" min-width="100">
             <template slot-scope="scope">
-              <input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写">
+              <el-input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" min-width="120" fixed="right">
             <template slot-scope="scope">
               <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
               <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
@@ -144,7 +142,7 @@
         </el-table-column>
         <el-table-column label="付票金额">
           <template slot-scope="scope">
-            <input v-if="scope.row.edit" type="text" v-model="scope.row.amount" placeholder="请填写">
+            <el-input v-if="scope.row.edit" type="text" v-model="scope.row.amount" placeholder="请填写"></el-input>
             <span v-else>{{scope.row.amount}}</span>
           </template>
         </el-table-column>
@@ -178,11 +176,12 @@ export default {
       uploadTableShow: false,
       listLoading: false,
       downloadLoading: false,
-      comfirmUploading: false
+      comfirmUploading: false,
+      amount: null
     }
   },
   created() {
-    console.log('editShow', this.contractId)
+    // console.log('editShow', this.contractId)
     if (this.contractId) {
       this.getPurchaseList()
       this.getBillingList()
@@ -310,6 +309,9 @@ export default {
         })
       )
     },
+    unitPriceChange(val) {
+      console.log('val', val)
+    },
     // 开票信息
     getBillingList() {
       this.$get('/billing/findAllByPaymentContract/' + this.contractId).then((res) => {
@@ -403,14 +405,20 @@ export default {
       })
     }
   },
+  computed: {
+  },
   watch: {
-    // contractId(data) {
-    //   console.log('my contractId', data)
-    //   this.purchaseList.forEach((item) => {
-    //     item.paymentContract = { id: data }
-    //   })
-    //   this.saveMaterial(this.purchaseList)
-    // }
+    purchaseList: {
+      handler(arr) {
+        var purchaseAmount = 0
+        arr.forEach((item) => {
+          item.totalAmount = item.number * item.unitPrice
+          purchaseAmount += item.totalAmount
+        })
+        this.$emit('purchaseAmount', purchaseAmount)
+      },
+      deep: true
+    }
   }
 }
 </script>

@@ -52,7 +52,10 @@ export default {
       downloadLoading: false,
       tab: 'listTab',
       editData: {},
-      searchData: {},
+      searchData: {
+        amount: 0,
+        amount1: 0
+      },
       isChange: false,
       exprotList: []
     }

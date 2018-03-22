@@ -133,7 +133,6 @@ export default {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         if (res.data.success === true) {
           this.purchaseList = res.data.data.content
-          console.log('purchaseList', this.purchaseList)
         }
       })
     },

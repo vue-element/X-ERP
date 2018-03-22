@@ -56,7 +56,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="供货周期:">
+            <el-form-item label="供货周期:" prop="supplyCycle">
               <p v-if="disabled">{{supplyInfo.supplyCycle}}</p>
               <el-input v-else v-model="supplyInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
             </el-form-item>
@@ -283,6 +283,7 @@ export default {
         licenseNumber: [{ required: true, message: '请输入营业执照号', trigger: 'blur' }],
         regAddress: [{ required: true, message: '请输入注册地址', trigger: 'blur' }],
         enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'change' }],
+        supplyCycle: [{ required: true, message: '请输入供货周期', trigger: 'blur' }],
         region: [{ required: true, message: '请输入供货区域', trigger: 'blur' }],
         materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
         person: [{ required: true, message: '请输入业务联系人', trigger: 'blur' }],
@@ -308,22 +309,15 @@ export default {
       this.$refs.supplyInfo.validate(valid => {
         if (valid) {
           this.loading = true
+          console.log('this.supplyInfo', JSON.stringify(this.supplyInfo))
           this.$post('/supply/save', this.supplyInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              this.$emit('changeObj', false)
-              if (this.action === 'edit') {
-                this.$emit('toggleTab')
-              }
+              this.supplyInfo = res.data.data
+              this.temp = _.cloneDeep(res.data.data)
+              this.successSave()
             } else {
-              this.$message({
-                message: '保存失败',
-                type: 'error'
-              })
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -362,6 +356,25 @@ export default {
     amountChange(val) {
       this.supplyInfo.regCapital = outputmoney(val)
     },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
+    },
     toggleAction() { // 当前组件是新增状态还是编辑状态
       if (this.editData.tabState === 'addTab') {
         this.action = 'add'
@@ -379,7 +392,10 @@ export default {
   watch: {
     disabled(status) {
       if (status === false) {
+        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
       }
     },
     supplyInfo: {
