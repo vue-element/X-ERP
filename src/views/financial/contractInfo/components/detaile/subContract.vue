@@ -31,7 +31,7 @@
         <form>
           <div class="describtion">
             <span>附件说明：</span>
-            <textarea rows="5" v-model="fileForm.describtion"></textarea>
+            <textarea rows="4" v-model="fileForm.describtion"></textarea>
           </div>
           <div class="person">
             <span>上传人：</span>
@@ -41,7 +41,7 @@
             <span>附件上传：</span>
             <input type="file" id="fileupload" @change="getFile($event)">
           </div>
-          <button class="filebtn" @click="upFile($event)">提交</button>
+          <button class="filebtn" @click="upFile($event)">上传</button>
         </form>
       </el-dialog>
     </div>
@@ -197,9 +197,9 @@ export default {
     .describtion,
     .person,
     .upfile{
-      font-size: 17px;
+      font-size: 15px;
       color: black;
-      margin: 10px 5% 30px;
+      margin: 15px 10% 20px;
       span{
         display: inline-block;
         width: 100px;
@@ -207,30 +207,38 @@ export default {
         text-align: right;
         vertical-align: top;
       }
+      textarea{
+        resize: both;
+        max-width: 70%;
+        min-width: 70%
+      }
       textarea,
       input[type="text"]{
         &::-webkit-scrollbar{
           width: 0;
         }
         margin-left: 5px;
-        padding-left: 10px;
+        padding-left: 8px;
         width: 70%;
-        line-height: 30px;
+        line-height: 26px;
         border: 1px solid #828282;
         border-radius: 5px;
         box-sizing: border-box;
       }
+      input[type="file"]{
+        margin-left: 7px;
+      }
     }
     button.filebtn{
-      margin: 0 0 20px 47%;
-      width: 12%;
-      height: 35px;
-      background-color: #67c23a;
-      border: 1px solid #67c23a;
-      border-radius: 10px;
+      font-size: 15px;
+      margin: 0 0 20px 45%;
+      width: 10%;
+      height: 30px;
+      background-color: #35d5ba;
+      border: 1px solid #35d5ba;
+      border-radius: 8px;
       color: #fff;
       cursor: pointer;
-      font-size: 17px;
     }
     .module-title{
       position:relative;

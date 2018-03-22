@@ -1,9 +1,9 @@
 <template>
-  <div class="invoice-add form-container">
+  <div class="billing-add form-container">
     <div class="commont-btn edit-btn" v-show="editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
-    <el-form :model="invoiceData" :rules="rules" ref="invoiceData">
+    <el-form :model="billingData" :rules="rules" ref="billingData">
       <div class="form-module">
         <h4 class="module-title">
           <p>新增开票信息:</p>
@@ -11,16 +11,16 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
-              <p v-if="disabled">{{invoiceData.contractInfo.code}}</p>
-              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择商机编码" filterable>
+              <p v-if="disabled">{{billingData.contractInfo.code}}</p>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择商机编码" filterable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <p v-if="disabled">{{invoiceData.contractInfo.name}}</p>
-              <el-select v-else v-model="invoiceData.contractInfo.id" placeholder="请选择合同编码" filterable>
+              <p v-if="disabled">{{billingData.contractInfo.name}}</p>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编码" filterable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -29,29 +29,29 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="发票抬头名称：" prop="name">
-              <p v-if="disabled">{{invoiceData.name}}</p>
-              <el-input v-else v-model="invoiceData.name" placeholder="请输入发票抬头名称"></el-input>
+              <p v-if="disabled">{{billingData.name}}</p>
+              <el-input v-else v-model="billingData.name" placeholder="请输入发票抬头名称"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票金额：" prop="amount">
-              <p v-if="disabled">{{invoiceData.amount}}</p>
-              <el-input v-else v-model="invoiceData.amount" placeholder="请输入开票金额"></el-input>
+              <p v-if="disabled">{{billingData.amount}}</p>
+              <el-input v-else v-model="billingData.amount" placeholder="请输入开票金额"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税率：" prop="taxRate">
-              <p v-if="disabled">{{invoiceData.taxRate}}</p>
-              <el-select v-else v-model="invoiceData.taxRate" placeholder="请选择税率">
+              <p v-if="disabled">{{billingData.taxRate}}</p>
+              <el-select v-else v-model="billingData.taxRate" placeholder="请选择税率">
                 <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税金：" class="single-date">
-              <p v-if="disabled">{{invoiceData.tax}}</p>
+              <p v-if="disabled">{{billingData.tax}}</p>
               <el-input v-else v-model="tax" placeholder="自动填充" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -59,28 +59,28 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="收入(不含税)：" class="single-date">
-              <p v-if="disabled">{{invoiceData.income}}</p>
+              <p v-if="disabled">{{billingData.income}}</p>
               <el-input v-else v-model="income" placeholder="自动填充" disabled></el-input>
             </el-form-item>
           </el-col>
            <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票号码：" prop="number">
-              <p v-if="disabled">{{invoiceData.number}}</p>
-              <el-input v-else v-model="invoiceData.number" placeholder="请输入发票号码"></el-input>
+              <p v-if="disabled">{{billingData.number}}</p>
+              <el-input v-else v-model="billingData.number" placeholder="请输入发票号码"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item class="single-date" label="开票日期：">
-              <p v-if="disabled">{{invoiceData.date}}</p>
-              <el-date-picker v-else v-model="invoiceData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+              <p v-if="disabled">{{billingData.date}}</p>
+              <el-date-picker v-else v-model="billingData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票内容：">
-              <p v-if="disabled">{{invoiceData.content}}</p>
-              <el-input v-else v-model="invoiceData.content" placeholder="请输入开票内容"></el-input>
+              <p v-if="disabled">{{billingData.content}}</p>
+              <el-input v-else v-model="billingData.content" placeholder="请输入开票内容"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -122,7 +122,7 @@ export default {
       editWord: '编辑',
       contractInfoList: [],
       taxRateList: [],
-      invoiceData: {
+      billingData: {
         amount: '',
         content: '',
         name: '',
@@ -148,7 +148,7 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.invoiceData)
+    this.temp = _.cloneDeep(this.billingData)
   },
   methods: {
     getInsertData() {
@@ -160,12 +160,12 @@ export default {
       this.taxRateList = [{ value: '3%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
     },
     save() {
-      this.$refs.invoiceData.validate(valid => {
+      this.$refs.billingData.validate(valid => {
         if (valid) {
           this.loading = true
-          this.invoiceData.tax = this.tax
-          this.invoiceData.income = this.income
-          this.$post('/contractBilling/save', this.invoiceData).then(res => {
+          this.billingData.tax = this.tax
+          this.billingData.income = this.income
+          this.$post('/contractBilling/save', this.billingData).then(res => {
             this.loading = false
             if (res.data.success === true) {
               this.temp = _.cloneDeep(res.data.data)
@@ -180,7 +180,7 @@ export default {
       })
     },
     reset() {
-      this.invoiceData = _.cloneDeep(this.temp)
+      this.billingData = _.cloneDeep(this.temp)
     },
     cancel() {
       this.$emit('changeObj', false)
@@ -188,7 +188,7 @@ export default {
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      this.invoiceData = _.cloneDeep(this.temp)
+      this.billingData = _.cloneDeep(this.temp)
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
@@ -197,7 +197,7 @@ export default {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
-        this.invoiceData = _.cloneDeep(this.editData.editData.contractBilling)
+        this.billingData = _.cloneDeep(this.editData.editData.contractBilling)
       }
     },
     successSave() {
@@ -220,7 +220,7 @@ export default {
       })
     },
     amount(val) {
-      this.invoiceData.amount = outputmoney(val)
+      this.billingData.amount = outputmoney(val)
     },
     validateMsg(errMsg) {
       return (rule, value, callback) => {
@@ -233,7 +233,7 @@ export default {
     }
   },
   watch: {
-    invoiceData: {
+    billingData: {
       handler(obj) {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
@@ -254,15 +254,15 @@ export default {
   },
   computed: {
     tax() {
-      if (this.invoiceData.amount && this.invoiceData.taxRate) {
-        return (this.invoiceData.amount * (this.invoiceData.taxRate.replace(/%/, '') / 100)).toFixed(2)
+      if (this.billingData.amount && this.billingData.taxRate) {
+        return (this.billingData.amount * (this.billingData.taxRate.replace(/%/, '') / 100)).toFixed(2)
       } else {
         return null
       }
     },
     income() {
-      if (this.invoiceData.amount && this.invoiceData.taxRate) {
-        return (this.invoiceData.amount - (this.invoiceData.amount * (this.invoiceData.taxRate.replace(/%/, '') / 100))).toFixed(2)
+      if (this.billingData.amount && this.billingData.taxRate) {
+        return (this.billingData.amount - (this.billingData.amount * (this.billingData.taxRate.replace(/%/, '') / 100))).toFixed(2)
       } else {
         return null
       }
@@ -273,7 +273,7 @@ export default {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-add{
+.billing-add{
   &::-webkit-scrollbar{
     width: 0;
   }

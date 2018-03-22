@@ -137,7 +137,7 @@
     <div class="list form-module" style="margin-top:40px;">
       <h4 class="module-title">
         <p>合同交底附件列表</p>
-        <el-button class="up-files common-btn" type="text" @click="upFiles = true">附件上传</el-button>
+        <el-button class="up-files common-btn" type="text" @click="upFiles">附件上传</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="fileData" ref="multipleTable" border>
@@ -161,20 +161,21 @@
     </div>
     <!-- 附件件上传弹窗 -->
     <el-dialog title="合同交底附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
-      <el-form>
-        <el-form-item label="附件说明">
-          <el-input type="textarea" v-model="fileForm.describtion"></el-input>
-        </el-form-item>
-        <el-form-item label="上传附件" prop="name">
-          <el-upload class="upload-demo" ref="upload" action="" :on-preview="handlePreview" :on-remove="handleRemove" :auto-upload="false">
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer" >
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交</el-button>
-      </div>
+      <form>
+        <div class="describtion">
+          <span>附件说明：</span>
+          <textarea rows="4" v-model="fileForm.describtion"></textarea>
+        </div>
+        <div class="person">
+          <span>上传人：</span>
+          <input type="text" v-model="fileForm.person">
+        </div>
+        <div class="upfile">
+          <span>附件上传：</span>
+          <input type="file" id="fileupload" @change="getFile($event)">
+        </div>
+        <button class="filebtn" @click="upFile($event)">上传</button>
+      </form>
     </el-dialog>
   </div>
 </template>
@@ -223,10 +224,10 @@ export default {
         }
       },
       // 附件上传
-      fileData: [],
       upFiles: false,
       fileForm: {
         describtion: '',
+        person: '',
         file: ''
       }
     }
@@ -475,6 +476,52 @@ export default {
         right:0;
       }
     }
+  }
+  .describtion,
+  .person,
+  .upfile{
+    font-size: 15px;
+    color: black;
+    margin: 15px 10% 20px;
+    span{
+      display: inline-block;
+      width: 100px;
+      height: 30px;
+      text-align: right;
+      vertical-align: top;
+    }
+    textarea{
+      resize: both;
+      max-width: 70%;
+      min-width: 70%
+    }
+    textarea,
+    input[type="text"]{
+      &::-webkit-scrollbar{
+        width: 0;
+      }
+      margin-left: 5px;
+      padding-left: 8px;
+      width: 70%;
+      line-height: 26px;
+      border: 1px solid #828282;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    input[type="file"]{
+      margin-left: 7px;
+    }
+  }
+  button.filebtn{
+    font-size: 15px;
+    margin: 0 0 20px 45%;
+    width: 10%;
+    height: 30px;
+    background-color: #35d5ba;
+    border: 1px solid #35d5ba;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
   }
 }
 </style>
