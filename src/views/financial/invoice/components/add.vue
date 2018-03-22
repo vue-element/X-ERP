@@ -52,21 +52,21 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税金：" class="single-date">
               <p v-if="disabled">{{invoiceData.tax}}</p>
-              <el-input v-else v-model="tax" disabled></el-input>
+              <el-input v-else v-model="tax" placeholder="自动填充" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="收入(不含税)：" class="single-date">
-              <p v-if="disabled">{{invoiceData.tax}}</p>
-              <el-input v-else v-model="invoiceData.income" disabled></el-input>
+              <p v-if="disabled">{{invoiceData.income}}</p>
+              <el-input v-else v-model="income" placeholder="自动填充" disabled></el-input>
             </el-form-item>
           </el-col>
            <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="开票号码：" prop="number">
               <p v-if="disabled">{{invoiceData.number}}</p>
-              <el-input v-else v-model.number="invoiceData.number" placeholder="请输入发票号码"></el-input>
+              <el-input v-else v-model="invoiceData.number" placeholder="请输入发票号码"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -96,12 +96,24 @@
 
 <script>
 import { outputmoney } from '@/utils'
+import { isObjectValueEqual } from '@/utils'
 import _ from 'lodash'
 export default {
   name: 'invoiceAdd',
   props: ['editData'],
   data() {
     var validateContractInfo = this.validateMsg('合同信息不能为空')
+    var validateAmount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('开票金额不能为空'))
+      } else {
+        if (!Number(value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       action: 'add',
       loading: false,
@@ -118,15 +130,16 @@ export default {
           id: ''
         },
         number: '',
+        tax: '',
         taxRate: '',
         income: ''
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
+        amount: [{ required: true, validator: validateAmount, trigger: 'blur' }],
         name: [{ required: true, message: '请输入发票抬头名称', trigger: 'blur' }],
-        number: [{ required: true, message: '请输入发票号码' }, { type: 'number', message: '请输入数字' }],
+        number: [{ required: true, message: '请输入发票号码', trigger: 'blur' }],
         taxRate: [{ required: true, message: '请选择税金', trigger: 'change' }],
-        amount: [{ required: true, message: '请输入开票金额', trigger: 'blur' }],
         date: [{ required: true, message: '请选择开票日期', trigger: 'blur' }]
       },
       temp: {}
@@ -139,34 +152,29 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/contractBilling/findInsertData').then(res => {
+      this.$get('/contractBilling/findInsertData').then((res) => {
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.contractInfoList
         }
       })
       this.taxRateList = [{ value: '3%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
     },
-    editInfo() {
-      var data = this.editData.editData
-      this.contractInfoList = data.contractInfoList
-      this.invoiceData = data.contractBilling
-    },
     save() {
       this.$refs.invoiceData.validate(valid => {
         if (valid) {
           this.loading = true
-          Number(this.invoiceData.amount)
+          this.invoiceData.tax = this.tax
+          this.invoiceData.income = this.income
           this.$post('/contractBilling/save', this.invoiceData).then(res => {
+            this.loading = false
             if (res.data.success === true) {
-              this.loading = false
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              if (this.editData.tabState === 'editTab') {
-                this.$emit('toggleTab')
-              }
+              this.temp = _.cloneDeep(res.data.data)
+              this.successSave()
+            } else {
+              this.failSave()
             }
+          }).catch(() => {
+            this.loading = false
           })
         }
       })
@@ -175,16 +183,12 @@ export default {
       this.invoiceData = _.cloneDeep(this.temp)
     },
     cancel() {
+      this.$emit('changeObj', false)
       this.$emit('toggleTab')
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      if (this.disabled === true) {
-        this.editWord = '编辑'
-        this.editInfo()
-      } else {
-        this.editWord = '取消编辑'
-      }
+      this.invoiceData = _.cloneDeep(this.temp)
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
@@ -193,8 +197,27 @@ export default {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
-        this.editInfo()
+        this.invoiceData = _.cloneDeep(this.editData.editData.contractBilling)
       }
+    },
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
     },
     amount(val) {
       this.invoiceData.amount = outputmoney(val)
@@ -209,8 +232,40 @@ export default {
       }
     }
   },
+  watch: {
+    invoiceData: {
+      handler(obj) {
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
+      },
+      deep: true
+    },
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
+      }
+    }
+  },
   computed: {
     tax() {
+      if (this.invoiceData.amount && this.invoiceData.taxRate) {
+        return (this.invoiceData.amount * (this.invoiceData.taxRate.replace(/%/, '') / 100)).toFixed(2)
+      } else {
+        return null
+      }
+    },
+    income() {
+      if (this.invoiceData.amount && this.invoiceData.taxRate) {
+        return (this.invoiceData.amount - (this.invoiceData.amount * (this.invoiceData.taxRate.replace(/%/, '') / 100))).toFixed(2)
+      } else {
+        return null
+      }
     }
   }
 }

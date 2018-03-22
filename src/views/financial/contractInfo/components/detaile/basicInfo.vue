@@ -211,7 +211,6 @@ export default {
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
-        console.log(data)
         this.businessList = data.businessList
         this.cityList = data.cityList
         this.clientList = data.clientList
@@ -230,7 +229,6 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
-          console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             // this.$store.commit('getContractMsg', res.data.data)
             var contractMsg = res.data.data
@@ -318,9 +316,9 @@ export default {
   computed: {
     contractTotalAmount() {
       if (!this.contractInfo.originalAmount && !this.contractInfo.changeAmount || !this.contractInfo.originalAmount && this.contractInfo.changeAmount) {
-        return 0
+        return null
       } else if (this.contractInfo.originalAmount && !this.contractInfo.changeAmount) {
-        this.changeAmount = ''
+        this.changeAmount = null
         return parseFloat(this.contractInfo.originalAmount)
       } else {
         return (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)

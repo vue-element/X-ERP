@@ -7,18 +7,18 @@
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
             <i class="iconfont icon-seeAll"></i>
-            <span>查看明细</span>
+            <span>查看</span>
           </button>
-          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-          <!-- <button>
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
+          </button>
         </div>
         <div class="export-btn fr">
           <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
@@ -66,6 +66,7 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {},
+      isChange: false,
       list: [
         {
           id: 1,
@@ -95,26 +96,66 @@ export default {
   },
   mounted() {},
   methods: {
-    addBtn() {
-      this.tab = 'addTab'
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
+    toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
       }
+      this.tab = tab
     },
+    listBtn() {
+      this.toggleTab('listTab')
+    },
+    // 查看单条信息功能
     editRow(data) {
+      this.toggleTab('addTab')
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      this.tab = 'addTab'
     },
+    // 查询功能
     search(data) {
+      this.toggleTab('listTab')
       this.searchData = data
-      this.tab = 'listTab'
     },
-    toggleTab(tab) {
-      this.tab = tab
+    addBtn() {
+      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
+        if (this.isChange === true) { // 有值的变化
+          this.showPopWin(() => {
+            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else { // 没有值的变化
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
+      }
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
+    },
+    changeObj(status) {
+      this.isChange = status
     },
     dataImpore() {
       this.toggleTab('importTab')

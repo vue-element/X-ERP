@@ -78,15 +78,26 @@ export default {
       })
     },
     deleteRow(id) {
-      var contractInfoID = { id: [id] }
-      this.$post('/contractInfo/delete', contractInfoID).then((res) => {
-        if (res.status === 200) {
-          this.getContractInfoData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var contractInfoID = { id: [id] }
+        this.$post('/contractInfo/delete', contractInfoID).then((res) => {
+          if (res.status === 200) {
+            this.getContractInfoData()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     handleSizeChange(val) {

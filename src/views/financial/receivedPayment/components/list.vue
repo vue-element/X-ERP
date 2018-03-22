@@ -84,15 +84,26 @@ export default {
       this.getPaymentData()
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/contractReceived/delete', projectID).then(res => {
-        if (res.data.success === true) {
-          this.getPaymentData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var projectID = { id: [id] }
+        this.$post('/contractReceived/delete', projectID).then(res => {
+          if (res.data.success === true) {
+            this.getPaymentData()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     editRow(id) {

@@ -486,3 +486,7 @@
 .el-radio+.el-radio{
   margin-left: 20px;
 }
+
+.el-select .el-input.is-disabled .el-input__inner:hover {
+    border-color: #828282;
+}

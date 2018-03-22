@@ -27,7 +27,7 @@
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
       </div>
       <!-- 分包文件上传弹窗 -->
-      <el-dialog title="分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
+      <el-dialog title="合同分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
         <form>
           <div class="describtion">
             <span>附件说明：</span>
@@ -106,7 +106,11 @@ export default {
         subContract = _.cloneDeep(this.editData.editData)
       } else {
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
-        subContract = contractMsg.contractBasis.contractInfo
+        if (contractMsg === null) {
+          return
+        } else {
+          subContract = contractMsg.contractBasis.contractInfo
+        }
       }
       this.$get('/contractSubcontract/findAllByContractInfo/' + subContract.id).then((res) => {
         this.subContractData = res.data.data.content
@@ -119,13 +123,14 @@ export default {
     },
     // 附件上传
     upFile(event) {
+      event.preventDefault()
       var _this = this
       var xhr = new XMLHttpRequest()
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200 || xhr.status === 304) {
+          _this.upFiles = false
           var res = JSON.parse(xhr.responseText)
           if (res.success === true) {
-            _this.upFiles = false
             _this.getSubContractFile()
             _this.fileForm = {
               ci_id: '',
@@ -134,7 +139,7 @@ export default {
               file: ''
             }
             var obj = document.getElementById('fileupload')
-            obj.outerHTML = obj.outerHTML
+            obj.value = ''
           }
         }
       }
@@ -156,15 +161,26 @@ export default {
     },
     // 附件删除
     deleteRow(id) {
-      var fileID = { id: [id] }
-      this.$post('/contractSubcontract/delete', fileID).then((res) => {
-        if (res.data.success === true) {
-          this.getSubContractFile()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var fileID = { id: [id] }
+        this.$post('/contractSubcontract/delete', fileID).then((res) => {
+          if (res.data.success === true) {
+            this.getSubContractFile()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }
