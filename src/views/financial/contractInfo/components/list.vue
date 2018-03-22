@@ -1,29 +1,29 @@
 <template>
-    <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
-        <el-table-column prop="0" label="序号" width="80" fixed>
-          <template slot-scope="scope">
-           {{scope.$index + 1}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
-        <el-table-column prop="name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="business.region.name" label="所属办事处" width="140"></el-table-column>
-        <el-table-column prop="term" label="合同所属期" width="140"></el-table-column>
-        <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
-        <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>
-        <el-table-column prop="receivedAmount" label="已回款金额"></el-table-column>
-        <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="140">
-          <template slot-scope="scope">
-            <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes"
+  <div class="table">
+    <el-table class="basic-form" style="width: 100%" :data="contractInfoData" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+      <el-table-column prop="0" label="序号" width="80" fixed>
+        <template slot-scope="scope">
+         {{scope.$index + 1}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
+      <el-table-column prop="name" label="合同名称" width="240"></el-table-column>
+      <el-table-column prop="business.region.name" label="所属办事处" width="140"></el-table-column>
+      <el-table-column prop="term" label="合同所属期" width="140"></el-table-column>
+      <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
+      <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>
+      <el-table-column prop="receivedAmount" label="已回款金额"></el-table-column>
+      <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="140">
+        <template slot-scope="scope">
+          <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
+          <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes"
 :page-size="pageSize" @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
-    </div>
+  </div>
 </template>
 
 <script>

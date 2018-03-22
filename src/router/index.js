@@ -45,12 +45,14 @@ export default new Router({
 })
 // asyncRouterMap 代表那些需求动态判断权限并通过 addRouters 动态添加的页面。具体的会在 权限判断 页面介绍。
 export const asyncRouterMap = [
+  // 基础管理
   { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'person' },
     children: [
       { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }},
       { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }}
     ]
   },
+  // 市场管理
   { path: '/market', component: Layout, redirect: 'noredirect', name: 'market', meta: { title: '市场管理', icon: 'person', role: ['sc'] },
     children: [
       { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
@@ -59,6 +61,7 @@ export const asyncRouterMap = [
       { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
     ]
   },
+  // 财务管理
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
     children: [
       { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
@@ -69,6 +72,7 @@ export const asyncRouterMap = [
       { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
+  // 成本管理
   { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
     children: [
       { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }},
@@ -81,6 +85,14 @@ export const asyncRouterMap = [
           { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }}
         ]
       }
+    ]
+  },
+  // 工程管理
+  { path: '/engineering', component: Layout, redirect: 'noredirect', name: 'engineering', meta: { title: '工程管理', icon: 'cost', role: ['cw'] },
+    children: [
+      { path: 'engineer', component: _import('engineering/projectCenter/index'), name: 'engineer', meta: { title: '项目管理中心' }},
+      { path: 'bidding', component: _import('engineering/biddingManagement/index'), name: 'bidding', meta: { title: '劳务招标管理' }},
+      { path: 'temporary', component: _import('engineering/temporaryEmployment/index'), name: 'temporary', meta: { title: '临时用工管理' }}
     ]
   },
   { path: '/permission', component: Layout,
