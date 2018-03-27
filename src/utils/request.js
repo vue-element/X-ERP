@@ -7,12 +7,15 @@ import qs from 'qs'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
+  // baseURL: 'http://10.51.23.71:8080',
+  // baseURL: 'http://10.51.39.106:8085',
   // baseURL: 'http://10.51.36.108:8081',
-  baseURL: 'http://202.105.96.131:8081',
-  // baseURL: 'http://202.105.96.131:8083',
+  // baseURL: 'http://202.105.96.131:8081',
+  baseURL: '/api',
+  // withCredentials: true,
   timeout: 5000 // 请求超时时间
 })
-
+axios.defaults.withCredentials = true
 // request拦截器
 service.interceptors.request.use(
   config => {
@@ -23,9 +26,8 @@ service.interceptors.request.use(
     if (store.getters.token) {
       var token = getToken()
       config.headers['X-Token'] = token
-      // console.log(token)
     }
-    // console.log('config', config)
+    console.log('config', config)
     return config
   }, error => {
   // Do something with request error
@@ -88,18 +90,14 @@ export function get(url, params = {}) {
 }
 
 // post 请求方法
-export function post(url, data = {}, isJson = true, enctype) {
+export function post(url, data = {}, isJson = true) {
   return new Promise((resolve, reject) => {
     var config = {}
     // console.log('isJson', isJson)
     if (isJson) {
       config.headers = { 'Content-Type': 'application/json;charset=utf-8' }
     } else {
-      if (enctype) {
-        config.headers = { 'Content-Type': 'multipart/form-data' }
-      } else {
-        config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }
+      config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
       data = qs.stringify(data)
     }
     // console.log('config', config)

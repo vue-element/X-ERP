@@ -17,3 +17,11 @@ export function removeToken() {
 export function getUser() {
   return Cookies.get('username')
 }
+
+export function getSession() {
+  return Cookies.get('SESSION')
+}
+
+export function setSession(session) {
+  return Cookies.set('SESSION', session)
+}

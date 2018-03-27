@@ -5,9 +5,9 @@
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
       </div>
-      <el-form-item prop="name" :class="(usernameActive ? 'isActive' : '')">
+      <el-form-item prop="username" :class="(usernameActive ? 'isActive' : '')">
         <span class="iconfont icon-username"></span>
-        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.name" autoComplete="on" placeholder="请输入您的账号" /></el-input>
+        <el-input name="name" type="text" @click.native="usernameClick" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的账号" /></el-input>
       </el-form-item>
 
       <el-form-item prop="password" :class="(passwordActive ? 'isActive' : '')">
@@ -30,7 +30,7 @@
 <script>
 import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
-import { setToken } from '@/utils/auth'
+import { setToken, setSession } from '@/utils/auth'
 
 export default {
   name: 'login',
@@ -51,11 +51,11 @@ export default {
     // }
     return {
       loginForm: {
-        name: '',
-        password: ''
+        username: 'wujiayi',
+        password: '123456'
       },
       loginRules: {
-        name: [{ required: true, trigger: 'blur', validator: '请输入用户名' }],
+        username: [{ required: true, trigger: 'blur', validator: '请输入用户名' }],
         password: [{ required: true, trigger: 'blur', validator: '请输入密码' }]
       },
       loading: false,
@@ -67,11 +67,11 @@ export default {
   },
   created() {
     if (Cookies.get('isKeepPw')) {
-      var name = Cookies.get('username')
+      var username = Cookies.get('username')
       var password = Cookies.get('password')
-      if (name && password) {
+      if (username && password) {
         this.isKeepPw = true
-        this.loginForm.name = name
+        this.loginForm.username = username
         this.loginForm.password = password
       } else {
         this.loginForm.name = ''
@@ -92,16 +92,22 @@ export default {
       this.isKeepPw = !this.isKeepPw
     },
     handleLogin() {
+      console.log(123123)
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$post('/login', this.loginForm, false).then((res) => {
+          this.$post('/shiro/auth', this.loginForm).then((res) => {
+            console.log(12)
             this.loading = false
             if (res.data.success === true) {
+              var sessionId = res.data.data.sessionID
+              console.log('sessionId', sessionId)
               setToken('11111')
+              this.setToken('11111')
+              setSession(sessionId)
               var userInfo = res.data.data
               this.$store.commit('login', userInfo)
-              var username = this.loginForm.name
+              var username = this.loginForm.username
               var password = this.loginForm.password
               Cookies.set('username', username, { expires: 7 })
               Cookies.set('password', password, { expires: 7 })
@@ -125,7 +131,7 @@ export default {
       })
     },
     ...mapActions([
-      // 'setToken',
+      'setToken',
       'setRoles',
       'login'
     ])

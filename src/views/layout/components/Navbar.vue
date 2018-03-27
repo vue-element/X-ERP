@@ -26,9 +26,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
-// import { getUserInfo } from '@/api/login'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
@@ -59,23 +58,27 @@ export default {
   },
   methods: {
     getUserInfo() {
-      var name = Cookies.get('username')
-      var password = Cookies.get('password')
-      var userInfo = {
-        name,
-        password
-      }
-      // console.log('getUserInfo', getUserInfo(userInfo))
-      this.$post('/login', userInfo, false).then((res) => {
-        if (res.data.success === true) {
-          var userInfo = res.data.data
-          this.setToken('11111')
-          this.$store.commit('login', userInfo)
-          this.user = {
-            name: userInfo.account.role.name,
-            department: userInfo.account.name
-          }
-        }
+      console.log('aiya')
+      // var username = Cookies.get('username')
+      // var password = Cookies.get('password')
+      // var userInfo = {
+      //   username,
+      //   password
+      // }
+      // // console.log('getUserInfo', getUserInfo(userInfo))
+      // this.$post('/shiro/auth', userInfo).then((res) => {
+      //   if (res.data.success === true) {
+      //     var userInfo = res.data.data
+      //     this.setToken('11111')
+      //     this.$store.commit('login', userInfo)
+      //     this.user = {
+      //       name: userInfo.account.role.name,
+      //       department: userInfo.account.name
+      //     }
+      //   }
+      // })
+      this.$post('/shiro/getInfo').then((res) => {
+        console.log(res.data)
       })
     },
     toggleSideBar() {

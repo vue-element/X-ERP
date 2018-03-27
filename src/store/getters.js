@@ -7,8 +7,11 @@ const getters = {
   // name: state => state.user.name,
   introduction: state => state.user.introduction,
   status: state => state.user.status,
-  roles: state => state.user.roles,
   setting: state => state.user.setting,
+  roles: state => state.user.roles,
+  menus: state => state.user.menus,
+  permissions: state => state.user.permissions,
+
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   searchObj: state => state.search.searchObj,
