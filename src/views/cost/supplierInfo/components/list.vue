@@ -11,7 +11,7 @@
         <el-table-column prop="category" label="供应商类型" width="120"></el-table-column>
         <el-table-column prop="licenseNumber" label="营业执照号" width="120"></el-table-column>
         <el-table-column prop="enterpriseNature" label="企业性质" width="80"></el-table-column>
-        <el-table-column prop="region" label="供货区域" width="100"></el-table-column>
+        <el-table-column prop="region.name" label="供货区域" width="100"></el-table-column>
         <el-table-column prop="materialCategory" label="物质类别" width="80"></el-table-column>
         <el-table-column prop="reviewState" label="评审状态" width="80"></el-table-column>
         <el-table-column prop="bank" label="开户银行" width="120"></el-table-column>
@@ -90,6 +90,16 @@ export default {
       this.getSupplierData()
     },
     deleteRow(id) {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel(id)
+      }).catch(() => {
+        return false
+      })
+    },
+    confirmDel(id) {
       var projectID = { id: [id] }
       this.$post('/supply/delete', projectID).then(res => {
         if (res.data.success === true) {

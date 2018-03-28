@@ -84,6 +84,16 @@ export default {
       this.getSupplierData()
     },
     deleteRow(id) {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel(id)
+      }).catch(() => {
+        return false
+      })
+    },
+    confirmDel(id) {
       var projectID = { id: [id] }
       this.$post('/outboundList/delete', projectID).then(res => {
         if (res.data.success === true) {

@@ -13,7 +13,7 @@
         <el-table-column prop="brand" label="品牌" width="100"></el-table-column>
         <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
         <el-table-column prop="supply.category" label="供应商类型" width="100"></el-table-column>
-        <el-table-column prop="supplyCycle" label="供货周期" width="100"></el-table-column>
+        <el-table-column prop="supply.supplyCycle" label="供货周期" width="100"></el-table-column>
         <el-table-column prop="productQuotation" label="最新报价" width="100"></el-table-column>
         <el-table-column prop="unit" label="单位" width="100"></el-table-column>
         <el-table-column label="操作" fixed="right" width="100">

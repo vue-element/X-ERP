@@ -49,8 +49,7 @@ export default {
     ...mapGetters([
       'sidebar',
       // 'userInfo',
-      'avatar',
-      'language'
+      'avatar'
     ])
   },
   created() {
@@ -58,44 +57,25 @@ export default {
   },
   methods: {
     getUserInfo() {
-      console.log('aiya')
-      // var username = Cookies.get('username')
-      // var password = Cookies.get('password')
-      // var userInfo = {
-      //   username,
-      //   password
-      // }
-      // // console.log('getUserInfo', getUserInfo(userInfo))
-      // this.$post('/shiro/auth', userInfo).then((res) => {
-      //   if (res.data.success === true) {
-      //     var userInfo = res.data.data
-      //     this.setToken('11111')
-      //     this.$store.commit('login', userInfo)
-      //     this.user = {
-      //       name: userInfo.account.role.name,
-      //       department: userInfo.account.name
-      //     }
-      //   }
-      // })
       this.$post('/shiro/getInfo').then((res) => {
-        console.log(res.data)
+        var userInfo = res.data.userPermission
+        this.$store.commit('login', userInfo)
+        this.user.name = userInfo.userName
+        this.user.department = userInfo.roleName
       })
     },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },
-    handleSetLanguage(lang) {
-      this.$i18n.locale = lang
-      this.$store.dispatch('setLanguage', lang)
-      this.$message({
-        message: 'switch language success',
-        type: 'success'
-      })
-    },
     logout() {
-      this.$store.dispatch('logout').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+      this.$post('/shiro/logout').then((res) => {
+
       })
+      // console.log(1111)
+      // this.$store.commit('logout')
+      // this.$store.dispatch('logout').then(() => {
+      //   location.reload() // 为了重新实例化vue-router对象 避免bug
+      // })
     },
     ...mapActions([
       'setToken',

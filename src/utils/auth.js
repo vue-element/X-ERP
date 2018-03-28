@@ -25,3 +25,7 @@ export function getSession() {
 export function setSession(session) {
   return Cookies.set('SESSION', session)
 }
+
+export function removeSession() {
+  return Cookies.remove('SESSION')
+}

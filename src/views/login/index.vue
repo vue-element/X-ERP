@@ -30,7 +30,7 @@
 <script>
 import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
-import { setToken, setSession } from '@/utils/auth'
+import { setToken } from '@/utils/auth'
 
 export default {
   name: 'login',
@@ -92,19 +92,15 @@ export default {
       this.isKeepPw = !this.isKeepPw
     },
     handleLogin() {
-      console.log(123123)
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$post('/shiro/auth', this.loginForm).then((res) => {
-            console.log(12)
             this.loading = false
             if (res.data.success === true) {
-              var sessionId = res.data.data.sessionID
-              console.log('sessionId', sessionId)
+              console.log('shdfhjshfjshj')
               setToken('11111')
               this.setToken('11111')
-              setSession(sessionId)
               var userInfo = res.data.data
               this.$store.commit('login', userInfo)
               var username = this.loginForm.username

@@ -7,50 +7,34 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编号:">
-              <el-select  v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
+            <el-form-item label="付款合同编号:">
+              <el-select v-model="searchData.paymentContract_id" placeholder="请选择付款合同编号" filterable>
+               <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="所属项目:">
-              <!-- <el-select v-model="searchData.project_id" placeholder="请选择所属项目" filterable clearable>
-               <el-option v-for="item in projectList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select> -->
-             <el-select v-model="searchData.contractInfo_id" placeholder="请选择" filterable>
-              <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="采购计划单号:">
-              <el-input v-model="searchData.orderNumber" placeholder="请输入采购计划单号"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="出库单编号:">
-              <el-input v-model="searchData.code" placeholder="请输入出库单编号"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="所属办事处:">
-              <el-select v-model="searchData.region_id" placeholder="请选择办事处" filterable clearable>
-               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="项目:">
+              <el-select v-model="searchData.paymentContract_id" placeholder="自动生成" disabled>
+               <el-option v-for="item in paymentContractList" :label="item.project" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="出库日期:" class="range-date">
               <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="办事处:">
+              <el-select v-model="searchData.paymentContract_id" placeholder="自动生成" disabled>
+               <el-option v-for="item in paymentContractList" :label="item.department" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -79,6 +63,7 @@ export default {
         date: ''
       },
       projectList: [],
+      paymentContractList: [],
       contractInfoList: [],
       regionList: [],
       rules: {}
@@ -91,6 +76,7 @@ export default {
     getInsertData() {
       this.$get('/outboundList/findInsertData').then((res) => {
         var data = res.data.data
+        this.paymentContractList = data.paymentContractList
         this.projectList = data.projectList
         this.regionList = data.regionList
         this.contractInfoList = data.contractInfoList
