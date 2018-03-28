@@ -58,7 +58,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="使用部门:" prop="department">
+            <el-form-item label="申请部门:" prop="department">
               <p v-if="disabled">{{paymentContract.department}}</p>
               <el-select v-else v-model="paymentContract.department" placeholder="请选择所属项目" filterable>
                <el-option v-for="item in departmentList" :label="item.value" :value="item.value" :key="item.id">
@@ -116,7 +116,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="是否自提:">
               <p v-if="disabled">{{paymentContract.mention}}</p>
-              <el-select v-else v-model="paymentContract.mention" placeholder="请选择" filterable>
+              <el-select v-else v-model="paymentContract.mention" placeholder="请选择">
                <el-option label="是" value="是"></el-option>
                <el-option label="否" value="否"></el-option>
              </el-select>
@@ -125,7 +125,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="账期:">
               <p v-if="disabled">{{paymentContract.term}}</p>
-              <el-select v-else v-model="paymentContract.term" placeholder="请选择账期" filterable>
+              <el-select v-else v-model="paymentContract.term" placeholder="请选择账期">
                <el-option label="一个月" value="一个月"></el-option>
                <el-option label="三个月" value="三个月"></el-option>
                <el-option label="六个月" value="六个月"></el-option>
@@ -183,7 +183,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="采购金额:" prop="amount">
               <p v-if="disabled">{{amount}}</p>
-              <el-input v-else v-model="amount" placeholder="请输入采购金额" disabled></el-input>
+              <el-input v-else v-model="amount" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -381,6 +381,7 @@ export default {
       this.paymentContract.payableAmount = val
       this.payableAmount = outputmoney('' + val)
     },
+    // 采购金额根据物料详情的金额动态变化
     purchaseAmount(val) {
       this.amount = outputmoney('' + val)
       this.paymentContract.amount = val

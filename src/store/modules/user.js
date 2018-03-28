@@ -1,5 +1,5 @@
 import { logout } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeSession } from '@/utils/auth'
 
 const user = {
   state: {
@@ -61,7 +61,6 @@ const user = {
             reject('error')
           }
           const data = response.data
-          console.log('response.data', response.data)
           commit('SET_ROLES', data.role)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
@@ -80,6 +79,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
+          removeSession()
           resolve()
         }).catch(error => {
           reject(error)
@@ -92,6 +92,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
+        removeSession()
         resolve()
       })
     },

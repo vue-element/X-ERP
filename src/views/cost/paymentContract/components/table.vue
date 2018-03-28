@@ -192,7 +192,7 @@ export default {
     getPurchaseList() {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         if (res.data.success === true) {
-          this.purchaseList = res.data.data.content
+          this.purchaseList = res.data.data
         }
       })
     },

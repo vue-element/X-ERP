@@ -4,6 +4,12 @@
       <div class="form-module">
         <h4 class="module-title">
           <p>入库验收</p>
+          <div class="material-table-head fr">
+            <button :loading="false">
+              <i class="iconfont icon-download"></i>
+              <span>导出入库单</span>
+            </button>
+          </div>
         </h4>
         <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
           <el-table-column label="发货明细">

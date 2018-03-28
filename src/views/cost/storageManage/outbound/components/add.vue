@@ -18,36 +18,19 @@
           </h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="合同编号:">
-                <p v-if="disabled">{{outboundInfo.contractInfo.code}}</p>
-                <el-select v-else v-model="outboundInfo.contractInfo.id" placeholder="请选择" filterable>
-                 <el-option v-for="item in contractList" :label="item.code" :value="item.id" :key="item.id">
+              <el-form-item label="付款合同编号:">
+                <p v-if="disabled">{{outboundInfo.paymentContract.code}}</p>
+                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="请选择付款合同编号" filterable>
+                 <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="项目:">
-                <p v-if="disabled">{{outboundInfo.contractInfo.name}}</p>
-               <el-select v-else v-model="outboundInfo.contractInfo.id" placeholder="请选择" filterable>
-                <el-option v-for="item in contractList" :label="item.name" :value="item.id" :key="item.id">
-                </el-option>
-              </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="40">
-            <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="采购计划单号:" class="single-date">
-                <p v-if="disabled">{{outboundInfo.orderNumber}}</p>
-                <el-input v-else v-model="outboundInfo.orderNumber" placeholder="请输入您的账号"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="办事处:">
-                <p v-if="disabled">{{outboundInfo.region.name}}</p>
-                <el-select v-else v-model="outboundInfo.region.id" placeholder="请选择" filterable>
-                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+                <p v-if="disabled">{{outboundInfo.paymentContract.project}}</p>
+                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="自动生成" disabled>
+                 <el-option v-for="item in paymentContractList" :label="item.project" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
               </el-form-item>
@@ -57,9 +40,20 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="出库单编号:">
                 <p v-if="disabled">{{outboundInfo.code}}</p>
-                <el-input v-else v-model="outboundInfo.code" placeholder="请输入您的账号"></el-input>
+                <el-input v-else v-model="outboundInfo.code" placeholder="请输入出库单编号"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :xs="24" :sm="12" :lg="12">
+              <el-form-item label="办事处:">
+                <p v-if="disabled">{{outboundInfo.paymentContract.project}}</p>
+                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="自动生成" disabled>
+                 <el-option v-for="item in paymentContractList" :label="item.department" :value="item.id" :key="item.id">
+                 </el-option>
+               </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="出库日期:" class="single-date">
                 <p v-if="disabled">{{outboundInfo.date}}</p>
@@ -96,11 +90,10 @@ export default {
       editShow: false,
       outboundInfo: {
         code: '出库单编号',
-        orderNumber: '',
-        contractInfo: { id: '' },
-        date: '',
-        region: { id: '' }
+        paymentContract: { id: '' },
+        date: ''
       },
+      paymentContractList: [],
       contractList: [],
       projectList: [],
       regionList: [],
@@ -173,9 +166,8 @@ export default {
     getInsertData() {
       this.$get('/outboundList/findInsertData').then((res) => {
         var data = res.data.data
-        console.log('data', data)
+        this.paymentContractList = data.paymentContractList
         this.contractList = data.contractInfoList
-        console.log('this.contractList', this.contractList)
         this.projectList = data.projectList
         this.regionList = data.regionList
       })

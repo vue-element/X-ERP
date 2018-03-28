@@ -12,25 +12,25 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合作商类别:" >
-              <el-select v-model="searchData.cooperativeType" placeholder="请选择" filterable>
-               <el-option v-for="item in cooperativeTypeList" :label="item.value" :value="item.value" :key="item.id">
+            <el-form-item label="供应商类别:">
+              <el-select v-model="searchData.type" placeholder="请选择供应商类别" filterable>
+               <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="物资类别:">
-              <el-select v-model="searchData.materialCategory" placeholder="请选择" filterable>
-               <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
+            <el-form-item label="供应商类型:">
+              <el-select v-model="searchData.category" placeholder="请选择供应商类型" filterable>
+               <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="评审状态:">
-              <el-select v-model="searchData.reviewState" placeholder="请选择" filterable>
-               <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
+            <el-form-item label="供应商等级:">
+              <el-select v-model="searchData.grade" placeholder="请选择供应商等级">
+               <el-option v-for="item in gradeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -38,8 +38,56 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="联系人:">
-              <el-input v-model="searchData.person" placeholder="请输入联系人"></el-input>
+            <el-form-item label="物资类别:">
+              <el-select v-model="searchData.materialCategory" placeholder="请选择物资类别" filterable>
+               <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="企业性质:">
+              <el-select v-model="searchData.enterpriseNature" placeholder="请选择企业性质" filterable>
+               <el-option v-for="item in enterpriseNatureList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="合作商类别:" >
+              <el-select v-model="searchData.cooperativeType" placeholder="请选择合作商类别" filterable>
+               <el-option v-for="item in cooperativeTypeList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="供货周期:" >
+                <el-input v-model="searchData.supplyCycle" placeholder="请输入供货周期"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="供货区域:" >
+              <el-select v-model="searchData.region_id" placeholder="请输入供货区域" filterable>
+                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="结算方式:" >
+              <el-select v-model="searchData.settlementMethod" placeholder="请选择结算方式" filterable>
+               <el-option v-for="item in settlementMethodList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="评审状态:">
+              <el-select v-model="searchData.reviewState" placeholder="请选择评审状态" filterable>
+               <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -65,11 +113,26 @@ export default {
       contractInfoList: [],
       searchData: {
         name: '',
-        cooperativeType: '',
         materialCategory: '',
+        enterpriseNature: '',
+        cooperativeType: '',
+        category: '',
+        grade: '',
+        type: '',
+        supplyCycle: '',
         reviewState: '',
-        person: ''
+        settlementMethod: '',
+        region_id: ''
       },
+      typeList: [],
+      categoryList: [],
+      materialCategoryList: [],
+      enterpriseNatureList: [],
+      cooperativeTypeList: [],
+      regionList: [],
+      settlementMethodList: [],
+      reviewStateList: [],
+      gradeList: [],
       rules: {}
     }
   },
@@ -78,9 +141,20 @@ export default {
   },
   methods: {
     getInsertData() {
+      this.$get('/supply/findInsertData').then((res) => {
+        if (res.data.success === true) {
+          this.regionList = res.data.data.regionList
+        }
+      })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
+      this.enterpriseNatureList = [{ value: '国企' }, { value: '民企' }, { value: '合资' }, { value: '外企' }]
       this.materialCategoryList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
+      this.invoiceTypeList = [{ value: '小规模纳税人' }, { value: '一般纳税人' }, { value: '普通' }]
+      this.categoryList = [{ value: '常用型' }, { value: '临时型' }, { value: '历史型' }]
+      this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]
       this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
+      this.settlementMethodList = [{ value: '月结' }, { value: '货到付款' }, { value: '其他' }]
+      this.gradeList = [{ value: 'A级' }, { value: 'B级' }, { value: 'C级' }, { value: 'D级' }]
     },
     search() {
       var searchData = {}

@@ -18,7 +18,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="合作商类别:" prop="cooperativeType">
               <p v-if="disabled">{{supplyInfo.cooperativeType}}</p>
-              <el-select v-else v-model="supplyInfo.cooperativeType" placeholder="请选择合作商类别" filterable>
+              <el-select v-else v-model="supplyInfo.cooperativeType" placeholder="请选择合作商类别">
                <el-option v-for="item in cooperativeTypeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -39,7 +39,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="注册资金:">
+            <el-form-item label="注册资金(元):">
               <p v-if="disabled">{{supplyInfo.regCapital}}</p>
               <el-input v-else v-model="supplyInfo.regCapital" @change="amountChange" placeholder="请输入注册资金"></el-input>
             </el-form-item>
@@ -47,7 +47,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="企业性质:" prop="enterpriseNature">
               <p v-if="disabled">{{supplyInfo.enterpriseNature}}</p>
-              <el-select v-else v-model="supplyInfo.enterpriseNature" placeholder="请选择企业性质" filterable>
+              <el-select v-else v-model="supplyInfo.enterpriseNature" placeholder="请选择企业性质">
                <el-option v-for="item in enterpriseNatureList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -63,14 +63,17 @@
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供货区域:" prop="region">
-              <p v-if="disabled">{{supplyInfo.region}}</p>
-              <el-input v-else v-model="supplyInfo.region" placeholder="请输入供货区域"></el-input>
+              <p v-if="disabled">{{supplyInfo.region.name}}</p>
+              <el-select v-else v-model="supplyInfo.region.id" placeholder="请输入供货区域">
+                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="物资类别:" prop="materialCategory">
               <p v-if="disabled">{{supplyInfo.materialCategory}}</p>
-              <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别" filterable>
+              <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别">
                <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -79,7 +82,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="业务联系人:" prop="person">
+            <el-form-item label="联系人:" prop="person">
               <p v-if="disabled">{{supplyInfo.person}}</p>
               <el-input v-else v-model="supplyInfo.person" placeholder="请输入业务联系人"></el-input>
             </el-form-item>
@@ -98,6 +101,12 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form-item label="物资明细:" class="address">
+              <p v-if="disabled">{{supplyInfo.materialDetails}}</p>
+              <el-input v-else v-model="supplyInfo.materialDetails" placeholder="请输入物资明细"></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :sm="24" :md="24" :lg="24">
             <el-form-item label="注册地址:" prop="regAddress" class="address">
               <p v-if="disabled">{{supplyInfo.regAddress}}</p>
@@ -134,7 +143,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="发票类型:" prop="invoiceType">
               <p v-if="disabled">{{supplyInfo.invoiceType}}</p>
-              <el-select v-else v-model="supplyInfo.invoiceType" placeholder="请选择发票类型" filterable>
+              <el-select v-else v-model="supplyInfo.invoiceType" placeholder="请选择发票类型">
                <el-option v-for="item in invoiceTypeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -159,7 +168,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类别:" prop="type">
               <p v-if="disabled">{{supplyInfo.type}}</p>
-              <el-select v-else v-model="supplyInfo.type" placeholder="请选择供应商类别" filterable>
+              <el-select v-else v-model="supplyInfo.type" placeholder="请选择供应商类别">
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -168,8 +177,28 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类型:" prop="category">
               <p v-if="disabled">{{supplyInfo.category}}</p>
-              <el-select v-else v-model="supplyInfo.category" placeholder="请选择供应商类型" filterable>
+              <el-select v-else v-model="supplyInfo.category" placeholder="请选择供应商类型">
                <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="供应商来源:" prop="source">
+              <p v-if="disabled">{{supplyInfo.source}}</p>
+              <el-select v-else v-model="supplyInfo.source" placeholder="请选择供应商来源">
+               <el-option v-for="item in sourceList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="供应商等级:" prop="grade">
+              <p v-if="disabled">{{supplyInfo.grade}}</p>
+              <el-select v-else v-model="supplyInfo.grade" placeholder="请选择供应商等级">
+               <el-option v-for="item in gradeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -179,16 +208,16 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="评审状态:" prop="reviewState">
               <p v-if="disabled">{{supplyInfo.reviewState}}</p>
-              <el-select v-else v-model="supplyInfo.reviewState" placeholder="请选择评审状态" filterable>
+              <el-select v-else v-model="supplyInfo.reviewState" placeholder="请选择评审状态">
                <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="结算方式:">
+            <el-form-item label="结算方式:" prop="settlementMethod">
               <p v-if="disabled">{{supplyInfo.settlementMethod}}</p>
-              <el-select v-else v-model="supplyInfo.settlementMethod" placeholder="请选择结算方式" filterable>
+              <el-select v-else v-model="supplyInfo.settlementMethod" placeholder="请选择结算方式">
                <el-option v-for="item in settlementMethodList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -197,15 +226,27 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="合作开始日期:" class="single-date">
-              <p v-if="disabled">{{supplyInfo.startDate}}</p>
-              <el-date-picker v-else type="date" v-model="supplyInfo.startDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+            <el-form-item label="等级评审处理:" prop="reviewHandle">
+              <p v-if="disabled">{{supplyInfo.reviewHandle}}</p>
+              <el-select v-else v-model="supplyInfo.reviewHandle" placeholder="请选择评审状态">
+               <el-option v-for="item in reviewHandleList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="评审到期日期:" class="single-date">
-              <p v-if="disabled">{{supplyInfo.endDate}}</p>
-              <el-date-picker v-else type="date"v-model="supplyInfo.endDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+            <el-form-item label="处理有效期限:" class="range-date validDate">
+              <p v-if="disabled">{{validDateStr}}</p>
+              <el-date-picker v-else v-model="validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form-item label="等级评审说明:" class="reviewDescription">
+              <p v-if="disabled">{{supplyInfo.reviewDescription}}</p>
+              <el-input v-else type="textarea" v-model="supplyInfo.reviewDescription" placeholder="请输入等级评审说明"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -234,6 +275,13 @@ export default {
         callback()
       }
     }
+    var validateRegion = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请输入供货区域'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
@@ -241,6 +289,8 @@ export default {
       disabled: false,
       editShow: false,
       contractInfoList: [],
+      validDate: [],
+      validDateStr: '',
       supplyInfo: {
         name: '',
         cooperativeType: '',
@@ -249,12 +299,13 @@ export default {
         enterprisePerson: '',
         licenseNumber: '',
         materialCategory: '',
+        materialDetails: '',
         person: '',
         phone: '',
         qq: '',
         regAddress: '',
         regCapital: '',
-        region: '',
+        region: { id: '' },
         supplyCycle: '',
         bank: '',
         bankAccount: '',
@@ -262,10 +313,13 @@ export default {
         taxRate: '',
         category: '',
         type: '',
+        source: '',
+        grade: '',
         reviewState: '',
         settlementMethod: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        reviewDescription: ''
       },
       cooperativeTypeList: [],
       enterpriseNatureList: [],
@@ -274,8 +328,12 @@ export default {
       categoryList: [],
       typeList: [],
       reviewStateList: [],
+      reviewHandleList: [],
       settlementMethodList: [],
       taxRateList: [],
+      regionList: [],
+      sourceList: [],
+      gradeList: [],
       rules: {
         name: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
         cooperativeType: [{ required: true, message: '请选择合作商类别', trigger: 'change' }],
@@ -284,7 +342,7 @@ export default {
         regAddress: [{ required: true, message: '请输入注册地址', trigger: 'blur' }],
         enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'change' }],
         supplyCycle: [{ required: true, message: '请输入供货周期', trigger: 'blur' }],
-        region: [{ required: true, message: '请输入供货区域', trigger: 'blur' }],
+        region: [{ required: true, validator: validateRegion, trigger: 'blur' }],
         materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
         person: [{ required: true, message: '请输入业务联系人', trigger: 'blur' }],
         phone: [{ required: true, validator: validPhone, trigger: 'blur' }],
@@ -294,7 +352,11 @@ export default {
         taxRate: [{ required: true, message: '请输入税率', trigger: 'change' }],
         type: [{ required: true, message: '请选择供应商类别', trigger: 'change' }],
         category: [{ required: true, message: '请选择供应商类型', trigger: 'change' }],
-        reviewState: [{ required: true, message: '请选择评审状态', trigger: 'change' }]
+        source: [{ required: true, message: '请选择供应商来源', trigger: 'change' }],
+        grade: [{ required: true, message: '请选择供应商等级', trigger: 'change' }],
+        reviewState: [{ required: true, message: '请选择评审状态', trigger: 'change' }],
+        settlementMethod: [{ required: true, message: '请选择结算方式', trigger: 'change' }],
+        reviewHandle: [{ required: true, message: '请选择等级评审处理', trigger: 'change' }]
       },
       temp: {}
     }
@@ -309,6 +371,8 @@ export default {
       this.$refs.supplyInfo.validate(valid => {
         if (valid) {
           this.loading = true
+          this.supplyInfo.startDate = this.validDate[0]
+          this.supplyInfo.endDate = this.validDate[1]
           console.log('this.supplyInfo', JSON.stringify(this.supplyInfo))
           this.$post('/supply/save', this.supplyInfo).then(res => {
             this.loading = false
@@ -323,6 +387,10 @@ export default {
             this.loading = false
           })
         } else {
+          this.$message({
+            message: '信息未填写完整',
+            type: 'warning'
+          })
           return false
         }
       })
@@ -343,6 +411,11 @@ export default {
       }
     },
     getInsertData() {
+      this.$get('/supply/findInsertData').then((res) => {
+        if (res.data.success === true) {
+          this.regionList = res.data.data.regionList
+        }
+      })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
       this.enterpriseNatureList = [{ value: '国企' }, { value: '民企' }, { value: '合资' }, { value: '外企' }]
       this.materialCategoryList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
@@ -352,6 +425,9 @@ export default {
       this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
       this.settlementMethodList = [{ value: '月结' }, { value: '货到付款' }, { value: '其他' }]
       this.taxRateList = [{ value: '0%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
+      this.sourceList = [{ value: '地产合作商' }, { value: '集团合作商' }, { value: '城市公司合作商' }, { value: '公司集采合作商' }, { value: '办事处推荐' }]
+      this.gradeList = [{ value: 'A级' }, { value: 'B级' }, { value: 'C级' }, { value: 'D级' }]
+      this.reviewHandleList = [{ value: '继续使用' }, { value: '暂停使用' }, { value: '终止使用' }]
     },
     amountChange(val) {
       this.supplyInfo.regCapital = outputmoney(val)
@@ -385,6 +461,7 @@ export default {
         this.disabled = true
         this.editShow = true
         this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
+        this.validDateStr = this.supplyInfo.startDate + '-' + this.supplyInfo.endDate
       }
     }
   },
@@ -433,6 +510,14 @@ export default {
       }
       .el-form-item__content{
         width: 88.5%!important;
+      }
+    }
+    .el-form-item.reviewDescription {
+      label.el-form-item__label {
+        width: 13.5%!important;
+      }
+      .el-form-item__content{
+        width: 81.5%!important;
       }
     }
   }
