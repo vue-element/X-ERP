@@ -62,8 +62,7 @@
 
 <script>
 import _ from 'lodash'
-import { outputmoney } from '@/utils'
-import { isObjectValueEqual } from '@/utils'
+import { outputmoney, isObjectValueEqual, formatDate } from '@/utils'
 export default {
   name: 'receivedPaymentAdd',
   props: ['editData'],
@@ -138,13 +137,12 @@ export default {
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
         this.action = 'add'
-        this.editShow = false
-        this.disabled = false
       } else {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
         this.receivedData = _.cloneDeep(this.editData.editData.contractReceived)
+        this.receivedData.date = formatDate(this.editData.editData.contractReceived.date)
       }
     },
     successSave() {

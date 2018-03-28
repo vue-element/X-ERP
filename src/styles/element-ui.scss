@@ -490,3 +490,7 @@
 .el-select .el-input.is-disabled .el-input__inner:hover {
     border-color: #828282;
 }
+
+.textarea.el-form-item .el-form-item__label{
+  vertical-align: top;
+}

@@ -355,3 +355,22 @@ export function isObjectValueEqual(a1, b1) {
   }
   return true
 }
+
+export function formatDate(date) {
+  var time = new Date(date)
+  var year = time.getFullYear()
+  var month = time.getMonth() + 1
+  var day = time.getDate()
+  var str = year + '-'
+  if (month < 10) {
+    str += '0' + month + '-'
+  } else {
+    str += month + '-'
+  }
+  if (day < 10) {
+    str += '0' + day
+  } else {
+    str += day
+  }
+  return str
+}

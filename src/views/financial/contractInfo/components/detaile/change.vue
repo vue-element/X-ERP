@@ -18,7 +18,6 @@
           <el-table-column prop="date" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
-              <!-- <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button> -->
               <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -26,7 +25,6 @@
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
       </div>
-      <!-- 变更附件上传弹窗 -->
       <el-dialog title="合同变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
         <form>
           <div class="describtion">
@@ -148,7 +146,7 @@ export default {
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      var src = 'http://202.105.96.131:8081'
+      var src = 'http://10.51.39.106:8085'
       xhr.open('POST', src + '/contractChange/save', true)
       xhr.send(fd)
     },

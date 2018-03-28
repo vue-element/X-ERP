@@ -1,9 +1,11 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+        <el-table-column fixed="left" label="序号" width="60">
+          <template slot-scope="scope">{{scope.$index + 1}}</template>
+        </el-table-column>
         <el-table-column prop="contractInfo" label="合同信息">
-          <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
           <el-table-column prop="contractInfo.code" label="合同编码"></el-table-column>
           <el-table-column prop="contractInfo.name" label="合同名称"></el-table-column>
         </el-table-column>
@@ -17,12 +19,30 @@
           <el-table-column prop="date" label="回款状态"></el-table-column>
         </el-table-column>
         <el-table-column prop="contractInfo" label="支出分析">
-          <el-table-column prop="contractInfo" label="材料">
-            <el-table-column prop="name" label="回款比例"></el-table-column>
-            <el-table-column prop="date" label="回款状态"></el-table-column>
+          <el-table-column prop="" label="材料">
+            <el-table-column prop="name" label="采购比例"></el-table-column>
+            <el-table-column prop="date" label="进度匹配度"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="" label="人工">
+            <el-table-column prop="" label="支出比例"></el-table-column>
+            <el-table-column prop="" label="进度匹配度"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="" label="综合">
+            <el-table-column prop="" label="支出比例"></el-table-column>
+            <el-table-column prop="" label="进度匹配度"></el-table-column>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column prop="contractInfo" label="收支差异分析">
+          <el-table-column prop="" label="收入成本差异">
+            <el-table-column prop="name" label="收支差额"></el-table-column>
+            <el-table-column prop="date" label="状态"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="" label="付现差异">
+            <el-table-column prop="name" label="付现差额"></el-table-column>
+            <el-table-column prop="date" label="状态"></el-table-column>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
@@ -63,22 +83,9 @@ export default {
       this.height = winHeight() - 210
     },
     getScheduleData() {
-      // console.log('searchData', this.searchData)
-      // console.log (typeof(this.searchData.date) === object)
-      // this.listLoading = true
-      // var pageSize = this.pageSize || 15
-      // var page = this.currentPage - 1 || 0
-      // var url = '/ContractSchedule/search/search?size=' + pageSize + '&page=' + page
-      // this.$post(url, this.searchData, false).then(res => {
-      //   if (res.data.success === true) {
-      //     var data = res.data.data
-      //     this.total = data.totalElements
-      //     this.currentPage = data.number + 1
-      //     this.pageSize = data.size
-      //     this.tableData = data.content
-      //     this.listLoading = false
-      //   }
-      // })
+      this.$get('/contractSchedule').then((res) => {
+        console.log(res)
+      })
     },
     handleCurrentChange(val) {
       this.currentPage = val
@@ -89,23 +96,8 @@ export default {
       this.getScheduleData()
     },
     deleteRow(id) {
-      var projectID = { id: [id] }
-      this.$post('/contractBilling/delete', projectID).then(res => {
-        if (res.data.success === true) {
-          this.getScheduleData()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
-      })
     },
     editRow(id) {
-      this.$get('/contractBilling/findUpdateData/' + id).then((res) => {
-        var data = res.data.data
-        console.log('data', data)
-        this.$emit('editRow', data)
-      })
     }
   },
   watch: {

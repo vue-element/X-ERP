@@ -7,17 +7,17 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo_id">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
+            <el-form-item label="合同名称：" class="single-date" filterable>
+              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同名称">
+               <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.contractInfo.id" :key="item.contractInfo.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" prop="contractInfo_id" class="single-date" filterable>
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同名称">
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="合同编号：">
+              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
+               <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.contractInfo.id" :key="item.contractInfo.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -39,7 +39,7 @@ export default {
     return {
       loading: false,
       disabled: false,
-      contractInfoList: [],
+      contractBillingList: [],
       searchData: {
         contractInfo_id: ''
       }
@@ -47,29 +47,21 @@ export default {
   },
   created() {
     this.getInsertData()
-    this.keepReceivedPayment()
   },
   methods: {
     getInsertData() {
-      this.$get('/contractReceived/findInsertData').then(res => {
+      this.$get('/contractReceived/findInsertData').then((res) => {
         if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
+          this.contractBillingList = res.data.data.contractBillingList
         }
       })
     },
     search() {
-      sessionStorage.setItem('receivedPaymentData', JSON.stringify(this.searchData))
       this.$emit('search', this.searchData)
     },
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
-    },
-    keepReceivedPayment() {
-      var searchData = JSON.parse(sessionStorage.getItem('receivedPaymentData'))
-      for (var key in searchData) {
-        this.searchData[key] = searchData[key]
-      }
     }
   }
 }

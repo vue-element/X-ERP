@@ -7,14 +7,14 @@
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看</span>
+          </button>
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <!-- <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
-            <i class="iconfont icon-add"></i>
-            <span>新增</span>
-          </button> -->
         </div>
         <div class="export-btn fr">
           <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj="changeObj"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
@@ -91,13 +91,6 @@ export default {
   },
   mounted() {},
   methods: {
-    addBtn() {
-      this.tab = 'addTab'
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
-      }
-    },
     editRow(data) {
       this.tab = 'addTab'
       this.editData = {
@@ -111,7 +104,52 @@ export default {
       this.tab = 'listTab'
     },
     toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
       this.tab = tab
+    },
+    listBtn() {
+      this.toggleTab('listTab')
+    },
+    addBtn() {
+      if (this.editData.tabState === 'editTab') {
+        if (this.isChange === true) {
+          this.showPopWin(() => {
+            this.tab = ''
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else {
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
+      }
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
+    },
+    changeObj(status) {
+      this.isChange = status
     },
     dataImpore() {
       this.toggleTab('importTab')

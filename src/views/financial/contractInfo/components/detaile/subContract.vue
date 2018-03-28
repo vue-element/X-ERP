@@ -148,7 +148,7 @@ export default {
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      var src = 'http://202.105.96.131:8081'
+      var src = 'http://10.51.39.106:8085'
       xhr.open('POST', src + '/contractSubcontract/save', true)
       xhr.send(fd)
     },

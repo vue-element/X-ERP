@@ -7,7 +7,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo.id">
+            <el-form-item label="合同名称 ：" prop="contractInfo.id" class="single-date">
               <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
@@ -15,7 +15,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称 ：" prop="contractInfo.id" class="single-date">
+            <el-form-item label="合同编号：" prop="contractInfo.id">
               <el-select v-model="ruleForm.contractInfo.id" placeholder="请选择">
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
@@ -49,16 +49,15 @@ export default {
     }
   },
   created() {
-    console.log('search created')
     this.getInsertData()
   },
   methods: {
     getInsertData() {
-      this.$get('/ContractPayment/findInsertData').then(res => {
-        if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
-        }
-      })
+      // this.$get('/ContractPayment/findInsertData').then(res => {
+      //   if (res.data.success === true) {
+      //     this.contractInfoList = res.data.data.contractInfoList
+      //   }
+      // })
     },
     search() {
       this.$emit('search', this.ruleForm)

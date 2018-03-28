@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="contract-container">
     <div class="form-head-attached">
       <div class="form-inner">

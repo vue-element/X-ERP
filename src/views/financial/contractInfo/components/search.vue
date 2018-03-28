@@ -5,33 +5,19 @@
         <h4 class="module-title">
           <p>查询条件</p>
         </h4>
-        <!-- <el-row :gutter="40">
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="商机编码：" prop="business">
-              <p v-if="disabled">{{contractInfo.code}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable>
-                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="商机名称：">
-              <p v-if="disabled">{{contractInfo.name}}</p>
-              <el-select v-else v-model="contractInfo.id" placeholder="请选择商机名称" filterable>
-                <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" prop="name">
-              <el-input v-model="searchData.name" placeholder="请输入合同名称"></el-input>
+            <el-form-item label="合同名称：">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable>
+                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编码：" prop="name">
-              <el-input v-model="searchData.code" placeholder="请输入合同编码"></el-input>
+            <el-form-item label="合同编码：">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编码" filterable>
+                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -44,8 +30,10 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item class="single-date" label="合同所属期：" prop="name">
-              <el-date-picker v-model="searchData.date" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
+            <el-form-item label="所属区域：" prop="name">
+              <el-select v-model="searchData.region_id" clearable placeholder="请选择所属区域">
+                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -56,10 +44,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="所属区域：" prop="name">
-              <el-select v-model="searchData.region_id" clearable placeholder="请选择所属区域">
-                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+            <el-form-item class="single-date" label="合同所属期：" prop="name">
+              <el-date-picker v-model="searchData.date" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -80,9 +66,11 @@ export default {
       regionList: [],
       cityList: [],
       clientList: [],
+      contractInfoList: [],
       searchData: {
-        name: '',
-        code: '',
+        // name: '',
+        // code: '',
+        contractInfo_id: '',
         date: '',
         signDate: '',
         region_id: '',
@@ -92,7 +80,6 @@ export default {
   },
   created() {
     this.getFindInsertData()
-    this.keepSearchWord()
   },
   methods: {
     getFindInsertData() {
@@ -101,6 +88,9 @@ export default {
         this.cityList = data.cityList
         this.clientList = data.clientList
         this.regionList = data.regionList
+      })
+      this.$get('/contractInfo').then((res) => {
+        this.contractInfoList = res.data.data.content
       })
       this.categoryList = [
         { value: '科技-智慧工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大数据平台' }, { value: '科技-设计服务' },
@@ -116,18 +106,11 @@ export default {
           searchData[key] = this.searchData[key]
         }
       }
-      sessionStorage.setItem('contractInfoSearchData', JSON.stringify(searchData))
       this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
-    },
-    keepSearchWord() {
-      var searchData = JSON.parse(sessionStorage.getItem('contractInfoSearchData'))
-      for (var key in searchData) {
-        this.searchData[key] = searchData[key]
-      }
     }
   },
   mounted() {

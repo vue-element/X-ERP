@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, formatDate } from '@/utils'
 export default {
   name: 'paymentList',
   props: ['searchData'],
@@ -63,6 +63,10 @@ export default {
       this.$post(url, this.searchData, false).then((res) => {
         if (res.data.success === true) {
           var data = res.data.data
+          for (var i = 0; i < data.content.length; i++) {
+            var date = formatDate(data.content[i].inputDate)
+            data.content[i].inputDate = date
+          }
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
