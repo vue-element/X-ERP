@@ -73,9 +73,9 @@ export default {
       })
       // console.log(1111)
       // this.$store.commit('logout')
-      // this.$store.dispatch('logout').then(() => {
-      //   location.reload() // 为了重新实例化vue-router对象 避免bug
-      // })
+      this.$store.dispatch('logout').then(() => {
+        location.reload() // 为了重新实例化vue-router对象 避免bug
+      })
     },
     ...mapActions([
       'setToken',

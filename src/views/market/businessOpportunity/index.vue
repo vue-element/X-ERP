@@ -165,11 +165,16 @@ export default {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
         const tHeader = ['序号', '商机名称', '商机类型', '商机来源', '客户信息', '城市', '区域', '项目关键信息描述', '业务分类', '预计成交金额（元）', '投标日期', '方案投标日期',
           '总体项目开工时间', '预计开发或发货时间', '预计合同签订时间', '业务负责人', '业务负责人（电话）', '项目具体跟进人', '项目具体跟进人（电话）', '跟进状态', '执行状态', '审批状态']
-        const filterVal = ['id', 'name', 'type', 'source', 'client.name', 'city.name', 'region.name', 'projectImpls.keyword', 'projectImpls.category', 'projectImpls.amount', 'projectImpls.bidDate', 'projectImpls.bidDate2',
+        const filterVal = ['index', 'name', 'type', 'source', 'client.name', 'city.name', 'region.name', 'projectImpls.keyword', 'projectImpls.category', 'projectImpls.amount', 'projectImpls.bidDate', 'projectImpls.bidDate2',
           'projectImpls.startDate', 'projectImpls.developDate', 'projectImpls.signDate', 'chargePerson', 'chargePersonPhone', 'followPerson', 'followPersonPhone', 'followState', 'executState', 'examineState']
         const list = this.exprotList
+        console.log('list', list)
+        var i = 1
+        list.forEach((item) => {
+          item.index = i
+          i++
+        })
         const data = this.formatJson(filterVal, list)
-        // return
         export_json_to_excel(tHeader, data, '商机信息表')
         this.downloadLoading = false
       })

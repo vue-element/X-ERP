@@ -104,7 +104,7 @@ import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['editShow', 'outboundId', 'actionTab'],
+  props: ['editShow', 'outboundId', 'paymentContractId', 'actionTab'],
   data() {
     return {
       purchaseList: [],
@@ -129,7 +129,9 @@ export default {
     }
   },
   created() {
-    this.getPurchaseList()
+    if (this.paymentContractId) {
+      this.getPurchaseList()
+    }
     if (this.outboundId) {
       this.getOutboundList()
       this.getOutboundCheck()
@@ -137,9 +139,9 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList').then((res) => {
+      this.$get('/purchaseList/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         if (res.data.success === true) {
-          this.purchaseList = res.data.data.content
+          this.purchaseList = res.data.data
         }
       })
     },
@@ -164,6 +166,7 @@ export default {
         })
         this.dialogFormVisible = false
       } else {
+        this.getPurchaseList()
         this.dialogFormVisible = true
       }
     },
@@ -222,7 +225,6 @@ export default {
     // 获取审核动态数组
     getOutboundCheck() {
       this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
-        console.log('res', res)
         if (res.data.success === true) {
           this.outboundCheck = res.data.data
         }

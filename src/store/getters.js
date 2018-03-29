@@ -16,7 +16,8 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   searchObj: state => state.search.searchObj,
   doSearch: state => state.search.doSearch,
-  userInfo: state => state.account.userInfo,
+
+  userName: state => state.account.userName,
   token: state => state.account.token
   // roles: state => state.account.roles
 }

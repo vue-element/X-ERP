@@ -407,7 +407,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userInfo'
+      'userName'
     ])
   },
   methods: {
@@ -482,7 +482,8 @@ export default {
         this.businessCtgList = data.businessCtgList
       })
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
-      this.businessInfo.createPerson = this.userInfo.account.name
+      this.businessInfo.createPerson = this.userName
+      // console.log('userInfo', this.userName)
     },
     cityChange(val) {
       var len = val.length

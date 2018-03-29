@@ -140,7 +140,7 @@
         <h4 class="module-title">
           <p>产品报价历史</p>
         </h4>
-        <el-table class="basic-form" style="width: 100%"  :data="historyPrice" ref="multipleTable">
+        <el-table class="basic-form" style="width: 100%"  :data="historyPriceList" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
             <template slot-scope="scope">{{scope.$index  + 1}}</template>
           </el-table-column>
@@ -156,6 +156,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import { outputmoney, isObjectValueEqual } from '@/utils'
 export default {
   name: 'supplierAdd',
@@ -202,7 +203,7 @@ export default {
       supplyList: [],
       systemList: [],
       typeList: [],
-      historyPrice: [],
+      historyPriceList: [],
       sourceList: [],
       rules: {
         name: [{ required: true, message: '请输入产品名称', trigger: 'blur' }],
@@ -263,7 +264,7 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      this.historyPrice = this.priceInfo.priceHistoryList
+      this.historyPriceList = this.priceInfo.priceHistoryList
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -286,20 +287,23 @@ export default {
       this.sourceList = [{ value: '地产集采价格' }, { value: '集团集采价格' }, { value: '公司集采价格' }, { value: '询价价格' }]
     },
     getPriceHistory() {
-      this.$get('/priceHistory?id=' + this.priceId).then((res) => {
-        console.log('lsp', res)
+      this.$get('/priceHistory/findAllByPrice/' + this.priceId).then((res) => {
+        if (res.data.success === true) {
+          this.historyPriceList = res.data.data.content
+          this.historyPriceList.forEach((item) => {
+            item.productQuotation = outputmoney('' + item.productQuotation)
+          })
+        }
       })
     },
     savePriceHistory() {
       var obj = {
-        person: '',
-        price: {
-          id: this.priceId
-        },
-        productQuotation: 0
+        person: this.userName,
+        price_id: this.priceId,
+        productQuotation: this.priceInfo.productQuotation
       }
       this.$post('/priceHistory/save', obj).then((res) => {
-        console.log('lsssss', res)
+        this.getPriceHistory()
       })
     },
     successSave() {
@@ -342,7 +346,11 @@ export default {
       this.priceInfo.productQuotation1 = outputmoney(val)
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
+  },
   watch: {
     disabled(status) {
       if (status === false) {

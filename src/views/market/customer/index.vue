@@ -135,8 +135,13 @@ export default {
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
         const tHeader = ['序号', '客户名称', '客户类型', '业态', '企业性质', '联系人', '联系人电话', 'QQ', 'E-mail', '客户地址']
-        const filterVal = ['id', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
+        const filterVal = ['index', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
         const list = this.exprotList
+        var i = 1
+        list.forEach((item) => {
+          item.index = i
+          i++
+        })
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, '客户信息表')
         this.downloadLoading = false
