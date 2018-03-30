@@ -34,7 +34,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="城市:">
-            <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
+            <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" filterable clearable></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>

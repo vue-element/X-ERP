@@ -36,8 +36,8 @@
     <transition name="fade" mode="out-in">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
     </transition>
+      <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>

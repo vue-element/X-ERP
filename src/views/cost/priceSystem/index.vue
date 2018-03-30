@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
@@ -139,12 +138,17 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['产品名称', '单位', '产品类型', '系统', '规格型号', '品牌', '供应商', '产品最新报价（元）', '区域', '供货周期（天）', '参考描述']
-        const filterVal = ['name', 'unit', 'type', 'system', 'specModel', 'brand', 'supply.name', 'productQuotation', 'region.name', 'supplyCycle', 'description']
-        console.log('exprotList', this.exprotList)
+        const tHeader = ['序号', '产品名称', '单位', '产品类型', '系统', '规格型号', '品牌', '供应商', '产品最新报价（元）', '供货周期（天）', '参考描述']
+        const filterVal = ['index', 'name', 'unit', 'type', 'system', 'specModel', 'brand', 'supply.name', 'productQuotation', 'supply.supplyCycle', 'description']
+        // console.log('exprotList', this.exprotList)
         var list = []
         if (Arr) {
           list = this.exprotList
+          var i = 1
+          list.forEach((item) => {
+            item.index = i
+            i++
+          })
         } else {
           list = []
         }
@@ -156,8 +160,11 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
+          if (j.indexOf('.') !== -1) {
+            var arr = j.split('.')
+            var m = arr[0]
+            var n = arr[1]
+            return v[m]['' + n]
           } else {
             return v[j]
           }

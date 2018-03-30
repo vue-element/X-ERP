@@ -234,7 +234,7 @@ export default {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
           this.loading = true
-          console.log('priceInfo', JSON.stringify(this.priceInfo))
+          // console.log('priceInfo', JSON.stringify(this.priceInfo))
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {

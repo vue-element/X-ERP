@@ -81,8 +81,7 @@
 
 <script>
 import _ from 'lodash'
-import { outputmoney } from '@/utils'
-import { isObjectValueEqual } from '@/utils'
+import { outputmoney, isObjectValueEqual, formatDate } from '@/utils'
 export default {
   name: 'paymentAdd',
   props: ['editData'],
@@ -165,6 +164,7 @@ export default {
         this.editShow = true
         this.disabled = true
         this.paymentData = _.cloneDeep(this.editData.editData.contractPayment)
+        this.paymentData.inputDate = formatDate(this.editData.editData.contractPayment.inputDate)
       }
     },
     toggleEditBtn() {

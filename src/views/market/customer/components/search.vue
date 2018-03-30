@@ -7,51 +7,36 @@
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
-          <label>项目名称：</label>
-          <input type="text" v-model="searchData.name" placeholder="请输入"/>
+          <label>客户类别:</label>
+          <el-select v-model="searchData.category" placeholder="请选择客户类别">
+           <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.value">
+           </el-option>
+         </el-select>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item single-date">
-          <label>首期入伙时间：</label>
-          <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="firstEntry" placeholder="选择日期" ></el-date-picker>
-          <!-- <el-date-picker v-model="searchData.firstEntry"  value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="—" end-placeholder="结束日期">
-          </el-date-picker> -->
+          <label>客户名称:</label>
+          <el-select v-model="searchData.c_id" placeholder="请选择客户类别" filterable>
+           <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+           </el-option>
+         </el-select>
+          <!-- <input type="text" v-model="searchData.c_id" placeholder="请输入客户名称"/> -->
         </div>
       </el-col>
     </el-row>
     <el-row :gutter="40">
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
-          <label>合约模式：</label>
-          <el-select v-model="searchData.contractMode" placeholder="请选择">
-           <el-option v-for="item in contractModeList" :label="item.name" :value="item.id" :key="item.id">
-           </el-option>
-         </el-select>
+          <label>联系人:</label>
+          <input type="text" v-model="searchData.name" placeholder="请输入联系人"/>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item customer-info">
-          <label>客户信息：</label>
-          <el-select v-model="searchData.client_id" placeholder="请选择">
-           <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-           </el-option>
-         </el-select>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col :xs="12" :sm="12" :lg="12">
-        <div class="basic-item">
-          <label>城市：</label>
-          <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange"></el-cascader>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="12">
-        <div class="basic-item">
-          <label>区域：</label>
-          <el-select v-model="searchData.region_id" placeholder="请选择">
-           <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+          <label>业态:</label>
+          <el-select v-model="searchData.type" placeholder="请选择业态">
+           <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.value">
            </el-option>
          </el-select>
         </div>
@@ -71,53 +56,33 @@ export default {
   data() {
     return {
       height: 100,
-      clientList: [],
-      cityList: [],
-      regionList: [],
-      contractModeList: [
-        {
-          id: '酬金制',
-          name: '酬金制'
-        },
-        {
-          id: '包干制',
-          name: '包干制'
-        }
-      ],
-      cityOption: [0, 1, 3],
       searchData: {
-        region_id: 1,
-        client_id: 1,
-        city_id: 3,
-        contractMode: '',
-        name: '廖淑萍'
+        c_id: null,
+        category: '',
+        type: '',
+        person: ''
       },
-      firstEntry: ''
+      clientList: [],
+      typeList: [],
+      categoryList: []
     }
   },
   created() {
     this.getInsertData()
-    this.searchData.city_id = this.cityOption[2]
   },
   methods: {
     getInsertData() {
-      this.$get('/bussiness/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
-      })
-    },
-    cityChange(val) {
-      var len = val.length
-      this.searchData.city_id = val[len - 1]
+      this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
+      this.typeList = [{ value: '多层' }, { value: '高层' }, { value: '小高层' }, { value: '别墅' }, { value: '商业' }, { value: '写字楼' }, { value: '其他' }]
     },
     search() {
-      if (this.firstEntry) {
-        this.searchData.firstEntry = this.firstEntry
+      var searchData = {}
+      for (var key in this.searchData) {
+        if (this.searchData[key]) {
+          searchData[key] = this.searchData[key]
+        }
       }
-      // console.log('searchData', this.searchData)
-      this.$emit('searchWord', this.searchData)
+      this.$emit('searchWord', searchData)
     },
     searchAll() {
       var searchData = {}

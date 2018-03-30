@@ -168,7 +168,6 @@ export default {
         const filterVal = ['index', 'name', 'type', 'source', 'client.name', 'city.name', 'region.name', 'projectImpls.keyword', 'projectImpls.category', 'projectImpls.amount', 'projectImpls.bidDate', 'projectImpls.bidDate2',
           'projectImpls.startDate', 'projectImpls.developDate', 'projectImpls.signDate', 'chargePerson', 'chargePersonPhone', 'followPerson', 'followPersonPhone', 'followState', 'executState', 'examineState']
         const list = this.exprotList
-        console.log('list', list)
         var i = 1
         list.forEach((item) => {
           item.index = i

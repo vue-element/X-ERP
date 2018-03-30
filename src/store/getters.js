@@ -18,6 +18,7 @@ const getters = {
   doSearch: state => state.search.doSearch,
 
   userName: state => state.account.userName,
+  accountName: state => state.account.accountName,
   token: state => state.account.token
   // roles: state => state.account.roles
 }

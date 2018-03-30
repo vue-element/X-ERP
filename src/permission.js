@@ -2,7 +2,7 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken } from '@/utils/auth' // 验权
+import { getToken, getSession } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
 
 // permissiom judge
@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
   // console.log('router beforeEach')
   NProgress.start() // 开启Progress
   // console.log('getToken', getToken())
-  if (getToken()) { // 判断是否有token
+  if (getToken() || getSession()) { // 判断是否有token
     // console.log('getToken', getToken())
     if (to.path === '/login') {
       next({ path: '/' })

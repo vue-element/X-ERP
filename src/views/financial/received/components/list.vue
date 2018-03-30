@@ -15,8 +15,8 @@
         <el-table-column prop="date" label="回款日期"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="editRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, formatDate } from '@/utils'
 export default {
   name: 'receivedPaymentList',
   props: ['searchData'],
@@ -68,6 +68,10 @@ export default {
         if (res.data.success === true) {
           this.listLoading = false
           var data = res.data.data
+          for (var i = 0; i < data.content.length; i++) {
+            var date = formatDate(data.content[i].date)
+            data.content[i].date = date
+          }
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size

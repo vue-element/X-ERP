@@ -21,7 +21,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称">
             <p v-if="disabled">{{mainMsg.business.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称">
+            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称" filterable>
               <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>

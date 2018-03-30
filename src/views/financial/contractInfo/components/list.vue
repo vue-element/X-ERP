@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, formatDate } from '@/utils'
 export default {
   props: ['searchData'],
   data() {
@@ -60,6 +60,8 @@ export default {
       this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
         for (var i = 0; i < data.content.length; i++) {
+          var term = formatDate(data.content[i].term)
+          data.content[i].term = term
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount
           data.content[i].invoiceNoReceive = invoiceNoReceive
         }
@@ -78,6 +80,7 @@ export default {
       })
     },
     deleteRow(id) {
+      console.log(id)
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -85,11 +88,18 @@ export default {
       }).then(() => {
         var contractInfoID = { id: [id] }
         this.$post('/contractInfo/delete', contractInfoID).then((res) => {
-          if (res.status === 200) {
+          console.log()
+          if (res.success === true) {
             this.getContractInfoData()
             this.$message({
               message: '删除成功',
               type: 'success'
+            })
+          } else {
+            this.getContractInfoData()
+            this.$message({
+              message: '删除失败',
+              type: 'error'
             })
           }
         })

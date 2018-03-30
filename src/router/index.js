@@ -57,7 +57,7 @@ export const asyncRouterMap = [
     children: [
       { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
       { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }},
+      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }, menu: 'business' },
       { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
     ]
   },
@@ -67,7 +67,7 @@ export const asyncRouterMap = [
       { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
       { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }},
       { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }},
-      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同付款管理' }},
+      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同成本管理' }},
       { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
       { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]

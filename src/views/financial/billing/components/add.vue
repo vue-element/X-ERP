@@ -77,10 +77,10 @@
               <el-date-picker v-else v-model="billingData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="开票内容：">
+          <el-col :xs="24" :sm="12" :lg="12" class="text">
+            <el-form-item label="开票内容：" class="textarea">
               <p v-if="disabled">{{billingData.content}}</p>
-              <el-input v-else v-model="billingData.content" placeholder="请输入开票内容"></el-input>
+              <el-input v-else v-model="billingData.content" type="textarea" placeholder="请输入开票内容"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,8 +95,7 @@
 </template>
 
 <script>
-import { outputmoney } from '@/utils'
-import { isObjectValueEqual } from '@/utils'
+import { outputmoney, isObjectValueEqual, formatDate } from '@/utils'
 import _ from 'lodash'
 export default {
   name: 'invoiceAdd',
@@ -165,6 +164,7 @@ export default {
           this.loading = true
           this.billingData.tax = this.tax
           this.billingData.income = this.income
+          console.log(JSON.stringify(this.billingData))
           this.$post('/contractBilling/save', this.billingData).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -198,6 +198,7 @@ export default {
         this.editShow = true
         this.disabled = true
         this.billingData = _.cloneDeep(this.editData.editData.contractBilling)
+        this.billingData.date = formatDate(this.editData.editData.contractBilling.date)
       }
     },
     successSave() {

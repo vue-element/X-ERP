@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
+import { hasPermission } from './utils/hasPermission'
 import axios from 'axios'
 // import utils from '@/utils/index'
 
@@ -22,6 +23,8 @@ Vue.config.productionTip = false
 axios.defaults.withCredentials = true	// 设置cookie可配置
 Vue.prototype.$post = post
 Vue.prototype.$get = get
+// 全局的常量
+Vue.prototype.hasPerm = hasPermission
 
 // var winHeight = utils.winSize.
 

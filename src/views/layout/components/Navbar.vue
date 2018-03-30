@@ -60,7 +60,7 @@ export default {
       this.$post('/shiro/getInfo').then((res) => {
         var userInfo = res.data.userPermission
         this.$store.commit('login', userInfo)
-        this.user.name = userInfo.userName
+        this.user.name = userInfo.accountName
         this.user.department = userInfo.roleName
       })
     },
@@ -69,12 +69,9 @@ export default {
     },
     logout() {
       this.$post('/shiro/logout').then((res) => {
-
-      })
-      // console.log(1111)
-      // this.$store.commit('logout')
-      this.$store.dispatch('logout').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+        this.$store.dispatch('logout').then(() => {
+          location.reload() // 为了重新实例化vue-router对象 避免bug
+        })
       })
     },
     ...mapActions([

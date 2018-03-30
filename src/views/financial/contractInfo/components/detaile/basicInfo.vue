@@ -152,7 +152,7 @@
 
 <script>
 import _ from 'lodash'
-import { isObjectValueEqual } from '@/utils'
+import { isObjectValueEqual, formatDate } from '@/utils'
 export default {
   props: ['editData'],
   data() {
@@ -229,6 +229,7 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
+          console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             // this.$store.commit('getContractMsg', res.data.data)
             var contractMsg = res.data.data
@@ -252,13 +253,11 @@ export default {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.contractInfo = data.contractInfo
-      var cityOption = data.contractInfo.oldCity.split('-')
-      this.cityOption = []
-      cityOption.forEach((item) => {
-        this.cityOption.push(parseInt(item))
-      })
-      var dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
-      this.contractInfo.dateShow = dateShow
+      this.contractInfo.signDate = formatDate(data.contractInfo.signDate)
+      this.contractInfo.term = formatDate(data.contractInfo.term)
+      this.contractInfo.startDate = formatDate(data.contractInfo.startDate)
+      this.contractInfo.endDate = formatDate(data.contractInfo.endDate)
+      this.contractInfo.dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = data.contractInfo.originalAmount + data.contractInfo.changeAmount
     },

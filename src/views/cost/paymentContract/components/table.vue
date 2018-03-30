@@ -12,7 +12,7 @@
             <i class="iconfont icon-import"></i>
             <span>导入物料明细</span>
           </button>
-          <button @click="addMaterial">
+          <button @click.prevent="addMaterial">
             <i class="iconfont icon-add"></i>
             <span>新增物料明细</span>
           </button>

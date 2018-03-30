@@ -52,7 +52,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="城市:" prop="city">
             <p v-if="disabled">{{businessInfo.city.name}}</p>
-            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
+            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市" filterable clearable></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -407,7 +407,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'accountName'
     ])
   },
   methods: {
@@ -482,7 +482,7 @@ export default {
         this.businessCtgList = data.businessCtgList
       })
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
-      this.businessInfo.createPerson = this.userName
+      this.businessInfo.createPerson = this.accountName
       // console.log('userInfo', this.userName)
     },
     cityChange(val) {

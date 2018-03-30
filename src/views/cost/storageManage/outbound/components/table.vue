@@ -4,7 +4,7 @@
       <h4 class="module-title">
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
-          <button @click="showDialog">
+          <button @click.prevent="showDialog">
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -43,7 +43,7 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
           <el-button :loading="false">通过审核</el-button>
-          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false">导出出库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>

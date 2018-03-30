@@ -1,7 +1,7 @@
  <template>
   <div class="contract-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
+      <el-table class="basic-form" style="width: 100%" :data="scheduleManageData" :height="height" v-loading.body="listLoading" border>
         <el-table-column prop="0" label="序号" width="80" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
@@ -39,7 +39,7 @@ export default {
       currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
-      tableData: []
+      scheduleManageData: []
     }
   },
   created() {
@@ -59,12 +59,19 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractSchedule/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data
+          // for (var i = 0; i < data.content.length; i++) {
+          //   var billingPercentage = data.content[i].billingPercentage * 100
+          //   var finishPercentage = data.content[i].finishPercentage * 100
+          //   data.content[i].billingPercentage = billingPercentage
+          //   data.content[i].finishPercentage = finishPercentage
+          // }
+          this.scheduleManageData = data.content
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.tableData = data.content
           this.listLoading = false
         }
       })

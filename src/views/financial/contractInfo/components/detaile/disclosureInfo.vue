@@ -27,13 +27,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="材料成本：">
               <p v-if="disabled">{{contractBasis.materialCost}}</p>
-              <el-input v-else v-model="contractBasis.materialCost" @change="materialCost" placeholder="请输入材料成本"></el-input>
+              <el-input v-else v-model="contractBasis.materialCost" placeholder="请输入材料成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="人工成本：">
               <p v-if="disabled">{{contractBasis.artificialCost}}</p>
-              <el-input v-else v-model.number="contractBasis.artificialCost" @change="artificialCost" placeholder="请输入人工成本"></el-input>
+              <el-input v-else v-model.number="contractBasis.artificialCost" placeholder="请输入人工成本"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -41,13 +41,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="综合成本：">
               <p v-if="disabled">{{contractBasis.comprehensiveCost}}</p>
-              <el-input v-else v-model="contractBasis.comprehensiveCost" @change="comprehensiveCost" placeholder="请输入综合成本"></el-input>
+              <el-input v-else v-model="contractBasis.comprehensiveCost" placeholder="请输入综合成本"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="管理费用：">
               <p v-if="disabled">{{contractBasis.manageCost}}</p>
-              <el-input v-else v-model="contractBasis.manageCost" @change="manageCost" placeholder="请输入管理费用"></el-input>
+              <el-input v-else v-model="contractBasis.manageCost" placeholder="请输入管理费用"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -55,7 +55,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="税金：">
               <p v-if="disabled">{{contractBasis.tax}}</p>
-              <el-input v-else v-model="contractBasis.tax" @change="tax" placeholder="请输入税金"></el-input>
+              <el-input v-else v-model="contractBasis.tax" placeholder="请输入税金"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -100,12 +100,12 @@
           </el-table-column>
           <el-table-column prop="paymentCondition" label="回款条件" width="300"></el-table-column>
           <el-table-column prop="date" label="计划回款时间"></el-table-column>
-          <el-table-column prop="ratio" label="计划回款比例"></el-table-column>
+          <el-table-column prop="ratio" label="计划回款比例(%)"></el-table-column>
           <el-table-column prop="amount" label="计划回款金额"></el-table-column>
           <el-table-column prop="cumulativeAmount" label="计划回款累计金额"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="paymentPlanModify(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="paymentPlanModify(scope.row.id)" type="text" size="small">修改</el-button>
               <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -115,8 +115,8 @@
     <!-- 新增回款计划弹窗 -->
     <el-dialog title="回款计划" :visible.sync="planBox" :modal-append-to-body="false">
       <el-form :model="paymentPlan">
-        <el-form-item label="回款条件：">
-          <el-input v-model="paymentPlan.paymentCondition"></el-input>
+        <el-form-item label="回款条件：" class="textarea">
+          <el-input type="textarea" v-model="paymentPlan.paymentCondition"></el-input>
         </el-form-item>
         <el-form-item label="计划回款比例(%)：">
           <el-input v-model="paymentPlan.ratio"></el-input>
@@ -140,7 +140,7 @@
         <el-button class="up-files common-btn" type="text" @click="upFiles">附件上传</el-button>
       </h4>
       <div class="table">
-        <el-table class="basic-form" style="width: 100%" :data="fileData" ref="multipleTable" border>
+        <el-table class="basic-form" style="width: 100%" :data="disclosureFile" ref="multipleTable" border>
           <el-table-column prop="0" label="序号" width="80" fixed>
             <template slot-scope="scope">
              {{scope.$index + 1}}
@@ -182,7 +182,7 @@
 
 <script>
 import _ from 'lodash'
-import { outputmoney } from '@/utils'
+import { formatDate } from '@/utils'
 import { mapState } from 'vuex'
 export default {
   props: ['editData'],
@@ -199,14 +199,14 @@ export default {
       // 合同交底信息
       contractBasis: {
         id: '',
-        sourceFunds: '',
-        materialCost: '',
-        artificialCost: '',
-        comprehensiveCost: '',
-        manageCost: '',
-        tax: '',
-        profit: '',
-        profitRate: '',
+        sourceFunds: null,
+        materialCost: null,
+        artificialCost: null,
+        comprehensiveCost: null,
+        manageCost: null,
+        tax: null,
+        profit: null,
+        profitRate: null,
         contractInfo: {
           id: ''
         }
@@ -225,6 +225,7 @@ export default {
       },
       // 附件上传
       upFiles: false,
+      disclosureFile: [],
       fileForm: {
         describtion: '',
         person: '',
@@ -234,7 +235,6 @@ export default {
   },
   created() {
     this.getInsertData()
-    // 判断状态是查看还是新增
     if (this.editData.tabState === 'editTab') {
       this.action = 'edit'
       this.editShow = true
@@ -278,6 +278,7 @@ export default {
       }
     },
     disclosureAdd() {
+      console.log(JSON.stringify(this.contractBasis))
       this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         this.loading = false
         if (res.data.success === true) {
@@ -343,7 +344,6 @@ export default {
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
           if (res.data.success === true) {
             this.paymentPlan.contractBasis.id = res.data.data.content[0].id
-            console.log(this.paymentPlan.contractBasis.id)
             this.paymentPlanAdd()
           }
         })
@@ -383,6 +383,12 @@ export default {
           if (res.data.success === true) {
             var contractBasisID = res.data.data.content[0].id
             this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
+              var data = res.data.data
+              console.log(data)
+              for (var i = 0; i < data.content.length; i++) {
+                var date = formatDate(data.content[i].date)
+                data.content[i].date = date
+              }
               this.receiveData = res.data.data.content
             })
           }
@@ -400,6 +406,7 @@ export default {
       this.$get('/paymentPlan/findUpdateData/' + id).then((res) => {
         this.clickPlanBox()
         this.paymentPlan = res.data.data.paymentPlan
+        this.paymentPlan.date = formatDate(res.data.data.paymentPlan.date)
       })
     },
     // 回款计划删除数据
@@ -414,33 +421,23 @@ export default {
           })
         }
       })
-    },
-    // 数字格式化
-    materialCost(val) {
-      this.contractBasis.materialCost = outputmoney(val)
-    },
-    artificialCost(val) {
-      this.contractBasis.artificialCost = outputmoney(val)
-    },
-    comprehensiveCost(val) {
-      this.contractBasis.comprehensiveCost = outputmoney(val)
-    },
-    manageCost(val) {
-      this.contractBasis.manageCost = outputmoney(val)
-    },
-    tax(val) {
-      this.contractBasis.tax = outputmoney(val)
-    },
-    // 附件上传
-    submitUpload() {
-      this.$refs.upload.submit()
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
     }
+    // 数字格式化
+    // materialCost(val) {
+    //   this.contractBasis.materialCost = outputmoney(val)
+    // },
+    // artificialCost(val) {
+    //   this.contractBasis.artificialCost = outputmoney(val)
+    // },
+    // comprehensiveCost(val) {
+    //   this.contractBasis.comprehensiveCost = outputmoney(val)
+    // },
+    // manageCost(val) {
+    //   this.contractBasis.manageCost = outputmoney(val)
+    // },
+    // tax(val) {
+    //   this.contractBasis.tax = outputmoney(val)
+    // }
   },
   mounted() {
   },
