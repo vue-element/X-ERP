@@ -26,7 +26,7 @@ export function logout() {
 //     params: { token }
 //   })
 // }
-export function getInfo(token) {
+export function getUserInfo(token) {
   return new Promise((resolve, reject) => {
     resolve({
       data: { username: 'admin', name: 'admin', 'role': ['admin'] }

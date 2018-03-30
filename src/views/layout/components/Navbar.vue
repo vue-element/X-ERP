@@ -26,7 +26,8 @@
 </template>
 
 <script>
-// import Cookies from 'js-cookie'
+// import store from '@/store'
+// import router from '@/router'
 import { mapActions, mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -59,9 +60,10 @@ export default {
     getUserInfo() {
       this.$post('/shiro/getInfo').then((res) => {
         var userInfo = res.data.userPermission
-        this.$store.commit('login', userInfo)
         this.user.name = userInfo.accountName
         this.user.department = userInfo.roleName
+        this.$store.commit('login', userInfo)
+        // this.$store.dispatch('GenerateRoutes', userInfo)
       })
     },
     toggleSideBar() {

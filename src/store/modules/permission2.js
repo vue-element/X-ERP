@@ -11,6 +11,8 @@ function hasPermission(menus, route) {
     /*
     * 如果这个路由有menu属性,就需要判断用户是否拥有此menu权限
     */
+    console.log('menus', menus)
+    console.log('menus', route.menu)
     return menus.indexOf(route.menu) > -1
   } else {
     return true
@@ -24,6 +26,7 @@ function hasPermission(menus, route) {
  */
 function filterAsyncRouter(asyncRouterMap, menus) {
   const accessedRouters = asyncRouterMap.filter(route => {
+    console.log('zengqinga', route)
     // filter,js语法里数组的过滤筛选方法
     if (hasPermission(menus, route)) {
       if (route.children && route.children.length) {
@@ -57,6 +60,7 @@ const permission = {
         // roles是后台传过来的角色数组,比如['管理员','文章']
         const role = userPermission.roleName
         const menus = userPermission.menuList
+        console.log('accessedRouters', menus)
         let accessedRouters
         // accessedRouters = asyncRouterMap
         if (role === '管理员') {
