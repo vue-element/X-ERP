@@ -21,9 +21,9 @@ export function logout() {
 
 // export function getUserInfo(token) {
 //   return request({
-//     url: '/user/info',
-//     method: 'get',
-//     params: { token }
+//     url: '/shiro/getInfo',
+//     method: 'post'
+//     // params: { token }
 //   })
 // }
 export function getUserInfo(token) {

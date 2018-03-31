@@ -8,7 +8,10 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>项目名称：</label>
-          <input type="text" v-model="searchData.name" placeholder="请输入项目名称" clearable/>
+          <el-select v-model="searchData.p_id" placeholder="请选择项目名称" clearable>
+           <el-option v-for="item in projectList" :label="item.name" :value="item.id" :key="item.id">
+           </el-option>
+         </el-select filterable clearable>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="12">
@@ -24,7 +27,7 @@
         <div class="basic-item">
           <label>合约模式：</label>
           <el-select v-model="searchData.contractMode" placeholder="请选择合约模式" clearable>
-           <el-option v-for="item in contractModeList" :label="item.name" :value="item.id" :key="item.id">
+           <el-option v-for="item in contractModeList" :label="item.name" :value="item.name" :key="item.id">
            </el-option>
          </el-select>
         </div>
@@ -49,7 +52,7 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>区域：</label>
-          <el-select v-model="searchData.region_id" placeholder="请选择区域">
+          <el-select v-model="searchData.region_id" placeholder="请选择区域" filterable clearable>
            <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
@@ -60,7 +63,7 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>建筑业态：</label>
-          <el-select v-model="searchData.archFormat" placeholder="请输入建筑业态">
+          <el-select v-model="searchData.archFormat" placeholder="请输入建筑业态" filterable clearable>
             <el-option v-for="item in archFormatList" :label="item.name" :value="item.name" :key="item.id"></el-option>
           </el-select>
         </div>
@@ -68,7 +71,7 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>小区类型：</label>
-          <el-select v-model="searchData.communityType" placeholder="请选择区域">
+          <el-select v-model="searchData.communityType" placeholder="请选择区域" filterable clearable>
            <el-option v-for="item in communityTypeList" :label="item.name" :value="item.name" :key="item.id"></el-option>
          </el-select>
         </div>
@@ -102,15 +105,17 @@ export default {
       clientList: [],
       cityList: [],
       regionList: [],
+      projectList: [],
       cityOption: ['', '', ''],
       communityTypeList: [],
+      contractModeList: [],
       archFormatList: [],
       searchData: {
         region_id: '',
         client_id: '',
         city_id: '',
         contractMode: '',
-        name: ''
+        p_id: ''
       },
       firstEntry: ''
     }
@@ -121,8 +126,16 @@ export default {
   },
   methods: {
     getInsertData() {
+      this.$get('/project/findInsertData').then((res) => {
+        var data = res.data.data
+        this.cityList = data.cityList
+        this.clientList = data.clientList
+        this.regionList = data.regionList
+        this.projectList = data.projectList
+      })
       this.archFormatList = [{ name: '多层' }, { name: '高层' }, { name: '小高层' }, { name: '别墅' }, { name: '商业' }, { name: '写字楼' }]
       this.communityTypeList = [{ name: '开放式小区' }, { name: '封闭式小区' }]
+      this.contractModeList = [{ name: '酬金制' }, { name: '包干制' }]
     },
     cityChange(val) {
       var len = val.length
@@ -140,6 +153,7 @@ export default {
           }
         }
       }
+      // console.log('searchWord', searchData)
       this.$emit('searchWord', searchData)
     },
     searchAll() {

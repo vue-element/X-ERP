@@ -13,7 +13,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商类别:">
-              <el-select v-model="searchData.type" placeholder="请选择供应商类别" filterable>
+              <el-select v-model="searchData.type" placeholder="请选择供应商类别" filterable clearable>
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -21,7 +21,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商类型:">
-              <el-select v-model="searchData.category" placeholder="请选择供应商类型" filterable>
+              <el-select v-model="searchData.category" placeholder="请选择供应商类型" filterable clearable>
                <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -29,7 +29,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商等级:">
-              <el-select v-model="searchData.grade" placeholder="请选择供应商等级">
+              <el-select v-model="searchData.grade" placeholder="请选择供应商等级" filterable clearable>
                <el-option v-for="item in gradeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -39,7 +39,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="物资类别:">
-              <el-select v-model="searchData.materialCategory" placeholder="请选择物资类别" filterable>
+              <el-select v-model="searchData.materialCategory" placeholder="请选择物资类别" filterable clearable>
                <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -47,7 +47,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="企业性质:">
-              <el-select v-model="searchData.enterpriseNature" placeholder="请选择企业性质" filterable>
+              <el-select v-model="searchData.enterpriseNature" placeholder="请选择企业性质" filterable clearable>
                <el-option v-for="item in enterpriseNatureList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -55,7 +55,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合作商类别:" >
-              <el-select v-model="searchData.cooperativeType" placeholder="请选择合作商类别" filterable>
+              <el-select v-model="searchData.cooperativeType" placeholder="请选择合作商类别" filterable clearable>
                <el-option v-for="item in cooperativeTypeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -68,7 +68,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供货区域:" >
-              <el-select v-model="searchData.region_id" placeholder="请输入供货区域" filterable>
+              <el-select v-model="searchData.region_id" placeholder="请输入供货区域" filterable clearable>
                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
               </el-select>
@@ -76,7 +76,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="结算方式:" >
-              <el-select v-model="searchData.settlementMethod" placeholder="请选择结算方式" filterable>
+              <el-select v-model="searchData.settlementMethod" placeholder="请选择结算方式" filterable clearable>
                <el-option v-for="item in settlementMethodList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -84,7 +84,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="评审状态:">
-              <el-select v-model="searchData.reviewState" placeholder="请选择评审状态" filterable>
+              <el-select v-model="searchData.reviewState" placeholder="请选择评审状态" filterable clearable>
                <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>

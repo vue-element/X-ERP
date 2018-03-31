@@ -32,7 +32,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="产品类型:" prop="type">
               <p v-if="disabled">{{priceInfo.type}}</p>
-              <el-select v-else v-model="priceInfo.type" placeholder="请选择产品类型">
+              <el-select v-else v-model="priceInfo.type" placeholder="请选择产品类型" filterable clearable>
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -43,7 +43,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="系统:" prop="system">
               <p v-if="disabled">{{priceInfo.system}}</p>
-              <el-select v-else v-model="priceInfo.system" placeholder="请选择系统">
+              <el-select v-else v-model="priceInfo.system" placeholder="请选择系统" filterable clearable>
                <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -66,7 +66,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供应商:" prop="supply">
               <p v-if="disabled">{{priceInfo.supply.name}}</p>
-              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" filterable>
+              <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" filterable clearable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -114,7 +114,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="价格来源:" prop="source">
               <p v-if="disabled">{{priceInfo.source}}</p>
-              <el-select v-else v-model="priceInfo.source" placeholder="请选择价格来源">
+              <el-select v-else v-model="priceInfo.source" placeholder="请选择价格来源" filterable clearable>
                <el-option v-for="item in sourceList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>

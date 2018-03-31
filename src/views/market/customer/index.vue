@@ -3,15 +3,15 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
-          <i class="iconfont icon-search"></i>
+        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')"  v-if="hasPerm('client:search')">
+          <i class="iconfont icon-search" ></i>
           <span>查询</span>
         </button>
-        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn" v-if="hasPerm('client:findAllByPage')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn" v-if="hasPerm('client:findInsertData')">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -29,10 +29,8 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <transition name="fade" mode="out-in">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-    </transition>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
     <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>

@@ -43,7 +43,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="区域:" prop="region">
             <p v-if="disabled">{{businessInfo.region.name}}</p>
-            <el-select v-else v-model="businessInfo.region.id" placeholder="请选择区域">
+            <el-select v-else v-model="businessInfo.region.id" placeholder="请选择区域" filterable clearable>
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -66,7 +66,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="业务分类:" prop="businessCategory">
             <p v-if="disabled">{{businessInfo.businessCategory.name}}</p>
-            <el-select v-else v-model="businessInfo.businessCategory.id" placeholder="请选择">
+            <el-select v-else v-model="businessInfo.businessCategory.id" placeholder="请选择" filterable clearable>
               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -77,7 +77,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
             <p v-if="disabled">{{businessInfo.client.name}}</p>
-            <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable>
+            <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable clearable>
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -187,7 +187,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="业务负责人:" prop="businessPerson">
             <p v-if="disabled">{{businessInfo.businessPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.businessPerson.id" placeholder="请选择业务负责人">
+            <el-select v-else v-model="businessInfo.businessPerson.id" placeholder="请选择业务负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -207,7 +207,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="设计负责人:" prop="businessPerson">
             <p v-if="disabled">{{businessInfo.designPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人">
+            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -227,7 +227,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="成本负责人:" prop="costPerson">
             <p v-if="disabled">{{businessInfo.costPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人">
+            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -247,7 +247,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="工程负责人:" prop="projectPerson">
             <p v-if="disabled">{{businessInfo.projectPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人">
+            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -267,7 +267,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="项目经理:" prop="projectManager">
             <p v-if="disabled">{{businessInfo.projectManager.name}}</p>
-            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理">
+            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>

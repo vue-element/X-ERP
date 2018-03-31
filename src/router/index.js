@@ -48,37 +48,37 @@ export const asyncRouterMap = [
   // 基础管理
   { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'pCenter' },
     children: [
-      { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }},
-      { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }}
+      { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }, menu: 'user' },
+      { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' }
     ]
   },
   // 市场管理
   { path: '/market', component: Layout, redirect: 'noredirect', name: 'market', meta: { title: '市场管理', icon: 'person', role: ['sc'] },
     children: [
-      { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }},
-      { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }},
-      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }, menu: 'business' },
-      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }}
+      { path: 'customer', component: _import('market/customer/index'), name: 'customer', meta: { title: '客户信息' }, menu: 'client' },
+      { path: 'smart-community', component: _import('market/smartCommunity/index'), name: 'smartCommunity', meta: { title: '智慧社区数据库' }, menu: 'project' },
+      { path: 'business-opportunity', component: _import('market/businessOpportunity/index'), name: 'businessOpportunity', meta: { title: '商机管理' }, menu: 'bussiness' },
+      { path: 'bid-manage', component: _import('market/bidManage/index'), name: 'bidManage', meta: { title: '投标报价管理' }, menu: 'tenderOffer' }
     ]
   },
   // 财务管理
   { path: '/financial', component: Layout, redirect: 'noredirect', name: 'financial', meta: { title: '财务管理', icon: 'money', role: ['cw'] },
     children: [
-      { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }},
-      { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }},
-      { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }},
+      { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }, menu: 'contractInfo' },
+      { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }, menu: 'contractBilling' },
+      { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }, menu: 'contractReceived' },
       { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同成本管理' }},
-      { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }},
+      { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }, menu: 'contractSchedule' },
       { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
     ]
   },
   // 成本管理
   { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
     children: [
-      { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }},
-      { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }},
-      { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }},
-      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }},
+      { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }, menu: 'supply' },
+      { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }, menu: 'price' },
+      { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }, menu: 'paymentContract' },
+      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'purchaseList' },
       { path: '/cost/storage-manage', component: _import('cost/storageManage/index'), name: 'storageManage', meta: { title: '出入库管理' },
         children: [
           { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }},

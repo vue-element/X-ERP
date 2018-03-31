@@ -8,7 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="付款合同编号:">
-              <el-select v-model="searchData.paymentContract_id" placeholder="请选择付款合同编号" filterable>
+              <el-select v-model="searchData.paymentContract_id" placeholder="请选择付款合同编号" filterable clearable>
                <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -76,10 +76,10 @@ export default {
     getInsertData() {
       this.$get('/outboundList/findInsertData').then((res) => {
         var data = res.data.data
-        this.paymentContractList = data.paymentContractList
-        this.projectList = data.projectList
-        this.regionList = data.regionList
-        this.contractInfoList = data.contractInfoList
+        this.paymentContractList = data.paymentContractList || []
+        this.projectList = data.projectList || []
+        this.regionList = data.regionList || []
+        this.contractInfoList = data.contractInfoList || []
       })
     },
     search() {

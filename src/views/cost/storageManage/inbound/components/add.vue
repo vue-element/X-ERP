@@ -24,8 +24,10 @@
                 <el-input v-else v-model="paymentContract.orderCode" placeholder="请输入订单编号"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="入库单编号:">
+              <el-form-item label="入库成本核算表号:">
                 <p v-if="disabled">{{paymentContract.inputCode}}</p>
                 <el-input v-else v-model="paymentContract.inputCode" placeholder="请输入入库单编号"></el-input>
               </el-form-item>

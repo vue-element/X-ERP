@@ -8,7 +8,7 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>客户类别:</label>
-          <el-select v-model="searchData.category" placeholder="请选择客户类别">
+          <el-select v-model="searchData.category" placeholder="请选择客户类别"  filterable clearable>
            <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.value">
            </el-option>
          </el-select>
@@ -17,11 +17,10 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item single-date">
           <label>客户名称:</label>
-          <el-select v-model="searchData.c_id" placeholder="请选择客户类别" filterable>
+          <el-select v-model="searchData.c_id" placeholder="请选择客户类别" filterable clearable>
            <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>
-          <!-- <input type="text" v-model="searchData.c_id" placeholder="请输入客户名称"/> -->
         </div>
       </el-col>
     </el-row>
@@ -29,13 +28,13 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>联系人:</label>
-          <input type="text" v-model="searchData.name" placeholder="请输入联系人"/>
+          <input type="text" v-model="searchData.name" placeholder="请输入联系人" />
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item customer-info">
           <label>业态:</label>
-          <el-select v-model="searchData.type" placeholder="请选择业态">
+          <el-select v-model="searchData.type" placeholder="请选择业态" filterable clearable>
            <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.value">
            </el-option>
          </el-select>
@@ -72,6 +71,11 @@ export default {
   },
   methods: {
     getInsertData() {
+      this.$get('/client/findInsertData').then((res) => {
+        if (res.data.success === true) {
+          this.clientList = res.data.data.clientList
+        }
+      })
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.typeList = [{ value: '多层' }, { value: '高层' }, { value: '小高层' }, { value: '别墅' }, { value: '商业' }, { value: '写字楼' }, { value: '其他' }]
     },

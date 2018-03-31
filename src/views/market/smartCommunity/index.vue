@@ -3,15 +3,15 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
+        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" v-if="hasPerm('project:search')">
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')" v-if="hasPerm('project:findAllByPage')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn" v-if="hasPerm('project:findInsertData')">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -19,7 +19,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button  v-show="deleteShow && tab === 'listTab'" @click="delSelectData">
+        <button  v-show="deleteShow && tab === 'listTab'" @click="delSelectData" v-if="hasPerm('project:deltete')">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>
@@ -33,10 +33,8 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <transition name="fade" mode="out-in">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-    </transition>
       <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -164,7 +162,7 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单位数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
+        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单元数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
           '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
         const filterVal = ['index', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
           'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']

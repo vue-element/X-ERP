@@ -173,10 +173,10 @@ export default {
     getInsertData() {
       this.$get('/outboundList/findInsertData').then((res) => {
         var data = res.data.data
-        this.paymentContractList = data.paymentContractList
-        this.contractList = data.contractInfoList
-        this.projectList = data.projectList
-        this.regionList = data.regionList
+        this.paymentContractList = data.paymentContractList || []
+        this.contractList = data.contractInfoList || []
+        this.projectList = data.projectList || []
+        this.regionList = data.regionList || []
       })
     },
     toggleAction() {

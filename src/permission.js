@@ -17,17 +17,16 @@ const whiteList = ['/login', '/authredirect']// 不重定向白名单
 router.beforeEach((to, from, next) => {
   // console.log('router beforeEach')
   NProgress.start() // 开启Progress
-  // console.log('getToken', getToken())
   if (getToken() || getSession()) { // 判断是否有token
-    // console.log('getToken', getToken())
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
     } else {
-      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const roles = res.data.role
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
+      if (!store.getters.accountName) { // 判断当前用户是否已拉取完user_info信息
+        store.dispatch('GetInfo').then(userInfo => { // 拉取user_info
+          // const menuList = res.menuList
+          // const permissionList = res.permissionList
+          store.dispatch('GenerateRoutes', userInfo).then(() => { // 生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,replace: true so the navigation will not leave a history record
           })
