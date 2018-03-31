@@ -1,7 +1,6 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height" @selection-change="handleSelectionChange"
-  v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+  <el-table class="basic-form" style="width: 100%" :data="projectData" :height="height" @selection-change="handleSelectionChange" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
     <el-table-column type="selection" width="40" fixed></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
@@ -9,9 +8,9 @@
    <el-table-column prop="client.name" label="客户名称" width="200"></el-table-column>
    <el-table-column prop="city.name" label="城市" width="100"></el-table-column>
    <el-table-column prop="region.name" label="地区" width="100"></el-table-column>
-   <el-table-column prop="name" label="项目名称" width="120" fixed></el-table-column>
-    <el-table-column prop="address" label="项目地址"></el-table-column>
-   <el-table-column prop="buildNum" label="楼栋及单位数量" width="100"></el-table-column>
+   <el-table-column prop="name" label="项目名称" width="180" fixed></el-table-column>
+    <el-table-column prop="address" label="项目地址" min-width="240"></el-table-column>
+   <el-table-column prop="buildNum" label="楼栋及单元数量" width="100"></el-table-column>
    <el-table-column prop="archFormat" label="建筑业态" width="100"></el-table-column>
    <el-table-column prop="builtArea" label="总建筑面积(平方)" width="100"></el-table-column>
    <el-table-column prop="chargeArea" label="总收费面积(平方)" width="100"></el-table-column>
@@ -19,9 +18,10 @@
    <el-table-column prop="contractMode" label="合约模式" width="100"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
-        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-      </template>
+<el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('project:findUpdateData')">
+  查看</el-button>
+<el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('project:delete')">删除</el-button>
+</template>
     </el-table-column>
   </el-table>
   <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import {
+  winHeight
+} from '@/utils'
 export default {
   name: 'smartCommunityList',
   props: ['searchData'],
@@ -52,8 +54,7 @@ export default {
       this.resize()
     })
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     resize() {
       this.height = winHeight() - 210
@@ -72,7 +73,9 @@ export default {
       })
     },
     confirmDel(id) {
-      var projectID = { id: [id] }
+      var projectID = {
+        id: [id]
+      }
       this.$post('/project/delete', projectID).then((res) => {
         if (res.status === 200) {
           this.getProjectData()
@@ -134,6 +137,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style rel="stylesheet/scss" lang="scss" scoped>
-@import "src/styles/mixin.scss";
-</style>
+<style rel="stylesheet/scss" lang="scss" scoped>@import "src/styles/mixin.scss";</style>

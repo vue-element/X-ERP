@@ -18,7 +18,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="合作商类别:" prop="cooperativeType">
               <p v-if="disabled">{{supplyInfo.cooperativeType}}</p>
-              <el-select v-else v-model="supplyInfo.cooperativeType" placeholder="请选择合作商类别">
+              <el-select v-else v-model="supplyInfo.cooperativeType" placeholder="请选择合作商类别" filterable clearable>
                <el-option v-for="item in cooperativeTypeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -47,7 +47,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="企业性质:" prop="enterpriseNature">
               <p v-if="disabled">{{supplyInfo.enterpriseNature}}</p>
-              <el-select v-else v-model="supplyInfo.enterpriseNature" placeholder="请选择企业性质">
+              <el-select v-else v-model="supplyInfo.enterpriseNature" placeholder="请选择企业性质" filterable clearable>
                <el-option v-for="item in enterpriseNatureList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -64,7 +64,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供货区域:" prop="region">
               <p v-if="disabled">{{supplyInfo.region.name}}</p>
-              <el-select v-else v-model="supplyInfo.region.id" placeholder="请输入供货区域">
+              <el-select v-else v-model="supplyInfo.region.id" placeholder="请输入供货区域" filterable clearable>
                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
               </el-select>
@@ -73,7 +73,7 @@
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="物资类别:" prop="materialCategory">
               <p v-if="disabled">{{supplyInfo.materialCategory}}</p>
-              <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别">
+              <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别" filterable clearable>
                <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -143,7 +143,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="发票类型:" prop="invoiceType">
               <p v-if="disabled">{{supplyInfo.invoiceType}}</p>
-              <el-select v-else v-model="supplyInfo.invoiceType" placeholder="请选择发票类型">
+              <el-select v-else v-model="supplyInfo.invoiceType" placeholder="请选择发票类型" filterable clearable>
                <el-option v-for="item in invoiceTypeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -152,7 +152,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="税率:" prop="taxRate">
               <p v-if="disabled">{{supplyInfo.taxRate}}</p>
-              <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率">
+              <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" filterable clearable>
                <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -168,7 +168,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类别:" prop="type">
               <p v-if="disabled">{{supplyInfo.type}}</p>
-              <el-select v-else v-model="supplyInfo.type" placeholder="请选择供应商类别">
+              <el-select v-else v-model="supplyInfo.type" placeholder="请选择供应商类别" filterable clearable>
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -177,7 +177,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商类型:" prop="category">
               <p v-if="disabled">{{supplyInfo.category}}</p>
-              <el-select v-else v-model="supplyInfo.category" placeholder="请选择供应商类型">
+              <el-select v-else v-model="supplyInfo.category" placeholder="请选择供应商类型" filterable clearable>
                <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -188,7 +188,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商来源:" prop="source">
               <p v-if="disabled">{{supplyInfo.source}}</p>
-              <el-select v-else v-model="supplyInfo.source" placeholder="请选择供应商来源">
+              <el-select v-else v-model="supplyInfo.source" placeholder="请选择供应商来源" filterable clearable>
                <el-option v-for="item in sourceList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -197,7 +197,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商等级:" prop="grade">
               <p v-if="disabled">{{supplyInfo.grade}}</p>
-              <el-select v-else v-model="supplyInfo.grade" placeholder="请选择供应商等级">
+              <el-select v-else v-model="supplyInfo.grade" placeholder="请选择供应商等级" filterable clearable>
                <el-option v-for="item in gradeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -208,7 +208,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="评审状态:" prop="reviewState">
               <p v-if="disabled">{{supplyInfo.reviewState}}</p>
-              <el-select v-else v-model="supplyInfo.reviewState" placeholder="请选择评审状态">
+              <el-select v-else v-model="supplyInfo.reviewState" placeholder="请选择评审状态" filterable clearable>
                <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -217,7 +217,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="结算方式:" prop="settlementMethod">
               <p v-if="disabled">{{supplyInfo.settlementMethod}}</p>
-              <el-select v-else v-model="supplyInfo.settlementMethod" placeholder="请选择结算方式">
+              <el-select v-else v-model="supplyInfo.settlementMethod" placeholder="请选择结算方式" filterable clearable>
                <el-option v-for="item in settlementMethodList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -228,7 +228,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="等级评审处理:" prop="reviewHandle">
               <p v-if="disabled">{{supplyInfo.reviewHandle}}</p>
-              <el-select v-else v-model="supplyInfo.reviewHandle" placeholder="请选择评审状态">
+              <el-select v-else v-model="supplyInfo.reviewHandle" placeholder="请选择评审状态" filterable clearable>
                <el-option v-for="item in reviewHandleList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>

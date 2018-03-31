@@ -8,7 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-select placeholder="请选择商机名称" v-model="searchData.business_id" filterable>
+            <el-select placeholder="请选择商机名称" v-model="searchData.business_id" filterable clearable>
              <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -16,7 +16,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-select placeholder="请选择商机编码" v-model="searchData.business_id" filterable>
+            <el-select placeholder="请选择商机编码" v-model="searchData.business_id" filterable clearable>
              <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
              </el-option>
            </el-select>

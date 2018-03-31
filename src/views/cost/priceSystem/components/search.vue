@@ -20,7 +20,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品类型:" >
-              <el-select v-model="searchData.type" placeholder="请选择" filterable>
+              <el-select v-model="searchData.type" placeholder="请选择" filterable clearable>
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -28,7 +28,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="系统:">
-              <el-select v-model="searchData.system" placeholder="请选择" filterable>
+              <el-select v-model="searchData.system" placeholder="请选择" filterable clearable>
                <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -50,7 +50,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商:">
-              <el-select v-model="searchData.supply_id" placeholder="请选择" filterable>
+              <el-select v-model="searchData.supply_id" placeholder="请选择" filterable clearable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>

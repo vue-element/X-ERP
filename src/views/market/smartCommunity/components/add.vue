@@ -13,7 +13,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户信息：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
-            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息" filterable>
+            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息" filterable clearable>
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -22,7 +22,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="区域：" prop="region">
             <p v-if="disabled">{{mainMsg.region.name}}</p>
-            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择区域">
+            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择区域" filterable clearable>
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -45,7 +45,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="楼栋及单位数量：" prop="buildNum">
+          <el-form-item label="楼栋及单元数量：" prop="buildNum">
             <p v-if="disabled">{{mainMsg.buildNum}}</p>
             <el-input v-else v-model="mainMsg.buildNum" type="number" min="0" placeholder="请输入楼栋及单位数量"></el-input>
           </el-form-item>
@@ -67,7 +67,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="建筑业态：" prop="archFormat">
             <p v-if="disabled">{{mainMsg.archFormat}}</p>
-            <el-select v-else v-model="mainMsg.archFormat" placeholder="请输入建筑业态">
+            <el-select v-else v-model="mainMsg.archFormat" placeholder="请输入建筑业态" filterable clearable>
               <el-option v-for="item in archFormatList" :label="item.name" :value="item.name" :key="item.id"></el-option>
             </el-select>
           </el-form-item>

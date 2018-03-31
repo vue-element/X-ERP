@@ -7,6 +7,7 @@ import { Message } from 'element-ui'
 const whiteList = ['/login', '/authredirect']// 不重定向白名单
 
 router.beforeEach((to, from, next) => {
+  NProgress.start() // 开启Progress
   if (getToken() || getSession()) {
     if (to.path === '/login') {
       next({ path: '/' })

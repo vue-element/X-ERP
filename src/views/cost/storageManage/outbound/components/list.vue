@@ -31,7 +31,7 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  name: 'paymentContractList',
+  name: 'outboundList',
   props: ['searchData'],
   data() {
     return {

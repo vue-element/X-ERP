@@ -8,7 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-select placeholder="请选择商机名称" v-model="searchData.b_id" filterable>
+            <el-select placeholder="请选择商机名称" v-model="searchData.b_id" filterable clearable>
              <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -16,7 +16,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-select placeholder="请选择商机编码" v-model="searchData.b_id" filterable>
+            <el-select placeholder="请选择商机编码" v-model="searchData.b_id" filterable clearable>
              <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -26,7 +26,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="区域:">
-            <el-select placeholder="请选择区域"  v-model="searchData.region_id">
+            <el-select placeholder="请选择区域"  v-model="searchData.region_id" clearable>
              <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -34,7 +34,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="城市:">
-            <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" filterable clearable></el-cascader>
+            <el-cascader :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" filterable clearable ></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -46,7 +46,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户名称:">
-            <el-select placeholder="请选择客户名称" v-model="searchData.client_id" filterable>
+            <el-select placeholder="请选择客户名称" v-model="searchData.client_id" filterable clearable>
              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -56,15 +56,15 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户类别:">
-            <el-select placeholder="请选择客户类别" v-model="searchData.client_id" filterable>
-             <el-option v-for="item in clientList" :label="item.category" :value="item.id" :key="item.id">
+            <el-select placeholder="请选择客户类别" v-model="searchData.clientCtg" filterable clearable>
+             <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
              </el-option>
            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务分类:">
-            <el-select placeholder="请选择业务分类" v-model="searchData.ctg_id" filterable>
+            <el-select placeholder="请选择业务分类" v-model="searchData.ctg_id" filterable clearable>
              <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -74,7 +74,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机审批状态:">
-            <el-select v-model="searchData.examineState" placeholder="请选择商机审批状态">
+            <el-select v-model="searchData.examineState" placeholder="请选择商机审批状态" clearable>
               <el-option v-for="item in examineStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -82,7 +82,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机执行状态:" prop="executState">
-            <el-select v-model="searchData.executState" placeholder="请选择商机执行状态">
+            <el-select v-model="searchData.executState" placeholder="请选择商机执行状态" clearable>
               <el-option v-for="item in executeStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -113,7 +113,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务线负责人:">
-            <el-select placeholder="请选择业务线负责人" v-model="searchData.bp_id" filterable>
+            <el-select placeholder="请选择业务线负责人" v-model="searchData.bp_id" filterable clearable>
              <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>
@@ -154,6 +154,7 @@ export default {
         city_id: '',
         client_id: '',
         ctg_id: '',
+        clientCtg: '',
         bp_id: '',
         region_id: ''
       },
@@ -224,6 +225,7 @@ export default {
       // this.$get('/bussiness').then((res) => {
       //   this.businessList = res.data.data.content
       // })
+      this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
       this.examineStateList = [{ value: '商机线索' }, { value: '有效商机' }]
     }

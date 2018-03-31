@@ -63,7 +63,6 @@ export default {
         this.user.name = userInfo.accountName
         this.user.department = userInfo.roleName
         this.$store.commit('login', userInfo)
-        // this.$store.dispatch('GenerateRoutes', userInfo)
       })
     },
     toggleSideBar() {

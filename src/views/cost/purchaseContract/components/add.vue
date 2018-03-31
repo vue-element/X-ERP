@@ -181,8 +181,6 @@ export default {
       this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
       this.paymentContract.amount = outputmoney('' + this.paymentContract.amount)
       this.paymentContract.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
-      console.log('amount', this.paymentContract.aomunt)
-      console.log('payableAmount', this.paymentContract.payableAmount)
       this.contractId = this.paymentContract.id
     }
   },

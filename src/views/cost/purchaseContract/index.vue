@@ -132,7 +132,6 @@ export default {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
         const tHeader = ['序号', '申请人', '申请时间', '业务类别', '申请部门', '商机编号', '使用项目', '支付对象', '应付金额', '到付时间', '发货状态', '是否自提', '账期']
         const filterVal = ['index', 'applicationPerson', 'applicationTime', 'businessCategory.name', 'department', 'contractInfo.code', 'contractInfo.name', 'paymentObject', 'payableAmount', 'payTime', 'deliveryStatus', 'mention', 'term']
-        console.log('exprotList', this.exprotList)
         var list = []
         var i = 1
         if (Arr) {
