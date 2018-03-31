@@ -1,5 +1,5 @@
 <template>
-  <div class="disclosure-info-container form-container" ref="ele">
+  <div class="disclosure-info-container form-container">
     <div class="commont-btn edit-btn" v-show="editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
@@ -89,7 +89,7 @@
     <div class="list form-module" style="margin-top:20px;">
       <h4 class="module-title">
         <p>回款计划</p>
-        <el-button type="text" class="up-files common-btn" @click="clickPlanBox">新增回款</el-button>
+        <el-button type="text" class="up-files common-btn" @click="clickShowBox">新增回款</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="receiveData" ref="multipleTable" border>
@@ -137,7 +137,7 @@
     <div class="list form-module" style="margin-top:40px;">
       <h4 class="module-title">
         <p>合同交底附件列表</p>
-        <el-button class="up-files common-btn" type="text" @click="upFiles">附件上传</el-button>
+        <el-button class="up-files common-btn" type="text" @click="filesBtn">附件上传</el-button>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="disclosureFile" ref="multipleTable" border>
@@ -146,14 +146,15 @@
              {{scope.$index + 1}}
             </template>
           </el-table-column>
-          <el-table-column prop="1" label="附件名称" width="300"></el-table-column>
-          <el-table-column prop="2" label="附件说明" width="350"></el-table-column>
-          <el-table-column prop="3" label="上传人"></el-table-column>
-          <el-table-column prop="4" label="上传时间"></el-table-column>
+          <el-table-column prop="fileName" label="附件名称" width="300"></el-table-column>
+          <el-table-column prop="describtion" label="附件说明" width="350"></el-table-column>
+          <el-table-column prop="person" label="上传人"></el-table-column>
+          <!-- <el-table-column prop="url" label="下载地址" width="400"></el-table-column> -->
+          <el-table-column prop="date" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="modify(scope.row.id)" type="text" size="small">修改</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -182,7 +183,6 @@
 
 <script>
 import _ from 'lodash'
-import { formatDate } from '@/utils'
 import { mapState } from 'vuex'
 export default {
   props: ['editData'],
@@ -235,6 +235,7 @@ export default {
   },
   created() {
     this.getInsertData()
+    this.getcontractBasisFile()
     if (this.editData.tabState === 'editTab') {
       this.action = 'edit'
       this.editShow = true
@@ -242,7 +243,6 @@ export default {
       this.showInfo()
     } else {
       this.action = 'add'
-      // var contractMsg = this.$store.state.contractMsg.contractMsg
       var contractMsg = sessionStorage.getItem('contractMsg')
       if (contractMsg) {
         this.disabled = false
@@ -270,7 +270,6 @@ export default {
           }
         })
       } else {
-        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.contractBasis.id = contractMsg.contractBasis.id
         this.contractBasis.contractInfo.id = contractMsg.contractBasis.contractInfo.id
@@ -278,7 +277,6 @@ export default {
       }
     },
     disclosureAdd() {
-      console.log(JSON.stringify(this.contractBasis))
       this.$post('/contractBasis/save', this.contractBasis).then((res) => {
         this.loading = false
         if (res.data.success === true) {
@@ -327,8 +325,7 @@ export default {
     cancel() {
       this.$emit('cancel')
     },
-    // 点击新增回款计划前判断是否有合同交底的ID
-    clickPlanBox() {
+    clickShowBox() {
       if (this.contractBasis.id) {
         this.planBox = true
       } else {
@@ -337,7 +334,6 @@ export default {
         })
       }
     },
-    // 新增回款计划
     paymentPlanSave() {
       if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
@@ -348,13 +344,13 @@ export default {
           }
         })
       } else {
-        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.paymentPlan.contractBasis.id = contractMsg.contractBasis.id
         this.paymentPlanAdd()
       }
     },
     paymentPlanAdd() {
+      console.log(this.paymentPlan)
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
         this.planBox = false
         if (res.data.success === true) {
@@ -375,7 +371,6 @@ export default {
         }
       })
     },
-    // 回款计划展示列表
     paymentPlayShow() {
       if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
@@ -383,18 +378,11 @@ export default {
           if (res.data.success === true) {
             var contractBasisID = res.data.data.content[0].id
             this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
-              var data = res.data.data
-              console.log(data)
-              for (var i = 0; i < data.content.length; i++) {
-                var date = formatDate(data.content[i].date)
-                data.content[i].date = date
-              }
               this.receiveData = res.data.data.content
             })
           }
         })
       } else {
-        // var contractMsg = this.$store.state.contractMsg.contractMsg
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         var contractBasisID = contractMsg.contractBasis.id
         this.$get('/paymentPlan/findAllByContractBasis/' + contractBasisID).then((res) => {
@@ -404,40 +392,137 @@ export default {
     },
     paymentPlanModify(id) {
       this.$get('/paymentPlan/findUpdateData/' + id).then((res) => {
-        this.clickPlanBox()
+        this.clickShowBox()
         this.paymentPlan = res.data.data.paymentPlan
-        this.paymentPlan.date = formatDate(res.data.data.paymentPlan.date)
       })
     },
-    // 回款计划删除数据
     deleteRow(id) {
-      var paymentPlanID = { id: [id] }
-      this.$post('/paymentPlan/delete/', paymentPlanID).then((res) => {
-        if (res.status === 200) {
-          this.paymentPlayShow()
-          this.$message({
-            message: '删除成功',
-            type: 'success'
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var paymentPlanID = { id: [id] }
+        this.$post('/paymentPlan/delete/', paymentPlanID).then((res) => {
+          if (res.data.success === true) {
+            this.paymentPlayShow()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    filesBtn() {
+      var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+      if (this.editData.tabState === 'addTab' && contractMsg === null) {
+        this.$message({
+          message: '请先输入合同基础信息'
+        })
+      } else {
+        if (this.editData.tabState === 'editTab') {
+          this.fileForm.cb_id = this.contractBasis.id
+        } else {
+          if (this.contractBasis.id) {
+            this.upFiles = true
+            this.fileForm.cb_id = this.contractBasis.id
+          } else {
+            this.$message({
+              message: '请先输入合同交底信息'
+            })
+          }
+        }
+      }
+    },
+    getcontractBasisFile() {
+      if (this.editData.tabState === 'editTab') {
+        var ci = _.cloneDeep(this.editData.editData)
+        this.$get('/contractBasis/findAllByContractInfo/' + ci.id).then((res) => {
+          if (res.data.success === true) {
+            var cb = res.data.data.content[0]
+            this.$get('/contractBasisEnclosure/findAllByContractBasis/' + cb.id).then((res) => {
+              this.disclosureFile = res.data.data.content
+            })
+          }
+        })
+      } else {
+        var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
+        if (contractMsg === null) {
+          return
+        } else {
+          var cb = contractMsg.contractBasis
+          this.$get('/contractBasisEnclosure/findAllByContractBasis/' + cb.id).then((res) => {
+            this.disclosureFile = res.data.data.content
           })
         }
+      }
+    },
+    getFile(event) {
+      this.fileForm.file = event.target.files[0]
+    },
+    upFile(event) {
+      event.preventDefault()
+      var _this = this
+      var xhr = new XMLHttpRequest()
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200 || xhr.status === 304) {
+          _this.upFiles = false
+          var res = JSON.parse(xhr.responseText)
+          if (res.success === true) {
+            _this.getcontractBasisFile()
+            _this.fileForm = {
+              cb_id: '',
+              describtion: '',
+              person: '',
+              file: ''
+            }
+            var obj = document.getElementById('fileupload')
+            obj.value = ''
+          }
+        }
+      }
+      var fd = new FormData()
+      fd.append('cb_id', this.fileForm.cb_id)
+      fd.append('describtion', this.fileForm.describtion)
+      fd.append('person', this.fileForm.person)
+      fd.append('file', this.fileForm.file)
+      var src = 'http://202.105.96.131:8081'
+      xhr.open('POST', src + '/contractBasisEnclosure/save', true)
+      xhr.send(fd)
+    },
+    deleteFile(id) {
+      this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var fileID = { id: [id] }
+        this.$post('/contractBasisEnclosure/delete', fileID).then((res) => {
+          if (res.data.success === true) {
+            this.getcontractBasisFile()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
+    },
+    downFile(row) {
+      console.log(row.url)
+      window.location.href = row.url
     }
-    // 数字格式化
-    // materialCost(val) {
-    //   this.contractBasis.materialCost = outputmoney(val)
-    // },
-    // artificialCost(val) {
-    //   this.contractBasis.artificialCost = outputmoney(val)
-    // },
-    // comprehensiveCost(val) {
-    //   this.contractBasis.comprehensiveCost = outputmoney(val)
-    // },
-    // manageCost(val) {
-    //   this.contractBasis.manageCost = outputmoney(val)
-    // },
-    // tax(val) {
-    //   this.contractBasis.tax = outputmoney(val)
-    // }
   },
   mounted() {
   },
@@ -451,6 +536,7 @@ export default {
 @import "src/styles/mixin.scss";
 .disclosure-info-container.form-container{
   margin-top:140px;
+  margin-bottom:20px;
   &::-webkit-scrollbar{
     width:0;
   }

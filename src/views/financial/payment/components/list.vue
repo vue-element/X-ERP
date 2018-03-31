@@ -7,15 +7,15 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="artificialCost" label="人工成本投入"></el-table-column>
-        <el-table-column prop="materialCost" label="材料成本投入"></el-table-column>
-        <el-table-column prop="comprehensiveCost" label="综合成本投入"></el-table-column>
-        <el-table-column prop="manageCost" label="管理费用"></el-table-column>
+        <el-table-column prop="code" label="合同编号" width="180"></el-table-column>
+        <el-table-column prop="name" label="合同名称" width="320"></el-table-column>
+        <el-table-column prop="region" label="所属办事处" width="160"></el-table-column>
+        <el-table-column prop="artificialCost" label="人工成本投入" width="180"></el-table-column>
+        <el-table-column prop="materialCost" label="材料成本投入" width="180"></el-table-column>
+        <el-table-column prop="comprehensiveCost" label="综合成本投入" width="180"></el-table-column>
+        <el-table-column prop="manageCost" label="管理费用" width="180"></el-table-column>
         <el-table-column prop="tax" label="税金"></el-table-column>
-        <el-table-column prop="inputDate" label="投入日期"></el-table-column>
+        <el-table-column prop="inputDate" label="投入日期" width="180"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   name: 'paymentList',
   props: ['searchData'],
@@ -64,13 +64,20 @@ export default {
         if (res.data.success === true) {
           var data = res.data.data
           for (var i = 0; i < data.content.length; i++) {
-            var date = formatDate(data.content[i].inputDate)
-            data.content[i].inputDate = date
+            var index = i + 1
+            var ciCode = data.content[i].contractInfo.code
+            var ciName = data.content[i].contractInfo.name
+            var region = data.content[i].contractInfo.business.region.name
+            data.content[i].code = ciCode
+            data.content[i].name = ciName
+            data.content[i].region = region
+            data.content[i].index = index
           }
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.paymentData = data.content
+          this.$emit('exportData', data.content)
           this.listLoading = false
         }
       })

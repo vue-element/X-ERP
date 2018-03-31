@@ -8,10 +8,9 @@
         <li :class="tab === 'change'?'is-active':''" @click="toggleTab('change')">变更</li>
         <li :class="tab === 'invoiceInfo'?'is-active':''" @click="toggleTab('invoiceInfo')">开票信息</li>
         <li :class="tab === 'returnMoney'?'is-active':''" @click="toggleTab('returnMoney')">回款信息</li>
-        <li :class="tab === 'payMoney'?'is-active':''" @click="toggleTab('payMoney')">付款信息</li>
+        <li :class="tab === 'payMoney'?'is-active':''" @click="toggleTab('payMoney')">成本信息</li>
       </ul>
     </div>
-
     <div class="contractInfo-show">
       <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel" @back="back"></basicInfo>
       <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @back="back"></disclosureInfo>

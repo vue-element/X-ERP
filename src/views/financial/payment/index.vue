@@ -19,21 +19,17 @@
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <!-- <button>
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
         </div>
         <div class="export-btn fr">
           <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading" :class="tab === 'loadDownTab' ? 'is-active' : ''">
+          <button @click="handleDownload()" :loading="downloadLoading">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading" :class="tab === 'exportTab' ? 'is-active' : ''">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -42,7 +38,7 @@
     </div>
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
     </div>
@@ -70,29 +66,7 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {},
-      list: [
-        {
-          id: 1,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 2,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 3,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        }
-      ]
+      exportList: []
     }
   },
   created() {
@@ -123,16 +97,16 @@ export default {
       this.tab = 'listTab'
     },
     addBtn() {
-      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
-        if (this.isChange === true) { // 有值的变化
+      if (this.editData.tabState === 'editTab') {
+        if (this.isChange === true) {
           this.showPopWin(() => {
-            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            this.tab = ''
             setTimeout(() => {
               this.tab = 'addTab'
             }, 50)
             this.editData.tabState = 'addTab'
           })
-        } else { // 没有值的变化
+        } else {
           this.tab = ''
           setTimeout(() => {
             this.tab = 'addTab'
@@ -162,16 +136,24 @@ export default {
       this.tab = 'importTab'
       // this.togglePath('import')
     },
-    handleDownload() {
-      this.tab = 'loadDownTab'
+    exportData(data) {
+      this.exportList = data
+    },
+    handleDownload(Arr) {
+      // this.tab = 'loadDownTab'
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-        const list = this.list
+        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '人工投入成本', '材料投入成本', '综合投入成本', '管理费用', '税金', '投入日期']
+        const filterVal = ['index', 'code', 'name', 'region', 'artificialCost', 'materialCost', 'comprehensiveCost', 'manageCost', 'tax', 'inputDate']
+        var list = []
+        if (Arr) {
+          list = this.exportList
+        } else {
+          list = []
+        }
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
+        export_json_to_excel(tHeader, data, '合同成本信息')
         this.downloadLoading = false
       })
     },

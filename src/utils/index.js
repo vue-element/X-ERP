@@ -374,3 +374,13 @@ export function formatDate(date) {
   }
   return str
 }
+// 小数转百分比
+export function getPercentage(num) {
+  return ((num * 100) + '%')
+}
+
+export function toPoint(percent) {
+  var str = percent.replace('%', '')
+  str = str / 100
+  return str
+}

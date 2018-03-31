@@ -7,18 +7,14 @@
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看</span>
+          </button>
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-         <!--  <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
-            <i class="iconfont icon-add"></i>
-            <span>新增</span>
-          </button> -->
-          <!-- <button>
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
         </div>
         <div class="export-btn fr">
           <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
@@ -37,7 +33,7 @@
       </div>
     </div>
     <div class="compotent-tab">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
+      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj="changeObj"></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
@@ -52,7 +48,7 @@ import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
 export default {
-  name: 'scheduleAnalysis',
+  name: 'scheduleManage',
   components: {
     AddComponent,
     ListComponent,
@@ -95,20 +91,12 @@ export default {
   },
   mounted() {},
   methods: {
-    addBtn() {
-      this.tab = 'addTab'
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
-      }
-    },
     editRow(data) {
+      this.tab = 'addTab'
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
-      this.tab = 'addTab'
     },
     search(data) {
       this.searchData = data
@@ -116,7 +104,52 @@ export default {
       this.tab = 'listTab'
     },
     toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
       this.tab = tab
+    },
+    listBtn() {
+      this.toggleTab('listTab')
+    },
+    addBtn() {
+      if (this.editData.tabState === 'editTab') {
+        if (this.isChange === true) {
+          this.showPopWin(() => {
+            this.tab = ''
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else {
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.editData.tabState = 'addTab'
+      }
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
+    },
+    changeObj(status) {
+      this.isChange = status
     },
     dataImpore() {
       this.toggleTab('importTab')
@@ -128,12 +161,6 @@ export default {
         const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
         const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
         const list = this.list
-        // if (list) {
-        //   list = this.list
-        // } else {
-        //   list = []
-        // }
-        // console.log('list', list)
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, this.filename)
         this.downloadLoading = false

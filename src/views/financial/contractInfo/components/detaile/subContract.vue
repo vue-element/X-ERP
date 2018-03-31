@@ -18,8 +18,8 @@
           <el-table-column prop="date" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
-              <!-- <el-button @click="modify(scope.row.id)" type="text" size="small">修改</el-button> -->
-              <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
+              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -78,7 +78,6 @@ export default {
     resize() {
       this.height = winHeight() - 335
     },
-    // 点击'附件上传'获取ci_id
     filesBtn() {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
       if (this.editData.tabState === 'addTab' && contractMsg === null) {
@@ -99,7 +98,6 @@ export default {
         }
       }
     },
-    // 渲染附件信息
     getSubContractFile() {
       var subContract = null
       if (this.editData.tabState === 'editTab') {
@@ -116,12 +114,9 @@ export default {
         this.subContractData = res.data.data.content
       })
     },
-    // 附件上传之前获取文件信息
     getFile(event) {
       this.fileForm.file = event.target.files[0]
-      console.log(this.fileForm.file)
     },
-    // 附件上传
     upFile(event) {
       event.preventDefault()
       var _this = this
@@ -148,19 +143,12 @@ export default {
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      var src = 'http://10.51.39.106:8085'
+      console.log(this.fileForm)
+      var src = 'http://202.105.96.131:8081'
       xhr.open('POST', src + '/contractSubcontract/save', true)
       xhr.send(fd)
     },
-    // 附件修改
-    modify(id) {
-      this.$get('/contractSubcontract/findUpdateData/' + id).then((res) => {
-        this.upFiles = true
-        this.fileForm = res.data.data.contractSubcontract
-      })
-    },
-    // 附件删除
-    deleteRow(id) {
+    deleteFile(id) {
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -182,6 +170,10 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    downFile(row) {
+      console.log(row.url)
+      // window.location.href = row.url
     }
   }
 }

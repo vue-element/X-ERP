@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   props: ['editData'],
   data() {
@@ -76,11 +76,6 @@ export default {
     getInvoceInfo() {
       var basicInfoID = this.editData.editData.id
       this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
-        var data = res.data.data.contractBillingList
-        for (var i = 0; i < data.content.length; i++) {
-          var date = formatDate(data.content[i].date)
-          data.content[i].date = date
-        }
         this.invoceInfoData = res.data.data.contractBillingList.content
         this.invoceInfo.totalAmount = res.data.data.totalAmount
       })

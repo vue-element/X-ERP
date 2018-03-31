@@ -7,12 +7,12 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="contractBilling.contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="contractBilling.contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractBilling.contractInfo.business.region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="contractBilling.number" label="发票号码"></el-table-column>
-        <el-table-column prop="amount" label="回款金额"></el-table-column>
-        <el-table-column prop="date" label="回款日期"></el-table-column>
+        <el-table-column prop="code" label="合同编号" width="180"></el-table-column>
+        <el-table-column prop="name" label="合同名称" width="340"></el-table-column>
+        <el-table-column prop="region" label="所属办事处" width="180"></el-table-column>
+        <el-table-column prop="number" label="发票号码" width="240"></el-table-column>
+        <el-table-column prop="amount" label="回款金额" min-width="140"></el-table-column>
+        <el-table-column prop="date" label="回款日期" width="180"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   name: 'receivedPaymentList',
   props: ['searchData'],
@@ -69,13 +69,22 @@ export default {
           this.listLoading = false
           var data = res.data.data
           for (var i = 0; i < data.content.length; i++) {
-            var date = formatDate(data.content[i].date)
-            data.content[i].date = date
+            var index = i + 1
+            var ciCode = data.content[i].contractBilling.contractInfo.code
+            var ciName = data.content[i].contractBilling.contractInfo.name
+            var region = data.content[i].contractBilling.contractInfo.business.region.name
+            var number = data.content[i].contractBilling.number
+            data.content[i].code = ciCode
+            data.content[i].name = ciName
+            data.content[i].region = region
+            data.content[i].number = number
+            data.content[i].index = index
           }
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
+          this.$emit('exportData', data.content)
         }
       })
     },

@@ -7,16 +7,16 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="contractInfo.code" label="合同编号" width="120"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="合同名称" width="240"></el-table-column>
-        <el-table-column prop="contractInfo.business.region.name" label="所属办事处"></el-table-column>
-        <el-table-column prop="name" label="发票抬头名称"></el-table-column>
-        <el-table-column prop="amount" label="开票金额(含税)"></el-table-column>
+        <el-table-column prop="code" label="合同编号" width="160"></el-table-column>
+        <el-table-column prop="name" label="合同名称" width="260"></el-table-column>
+        <el-table-column prop="region" label="所属办事处" width="130"></el-table-column>
+        <el-table-column prop="name" label="发票抬头名称" width="260"></el-table-column>
+        <el-table-column prop="amount" label="开票金额(含税)" width="140"></el-table-column>
         <el-table-column prop="taxRate" label="税率"></el-table-column>
-        <el-table-column prop="tax" label="税金"></el-table-column>
-        <el-table-column prop="income" label="收入(不含税)"></el-table-column>
-        <el-table-column prop="date" label="开票日期"></el-table-column>
-        <el-table-column prop="number" label="发票号码"></el-table-column>
+        <el-table-column prop="tax" label="税金" width="120"></el-table-column>
+        <el-table-column prop="income" label="收入(不含税)" width="120"></el-table-column>
+        <el-table-column prop="date" label="开票日期" width="140"></el-table-column>
+        <el-table-column prop="number" label="发票号码" width="140"></el-table-column>
         <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   name: 'invoiceList',
   props: ['searchData'],
@@ -67,15 +67,20 @@ export default {
         if (res.data.success === true) {
           var data = res.data.data
           for (var i = 0; i < data.content.length; i++) {
-            var date = formatDate(data.content[i].date)
-            data.content[i].date = date
+            var region = data.content[i].contractInfo.business.region.name
+            var code = data.content[i].contractInfo.code
+            var name = data.content[i].contractInfo.name
+            var index = i + 1
+            data.content[i].region = region
+            data.content[i].index = index
+            data.content[i].code = code
+            data.content[i].name = name
           }
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.invoiceData = data.content
-          this.invoiceData.tax = data.content.amount * data.content.taxRate
-          this.invoiceData.income = data.content.amount - (data.content.amount * data.content.taxRate)
+          this.$emit('exportData', data.content)
           this.listLoading = false
         }
       })

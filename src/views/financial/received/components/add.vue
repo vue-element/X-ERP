@@ -12,7 +12,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -20,7 +20,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -30,7 +30,7 @@
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="发票号码：">
               <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码"  filterable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -62,7 +62,7 @@
 
 <script>
 import _ from 'lodash'
-import { outputmoney, isObjectValueEqual, formatDate } from '@/utils'
+import { outputmoney, isObjectValueEqual } from '@/utils'
 export default {
   name: 'receivedPaymentAdd',
   props: ['editData'],
@@ -76,12 +76,14 @@ export default {
       action: 'add',
       contractBillingList: [],
       contractInfoList: [],
+      preAmount: null,
       receivedData: {
         contractBilling: {
           id: null
         },
         amount: null,
-        date: ''
+        date: '',
+        diffAmount: null
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
@@ -99,7 +101,6 @@ export default {
   methods: {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
-        console.log(res)
         if (res.data.success === true) {
           this.contractBillingList = res.data.data.contractBillingList
         }
@@ -109,6 +110,7 @@ export default {
       this.$refs.receivedData.validate((valid) => {
         if (valid) {
           this.loading = true
+          this.receivedData.diffAmount = this.receivedData.amount - this.preAmount
           this.$post('/contractReceived/save', this.receivedData).then(res => {
             if (res.data.success === true) {
               this.loading = false
@@ -142,7 +144,7 @@ export default {
         this.editShow = true
         this.disabled = true
         this.receivedData = _.cloneDeep(this.editData.editData.contractReceived)
-        this.receivedData.date = formatDate(this.editData.editData.contractReceived.date)
+        this.preAmount = this.receivedData.amount
       }
     },
     successSave() {

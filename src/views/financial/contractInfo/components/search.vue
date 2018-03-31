@@ -8,14 +8,14 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable>
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编码：">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编码" filterable>
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -106,6 +106,7 @@ export default {
           searchData[key] = this.searchData[key]
         }
       }
+      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

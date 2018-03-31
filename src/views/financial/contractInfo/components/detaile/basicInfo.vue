@@ -12,7 +12,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="商机编码：" prop="business">
                 <p v-if="disabled">{{contractInfo.business.code}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable clearable>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -20,7 +20,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="商机名称：">
                 <p v-if="disabled">{{contractInfo.business.name}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable clearable>
                   <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -28,7 +28,7 @@
           </el-row>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="合同编码：">
+              <el-form-item label="合同编号：">
                 <p v-if="disabled">{{contractInfo.code}}</p>
                 <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
@@ -42,6 +42,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="业务类别：">
@@ -60,6 +61,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="城市：" prop="city">
@@ -152,7 +154,7 @@
 
 <script>
 import _ from 'lodash'
-import { isObjectValueEqual, formatDate } from '@/utils'
+import { isObjectValueEqual } from '@/utils'
 export default {
   props: ['editData'],
   data() {
@@ -207,7 +209,6 @@ export default {
       this.disabled = true
       this.disabled = false
     },
-    // 获取下拉框数据
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
         var data = res.data.data
@@ -229,9 +230,7 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
-          console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
-            // this.$store.commit('getContractMsg', res.data.data)
             var contractMsg = res.data.data
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
             this.loading = false
@@ -252,11 +251,8 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
+      console.log(data)
       this.contractInfo = data.contractInfo
-      this.contractInfo.signDate = formatDate(data.contractInfo.signDate)
-      this.contractInfo.term = formatDate(data.contractInfo.term)
-      this.contractInfo.startDate = formatDate(data.contractInfo.startDate)
-      this.contractInfo.endDate = formatDate(data.contractInfo.endDate)
       this.contractInfo.dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = data.contractInfo.originalAmount + data.contractInfo.changeAmount
@@ -331,6 +327,7 @@ export default {
 @import "src/styles/mixin.scss";
 .basicInfo-container.form-container{
   margin-top: 140px;
+  margin-bottom: 20px;
   &::-webkit-scrollbar{
     width: 0;
   }

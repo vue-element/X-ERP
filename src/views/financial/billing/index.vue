@@ -29,7 +29,7 @@
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -38,7 +38,7 @@
     </div>
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
     </div>
@@ -67,34 +67,11 @@ export default {
       editData: {},
       searchData: {},
       isChange: false,
-      list: [
-        {
-          id: 1,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 2,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        },
-        {
-          id: 3,
-          title: '头条信息',
-          author: '作者',
-          pageviews: 200,
-          display_time: '2018-01-22'
-        }
-      ]
+      exportList: []
     }
   },
   created() {
   },
-  mounted() {},
   methods: {
     toggleTab(tab) {
       if (this.tab === 'addTab' && this.isChange === true) {
@@ -108,7 +85,6 @@ export default {
     listBtn() {
       this.toggleTab('listTab')
     },
-    // 查看单条信息功能
     editRow(data) {
       this.toggleTab('addTab')
       this.editData = {
@@ -116,22 +92,21 @@ export default {
         tabState: 'editTab'
       }
     },
-    // 查询功能
     search(data) {
       this.toggleTab('listTab')
       this.searchData = data
     },
     addBtn() {
-      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
-        if (this.isChange === true) { // 有值的变化
+      if (this.editData.tabState === 'editTab') {
+        if (this.isChange === true) {
           this.showPopWin(() => {
-            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
+            this.tab = ''
             setTimeout(() => {
               this.tab = 'addTab'
             }, 50)
             this.editData.tabState = 'addTab'
           })
-        } else { // 没有值的变化
+        } else {
           this.tab = ''
           setTimeout(() => {
             this.tab = 'addTab'
@@ -160,15 +135,23 @@ export default {
     dataImpore() {
       this.toggleTab('importTab')
     },
-    handleDownload() {
+    exportData(data) {
+      this.exportList = data
+    },
+    handleDownload(Arr) {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '文章标题', '作者', '阅读数', '发布时间']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-        const list = this.list
+        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票抬头名称', '开票金额(含税)', '税率', '税金', '开票日期', '发票号码', '发票内容']
+        const filterVal = ['index', 'code', 'name', 'name', 'amount', 'taxRate', 'tax', 'income', 'date', 'number', 'content']
+        var list = []
+        if (Arr) {
+          list = this.exportList
+        } else {
+          list = []
+        }
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
+        export_json_to_excel(tHeader, data, '合同开票信息')
         this.downloadLoading = false
       })
     },

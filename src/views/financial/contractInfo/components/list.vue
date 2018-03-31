@@ -6,15 +6,15 @@
          {{scope.$index + 1}}
         </template>
       </el-table-column>
-      <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
-      <el-table-column prop="name" label="合同名称" width="240"></el-table-column>
-      <el-table-column prop="business.region.name" label="所属办事处" width="140"></el-table-column>
-      <el-table-column prop="term" label="合同所属期" width="140"></el-table-column>
-      <el-table-column prop="changeAmount" label="变更后合同金额"></el-table-column>
-      <el-table-column prop="invoicedAmount" label="已开票金额"></el-table-column>
-      <el-table-column prop="receivedAmount" label="已回款金额"></el-table-column>
-      <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="140">
+      <el-table-column prop="code" label="合同编号" width="140"></el-table-column>
+      <el-table-column prop="name" label="合同名称" width="260"></el-table-column>
+      <el-table-column prop="region" label="所属办事处" width="160"></el-table-column>
+      <el-table-column prop="term" label="合同所属期" width="160"></el-table-column>
+      <el-table-column prop="changeAmount" label="变更后合同金额" width="150"></el-table-column>
+      <el-table-column prop="invoicedAmount" label="已开票金额" width="150"></el-table-column>
+      <el-table-column prop="receivedAmount" label="已回款金额" width="150"></el-table-column>
+      <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" min-width="160"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
           <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   props: ['searchData'],
   data() {
@@ -60,15 +60,18 @@ export default {
       this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
         for (var i = 0; i < data.content.length; i++) {
-          var term = formatDate(data.content[i].term)
-          data.content[i].term = term
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount
+          var region = data.content[i].business.region.name
+          var index = i + 1
           data.content[i].invoiceNoReceive = invoiceNoReceive
+          data.content[i].region = region
+          data.content[i].index = index
         }
-        this.contractInfoData = data.content
         this.total = data.totalElements
         this.currentPage = data.number + 1
         this.pageSize = data.size
+        this.contractInfoData = data.content
+        this.$emit('exportData', data.content)
         this.listLoading = false
       })
     },
@@ -80,7 +83,6 @@ export default {
       })
     },
     deleteRow(id) {
-      console.log(id)
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -88,7 +90,6 @@ export default {
       }).then(() => {
         var contractInfoID = { id: [id] }
         this.$post('/contractInfo/delete', contractInfoID).then((res) => {
-          console.log()
           if (res.success === true) {
             this.getContractInfoData()
             this.$message({

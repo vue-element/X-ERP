@@ -45,7 +45,7 @@
     </el-form>
     <div class="list form-module">
       <h4 class="module-title">
-        <p>付款详情</p>
+        <p>成本详情</p>
       </h4>
       <div class="table">
         <el-table class="basic-form" style="width: 100%" :data="paymentData" :height="height" ref="multipleTable" border>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { winHeight, formatDate } from '@/utils'
+import { winHeight } from '@/utils'
 export default {
   props: ['editData'],
   data() {
@@ -113,11 +113,6 @@ export default {
     getContractPayment() {
       var paymentID = this.editData.editData.id
       this.$get('/contractPayment/findAllByContractInfo/' + paymentID).then((res) => {
-        var data = res.data.data.contractPaymentList
-        for (var i = 0; i < data.content.length; i++) {
-          var inputDate = formatDate(data.content[i].inputDate)
-          data.content[i].inputDate = inputDate
-        }
         this.paymentData = res.data.data.contractPaymentList.content
         this.contractPayment.totalProAmount = res.data.data.totalProAmount
         this.contractPayment.totalMaterialCost = res.data.data.totalMaterialCost

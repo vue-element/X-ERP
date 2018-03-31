@@ -12,7 +12,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
               <p v-if="disabled">{{billingData.contractInfo.code}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择商机编码" filterable>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择商机编码" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -20,7 +20,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
               <p v-if="disabled">{{billingData.contractInfo.name}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编码" filterable>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { outputmoney, isObjectValueEqual, formatDate } from '@/utils'
+import { outputmoney, isObjectValueEqual } from '@/utils'
 import _ from 'lodash'
 export default {
   name: 'invoiceAdd',
@@ -121,6 +121,7 @@ export default {
       editWord: '编辑',
       contractInfoList: [],
       taxRateList: [],
+      preAmount: '',
       billingData: {
         amount: '',
         content: '',
@@ -131,7 +132,8 @@ export default {
         number: '',
         tax: '',
         taxRate: '',
-        income: ''
+        income: '',
+        diffAmount: ''
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
@@ -164,7 +166,7 @@ export default {
           this.loading = true
           this.billingData.tax = this.tax
           this.billingData.income = this.income
-          console.log(JSON.stringify(this.billingData))
+          this.billingData.diffAmount = this.billingData.amount - this.preAmount
           this.$post('/contractBilling/save', this.billingData).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -198,7 +200,7 @@ export default {
         this.editShow = true
         this.disabled = true
         this.billingData = _.cloneDeep(this.editData.editData.contractBilling)
-        this.billingData.date = formatDate(this.editData.editData.contractBilling.date)
+        this.preAmount = this.billingData.amount
       }
     },
     successSave() {

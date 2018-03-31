@@ -15,13 +15,9 @@
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
-        <!--   <button :class="tab === 'delTab' ? 'is-active' : ''">
-            <i class="iconfont icon-delete"></i>
-            <span>删除</span>
-          </button> -->
         </div>
         <div class="export-btn fr">
-          <button>
+          <button @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -30,13 +26,14 @@
     </div>
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
-      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow"></listComponent>
+      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData"></listComponent>
       <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')"></addComponent>
     </div>
   </div>
 </template>
 
 <script>
+import { parseTime } from '@/utils'
 import searchComponent from './components/search'
 import listComponent from './components/list'
 import addComponent from './components/add'
@@ -50,6 +47,8 @@ export default {
     return {
       tab: 'listTab',
       rowDetail: '',
+      downloadLoading: false,
+      exprotList: [],
       searchData: {},
       editData: {}
     }
@@ -61,7 +60,6 @@ export default {
     toggleTab(tab) {
       this.tab = tab
     },
-    // 点击新增
     addBtn() {
       this.tab = 'addTab'
       this.delSession()
@@ -70,7 +68,6 @@ export default {
         tabState: 'addTab'
       }
     },
-    // 点击查看
     editRow(data) {
       this.tab = 'addTab'
       this.editData = {
@@ -90,6 +87,39 @@ export default {
     },
     back(tab) {
       this.tab = tab
+    },
+    exportData(data) {
+      this.exprotList = data
+    },
+    handleDownload(Arr) {
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '合同所属期', '变更后合同金额', '已开票金额', '已回款金额', '已开票未回款金额']
+        const filterVal = ['index', 'code', 'name', 'region', 'term', 'changeAmount', 'invoicedAmount', 'receivedAmount', 'invoiceNoReceive']
+        var list = []
+        if (Arr) {
+          list = this.exprotList
+        } else {
+          list = []
+        }
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '合同信息')
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      console.log(filterVal, 'filterVal')
+      console.log(jsonData, 'jsonData')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   },
   computed: {

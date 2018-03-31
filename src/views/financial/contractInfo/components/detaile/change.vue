@@ -1,5 +1,5 @@
 <template>
-  <div class="change-container form-container">
+  <div class="contractChange-container form-container">
     <div class="list form-module">
       <h4 class="module-title">
         <p>合同变更附件列表</p>
@@ -19,13 +19,15 @@
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
               <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
     :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
       </div>
-      <el-dialog title="合同变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
+      <!-- 分包文件上传弹窗 -->
+      <el-dialog title="变更附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
         <form>
           <div class="describtion">
             <span>附件说明：</span>
@@ -53,9 +55,9 @@ export default {
   props: ['editData'],
   data() {
     return {
-      contractChangeData: [],
       height: 100,
       currentPage: 1,
+      contractChangeData: [],
       upFiles: false,
       fileForm: {
         ci_id: '',
@@ -66,7 +68,7 @@ export default {
     }
   },
   created() {
-    this.getContractChangeFile()
+    this.getSubContractFile()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -76,7 +78,6 @@ export default {
     resize() {
       this.height = winHeight() - 335
     },
-    // 点击'附件上传'获取ci_id
     filesBtn() {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
       if (this.editData.tabState === 'addTab' && contractMsg === null) {
@@ -97,29 +98,26 @@ export default {
         }
       }
     },
-    // 渲染附件信息
-    getContractChangeFile() {
-      var contractChange = null
+    getSubContractFile() {
+      var subContract = null
       if (this.editData.tabState === 'editTab') {
-        contractChange = _.cloneDeep(this.editData.editData)
+        subContract = _.cloneDeep(this.editData.editData)
       } else {
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         if (contractMsg === null) {
           return
         } else {
-          contractChange = contractMsg.contractBasis.contractInfo
+          subContract = contractMsg.contractBasis.contractInfo
         }
       }
-      this.$get('/contractChange/findAllByContractInfo/' + contractChange.id).then((res) => {
+      this.$get('/contractChange/findAllByContractInfo/' + subContract.id).then((res) => {
         this.contractChangeData = res.data.data.content
       })
     },
-    // 附件上传之前获取文件信息
     getFile(event) {
       this.fileForm.file = event.target.files[0]
       console.log(this.fileForm.file)
     },
-    // 附件上传
     upFile(event) {
       event.preventDefault()
       var _this = this
@@ -129,7 +127,7 @@ export default {
           _this.upFiles = false
           var res = JSON.parse(xhr.responseText)
           if (res.success === true) {
-            _this.getContractChangeFile()
+            _this.getSubContractFile()
             _this.fileForm = {
               ci_id: '',
               describtion: '',
@@ -146,18 +144,10 @@ export default {
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      var src = 'http://10.51.39.106:8085'
+      var src = 'http://202.105.96.131:8081'
       xhr.open('POST', src + '/contractChange/save', true)
       xhr.send(fd)
     },
-    // 附件修改
-    modify(id) {
-      this.$get('/contractChange/findUpdateData/' + id).then((res) => {
-        this.upFiles = true
-        this.fileForm = res.data.data.contractSubcontract
-      })
-    },
-    // 附件删除
     deleteRow(id) {
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
         confirmButtonText: '确定',
@@ -167,7 +157,7 @@ export default {
         var fileID = { id: [id] }
         this.$post('/contractChange/delete', fileID).then((res) => {
           if (res.data.success === true) {
-            this.getContractChangeFile()
+            this.getSubContractFile()
             this.$message({
               message: '删除成功',
               type: 'success'
@@ -180,6 +170,10 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    downFile(row) {
+      console.log(row.url)
+      // window.location.href = row.url
     }
   }
 }
@@ -187,7 +181,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.change-container.form-container{
+.contractChange-container.form-container{
   border:none;
   margin-top:140px;
   .list.form-module{
