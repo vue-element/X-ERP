@@ -1,4 +1,6 @@
-import { getToken, removeToken, removeSession } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
+// import store from '../../store'
+// import router from '../../router'
 const user = {
   state: {
     // userInfo: {},
@@ -39,7 +41,6 @@ const user = {
       state.userName = ''
       state.token = ''
       removeToken()
-      removeSession()
     },
     setToken: (state, token) => {
       state.token = token
@@ -62,19 +63,26 @@ const user = {
       commit('logout')
     }
     // // 获取用户信息
-    // GetUserInfo({ commit, state }) {
+    // GetInfo({commit, state}) {
     //   return new Promise((resolve, reject) => {
-    //     getUserInfo(state.token).then(response => {
-    //       if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-    //         reject('error')
-    //       }
-    //       const data = response.data
-    //       commit('setRoles', data.role)
-    //       resolve(response)
+    //     api({
+    //       url: '/SHIRO/getInfo',
+    //       method: 'post'
+    //     }).then(data => {
+    //       // 储存用户信息
+    //       commit('SET_USER', data.userPermission)
+    //       // cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
+    //       setToken()
+    //       let userPermission = data.userPermission
+    //       store.dispatch('GenerateRoutes', userPermission).then(() => {
+    //         // 生成该用户的新路由json操作完毕之后,调用vue-router的动态新增路由方法,将新路由添
+    //         router.addRoutes(store.getters.addRouters)
+    //       })
+    //       resolve(data)
     //     }).catch(error => {
     //       reject(error)
     //     })
-    //   })
+    //   }
     // }
   }
 }

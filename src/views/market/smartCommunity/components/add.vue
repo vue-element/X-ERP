@@ -33,7 +33,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="城市：" prop="city">
             <p v-if="disabled">{{mainMsg.city.name}}</p>
-            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市"></el-cascader>
+            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市" filterable clearable></el-cascader>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -447,7 +447,7 @@ export default {
         client: {
           id: ''
         },
-        address: '22222',
+        address: '',
         archFormat: '',
         basementParkingFee: '',
         basementParkingNum: '',

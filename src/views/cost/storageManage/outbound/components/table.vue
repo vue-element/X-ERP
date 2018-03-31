@@ -4,7 +4,7 @@
       <h4 class="module-title">
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
-          <button @click="showDialog">
+          <button @click.prevent="showDialog">
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -43,7 +43,7 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
           <el-button :loading="false">通过审核</el-button>
-          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false">导出出库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>
@@ -104,7 +104,7 @@ import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['editShow', 'outboundId', 'actionTab'],
+  props: ['editShow', 'outboundId', 'paymentContractId', 'actionTab'],
   data() {
     return {
       purchaseList: [],
@@ -129,7 +129,9 @@ export default {
     }
   },
   created() {
-    this.getPurchaseList()
+    if (this.paymentContractId) {
+      this.getPurchaseList()
+    }
     if (this.outboundId) {
       this.getOutboundList()
       this.getOutboundCheck()
@@ -137,9 +139,9 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList').then((res) => {
+      this.$get('/purchaseList/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         if (res.data.success === true) {
-          this.purchaseList = res.data.data.content
+          this.purchaseList = res.data.data
         }
       })
     },
@@ -164,6 +166,7 @@ export default {
         })
         this.dialogFormVisible = false
       } else {
+        this.getPurchaseList()
         this.dialogFormVisible = true
       }
     },
@@ -222,7 +225,6 @@ export default {
     // 获取审核动态数组
     getOutboundCheck() {
       this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
-        console.log('res', res)
         if (res.data.success === true) {
           this.outboundCheck = res.data.data
         }

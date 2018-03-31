@@ -3,10 +3,10 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <!-- <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
+        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
           <i class="iconfont icon-search"></i>
           <span>查询</span>
-        </button> -->
+        </button>
         <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
@@ -32,8 +32,8 @@
     <transition name="fade" mode="out-in">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
     </transition>
+    <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
 </template>
@@ -135,8 +135,13 @@ export default {
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
         const tHeader = ['序号', '客户名称', '客户类型', '业态', '企业性质', '联系人', '联系人电话', 'QQ', 'E-mail', '客户地址']
-        const filterVal = ['id', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
+        const filterVal = ['index', 'name', 'category', 'type', 'nature', 'person', 'phone', 'qq', 'email', 'address']
         const list = this.exprotList
+        var i = 1
+        list.forEach((item) => {
+          item.index = i
+          i++
+        })
         const data = this.formatJson(filterVal, list)
         export_json_to_excel(tHeader, data, '客户信息表')
         this.downloadLoading = false

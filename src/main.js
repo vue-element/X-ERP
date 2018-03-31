@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
+import { hasPermission } from './utils/hasPermission'
 import axios from 'axios'
 // import utils from '@/utils/index'
 
@@ -22,6 +23,8 @@ Vue.config.productionTip = false
 axios.defaults.withCredentials = true	// 设置cookie可配置
 Vue.prototype.$post = post
 Vue.prototype.$get = get
+// 全局的常量
+Vue.prototype.hasPerm = hasPermission
 
 // var winHeight = utils.winSize.
 
@@ -30,25 +33,6 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-// 路由截获
-// router.beforeEach((to, from, next) => {
-//   const token = getCookie('privarytoken')
-//   if(to.name == "login"){
-//     next();
-//   }else{
-//     if(token !==null){
-//       next()
-//     }else{
-//       setSession("direct", location.href) //保存重定向之前的地址
-//       router.push({
-//         path: '/login',
-//       })
-//       next();
-//     }
-//   }
-//   console.log(to.path)
-//   next()
-// })
 new Vue({
   el: '#app',
   router,

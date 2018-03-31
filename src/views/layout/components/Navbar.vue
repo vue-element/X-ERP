@@ -26,7 +26,8 @@
 </template>
 
 <script>
-// import Cookies from 'js-cookie'
+// import store from '@/store'
+// import router from '@/router'
 import { mapActions, mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -59,9 +60,10 @@ export default {
     getUserInfo() {
       this.$post('/shiro/getInfo').then((res) => {
         var userInfo = res.data.userPermission
-        this.$store.commit('login', userInfo)
-        this.user.name = userInfo.userName
+        this.user.name = userInfo.accountName
         this.user.department = userInfo.roleName
+        this.$store.commit('login', userInfo)
+        // this.$store.dispatch('GenerateRoutes', userInfo)
       })
     },
     toggleSideBar() {
@@ -69,13 +71,10 @@ export default {
     },
     logout() {
       this.$post('/shiro/logout').then((res) => {
-
+        this.$store.dispatch('logout').then(() => {
+          location.reload() // 为了重新实例化vue-router对象 避免bug
+        })
       })
-      // console.log(1111)
-      // this.$store.commit('logout')
-      // this.$store.dispatch('logout').then(() => {
-      //   location.reload() // 为了重新实例化vue-router对象 避免bug
-      // })
     },
     ...mapActions([
       'setToken',

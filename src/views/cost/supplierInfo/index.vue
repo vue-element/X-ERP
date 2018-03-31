@@ -140,14 +140,19 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['供应商名称', '合作商类别', '企业法人', '营业执照号', '注册资金', '企业性质', '供货周期', '供货区域', '物资类别', '业务联系人', '联系电话',
+        const tHeader = ['序号', '供应商名称', '合作商类别', '企业法人', '营业执照号', '注册资金', '企业性质', '供货周期', '供货区域', '物资类别', '业务联系人', '联系电话',
           'QQ', '注册地址', '现址', '开户银行', '银行账号', '发票类型', '税率', '供应商类别', '供应商类型', '评审状态', '结算方式', '合作开始日期', '评审到期日期']
-        const filterVal = ['name', 'cooperativeType', 'enterprisePerson', 'licenseNumber', 'regCapital', 'enterpriseNature', 'supplyCycle', 'region', 'materialCategory', 'person',
+        const filterVal = ['index', 'name', 'cooperativeType', 'enterprisePerson', 'licenseNumber', 'regCapital', 'enterpriseNature', 'supplyCycle', 'region', 'materialCategory', 'person',
           'phone', 'qq', 'regAddress', 'address', 'bank', 'bankAccount', 'invoiceType', 'taxRate', 'type', 'category', 'reviewState', 'settlementMethod', 'startDate', 'endDate']
         console.log('exprotList', this.exprotList)
         var list = []
+        var i = 1
         if (Arr) {
           list = this.exprotList
+          list.forEach((item) => {
+            item.index = i
+            i++
+          })
         } else {
           list = []
         }

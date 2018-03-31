@@ -84,8 +84,8 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/client?size=' + pageSize + '&page=' + page
-      this.$get(url, this.searchData).then((res) => {
+      var url = '/client/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then((res) => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data

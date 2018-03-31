@@ -3,15 +3,13 @@
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
         <el-table-column prop="0" label="序号"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-        <el-table-column prop="contractInfo.code" label="合同编号"></el-table-column>
-        <el-table-column prop="orderNumber" label="采购计划单号"></el-table-column>
+        <el-table-column prop="paymentContract.code" label="付款合同编号"></el-table-column>
         <el-table-column prop="code" label="出库单编号"></el-table-column>
-        <el-table-column prop="contractInfo.name" label="项目"></el-table-column>
-        <el-table-column prop="region.name" label="办事处"></el-table-column>
+        <el-table-column prop="paymentContract.project" label="项目"></el-table-column>
+        <el-table-column prop="paymentContract.department" label="办事处"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <!-- <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button> -->
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-dropdown>
               <el-button class="el-dropdown-link" type="text">更多</el-button>
