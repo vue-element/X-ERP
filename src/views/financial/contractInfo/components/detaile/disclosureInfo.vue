@@ -429,7 +429,6 @@ export default {
           this.upFiles = true
           this.fileForm.cb_id = this.contractBasis.id
         } else {
-          console.log(222)
           if (this.contractBasis.id) {
             this.upFiles = true
             this.fileForm.cb_id = this.contractBasis.id
@@ -470,7 +469,7 @@ export default {
     upFile(event) {
       event.preventDefault()
       var fd = new FormData()
-      fd.append('ci_id', this.fileForm.ci_id)
+      fd.append('cb_id', this.fileForm.cb_id)
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)

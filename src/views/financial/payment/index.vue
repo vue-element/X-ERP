@@ -21,10 +21,10 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''" v-show="tab === 'listTab'">
+          <!-- <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''" v-show="tab === 'listTab'">
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
-          </button>
+          </button> -->
           <button @click="handleDownload()" :loading="downloadLoading" v-show="tab === 'listTab'">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>

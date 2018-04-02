@@ -376,7 +376,8 @@ export function formatDate(date) {
 }
 // 小数转百分比
 export function getPercentage(num) {
-  return ((num * 100) + '%')
+  var str = parseInt(num * 100) / 100 + '%'
+  return str
 }
 
 export function toPoint(percent) {
