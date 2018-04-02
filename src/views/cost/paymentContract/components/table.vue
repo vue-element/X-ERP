@@ -4,11 +4,11 @@
       <h4 class="module-title">
         <p @click="uploadTableShow = false">物料详情</p>
         <div class="material-table-head fr">
-          <button @click="handleDownload" :loading="downloadLoading">
+          <button @click.prevent="handleDownload" :loading="downloadLoading">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="uploadMaterial">
+          <button @click.prevent="uploadMaterial">
             <i class="iconfont icon-import"></i>
             <span>导入物料明细</span>
           </button>

@@ -68,9 +68,8 @@ export const asyncRouterMap = [
       { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }, menu: 'contractBilling' },
       { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }, menu: 'contractReceived' },
       { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同成本管理' }},
-      { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }, menu: 'contractSchedule' },
-      { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
-      // { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }}
+      // { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }, menu: 'contractSchedule' },
+      { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }, menu: 'contractSchedule' }
     ]
   },
   // 成本管理
@@ -79,11 +78,11 @@ export const asyncRouterMap = [
       { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }, menu: 'supply' },
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }, menu: 'price' },
       { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }, menu: 'paymentContract' },
-      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'purchaseList' },
+      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'paymentContract' },
       { path: '/cost/storage-manage', component: _import('cost/storageManage/index'), name: 'storageManage', meta: { title: '出入库管理' },
         children: [
-          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }},
-          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }}
+          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }, menu: 'paymentContract' },
+          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }, menu: 'outboundList' }
         ]
       }
     ]

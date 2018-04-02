@@ -9,15 +9,13 @@
    <el-table-column prop="business.name" label="商机名称" width="100"></el-table-column>
    <el-table-column prop="business.amount" label="预计成交金额" width="120"></el-table-column>
    <el-table-column prop="business.executeState" label="商机执行状态" width="120"></el-table-column>
-   <!-- <el-table-column prop="url" label="在线协作地址">
-   </el-table-column> -->
    <el-table-column label="在线协作地址">
      <template slot-scope="scope">
        <span @click="toURl(scope.row.url)">{{scope.row.url}}</span></template>
    </el-table-column>
    <el-table-column fixed="right" label="操作" width="180">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small">表格查看/编辑</el-button>
+        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small" hasPerm('tenderOffer:findInsertData')>表格查看/编辑</el-button>
         <el-button @click.native.prevent="exportExcel(scope.row)" type="text" size="small">表格导出</el-button>
       </template>
     </el-table-column>

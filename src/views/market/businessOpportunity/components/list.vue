@@ -18,8 +18,8 @@
       <el-table-column fixed="right" prop="examineState" label="商机审批状态" width="120"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
-        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('bussiness:findAllByPage')">查看</el-button>
+        <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('bussiness:delete')">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
