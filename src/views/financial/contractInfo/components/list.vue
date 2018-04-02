@@ -13,7 +13,7 @@
       <el-table-column prop="contractTotalAmount" label="变更后合同金额" width="150"></el-table-column>
       <el-table-column prop="invoicedAmount" label="已开票金额" width="150"></el-table-column>
       <el-table-column prop="receivedAmount" label="已回款金额" width="150"></el-table-column>
-      <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" min-width="160"></el-table-column>
+      <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
@@ -90,7 +90,7 @@ export default {
       }).then(() => {
         var contractInfoID = { id: [id] }
         this.$post('/contractInfo/delete', contractInfoID).then((res) => {
-          if (res.success === true) {
+          if (res.data.success === true) {
             this.getContractInfoData()
             this.$message({
               message: '删除成功',

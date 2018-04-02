@@ -29,7 +29,6 @@ function hasPermission(menus, route) {
  * @param roles
  */
 function filterAsyncRouter(asyncRouterMap, menus) {
-  // console.log('asyncRouterMap', asyncRouterMap) // 异步路由表
   const accessedRouters = asyncRouterMap.filter(route => {
     if (hasPermission(menus, route)) {
       // console.log('hasPermission true')

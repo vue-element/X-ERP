@@ -67,8 +67,7 @@ export const asyncRouterMap = [
       { path: 'contractInfo', component: _import('financial/contractInfo/index'), name: 'contractInfo', meta: { title: '合同信息管理' }, menu: 'contractInfo' },
       { path: 'billing', component: _import('financial/billing/index'), name: 'contrctBilling', meta: { title: '合同开票管理' }, menu: 'contractBilling' },
       { path: 'received', component: _import('financial/received/index'), name: 'received', meta: { title: '合同回款管理' }, menu: 'contractReceived' },
-      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同成本管理' }},
-      // { path: 'scheduleManage', component: _import('financial/scheduleManage/index'), name: 'scheduleManage', meta: { title: '项目进度管理' }, menu: 'contractSchedule' },
+      { path: 'payment', component: _import('financial/payment/index'), name: 'payment', meta: { title: '合同成本管理' }, menu: 'contractPayment' },
       { path: 'scheduleAnalysis', component: _import('financial/scheduleAnalysis/index'), name: 'scheduleAnalysis', meta: { title: '项目进度分析' }, menu: 'contractSchedule' }
     ]
   },
