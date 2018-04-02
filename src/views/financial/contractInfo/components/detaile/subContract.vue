@@ -119,34 +119,25 @@ export default {
     },
     upFile(event) {
       event.preventDefault()
-      var _this = this
-      var xhr = new XMLHttpRequest()
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200 || xhr.status === 304) {
-          _this.upFiles = false
-          var res = JSON.parse(xhr.responseText)
-          if (res.success === true) {
-            _this.getSubContractFile()
-            _this.fileForm = {
-              ci_id: '',
-              describtion: '',
-              person: '',
-              file: ''
-            }
-            var obj = document.getElementById('fileupload')
-            obj.value = ''
-          }
-        }
-      }
       var fd = new FormData()
       fd.append('ci_id', this.fileForm.ci_id)
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      console.log(this.fileForm)
-      var src = 'http://202.105.96.131:8081'
-      xhr.open('POST', src + '/contractSubcontract/save', true)
-      xhr.send(fd)
+      this.$post('/contractSubcontract/save', fd).then((res) => {
+        if (res.data.success === true) {
+          this.getSubContractFile()
+          this.fileForm = {
+            ci_id: '',
+            describtion: '',
+            person: '',
+            file: ''
+          }
+          var obj = document.getElementById('fileupload')
+          obj.value = ''
+          this.upFiles = false
+        }
+      })
     },
     deleteFile(id) {
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {
@@ -172,8 +163,7 @@ export default {
       })
     },
     downFile(row) {
-      console.log(row.url)
-      // window.location.href = row.url
+      window.location.href = row.url
     }
   }
 }

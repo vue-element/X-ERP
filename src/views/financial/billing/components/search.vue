@@ -8,16 +8,16 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
-               <el-option v-for="item in contractInfoList" :label="item.contractInfo.name" :value="item.contractInfo.id" :key="item.contractInfo.id">
+              <el-select v-model="searchData.name" clearable placeholder="请选择合同编码"  filterable>
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编码：">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
-               <el-option v-for="item in contractInfoList" :label="item.contractInfo.code" :value="item.contractInfo.id" :key="item.contractInfo.id">
+              <el-select v-model="searchData.code" clearable placeholder="请选择合同编码"  filterable>
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -60,7 +60,7 @@ export default {
       disabled: false,
       contractInfoList: [],
       searchData: {
-        contractInfo_id: '',
+        id: null,
         name: '',
         number: '',
         date: ''
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/contractBilling').then(res => {
+      this.$get('/contractBilling/findInsertData').then(res => {
         console.log(res)
         if (res.data.success === true) {
           this.contractInfoList = res.data.data.content
@@ -93,6 +93,7 @@ export default {
       }
       searchData['date'] = this.searchData['date'][0]
       searchData['date1'] = this.searchData['date'][1]
+      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

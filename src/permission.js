@@ -7,6 +7,7 @@ import { Message } from 'element-ui'
 
 // permissiom judge
 function hasPermission(roles, permissionRoles) {
+  console.log('roles', roles)
   if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
   if (!permissionRoles) return true
   return roles.some(role => permissionRoles.indexOf(role) >= 0)

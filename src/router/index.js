@@ -115,7 +115,7 @@ export const asyncRouterMap = [
   {
     path: '/error',
     component: Layout,
-    hidden: true,
+    hidden: false,
     redirect: 'noredirect',
     name: 'errorPages',
     meta: {
@@ -126,26 +126,6 @@ export const asyncRouterMap = [
       { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: '401', noCache: true }},
       { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: '404', noCache: true }}
     ]
-  },
-  { path: '/excel',
-    component: Layout,
-    hidden: true,
-    redirect: '/excel/export-excel',
-    name: 'excel',
-    meta: {
-      title: 'excel',
-      icon: 'excel'
-    },
-    children: [
-      { path: 'export-excel', component: _import('excel/exportExcel'), name: 'exportExcel', meta: { title: 'export excel' }},
-      { path: 'export-selected-excel', component: _import('excel/selectExcel'), name: 'selectExcel', meta: { title: 'select excel' }},
-      { path: 'upload-excel', component: _import('excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'upload excel' }}
-    ]
-  },
-  { path: '/i18n',
-    component: Layout,
-    hidden: true,
-    children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: '国际化', icon: 'international' }}]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

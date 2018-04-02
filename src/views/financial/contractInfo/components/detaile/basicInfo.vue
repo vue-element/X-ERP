@@ -230,6 +230,8 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
+          console.log(this.contractInfo.contractTotalAmount)
+          console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             var contractMsg = res.data.data
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
@@ -251,7 +253,6 @@ export default {
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
       this.contractInfo = data.contractInfo
       this.contractInfo.dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
@@ -311,11 +312,14 @@ export default {
   computed: {
     contractTotalAmount() {
       if (!this.contractInfo.originalAmount && !this.contractInfo.changeAmount || !this.contractInfo.originalAmount && this.contractInfo.changeAmount) {
+        this.contractInfo.contractTotalAmount = null
         return null
       } else if (this.contractInfo.originalAmount && !this.contractInfo.changeAmount) {
         this.changeAmount = null
+        this.contractInfo.contractTotalAmount = parseFloat(this.contractInfo.originalAmount)
         return parseFloat(this.contractInfo.originalAmount)
       } else {
+        this.contractInfo.contractTotalAmount = (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)
         return (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)
       }
     }

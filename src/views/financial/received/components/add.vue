@@ -70,7 +70,7 @@ export default {
     var validateContractInfo = this.validateMsg('合同信息不能为空')
     return {
       loading: false,
-      editShow: true,
+      editShow: false,
       editWord: '编辑',
       disabled: false,
       action: 'add',

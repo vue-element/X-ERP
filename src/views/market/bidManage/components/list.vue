@@ -15,7 +15,7 @@
    </el-table-column>
    <el-table-column fixed="right" label="操作" width="180">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small" hasPerm('tenderOffer:findInsertData')>表格查看/编辑</el-button>
+        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small" v-if="hasPerm('tenderOffer:findInsertData')">表格查看/编辑</el-button>
         <el-button @click.native.prevent="exportExcel(scope.row)" type="text" size="small">表格导出</el-button>
       </template>
     </el-table-column>

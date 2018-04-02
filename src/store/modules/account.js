@@ -6,7 +6,7 @@ const user = {
   state: {
     // userInfo: {},
     token: getToken(),
-    // roles: [],
+    roles: [],
     // role: '',
     accountId: '',
     accountName: '',
@@ -64,30 +64,19 @@ const user = {
     logout({ commit }) {
       commit('logout')
     },
-    // // 获取用户信息
+    // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        post('/shiro/getInfo')
-          .then(res => {
-            var userInfo = res.data.userPermission
-            console.log('userInfo', userInfo)
-            commit('login', userInfo)
-            // this.$store.dispatch('GenerateRoutes', userInfo)
-            resolve(userInfo)
-          })
-          .catch(error => {
-            reject(error)
-          })
+        post('/shiro/getInfo').then((res) => {
+          var userInfo = res.data.userPermission
+          console.log('userInfo', userInfo)
+          commit('login', userInfo)
+          resolve(userInfo)
+        }).catch(error => {
+          reject(error)
+        })
       })
     }
   }
 }
 export default user
-// export function getUserInfo(token) {
-//   return new Promise((resolve, reject) => {
-//     resolve({
-//       data: { username: 'admin', name: 'admin', 'role': ['admin'] }
-//       // console.log('getUserInfo', data)
-//     })
-//   })
-// }

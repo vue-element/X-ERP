@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { winHeight } from '@/utils'
 export default {
   data() {
     return {
@@ -40,8 +41,15 @@ export default {
     }
   },
   created() {
+    this.resize()
+    window.addEventListener('resize', () => {
+      this.resize()
+    })
   },
   methods: {
+    resize() {
+      this.height = winHeight() - 220
+    },
     handleSizeChange(val) {
       this.pageSize = val
       this.getContractInfoData()
