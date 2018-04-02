@@ -10,7 +10,7 @@
       <el-table-column prop="name" label="合同名称" width="260"></el-table-column>
       <el-table-column prop="region" label="所属办事处" width="160"></el-table-column>
       <el-table-column prop="term" label="合同所属期" width="160"></el-table-column>
-      <el-table-column prop="changeAmount" label="变更后合同金额" width="150"></el-table-column>
+      <el-table-column prop="contractTotalAmount" label="变更后合同金额" width="150"></el-table-column>
       <el-table-column prop="invoicedAmount" label="已开票金额" width="150"></el-table-column>
       <el-table-column prop="receivedAmount" label="已回款金额" width="150"></el-table-column>
       <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" min-width="160"></el-table-column>

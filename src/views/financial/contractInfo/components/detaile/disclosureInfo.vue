@@ -149,12 +149,11 @@
           <el-table-column prop="fileName" label="附件名称" width="300"></el-table-column>
           <el-table-column prop="describtion" label="附件说明" width="350"></el-table-column>
           <el-table-column prop="person" label="上传人"></el-table-column>
-          <!-- <el-table-column prop="url" label="下载地址" width="400"></el-table-column> -->
           <el-table-column prop="date" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
               <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
+              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -427,8 +426,10 @@ export default {
         })
       } else {
         if (this.editData.tabState === 'editTab') {
+          this.upFiles = true
           this.fileForm.cb_id = this.contractBasis.id
         } else {
+          console.log(222)
           if (this.contractBasis.id) {
             this.upFiles = true
             this.fileForm.cb_id = this.contractBasis.id
@@ -468,33 +469,25 @@ export default {
     },
     upFile(event) {
       event.preventDefault()
-      var _this = this
-      var xhr = new XMLHttpRequest()
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200 || xhr.status === 304) {
-          _this.upFiles = false
-          var res = JSON.parse(xhr.responseText)
-          if (res.success === true) {
-            _this.getcontractBasisFile()
-            _this.fileForm = {
-              cb_id: '',
-              describtion: '',
-              person: '',
-              file: ''
-            }
-            var obj = document.getElementById('fileupload')
-            obj.value = ''
-          }
-        }
-      }
       var fd = new FormData()
-      fd.append('cb_id', this.fileForm.cb_id)
+      fd.append('ci_id', this.fileForm.ci_id)
       fd.append('describtion', this.fileForm.describtion)
       fd.append('person', this.fileForm.person)
       fd.append('file', this.fileForm.file)
-      var src = 'http://202.105.96.131:8081'
-      xhr.open('POST', src + '/contractBasisEnclosure/save', true)
-      xhr.send(fd)
+      this.$post('/contractBasisEnclosure/save', fd).then((res) => {
+        if (res.data.success === true) {
+          this.getcontractBasisFile()
+          this.fileForm = {
+            ci_id: '',
+            describtion: '',
+            person: '',
+            file: ''
+          }
+          var obj = document.getElementById('fileupload')
+          obj.value = ''
+          this.upFiles = false
+        }
+      })
     },
     deleteFile(id) {
       this.$confirm('此操作将删除该条信息, 是否继续?', '警告', {

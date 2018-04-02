@@ -17,7 +17,7 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="handleDownload('Arr')" :loading="downloadLoading">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
