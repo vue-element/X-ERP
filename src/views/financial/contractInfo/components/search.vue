@@ -85,7 +85,6 @@ export default {
         this.contractInfoList = data.contractInfoList
         this.businessCtgList = data.businessCtgList
         this.regionList = data.regionList
-        console.log(data)
       })
     },
     search() {
@@ -97,7 +96,6 @@ export default {
           searchData[key] = this.searchData[key]
         }
       }
-      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

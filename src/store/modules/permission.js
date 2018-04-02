@@ -15,8 +15,8 @@ function hasPermission(menus, route) {
     /*
      * 如果这个路由有menu属性,就需要判断用户是否拥有此menu权限
      */
-    console.log('menus', menus)
-    console.log('menus', route.menu)
+    // console.log('menus', menus)
+    // console.log('menus', route.menu)
     return menus.indexOf(route.menu) > -1
   } else {
     return false
@@ -29,7 +29,7 @@ function hasPermission(menus, route) {
  * @param roles
  */
 function filterAsyncRouter(asyncRouterMap, menus) {
-  console.log('asyncRouterMap', asyncRouterMap)
+  // console.log('asyncRouterMap', asyncRouterMap)
   const accessedRouters = asyncRouterMap.filter(route => {
     if (hasPermission(menus, route)) {
       // console.log('hasPermission true')
@@ -40,7 +40,7 @@ function filterAsyncRouter(asyncRouterMap, menus) {
     }
     return false
   })
-  console.log('accessedRouters', accessedRouters)
+  // console.log('accessedRouters', accessedRouters)
   return accessedRouters
 }
 

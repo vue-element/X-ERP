@@ -214,7 +214,6 @@ export default {
     category(value) {
       for (var i = 0; i < this.businessList.length; i++) {
         if (this.businessList[i].id === value) {
-          console.log(this.businessList[i])
           this.contractInfo.businessCategory.id = this.businessList[i].businessCategory.id
           this.contractInfo.region.id = this.businessList[i].region.id
           this.contractInfo.city.id = this.businessList[i].city.id
@@ -243,7 +242,6 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
-          console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             var contractMsg = res.data.data
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
