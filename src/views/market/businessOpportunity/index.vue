@@ -3,15 +3,15 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button v-if="listPermission" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+        <button v-if="hasPerm('bussiness:search')" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+        <button v-if="hasPerm('bussiness:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button v-if="savePermission" @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
+        <button v-if="hasPerm('bussiness:findInsertData')" @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -19,7 +19,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button @click="delSelectData" v-show="deleteShow && tab === 'listTab'">
+        <button v-if="hasPerm('bussiness:delete')"  @click="delSelectData" v-show="deleteShow && tab === 'listTab'">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>

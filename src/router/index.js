@@ -77,11 +77,11 @@ export const asyncRouterMap = [
       { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }, menu: 'supply' },
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }, menu: 'price' },
       { path: 'payment-contract', component: _import('cost/paymentContract/index'), name: 'paymentContract', meta: { title: '付款合同管理' }, menu: 'paymentContract' },
-      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'purchaseList' },
+      { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'paymentContract' },
       { path: '/cost/storage-manage', component: _import('cost/storageManage/index'), name: 'storageManage', meta: { title: '出入库管理' },
         children: [
-          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }},
-          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }}
+          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }, menu: 'paymentContract' },
+          { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }, menu: 'outboundList' }
         ]
       }
     ]
@@ -114,7 +114,7 @@ export const asyncRouterMap = [
   {
     path: '/error',
     component: Layout,
-    hidden: true,
+    hidden: false,
     redirect: 'noredirect',
     name: 'errorPages',
     meta: {
@@ -125,26 +125,6 @@ export const asyncRouterMap = [
       { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: '401', noCache: true }},
       { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: '404', noCache: true }}
     ]
-  },
-  { path: '/excel',
-    component: Layout,
-    hidden: true,
-    redirect: '/excel/export-excel',
-    name: 'excel',
-    meta: {
-      title: 'excel',
-      icon: 'excel'
-    },
-    children: [
-      { path: 'export-excel', component: _import('excel/exportExcel'), name: 'exportExcel', meta: { title: 'export excel' }},
-      { path: 'export-selected-excel', component: _import('excel/selectExcel'), name: 'selectExcel', meta: { title: 'select excel' }},
-      { path: 'upload-excel', component: _import('excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'upload excel' }}
-    ]
-  },
-  { path: '/i18n',
-    component: Layout,
-    hidden: true,
-    children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: '国际化', icon: 'international' }}]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

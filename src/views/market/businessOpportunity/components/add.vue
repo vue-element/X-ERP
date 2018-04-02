@@ -2,8 +2,8 @@
 <div class="business-container busniess-add form-container"  ref="ele">
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
-  <el-button @click="toggleEditBtn">{{editWord}}</el-button>
-  <el-button v-show="this.disabled === true" @click="passCheck">审批通过</el-button>
+  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:findUpdateData')">{{editWord}}</el-button>
+  <el-button v-show="(this.disabled === true) && hasPerm('bussiness:examine')" @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">
     <!-- 基本信息 -->
@@ -284,7 +284,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="commont-btn" v-show="!disabled">
+    <div class="commont-btn" v-show="hasPerm('bussiness:save') && !disabled">
       <el-button @click="add" :loading="loading">提交</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>

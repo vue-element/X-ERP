@@ -11,7 +11,7 @@
         <el-table-column prop="supply.name" label="供应商"
         min-width="160"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" min-width="140">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button>

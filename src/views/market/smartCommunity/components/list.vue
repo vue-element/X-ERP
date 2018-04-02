@@ -18,7 +18,7 @@
    <el-table-column prop="contractMode" label="合约模式" width="100"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-<el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('project:findUpdateData')">
+<el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('project:findAllByPage')">
   查看</el-button>
 <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('project:delete')">删除</el-button>
 </template>

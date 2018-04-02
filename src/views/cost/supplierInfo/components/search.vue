@@ -8,7 +8,10 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商名称:">
-              <el-input v-model="searchData.name" placeholder="请输入供应商名称"></el-input>
+              <el-select v-model="searchData.s_id" placeholder="请选择供应商" filterable clearable>
+               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
@@ -112,7 +115,7 @@ export default {
       disabled: false,
       contractInfoList: [],
       searchData: {
-        name: '',
+        s_id: '',
         materialCategory: '',
         enterpriseNature: '',
         cooperativeType: '',
@@ -124,6 +127,7 @@ export default {
         settlementMethod: '',
         region_id: ''
       },
+      supplyList: [],
       typeList: [],
       categoryList: [],
       materialCategoryList: [],
@@ -143,7 +147,9 @@ export default {
     getInsertData() {
       this.$get('/supply/findInsertData').then((res) => {
         if (res.data.success === true) {
-          this.regionList = res.data.data.regionList
+          var data = res.data.data
+          this.regionList = data.regionList
+          this.supplyList = data.supplyList
         }
       })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]

@@ -3,15 +3,15 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
+        <button v-if="hasPerm('tenderOffer:search')" :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
-        <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+        <button v-if="hasPerm('tenderOffer:findAllByPage')" :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <button v-if="hasPerm('tenderOffer:save')" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -19,7 +19,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <button v-show="deleteShow" @click="delSelectData">
+        <button v-show="deleteShow" @click="delSelectData" v-if="hasPerm('tenderOffer:delete')">
           <i class="iconfont icon-delete"></i>
           <span>删除</span>
         </button>

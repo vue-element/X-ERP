@@ -1,7 +1,7 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <div class="commont-btn edit-btn" v-show="editShow">
+  <div class="commont-btn edit-btn" v-show="hasPerm('project:findUpdateData') && editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
   </div>
   <el-form :model="mainMsg" :rules="rules" ref="mainMsg">
@@ -374,7 +374,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="commont-btn" v-show="!disabled">
+    <div class="commont-btn" v-show="hasPerm('project:save') && !disabled">
       <el-button @click="add('mainMsg')" :loading="loading">提交</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>

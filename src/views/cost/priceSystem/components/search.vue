@@ -8,19 +8,27 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品编号:">
-              <el-input v-model="searchData.code" placeholder="请输入供应商名称"></el-input>
+              <!-- <el-input v-model="searchData.code" placeholder="请输入供应商名称"></el-input> -->
+              <el-select v-model="searchData.p_id" placeholder="请选择产品编号" filterable clearable>
+               <el-option v-for="item in priceList" :label="item.code" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品名称:">
-              <el-input v-model="searchData.name" placeholder="请输入供应商名称"></el-input>
+              <!-- <el-input v-model="searchData.name" placeholder="请输入供应商名称"></el-input> -->
+              <el-select v-model="searchData.p_id" placeholder="请选择产品名称" filterable clearable>
+               <el-option v-for="item in priceList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品类型:" >
-              <el-select v-model="searchData.type" placeholder="请选择" filterable clearable>
+              <el-select v-model="searchData.type" placeholder="请选择产品类型" filterable clearable>
                <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -28,7 +36,7 @@
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="系统:">
-              <el-select v-model="searchData.system" placeholder="请选择" filterable clearable>
+              <el-select v-model="searchData.system" placeholder="请选择系统" filterable clearable>
                <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -38,19 +46,19 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="规格型号:">
-              <el-input v-model="searchData.specModel" placeholder="请输入联系人"></el-input>
+              <el-input v-model="searchData.specModel" placeholder="请输入规格型号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="品牌:">
-              <el-input v-model="searchData.brand" placeholder="请输入联系人"></el-input>
+              <el-input v-model="searchData.brand" placeholder="请输入品牌"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商:">
-              <el-select v-model="searchData.supply_id" placeholder="请选择" filterable clearable>
+              <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -76,9 +84,11 @@ export default {
       typeList: [],
       systemList: [],
       supplyList: [],
+      priceList: [],
       searchData: {
-        code: '',
-        name: '',
+        // code: '',
+        // name: '',
+        p_id: '',
         type: '',
         system: '',
         specModel: '',
@@ -96,6 +106,7 @@ export default {
       this.$get('/price/findInsertData').then(res => {
         var data = res.data.data
         this.supplyList = data.supplyList
+        this.priceList = data.priceList
       })
       this.systemList = [
         { value: '停车场系统' },

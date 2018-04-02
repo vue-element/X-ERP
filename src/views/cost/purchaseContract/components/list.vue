@@ -22,17 +22,16 @@
        <el-table-column prop="term" label="账期" width="100"></el-table-column>
        <el-table-column label="操作" fixed="right" width="120">
         <template slot-scope="scope">
-<el-button @click.native.prevent="seeRow(scope.row.id)" type="text">
-  查看</el-button>
-<el-dropdown @command="handleCommand">
-  <el-button class="el-dropdown-link" type="text">更多</el-button>
-  <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item command="a" @click.native.prevent="downloadPL(scope.row.id)">生成采购清单</el-dropdown-item>
-    <el-dropdown-item command="b">生成采购合同</el-dropdown-item>
-    <!-- <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" >删除</el-dropdown-item> -->
-  </el-dropdown-menu>
-</el-dropdown>
-</template>
+          <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
+          <el-dropdown @command="handleCommand">
+            <el-button class="el-dropdown-link" type="text">更多</el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="a" @click.native.prevent="downloadPL(scope.row.id)">生成采购清单</el-dropdown-item>
+              <el-dropdown-item command="b">生成采购合同</el-dropdown-item>
+              <!-- <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" >删除</el-dropdown-item> -->
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
       </el-table-column>
      </el-table>
      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
@@ -109,17 +108,21 @@ export default {
     downloadPL(id) {
       this.$get('/purchaseList/findAllByPaymentContract/' + id).then((res) => {
         var data = res.data.data
-        console.log('lician', data)
-        this.purchaseList = data.content
+        this.purchaseList = data
         require.ensure([], () => {
           const {
             export_json_to_excel
           } = require('@/vendor/Export2Excel')
           const tHeader = ['序号', '物料名称', '品牌', '规格型号', '单位', '单价', '数量', '总金额']
-          const filterVal = ['name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
+          const filterVal = ['index', 'name', 'brand', 'model', 'unit', 'unitPrice', 'number', 'totalAmount']
           const list = this.purchaseList
+          var i = 1
+          list.forEach((item) => {
+            item.index = i
+            i++
+          })
           const data = this.formatJson(filterVal, list)
-          export_json_to_excel(tHeader, data, this.filename)
+          export_json_to_excel(tHeader, data, '采购清单')
         })
       })
     },
