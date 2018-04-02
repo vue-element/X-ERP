@@ -2,13 +2,14 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
-        <el-table-column prop="0" label="序号">
+        <el-table-column prop="0" label="序号" fixed width="60">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="oddNumber" label="订单编号"></el-table-column>
-        <el-table-column prop="code" label="付款合同编号"></el-table-column>
-        <el-table-column prop="department" label="办事处"></el-table-column>
-        <el-table-column prop="supply.name" label="供应商"></el-table-column>
+        <el-table-column prop="orderCode" label="订单编号" min-width="160"></el-table-column>
+        <el-table-column prop="code" label="付款合同编号/入库单编号" min-width="180"></el-table-column>
+        <el-table-column prop="department" label="使用部门" min-width="120"></el-table-column>
+        <el-table-column prop="supply.name" label="供应商"
+        min-width="160"></el-table-column>
         <el-table-column prop="category" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -57,15 +58,14 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/paymentContract/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
+        this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.listLoading = false
-        } else {
-          this.listLoading = false
+          this.$emit('exportData', data.content)
         }
       }).catch(() => {
         this.listLoading = false

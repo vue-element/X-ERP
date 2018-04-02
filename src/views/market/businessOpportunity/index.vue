@@ -3,7 +3,7 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+        <button v-if="listPermission" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
           <i class="iconfont icon-search"></i>
           <span>查询</span>
         </button>
@@ -11,7 +11,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
+        <button v-if="savePermission" @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      permissionKey: 'bussiness',
       searchData: {
         amount: 0,
         amount1: 0
@@ -66,6 +67,7 @@ export default {
     }
   },
   created() {
+    console.log('this.listPermission', this.listPermission)
   },
   mounted() {
   },
@@ -163,10 +165,8 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '商机名称', '商机类型', '商机来源', '客户信息', '城市', '区域', '项目关键信息描述', '业务分类', '预计成交金额（元）', '投标日期', '方案投标日期',
-          '总体项目开工时间', '预计开发或发货时间', '预计合同签订时间', '业务负责人', '业务负责人（电话）', '项目具体跟进人', '项目具体跟进人（电话）', '跟进状态', '执行状态', '审批状态']
-        const filterVal = ['index', 'name', 'type', 'source', 'client.name', 'city.name', 'region.name', 'projectImpls.keyword', 'projectImpls.category', 'projectImpls.amount', 'projectImpls.bidDate', 'projectImpls.bidDate2',
-          'projectImpls.startDate', 'projectImpls.developDate', 'projectImpls.signDate', 'chargePerson', 'chargePersonPhone', 'followPerson', 'followPersonPhone', 'followState', 'executState', 'examineState']
+        const tHeader = ['序号', '商机名称', '商机编号', '客户信息', '城市', '区域', '业务分类', '预计启动时间', '预计成交金额', '业务负责人', '商机审批状态']
+        const filterVal = ['index', 'name', 'code', 'client.name', 'city.name', 'region.name', 'businessCategory.name', 'startDate', 'amount', 'businessPerson.name', 'examineState']
         const list = this.exprotList
         var i = 1
         list.forEach((item) => {

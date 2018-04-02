@@ -84,7 +84,7 @@
       <h4 class="module-title">
         <p>开票信息</p>
         <div class="material-table-head fr">
-          <button @click="addBilling">
+          <button @click.prevent="addBilling">
             <i class="iconfont icon-add"></i>
             <span>新增开票信息</span>
           </button>
@@ -122,7 +122,7 @@
       <h4 class="module-title">
         <p>付款信息</p>
         <div class="material-table-head fr">
-          <button @click="addPayment">
+          <button @click.prevent="addPayment">
             <i class="iconfont icon-add"></i>
             <span>新增付款信息</span>
           </button>

@@ -1,7 +1,7 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container customer-input" ref="ele">
-  <div class="commont-btn edit-top-btn" v-show="editShow">
+  <div class="commont-btn edit-top-btn" v-show="hasPerm('client:findUpdateData') && editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
   </div>
   <el-form :model="client" :rules="rules" ref="client">
@@ -19,7 +19,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户类别:" prop="category">
             <p v-if="disabled">{{client.category}}</p>
-            <el-select v-else v-model="client.category" placeholder="请选择客户类别">
+            <el-select v-else v-model="client.category" placeholder="请选择客户类别" filterable clearable>
               <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -30,16 +30,16 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业态:" prop="type">
             <p v-if="disabled">{{client.type}}</p>
-            <el-select v-else v-model="client.type" placeholder="请选择业态">
+            <el-select v-else v-model="client.type" placeholder="请选择业态"  filterable clearable>
               <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
-            </el-select>
+            </el-select filterable clearable>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="企业性质:" prop="nature">
             <p v-if="disabled">{{client.nature}}</p>
-            <el-select v-else v-model="client.nature" placeholder="请选择企业性质">
+            <el-select v-else v-model="client.nature" placeholder="请选择企业性质" filterable clearable>
               <el-option v-for="item in natureList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -97,7 +97,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="commont-btn" v-show="!disabled">
+    <div class="commont-btn"  v-show="hasPerm('client:save') && !disabled">
       <el-button @click="add" :loading="loading">提交</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>

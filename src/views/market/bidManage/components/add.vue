@@ -13,7 +13,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码" prop="business">
             <p v-if="disabled">{{mainMsg.business.code}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机编码" filterable>
+            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机编码" filterable clearable>
               <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -21,7 +21,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称">
             <p v-if="disabled">{{mainMsg.business.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称" filterable>
+            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称" filterable clearable>
               <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -136,6 +136,7 @@ export default {
       this.$get('/tenderOffer/findInsertData').then((res) => {
         var data = res.data.data
         this.businessList = data.businessList
+        console.log('business', this.businessList)
       })
     },
     successSave() {

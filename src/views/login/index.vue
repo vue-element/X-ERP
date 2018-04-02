@@ -98,9 +98,11 @@ export default {
           this.$post('/shiro/auth', this.loginForm).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              console.log('shdfhjshfjshj')
-              setToken('11111')
-              this.setToken('11111')
+              var data = res.data.data
+              console.log('data', data)
+              var token = data.sessionID
+              setToken(token)
+              this.setToken(token)
               var userInfo = res.data.data
               this.$store.commit('login', userInfo)
               var username = this.loginForm.username

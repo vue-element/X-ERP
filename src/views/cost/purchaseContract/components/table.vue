@@ -82,7 +82,7 @@
       <h4 class="module-title">
         <p>付款信息</p>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading">
+      <el-table class="basic-form" style="width: 100%" :data="paymentList" v-loading.body="listLoading">
         <el-table-column label="序号">
           <template slot-scope="scope">
            {{scope.$index + 1}}
@@ -122,6 +122,7 @@ export default {
     }
   },
   created() {
+    console.log('contractId', this.contractId)
     if (this.contractId) {
       this.getPurchaseList()
       this.getBillingList()
@@ -132,7 +133,7 @@ export default {
     getPurchaseList() {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
         if (res.data.success === true) {
-          this.purchaseList = res.data.data.content
+          this.purchaseList = res.data.data
         }
       })
     },

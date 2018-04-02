@@ -40,7 +40,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="商机编号:" prop="contractInfo">
               <p v-if="disabled">{{paymentContract.contractInfo.code}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择商机编号" filterable>
+              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择商机编号" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -49,7 +49,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="所属项目:">
               <p v-if="disabled">{{paymentContract.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择所属项目" filterable>
+              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择所属项目" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -60,7 +60,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="申请部门:" prop="department">
               <p v-if="disabled">{{paymentContract.department}}</p>
-              <el-select v-else v-model="paymentContract.department" placeholder="请选择所属项目" filterable>
+              <el-select v-else v-model="paymentContract.department" placeholder="请选择所属项目" filterable clearable>
                <el-option v-for="item in departmentList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
              </el-select>
@@ -69,7 +69,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="业务类别:" prop="businessCategory">
               <p v-if="disabled">{{paymentContract.businessCategory.name}}</p>
-              <el-select v-else v-model="paymentContract.businessCategory.id" placeholder="请选择业务类别" filterable>
+              <el-select v-else v-model="paymentContract.businessCategory.id" placeholder="请选择业务类别" filterable clearable>
                <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -85,7 +85,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="支付对象:">
               <p v-if="disabled">{{paymentContract.paymentObject}}</p>
-              <el-select v-else v-model="paymentContract.paymentObject" placeholder="请选择支付对象" filterable>
+              <el-select v-else v-model="paymentContract.paymentObject" placeholder="请选择支付对象" filterable clearable>
                 <el-option label="个人" value="个人"></el-option>
                 <el-option label="供应商" value="供应商"></el-option>
              </el-select>
@@ -116,7 +116,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="是否自提:">
               <p v-if="disabled">{{paymentContract.mention}}</p>
-              <el-select v-else v-model="paymentContract.mention" placeholder="请选择">
+              <el-select v-else v-model="paymentContract.mention" placeholder="请选择" filterable clearable>
                <el-option label="是" value="是"></el-option>
                <el-option label="否" value="否"></el-option>
              </el-select>
@@ -125,7 +125,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="账期:">
               <p v-if="disabled">{{paymentContract.term}}</p>
-              <el-select v-else v-model="paymentContract.term" placeholder="请选择账期">
+              <el-select v-else v-model="paymentContract.term" placeholder="请选择账期" filterable clearable>
                <el-option label="一个月" value="一个月"></el-option>
                <el-option label="三个月" value="三个月"></el-option>
                <el-option label="六个月" value="六个月"></el-option>
@@ -143,7 +143,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商:" prop="supply">
               <p v-if="disabled">{{paymentContract.supply.name}}</p>
-              <el-select v-else v-model="paymentContract.supply.id" placeholder="请选择供应商" filterable>
+              <el-select v-else v-model="paymentContract.supply.id" placeholder="请选择供应商" filterable clearable>
                 <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
              </el-select>
@@ -152,7 +152,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="材料类型:" prop="materialCategory">
               <p v-if="disabled">{{paymentContract.materialCategory.name}}</p>
-              <el-select v-else v-model="paymentContract.materialCategory.id" placeholder="请选择材料类型" filterable>
+              <el-select v-else v-model="paymentContract.materialCategory.id" placeholder="请选择材料类型" filterable clearable>
                 <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
              </el-select>
@@ -163,7 +163,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="发货状态:" prop="deliveryStatus">
               <p v-if="disabled">{{paymentContract.deliveryStatus}}</p>
-              <el-select v-else v-model="paymentContract.deliveryStatus" placeholder="请选择发货状态" filterable>
+              <el-select v-else v-model="paymentContract.deliveryStatus" placeholder="请选择发货状态" filterable clearable>
                <el-option label="未发货" value="未发货"></el-option>
                <el-option label="已发货" value="已发货"></el-option>
                <el-option label="已到货" value="已到货"></el-option>

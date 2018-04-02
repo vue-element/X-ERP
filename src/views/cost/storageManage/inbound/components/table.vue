@@ -181,8 +181,7 @@ export default {
   methods: {
     getPurchaseList() {
       this.$get('/inboundDetaile/findAllByPaymentContract/' + this.contractId).then((res) => {
-        var data = _.cloneDeep(res.data.data)
-        console.log('purchaselist', data)
+        var data = _.cloneDeep(res.data.data) || []
         data.forEach((item) => {
           item.number = item.number ? item.number : item.purchaseList.number
           item.model = item.model ? item.model : item.purchaseList.model

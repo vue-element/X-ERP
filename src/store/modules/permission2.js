@@ -26,7 +26,6 @@ function hasPermission(menus, route) {
  */
 function filterAsyncRouter(asyncRouterMap, menus) {
   const accessedRouters = asyncRouterMap.filter(route => {
-    console.log('zengqinga', route)
     // filter,js语法里数组的过滤筛选方法
     if (hasPermission(menus, route)) {
       if (route.children && route.children.length) {
