@@ -90,7 +90,7 @@ export default {
       }).then(() => {
         var contractInfoID = { id: [id] }
         this.$post('/contractInfo/delete', contractInfoID).then((res) => {
-          if (res.success === true) {
+          if (res.data.success === true) {
             this.getContractInfoData()
             this.$message({
               message: '删除成功',

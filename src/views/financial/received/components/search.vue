@@ -7,17 +7,17 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.contractInfo.id" :key="item.contractInfo.id">
+            <el-form-item label="合同名称：" class="single-date">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
+               <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.contractInfo.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" class="single-date">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
-               <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.contractInfo.id" :key="item.contractInfo.id">
+            <el-form-item label="合同编号：">
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
+               <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.contractInfo.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -52,7 +52,21 @@ export default {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
         if (res.data.success === true) {
-          this.contractBillingList = res.data.data.contractBillingList
+          var data = res.data.data.contractBillingList
+          const arrNew = [data[0]]
+          for (var i = 0; i < data.length; i++) {
+            var flag = true
+            for (var j = 0; j < arrNew.length; j++) {
+              if (data[i].contractInfo.id === arrNew[j].contractInfo.id) {
+                flag = false
+                break
+              }
+            }
+            if (flag) {
+              arrNew[arrNew.length] = data[i]
+            }
+          }
+          this.contractBillingList = arrNew
         }
       })
     },

@@ -12,7 +12,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="商机编码：" prop="business">
                 <p v-if="disabled">{{contractInfo.business.code}}</p>
-                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" filterable clearable>
+                <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" @change="category" filterable clearable>
                   <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -42,7 +42,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="业务类别：">
@@ -61,7 +60,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="城市：" prop="city">
@@ -105,13 +103,13 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item class="single-date" label="合同所属期：" prop="term">
                 <p v-if="disabled">{{contractInfo.term}}</p>
-                <el-date-picker v-else v-model="contractInfo.term" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                <el-date-picker v-else v-model="contractInfo.term" type="date" format="yyyy-MM" value-format="yyyy-MM" placeholder="选择日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item class="range-date" label="合同期限：" prop="limit">
                 <p v-if="disabled">{{contractInfo.dateShow}}</p>
-                <el-date-picker v-else v-model="contractInfo.limit" @change="change" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+                <el-date-picker v-else v-model="contractInfo.limit" @change="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -175,7 +173,11 @@ export default {
       categoryList: [],
       contractInfo: {
         name: '',
-        business: { id: '' },
+        business: { id: null },
+        businessCategory: { id: null },
+        region: { id: null },
+        city: { id: null },
+        client: { id: null },
         text: '',
         signDate: '',
         term: '',
@@ -205,9 +207,20 @@ export default {
     this.temp = _.cloneDeep(this.contractInfo)
   },
   methods: {
-    change() {
+    date() {
       this.disabled = true
       this.disabled = false
+    },
+    category(value) {
+      for (var i = 0; i < this.businessList.length; i++) {
+        if (this.businessList[i].id === value) {
+          console.log(this.businessList[i])
+          this.contractInfo.businessCategory.id = this.businessList[i].businessCategory.id
+          this.contractInfo.region.id = this.businessList[i].region.id
+          this.contractInfo.city.id = this.businessList[i].city.id
+          this.contractInfo.client.id = this.businessList[i].client.id
+        }
+      }
     },
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
@@ -230,7 +243,6 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
-          console.log(this.contractInfo.contractTotalAmount)
           console.log(this.contractInfo)
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             var contractMsg = res.data.data

@@ -1,24 +1,88 @@
 <template>
   <div class="invoice-search form-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-form :model="analysisData" ref="analysisData">
       <div class="form-module">
         <h4 class="module-title">
           <p>查询条件:</p>
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号:" class="single-date">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择" filterable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
+            <el-form-item label="合同名称:" class="single-date">
+              <el-select v-model="analysisData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
+               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称:" class="single-date">
-              <el-select v-model="ruleForm.contractInfo_id" placeholder="请选择" filterable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
+            <el-form-item label="合同编号:" class="single-date">
+              <el-select v-model="analysisData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
+               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="项目所属阶段:" class="single-date">
+              <el-select v-model="analysisData.stage" placeholder="请选择项目所属阶段" filterable clearable>
+               <el-option v-for="item in stageList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="项目状态:" class="single-date">
+              <el-select v-model="analysisData.status" placeholder="请选择项目转态" filterable clearable>
+                <el-option v-for="item in projectStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="回款状态:" class="single-date">
+              <el-select v-model="analysisData.receivedStatus" placeholder="请选择回款状态" filterable clearable>
+               <el-option v-for="item in receivedStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="材料进度匹配度:" class="single-date">
+              <el-select v-model="analysisData.materialStatus" placeholder="请选择材料进度匹配度" filterable clearable>
+                <el-option v-for="item in materialStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="人工进度匹配度:" class="single-date">
+              <el-select v-model="analysisData.artificialStatus" placeholder="请选择人工进度匹配度" filterable clearable>
+               <el-option v-for="item in artificialStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="综合进度匹配度:" class="single-date">
+              <el-select v-model="analysisData.comprehensiveStatus" placeholder="请选择综合进度匹配度" filterable clearable>
+                <el-option v-for="item in comprehensiveStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="收支差异状态:" class="single-date">
+              <el-select v-model="analysisData.paymentBalanceStatus" placeholder="请选择收支差异状态" filterable clearable>
+               <el-option v-for="item in paymentBalanceStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+             </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="付现差异状态:" class="single-date">
+              <el-select v-model="analysisData.cashBalanceStatus" placeholder="请选择付现差异状态" filterable clearable>
+                <el-option v-for="item in cashBalanceStatusList" :label="item.value" :value="item.value" :key="item.id"></el-option>
              </el-select>
             </el-form-item>
           </el-col>
@@ -39,11 +103,26 @@ export default {
     return {
       loading: false,
       disabled: false,
-      contractInfoList: [],
-      ruleForm: {
-        contractInfo_id: ''
-      },
-      rules: {}
+      contractInfoList: [], // 项目合同
+      stageList: [], // 项目所属阶段
+      projectStatusList: [], // 项目状态
+      receivedStatusList: [], // 回款状态
+      materialStatusList: [], // 材料进度匹配度
+      artificialStatusList: [], // 人工进度匹配度
+      comprehensiveStatusList: [], // 综合进度匹配度
+      paymentBalanceStatusList: [], // 收支差异状态
+      cashBalanceStatusList: [], // 付现差异状态
+      analysisData: {
+        contractInfo_id: '',
+        stage: '',
+        projectStatus: '',
+        receivedStatus: '',
+        materialStatus: '',
+        artificialStatus: '',
+        comprehensiveStatus: '',
+        paymentBalanceStatus: '',
+        cashBalanceStatus: ''
+      }
     }
   },
   created() {
@@ -51,14 +130,26 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/contractSchedule/findInsertData').then(res => {
-        if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
-        }
+      this.$get('/contractSchedule/findInsertData').then((res) => {
+        this.contractInfoList = res.data.data.contractInfoList
       })
+      this.stageList = [{ value: '未进场' }, { value: '施工中' }, { value: '已完工' }]
+      this.projectStatusList = [{ value: '正常' }, { value: '滞后' }, { value: '严重滞后' }]
+      this.receivedStatusList = [{ value: '正常' }, { value: '提前' }, { value: '滞后' }, { value: '严重滞后' }]
+      this.materialStatusList = [{ value: '正常' }, { value: '提前' }, { value: '滞后' }, { value: '严重滞后' }]
+      this.artificialStatusList = [{ value: '正常' }, { value: '超支' }]
+      this.comprehensiveStatusList = [{ value: '正常' }, { value: '超支' }]
+      this.paymentBalanceStatusList = [{ value: '正常' }, { value: '异常' }]
+      this.cashBalanceStatusList = [{ value: '正常' }, { value: '异常' }]
     },
     search() {
-      this.$emit('search', this.ruleForm)
+      var searchData = {}
+      for (var key in this.analysisData) {
+        if (this.analysisData[key]) {
+          searchData[key] = this.analysisData[key]
+        }
+      }
+      this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}
