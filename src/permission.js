@@ -6,17 +6,15 @@ import { getToken, getSession } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
 
 // permissiom judge
-function hasPermission(roles, permissionRoles) {
-  console.log('roles', roles)
-  if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
-  if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
-}
+// function hasPermission(roleCode, permissionRoles) {
+//   if (roleCode === 'admin') return true // admin权限 直接通过
+//   if (!permissionRoles) return true
+//   return roles.some(role => permissionRoles.indexOf(role) >= 0)
+// }
 
 const whiteList = ['/login', '/authredirect']// 不重定向白名单
 
 router.beforeEach((to, from, next) => {
-  // console.log('router beforeEach')
   NProgress.start() // 开启Progress
   if (getToken() || getSession()) { // 判断是否有token
     if (to.path === '/login') {
@@ -24,10 +22,10 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
     } else {
       if (!store.getters.accountName) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetInfo').then(userInfo => { // 拉取user_info
+        store.dispatch('GetInfo').then(userInfo => { // 拉取user_info  GetInfo在account.js定义
           // const menuList = res.menuList
           // const permissionList = res.permissionList
-          store.dispatch('GenerateRoutes', userInfo).then(() => { // 生成可访问的路由表
+          store.dispatch('GenerateRoutes', userInfo).then(() => { // 生成可访问的路由表  GenerateRoute在permission.js定义
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,replace: true so the navigation will not leave a history record
           })
@@ -39,14 +37,14 @@ router.beforeEach((to, from, next) => {
         })
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.role)) {
-          next()//
-        } else {
-          next({ path: '/401', query: { noGoBack: true }})
-          NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
-        }
+        // if (hasPermission(store.getters.roleCode, to.meta.role)) {
+        //   next()//
+        // } else {
+        //   next({ path: '/401', query: { noGoBack: true }})
+        //   NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
+        // }
         // 可删 ↑
-        // next()
+        next()
       }
     }
   } else {

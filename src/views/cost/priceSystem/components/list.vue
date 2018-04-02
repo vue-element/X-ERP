@@ -18,8 +18,8 @@
         <el-table-column prop="unit" label="单位" width="100"></el-table-column>
         <el-table-column label="操作" fixed="right" width="100">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('price:findAllByPage')">查看</el-button>
+            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" v-if="hasPerm('price:delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,13 +50,13 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getSupplierData()
+    this.getPriceData()
   },
   methods: {
     resize() {
       this.height = winHeight() - 210
     },
-    getSupplierData() {
+    getPriceData() {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
@@ -77,17 +77,27 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getSupplierData()
+      this.getPriceData()
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getSupplierData()
+      this.getPriceData()
     },
     deleteRow(id) {
+      this.$confirm('确认删除此信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.confirmDel(id)
+      }).catch(() => {
+        return false
+      })
+    },
+    confirmDel(id) {
       var projectID = { id: [id] }
       this.$post('/price/delete', projectID).then(res => {
         if (res.data.success === true) {
-          this.getSupplierData()
+          this.getPriceData()
           this.$message({
             message: '删除成功',
             type: 'success'

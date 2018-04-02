@@ -1,6 +1,6 @@
 <template>
   <div class="supply-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('supply:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="supplyInfo" :rules="rules" ref="supplyInfo">
@@ -63,9 +63,9 @@
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
             <el-form-item label="供货区域:" prop="region">
-              <p v-if="disabled">{{supplyInfo.region.name}}</p>
-              <el-select v-else v-model="supplyInfo.region.id" placeholder="请输入供货区域" filterable clearable>
-                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+              <p v-if="disabled">{{supplyInfo.supplyRegion.name}}</p>
+              <el-select v-else v-model="supplyInfo.supplyRegion.id" placeholder="请输入供货区域" filterable clearable>
+                <el-option v-for="item in supplyRegionList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -251,7 +251,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn"  v-show="!disabled">
+      <div class="commont-btn"  v-show="hasPerm('supply:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -305,7 +305,7 @@ export default {
         qq: '',
         regAddress: '',
         regCapital: '',
-        region: { id: '' },
+        supplyRegion: { id: '' },
         supplyCycle: '',
         bank: '',
         bankAccount: '',
@@ -331,7 +331,7 @@ export default {
       reviewHandleList: [],
       settlementMethodList: [],
       taxRateList: [],
-      regionList: [],
+      supplyRegionList: [],
       sourceList: [],
       gradeList: [],
       rules: {
@@ -342,7 +342,7 @@ export default {
         regAddress: [{ required: true, message: '请输入注册地址', trigger: 'blur' }],
         enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'change' }],
         supplyCycle: [{ required: true, message: '请输入供货周期', trigger: 'blur' }],
-        region: [{ required: true, validator: validateRegion, trigger: 'blur' }],
+        supplyRegion: [{ required: true, validator: validateRegion, trigger: 'blur' }],
         materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
         person: [{ required: true, message: '请输入业务联系人', trigger: 'blur' }],
         phone: [{ required: true, validator: validPhone, trigger: 'blur' }],
@@ -413,7 +413,7 @@ export default {
     getInsertData() {
       this.$get('/supply/findInsertData').then((res) => {
         if (res.data.success === true) {
-          this.regionList = res.data.data.regionList
+          this.supplyRegionList = res.data.data.supplyRegionList
         }
       })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
