@@ -4,9 +4,9 @@
     <el-table-column  fixed="left" align="center" prop="0" label="序号" width="60">
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="name" label="客户名称"></el-table-column>
-   <el-table-column prop="category" label="客户类型" width="100"></el-table-column>
-   <el-table-column prop="type" label="业态" width="180"></el-table-column>
+   <el-table-column prop="name" label="客户名称" min-width="240" fixed></el-table-column>
+   <el-table-column prop="category" label="客户类型" width="120"></el-table-column>
+   <el-table-column prop="type" label="业态" width="100"></el-table-column>
    <el-table-column prop="nature" label="企业性质" width="100"></el-table-column>
    <el-table-column prop="person" label="联系人" width="100"></el-table-column>
    <el-table-column prop="phone" label="联系人电话" width="140"></el-table-column>

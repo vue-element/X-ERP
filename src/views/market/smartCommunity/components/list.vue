@@ -5,16 +5,16 @@
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="client.name" label="客户名称" width="200"></el-table-column>
-   <el-table-column prop="city.name" label="城市" width="100"></el-table-column>
-   <el-table-column prop="region.name" label="地区" width="100"></el-table-column>
-   <el-table-column prop="name" label="项目名称" width="180" fixed></el-table-column>
+   <el-table-column prop="client.name" label="客户名称" width="180"></el-table-column>
+   <el-table-column prop="city.name" label="城市" width="120"></el-table-column>
+   <el-table-column prop="region.name" label="地区" width="140"></el-table-column>
+   <el-table-column prop="name" label="项目名称" width="200" fixed></el-table-column>
     <el-table-column prop="address" label="项目地址" min-width="240"></el-table-column>
    <el-table-column prop="buildNum" label="楼栋及单元数量" width="100"></el-table-column>
    <el-table-column prop="archFormat" label="建筑业态" width="100"></el-table-column>
-   <el-table-column prop="builtArea" label="总建筑面积(平方)" width="100"></el-table-column>
-   <el-table-column prop="chargeArea" label="总收费面积(平方)" width="100"></el-table-column>
-   <el-table-column prop="roomNum" label="户数" width="80"></el-table-column>
+   <el-table-column prop="builtArea" label="总建筑面积(平方)" width="140"></el-table-column>
+   <el-table-column prop="chargeArea" label="总收费面积(平方)" width="140"></el-table-column>
+   <el-table-column prop="roomNum" label="户数" width="100"></el-table-column>
    <el-table-column prop="contractMode" label="合约模式" width="100"></el-table-column>
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">

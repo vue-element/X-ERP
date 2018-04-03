@@ -60,7 +60,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机提供人:" prop="sourcePerson">
             <p v-if="disabled">{{businessInfo.sourcePerson}}</p>
-            <el-input v-else placeholder="请输入商机提供人" v-model="businessInfo.sourcePerson"></el-input>
+            <el-input v-else placeholder="请输入商机提供人" v-model="businessInfo.sourcePerson" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
@@ -120,7 +120,7 @@
         <el-col :sm="24" :md="24" :lg="24">
           <el-form-item label="项目需求描述:" class="pro_describe">
             <p v-if="disabled">{{businessInfo.keyword}}</p>
-            <el-input v-else v-model="businessInfo.keyword" placeholder="请输入项目需求描述" type="textarea"></el-input>
+            <el-input v-else v-model="businessInfo.keyword" placeholder="请输入项目需求描述" type="textarea" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -132,7 +132,7 @@
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="决策人联系人:" prop="firstPersonPhone">
+          <el-form-item label="联系方式:" prop="firstPersonPhone">
             <p v-if="disabled">{{businessInfo.firstPersonPhone}}</p>
             <el-input v-else v-model="businessInfo.firstPersonPhone" placeholder="请输入决策人联系人"  min='0'></el-input>
           </el-form-item>
@@ -142,11 +142,11 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="项目预计启动时间:" class="single-date">
             <p v-if="disabled">{{businessInfo.startDate}}</p>
-            <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.startDate"  placeholder="自动生成"></el-date-picker>
+            <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.startDate"  placeholder="请输入预计启动时间"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="预计成交金额:">
+          <el-form-item label="预计成交金额:" prop="amount1">
             <p v-if="disabled">{{businessInfo.amount1}}</p>
             <el-input v-else v-model="businessInfo.amount1" @change="amountChange" placeholder="请输入预计成交金额" min='0'></el-input>
           </el-form-item>
@@ -205,7 +205,7 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="设计负责人:" prop="businessPerson">
+          <el-form-item label="设计负责人:" prop="designPerson">
             <p v-if="disabled">{{businessInfo.designPerson.name}}</p>
             <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
@@ -344,7 +344,7 @@ export default {
         examineState: '商机线索',
         keyword: '',
         firstPerson: '',
-        firstPersonPhone: '13682561462',
+        firstPersonPhone: '',
         startDate: '',
         amount: null,
         amount1: '',
@@ -394,6 +394,7 @@ export default {
         businessPerson: [{ required: true, validator: businessPerson, trigger: 'change' }],
         designPerson: [{ required: true, validator: designPerson, trigger: 'change' }],
         costPerson: [{ required: true, validator: costPerson, trigger: 'change' }],
+        amount1: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }],
         projectPerson: [{ required: true, validator: projectPerson, trigger: 'change' }],
         projectManager: [{ required: true, validator: projectManager, trigger: 'change' }]
       },

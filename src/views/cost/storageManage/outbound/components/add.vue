@@ -20,7 +20,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="付款合同编号:" prop="paymentContract">
                 <p v-if="disabled">{{outboundInfo.paymentContract.code}}</p>
-                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="请选择付款合同编号" filterable>
+                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="请选择付款合同编号" filterable clearable>
                  <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
@@ -28,9 +28,9 @@
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="项目:">
-                <p v-if="disabled">{{outboundInfo.paymentContract.project}}</p>
+                <p v-if="disabled">{{outboundInfo.paymentContract.contractInfo.name}}</p>
                 <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="自动生成" disabled>
-                 <el-option v-for="item in paymentContractList" :label="item.project" :value="item.id" :key="item.id">
+                 <el-option v-for="item in paymentContractList" :label="item.contractInfo.name" :value="item.id" :key="item.code">
                  </el-option>
                </el-select>
               </el-form-item>

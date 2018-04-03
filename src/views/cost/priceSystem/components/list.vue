@@ -5,16 +5,16 @@
         <el-table-column prop="0" label="序号" width="60" fixed>
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="code" label="产品编号" width="100"></el-table-column>
-        <el-table-column prop="name" label="产品名称" width="100"></el-table-column>
-        <el-table-column prop="type" label="产品类型"></el-table-column>
-        <el-table-column prop="system" label="系统" width="100"></el-table-column>
-        <el-table-column prop="specModel" label="规格型号" width="100"></el-table-column>
-        <el-table-column prop="brand" label="品牌" width="100"></el-table-column>
-        <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
+        <el-table-column prop="code" label="产品编号" width="100" fixed></el-table-column>
+        <el-table-column prop="name" label="产品名称" width="160" fixed></el-table-column>
+        <el-table-column prop="type" label="产品类型" width="120"></el-table-column>
+        <el-table-column prop="system" label="系统" width="160"></el-table-column>
+        <el-table-column prop="specModel" label="规格型号" width="140"></el-table-column>
+        <el-table-column prop="brand" label="品牌" width="120"></el-table-column>
+        <el-table-column prop="supply.name" label="供应商" width="140"></el-table-column>
         <el-table-column prop="supply.category" label="供应商类型" width="100"></el-table-column>
         <el-table-column prop="supply.supplyCycle" label="供货周期" width="100"></el-table-column>
-        <el-table-column prop="productQuotation" label="最新报价" width="100"></el-table-column>
+        <el-table-column prop="productQuotation" label="最新报价(元)" width="140"></el-table-column>
         <el-table-column prop="unit" label="单位" width="100"></el-table-column>
         <el-table-column label="操作" fixed="right" width="100">
           <template slot-scope="scope">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { outputmoney, winHeight } from '@/utils'
 export default {
   name: 'supplierList',
   props: ['searchData'],
@@ -69,7 +69,10 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.$emit('exportData', data.content)
+          this.tableData.forEach((item) => {
+            item.productQuotation = outputmoney('' + item.productQuotation)
+          })
+          this.$emit('exportData', this.tableData)
         }
       }).catch(() => {
         this.listLoading = false
