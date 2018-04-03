@@ -23,7 +23,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="业务分类：">
+            <el-form-item label="业务类别：">
               <el-select v-model="searchData.bctg_id" placeholder="请选择业务类别" clearable>
                 <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
@@ -40,12 +40,12 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item class="single-date" label="签订时间：">
-              <el-date-picker v-model="searchData.signDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-model="searchData.signDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择签订日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item class="single-date" label="合同所属期：">
-              <el-date-picker v-model="searchData.term" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-model="searchData.term" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择合同所属日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -90,10 +90,10 @@ export default {
     search() {
       var searchData = {}
       for (var key in this.searchData) {
-        if (this.searchData[key] === '') {
-          delete this.searchData[key]
-        } else {
-          searchData[key] = this.searchData[key]
+        if (this.searchData[key]) {
+          if (key === 'term') {
+            searchData['term'] = this.searchData['term'] + '-01'
+          }
         }
       }
       this.$emit('search', searchData)

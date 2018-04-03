@@ -86,7 +86,6 @@ export default {
       // var page = this.currentPage - 1 || 0
       // var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
       // this.$post(url, basicInfoID, false).then((res) => {
-      //   console.log(res)
       // })
     }
   }

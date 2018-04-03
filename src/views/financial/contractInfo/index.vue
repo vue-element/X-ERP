@@ -9,7 +9,7 @@
           </button>
           <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
             <i class="iconfont icon-seeAll"></i>
-            <span>查看明细</span>
+            <span>查看</span>
           </button>
           <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
             <i class="iconfont icon-add"></i>
@@ -109,8 +109,6 @@ export default {
       })
     },
     formatJson(filterVal, jsonData) {
-      console.log(filterVal, 'filterVal')
-      console.log(jsonData, 'jsonData')
       return jsonData.map(v =>
         filterVal.map(j => {
           if (j === 'timestamp') {

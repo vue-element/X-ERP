@@ -13,8 +13,8 @@
             <el-form-item label="资金来源：">
               <p v-if="disabled">{{contractBasis.sourceFunds}}</p>
               <el-select v-else v-model="contractBasis.sourceFunds" placeholder="请选择资金来源">
-                  <el-option v-for="item in sourceFundsList" :label="item.value" :value="item.value" :key="item.id"></el-option>
-                </el-select>
+                <el-option v-for="item in sourceFundsList" :label="item.value" :value="item.value" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -115,17 +115,17 @@
     <!-- 新增回款计划弹窗 -->
     <el-dialog title="回款计划" :visible.sync="planBox" :modal-append-to-body="false">
       <el-form :model="paymentPlan">
-        <el-form-item label="回款条件：" class="textarea">
+        <el-form-item label="回款条件：" class="textarea" placeholder="请输入回款条件">
           <el-input type="textarea" v-model="paymentPlan.paymentCondition"></el-input>
         </el-form-item>
         <el-form-item label="计划回款比例(%)：">
-          <el-input v-model="paymentPlan.ratio"></el-input>
+          <el-input v-model="paymentPlan.ratio" placeholder="请输入计划回款比例"></el-input>
         </el-form-item>
         <el-form-item label="计划回款金额(元)：">
-          <el-input v-model="paymentPlan.amount"></el-input>
+          <el-input v-model="paymentPlan.amount" placeholder="请输入计划回款金额"></el-input>
         </el-form-item>
         <el-form-item class="single-date" label="计划回款时间：">
-          <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+          <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择计划回款日期"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -164,11 +164,11 @@
       <form>
         <div class="describtion">
           <span>附件说明：</span>
-          <textarea rows="4" v-model="fileForm.describtion"></textarea>
+          <textarea rows="4" v-model="fileForm.describtion" placeholder="请输入附件说明"></textarea>
         </div>
         <div class="person">
           <span>上传人：</span>
-          <input type="text" v-model="fileForm.person">
+          <input type="text" v-model="fileForm.person" placeholder="请输入上传人">
         </div>
         <div class="upfile">
           <span>附件上传：</span>
@@ -349,7 +349,6 @@ export default {
       }
     },
     paymentPlanAdd() {
-      console.log(this.paymentPlan)
       this.$post('/paymentPlan/save', this.paymentPlan).then((res) => {
         this.planBox = false
         if (res.data.success === true) {

@@ -60,6 +60,7 @@ export default {
       this.$post(url, this.searchData, false).then((res) => {
         var data = res.data.data
         for (var i = 0; i < data.content.length; i++) {
+          data.content[i].term = (data.content[i].term + '').slice(0, -3)
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount
           var region = data.content[i].business.region.name
           var index = i + 1
