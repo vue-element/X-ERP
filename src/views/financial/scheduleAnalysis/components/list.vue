@@ -1,7 +1,7 @@
 <template>
   <div class="analysis-list">
     <div class="table">
-      <el-table class="basic-form" id="out-table" style="width: 100%" :data="scheduleAnalysisData" :height="height" v-loading.body="listLoading" border  :row-style="rowStyle">
+      <el-table class="basic-form" id="out-table" style="width: 100%" :data="scheduleAnalysisData" :height="height" v-loading.body="listLoading" border :row-style="rowStyle">
         <el-table-column fixed="left" label="序号" width="60">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
@@ -135,11 +135,9 @@ export default {
     },
     rowStyle(row) {
       var data = row.row
-      console.log(data)
       for (var key in data) {
-        console.log(data[key])
         if (data[key] === '严重滞后' || data[key] === '超支') {
-          return { 'background-color': '#F96161!important' }
+          return { 'background-color': '#F96161' }
         }
       }
     }
@@ -149,4 +147,11 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.analysis-list{
+  .table{
+    tr.el-table__row.hover-row:hover{
+      background-color: #F96161;
+    }
+  }
+}
 </style>

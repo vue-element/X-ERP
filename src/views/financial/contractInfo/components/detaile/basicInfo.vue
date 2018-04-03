@@ -265,6 +265,7 @@ export default {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.contractInfo = data.contractInfo
+      console.log(this.contractInfo.term)
       this.contractInfo.dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = data.contractInfo.originalAmount + data.contractInfo.changeAmount
