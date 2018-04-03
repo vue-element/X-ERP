@@ -1,13 +1,13 @@
 <template>
-  <div class="contract-list">
+  <div class="analysis-list">
     <div class="table">
-      <el-table class="basic-form" style="width: 100%" :data="scheduleAnalysisData" :height="height" v-loading.body="listLoading" border>
+      <el-table class="basic-form" id="out-table" style="width: 100%" :data="scheduleAnalysisData" :height="height" v-loading.body="listLoading" border  :row-style="rowStyle">
         <el-table-column fixed="left" label="序号" width="60">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column label="合同信息">
-          <el-table-column prop="contractInfo.code" label="合同编码" width="140"></el-table-column>
-          <el-table-column prop="contractInfo.name" label="合同名称" width="200"></el-table-column>
+          <el-table-column prop="code" label="合同编码" width="140"></el-table-column>
+          <el-table-column prop="name" label="合同名称" width="200"></el-table-column>
         </el-table-column>
         <el-table-column label="进度分析">
           <el-table-column prop="stage" label="项目所属阶段" width="160"></el-table-column>
@@ -101,8 +101,15 @@ export default {
             data.content[i].materialPercentage = materialPercentage
             data.content[i].artificialPercentage = artificialPercentage
             data.content[i].comprehensivePercentage = comprehensivePercentage
+            var index = i + 1
+            var ciCode = data.content[i].contractInfo.code
+            var ciName = data.content[i].contractInfo.name
+            data.content[i].index = index
+            data.content[i].code = ciCode
+            data.content[i].name = ciName
           }
           this.scheduleAnalysisData = data.content
+          this.$emit('exportData', data.content)
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
@@ -125,11 +132,17 @@ export default {
         var data = res.data.data
         this.$emit('editRow', data)
       })
+    },
+    rowStyle(row) {
+      var data = row.row
+      console.log(data)
+      for (var key in data) {
+        console.log(data[key])
+        if (data[key] === '严重滞后' || data[key] === '超支') {
+          return { 'background-color': '#F96161!important' }
+        }
+      }
     }
-  },
-  watch: {
-  },
-  computed: {
   }
 }
 </script>

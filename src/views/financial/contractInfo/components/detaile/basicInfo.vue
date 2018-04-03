@@ -95,7 +95,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item class="single-date" label="签订时间：">
                 <p v-if="disabled">{{contractInfo.signDate}}</p>
-                <el-date-picker v-else v-model="contractInfo.signDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                <el-date-picker v-else v-model="contractInfo.signDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择签订日期"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -103,7 +103,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item class="single-date" label="合同所属期：" prop="term">
                 <p v-if="disabled">{{contractInfo.term}}</p>
-                <el-date-picker v-else v-model="contractInfo.term" type="date" format="yyyy-MM" value-format="yyyy-MM" placeholder="选择日期"></el-date-picker>
+                <el-date-picker v-else v-model="contractInfo.term" type="date" format="yyyy-MM" value-format="yyyy-MM" placeholder="选择合同所属日期"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -242,6 +242,7 @@ export default {
           this.contractInfo.oldCity = this.cityOption.join('-')
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
+          this.contractInfo.term = this.contractInfo.term + '-01'
           this.$post('/contractInfo/save', this.contractInfo).then((res) => {
             var contractMsg = res.data.data
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))

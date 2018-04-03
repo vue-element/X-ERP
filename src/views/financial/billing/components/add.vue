@@ -10,18 +10,18 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo">
-              <p v-if="disabled">{{billingData.contractInfo.code}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择商机编码" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
+            <el-form-item label="合同名称：">
+              <p v-if="disabled">{{billingData.contractInfo.name}}</p>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同名称" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
-              <p v-if="disabled">{{billingData.contractInfo.name}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-form-item label="合同编号：" prop="contractInfo">
+              <p v-if="disabled">{{billingData.contractInfo.code}}</p>
+              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -74,7 +74,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item class="single-date" label="开票日期：">
               <p v-if="disabled">{{billingData.date}}</p>
-              <el-date-picker v-else v-model="billingData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-else v-model="billingData.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开票日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12" class="text">

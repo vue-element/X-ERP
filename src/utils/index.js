@@ -382,6 +382,10 @@ export function getPercentage(num) {
 
 export function toPoint(percent) {
   var str = percent.replace('%', '')
-  str = str / 100
+  return str
+}
+
+export function twoPoint(num) {
+  var str = parseInt(num * 100) / 100
   return str
 }

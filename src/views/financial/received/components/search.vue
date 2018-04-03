@@ -51,7 +51,7 @@ export default {
   methods: {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
-        if (res.data.success === true) {
+        if (res.data.success === true && res.data.data.contractBillingList) {
           var data = res.data.data.contractBillingList
           const arrNew = [data[0]]
           for (var i = 0; i < data.length; i++) {

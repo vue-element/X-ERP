@@ -9,6 +9,14 @@
           <p>新增付款信息:</p>
         </h4>
         <el-row :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="合同名称：">
+              <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
+              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同名称" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：" prop="contractInfo">
               <p v-if="disabled">{{paymentData.contractInfo.code}}</p>
@@ -16,14 +24,6 @@
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
-              <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编码" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -65,7 +65,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="投入日期：" class="single-date" prop="inputDate">
               <p v-if="disabled">{{paymentData.inputDate}}</p>
-              <el-date-picker v-else type="date" placeholder="选择日期" v-model="paymentData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+              <el-date-picker v-else type="date" placeholder="选择投入日期" v-model="paymentData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>

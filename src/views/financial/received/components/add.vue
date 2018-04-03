@@ -10,18 +10,18 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编号：">
-              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
-                <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
+            <el-form-item label="合同名称：">
+              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同名称" filterable clearable>
+                <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
-              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
-                <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
+            <el-form-item label="合同编号：">
+              <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编号" filterable clearable>
+                <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -30,7 +30,7 @@
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="发票号码：">
               <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编码" filterable clearable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择发票号码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -38,7 +38,7 @@
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="回款日期：" class="single-date" prop="date">
               <p v-if="disabled">{{receivedData.date}}</p>
-              <el-date-picker v-else v-model="receivedData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" ></el-date-picker>
+              <el-date-picker v-else v-model="receivedData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择回款日期" ></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>

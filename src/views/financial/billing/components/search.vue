@@ -15,8 +15,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编码：">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
+            <el-form-item label="合同编号：">
+              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编号"  filterable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>

@@ -31,11 +31,11 @@
         <form>
           <div class="describtion">
             <span>附件说明：</span>
-            <textarea rows="4" v-model="fileForm.describtion"></textarea>
+            <textarea rows="4" v-model="fileForm.describtion" placeholder="请输入附件说明"></textarea>
           </div>
           <div class="person">
             <span>上传人：</span>
-            <input type="text" v-model="fileForm.person">
+            <input type="text" v-model="fileForm.person" placeholder="请输入上传人">
           </div>
           <div class="upfile">
             <span>附件上传：</span>
