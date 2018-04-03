@@ -8,7 +8,7 @@
       </ul>
     </div>
     <div class="form-container">
-      <div class="commont-btn edit-btn" v-show="editShow">
+      <div class="commont-btn edit-btn" v-show="hasPerm('outboundList:findUpdateData') && editShow">
         <el-button @click="toggleEditBtn">{{editWord}}</el-button>
       </div>
       <el-form :model="outboundInfo" :rules="rules" ref="outboundInfo">
@@ -63,7 +63,7 @@
             </el-col>
           </el-row>
         </div>
-        <div class="commont-btn"  v-show="!disabled">
+        <div class="commont-btn"  v-show="hasPerm('outboundList:save') && !disabled">
           <el-button :loading="loading" @click="save">保存</el-button>
           <el-button @click="reset">重置</el-button>
           <el-button @click="cancel">取消</el-button>

@@ -190,6 +190,7 @@ export default {
         unit: '',
         source: ''
       },
+      oldproductQuotation: '',
       supplyType: '',
       supplyRegion: '',
       supplyCycle: '',
@@ -228,11 +229,13 @@ export default {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
           this.loading = true
+          this.oldproductQuotation = _.cloneDeep(this.priceInfo.productQuotation)
+          // console.log('oldproductQuotation', this.oldproductQuotation)
+          // console.log('productQuotation', this.priceInfo.productQuotation)
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
               this.priceInfo = res.data.data
-              console.log(res.data.data)
               this.editInfo()
               this.temp = _.cloneDeep(this.priceInfo)
               this.priceId = this.priceInfo.id
@@ -241,8 +244,6 @@ export default {
             } else {
               this.failSave()
             }
-          }).catch(() => {
-            this.failSave()
           })
         } else {
           this.$message({
@@ -300,14 +301,21 @@ export default {
       })
     },
     savePriceHistory() {
-      var obj = {
-        person: this.userName,
-        price_id: this.priceId,
-        productQuotation: this.priceInfo.productQuotation
-      }
-      this.$post('/priceHistory/save', obj).then((res) => {
+      console.log('oldproductQuotation', this.oldproductQuotation)
+      console.log('productQuotation', this.priceInfo.productQuotation)
+      console.log(this.oldproductQuotation !== this.priceInfo.productQuotation)
+      if (this.oldproductQuotation !== this.priceInfo.productQuotation) {
+        var obj = {
+          person: this.userName,
+          price_id: this.priceId,
+          productQuotation: this.priceInfo.productQuotation
+        }
+        this.$post('/priceHistory/save', obj).then((res) => {
+          this.getPriceHistory()
+        })
+      } else {
         this.getPriceHistory()
-      })
+      }
     },
     successSave() {
       this.$emit('changeObj', false)

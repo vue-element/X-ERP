@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('outboundList:search')" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('outboundList:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看明细</span>
           </button>
-          <button @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('outboundList:save')" @click="addBtn" :class="tab === 'addTab' ? 'is-active' : ''">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>

@@ -72,7 +72,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供货区域:" >
               <el-select v-model="searchData.region_id" placeholder="请输入供货区域" filterable clearable>
-                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+                <el-option v-for="item in supplyRegionList" :label="item.name" :value="item.id" :key="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -127,7 +127,7 @@ export default {
         settlementMethod: '',
         region_id: ''
       },
-      supplyList: [],
+      supplyRegionList: [],
       typeList: [],
       categoryList: [],
       materialCategoryList: [],
@@ -148,7 +148,8 @@ export default {
       this.$get('/supply/findInsertData').then((res) => {
         if (res.data.success === true) {
           var data = res.data.data
-          this.regionList = data.regionList
+          // this.regionList = data.regionList
+          this.supplyRegionList = res.data.data.supplyRegionList
           this.supplyList = data.supplyList
         }
       })

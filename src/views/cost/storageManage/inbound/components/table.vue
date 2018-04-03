@@ -1,15 +1,15 @@
 <template>
   <div class="payment-contract">
     <div v-show="actionTab === 'inboundInfo' || actionTab === 'officeCheck'">
-      <div class="form-module">
+      <div class="form-module" v-if="hasPerm('inboundDetaile:findAllByPaymentContract')">
         <h4 class="module-title">
           <p>入库验收</p>
-          <div class="material-table-head fr">
+          <!-- <div class="material-table-head fr">
             <button :loading="false">
               <i class="iconfont icon-download"></i>
               <span>导出入库单</span>
             </button>
-          </div>
+          </div> -->
         </h4>
         <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
           <el-table-column label="发货明细">
@@ -54,7 +54,7 @@
                 <span v-else>{{scope.row.certificate}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" style="display: none">
+            <el-table-column label="操作" v-if="hasPerm('inboundDetaile:save')" style="display: none">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                 <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
@@ -66,7 +66,7 @@
           <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
-          <el-button :loading="false">通过审核</el-button>
+          <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
@@ -112,7 +112,7 @@
           </el-col>
         </el-row>
         <div class="commont-btn">
-          <el-button :loading="false">通过审核</el-button>
+          <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">导出入库成本核算表</el-button>
           <el-button :loading="false">导出出库成本核算表</el-button>
@@ -120,7 +120,7 @@
         </div>
       </div>
     </div>
-    <div class="form-module">
+    <div class="form-module" v-if="hasPerm('inboundCheck:findAllByPage')">
       <h4 class="module-title">
         <p>审核动态</p>
       </h4>

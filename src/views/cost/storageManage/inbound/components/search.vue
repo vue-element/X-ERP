@@ -15,7 +15,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="付款合同编号:">
+            <el-form-item label="付款合同编号/入库单号:">
               <el-select v-model="searchData.code" placeholder="请选择付款合同编号" filterable clearable>
                <el-option v-for="item in paymentContractList" :label="item.code" :value="item.code" :key="item.id">
                </el-option>
