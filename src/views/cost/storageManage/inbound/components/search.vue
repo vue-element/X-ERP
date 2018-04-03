@@ -9,7 +9,7 @@
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="订单编号:">
               <el-select v-model="searchData.orderCode" placeholder="请选择订单编号" filterable clearable>
-               <el-option v-for="item in paymentContractList" :label="item.orderCode" :value="item.code" :key="item.id">
+               <el-option v-for="item in paymentContractList" :label="item.orderCode" :value="item.orderCode" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -23,23 +23,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row :gutter="40">
-          <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="商机编号:">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择商机编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="使用项目:" >
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择所属项目" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
-            </el-form-item>
-          </el-col>
+        <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="使用部门:">
               <el-select v-model="searchData.department" placeholder="请选择所属项目" filterable clearable>
@@ -48,8 +32,6 @@
              </el-select>
             </el-form-item>
           </el-col>
-        </el-row> -->
-        <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="供应商:">
               <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
@@ -58,6 +40,8 @@
              </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="入库日期:" class="range-date">
               <el-date-picker v-model="searchData.inputDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
@@ -84,13 +68,11 @@ export default {
       searchData: {
         orderCode: '',
         code: '',
+        department: '',
         inputDate: '',
         supply_id: ''
       },
       paymentContractList: [],
-      contractInfoList: [],
-      businessCtgList: [],
-      materialCtgList: [],
       supplyList: [],
       departmentList: []
     }
@@ -102,9 +84,6 @@ export default {
     getInsertData() {
       this.$get('/paymentContract/findInsertData').then((res) => {
         var data = res.data.data
-        this.businessCtgList = data.businessCtgList
-        this.contractInfoList = data.contractInfoList
-        this.materialCtgList = data.materialCtgList
         this.paymentContractList = data.paymentContractList
         this.supplyList = data.supplyList
         this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
@@ -115,9 +94,9 @@ export default {
       var searchData = {}
       for (var key in this.searchData) {
         if (this.searchData[key]) {
-          if (key === 'applicationTime') {
+          if (key === 'inputDate') {
             searchData['inputDate'] = this.searchData['inputDate'][0]
-            searchData['inputDate'] = this.searchData['inputDate'][1]
+            searchData['inputDate1'] = this.searchData['inputDate'][1]
           } else {
             searchData[key] = this.searchData[key]
           }

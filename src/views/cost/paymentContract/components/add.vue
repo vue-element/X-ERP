@@ -1,6 +1,6 @@
 :sm:md<template>
   <div class="payment-contract-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow" >
+    <div class="commont-btn edit-btn" v-show="hasPerm('paymentContract:findUpdateData') && editShow" >
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="paymentContract" :rules="rules" ref="paymentContract">
@@ -188,7 +188,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn"  v-show="!disabled">
+      <div class="commont-btn"  v-show="hasPerm('paymentContract:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -349,12 +349,8 @@ export default {
         message: '保存成功',
         type: 'success'
       })
-      if (this.action === 'add') {
-        this.$emit('toggleTab')
-      } else {
-        this.editShow = true
-        this.disabled = true
-      }
+      this.editShow = true
+      this.disabled = true
     },
     failSave() {
       this.$message({

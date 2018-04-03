@@ -13,7 +13,7 @@
           <h4 class="module-title"><p>入库信息:</p></h4>
           <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="付款合同编号:">
+              <el-form-item label="付款合同编号/入库单号:">
                 <p v-if="disabled">{{paymentContract.code}}</p>
                 <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同编号"></el-input>
               </el-form-item>

@@ -7,8 +7,8 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasPermission(menus, route) {
   if (route.children && route.children.length > 0) {
+    // 判断各分管理模块（客户、财务、成本）的子路由是否存在menus中，如果存在，左侧菜单栏展示总管理模块title
     var res = route.children.filter(route => menus.indexOf(route.menu) > -1)
-    // console.log('filter children', res)
     return res.length > 0
   }
   if (route.menu) {
@@ -29,7 +29,6 @@ function hasPermission(menus, route) {
  * @param roles
  */
 function filterAsyncRouter(asyncRouterMap, menus) {
-  // console.log('asyncRouterMap', asyncRouterMap)
   const accessedRouters = asyncRouterMap.filter(route => {
     if (hasPermission(menus, route)) {
       // console.log('hasPermission true')
@@ -40,7 +39,6 @@ function filterAsyncRouter(asyncRouterMap, menus) {
     }
     return false
   })
-  // console.log('accessedRouters', accessedRouters)
   return accessedRouters
 }
 
@@ -67,6 +65,7 @@ const permission = {
         } else {
           accessedRouters = filterAsyncRouter(asyncRouterMap, menus)
         }
+        // console.log('accessedRouters', accessedRouters)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

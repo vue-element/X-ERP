@@ -1,13 +1,10 @@
 import { getToken, removeToken } from '@/utils/auth'
 import { post } from '@/utils/request'
-// import store from '../../store'
-// import router from '../../router'
+
 const user = {
   state: {
-    // userInfo: {},
     token: getToken(),
-    roles: [],
-    // role: '',
+    // roles: [],
     accountId: '',
     accountName: '',
     menus: [],
@@ -46,10 +43,10 @@ const user = {
     },
     setToken: (state, token) => {
       state.token = token
-    },
-    setRoles: (state, roles) => {
-      state.roles = roles
     }
+    // setRoles: (state, roles) => {
+    //   state.roles = roles
+    // }
   },
   actions: {
     login({ commit }, userInfo) {
@@ -58,9 +55,9 @@ const user = {
     setToken({ commit }, token) {
       commit('setToken', token)
     },
-    setRoles({ commit }, roles) {
-      commit('setRoles', roles)
-    },
+    // setRoles({ commit }, roles) {
+    //   commit('setRoles', roles)
+    // },
     logout({ commit }) {
       commit('logout')
     },
@@ -69,9 +66,9 @@ const user = {
       return new Promise((resolve, reject) => {
         post('/shiro/getInfo').then((res) => {
           var userInfo = res.data.userPermission
-          console.log('userInfo', userInfo)
+          // console.log('userInfo', userInfo)
           commit('login', userInfo)
-          resolve(userInfo)
+          resolve(userInfo) // 这里调resolve方法，则then方法会被调用
         }).catch(error => {
           reject(error)
         })

@@ -56,7 +56,7 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/paymentContract/search?size=' + pageSize + '&page=' + page
+      var url = '/paymentContract/rkSearch?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
         this.listLoading = false
         if (res.data.success === true) {

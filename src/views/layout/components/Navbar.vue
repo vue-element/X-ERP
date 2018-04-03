@@ -9,14 +9,14 @@
       <span class="username">{{user.department}}</span>
       <i class="iconfont icon-username"></i>
     </li>
-    <li>
+    <!-- <li>
       <span class="help">帮助</span>
       <i class="iconfont icon-help"></i>
     </li>
     <li>
       <span class="setting">设置</span>
       <i class="iconfont icon-setting"></i>
-    </li>
+    </li> -->
     <li @click="logout">
       <span class="logout">退出</span>
       <i class="iconfont icon-out"></i>
@@ -26,8 +26,6 @@
 </template>
 
 <script>
-// import store from '@/store'
-// import router from '@/router'
 import { mapActions, mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -49,8 +47,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      // 'userInfo',
-      'avatar'
+      'accountName',
+      'roleName'
     ])
   },
   created() {
@@ -58,12 +56,8 @@ export default {
   },
   methods: {
     getUserInfo() {
-      this.$post('/shiro/getInfo').then((res) => {
-        var userInfo = res.data.userPermission
-        this.user.name = userInfo.accountName
-        this.user.department = userInfo.roleName
-        this.$store.commit('login', userInfo)
-      })
+      this.user.name = this.accountName
+      this.user.department = this.roleName
     },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')

@@ -1,6 +1,6 @@
 <template>
   <div class="supply-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('price:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="priceInfo" :rules="rules" ref="priceInfo">
@@ -78,20 +78,12 @@
             <el-form-item label="供应商类型:">
               <p v-if="disabled">{{priceInfo.supply.type}}</p>
               <el-input v-else v-model="supplyType" placeholder="自动生成" disabled></el-input>
-              <!-- <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
-               <el-option v-for="item in supplyList" :label="item.type" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供应区域:">
-              <p v-if="disabled">{{priceInfo.supply.region.name}}</p>
+              <p v-if="disabled">{{priceInfo.supply.supplyRegion.name}}</p>
               <el-input v-else v-model="supplyRegion" placeholder="自动生成" disabled></el-input>
-              <!-- <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
-               <el-option v-for="(item, index) in supplyList" :label="item.region.name" :value="item.region.id" :key="index">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -100,10 +92,6 @@
             <el-form-item label="供货周期(天):">
               <p v-if="disabled">{{priceInfo.supply.supplyCycle}}</p>
               <el-input v-else v-model="supplyCycle" placeholder="自动生成" disabled></el-input>
-              <!-- <el-select v-else v-model="priceInfo.supply.id" placeholder="请选择供应商" disabled>
-               <el-option v-for="item in supplyList" :label="item.supplyCycle" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
@@ -133,7 +121,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn"  v-show="!disabled">
+      <div class="commont-btn"  v-show="hasPerm('price:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -202,6 +190,7 @@ export default {
         unit: '',
         source: ''
       },
+      oldproductQuotation: '',
       supplyType: '',
       supplyRegion: '',
       supplyCycle: '',
@@ -240,6 +229,9 @@ export default {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
           this.loading = true
+          this.oldproductQuotation = _.cloneDeep(this.priceInfo.productQuotation)
+          // console.log('oldproductQuotation', this.oldproductQuotation)
+          // console.log('productQuotation', this.priceInfo.productQuotation)
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -252,8 +244,6 @@ export default {
             } else {
               this.failSave()
             }
-          }).catch(() => {
-            this.failSave()
           })
         } else {
           this.$message({
@@ -275,7 +265,7 @@ export default {
       this.historyPriceList = this.priceInfo.priceHistoryList
       if (this.priceInfo.supply.id) {
         this.supplyType = this.priceInfo.supply.type
-        this.supplyRegion = this.priceInfo.supply.region.name
+        this.supplyRegion = this.priceInfo.supply.supplyRegion.name
         this.supplyCycle = this.priceInfo.supply.supplyCycle
       }
     },
@@ -311,14 +301,21 @@ export default {
       })
     },
     savePriceHistory() {
-      var obj = {
-        person: this.userName,
-        price_id: this.priceId,
-        productQuotation: this.priceInfo.productQuotation
-      }
-      this.$post('/priceHistory/save', obj).then((res) => {
+      console.log('oldproductQuotation', this.oldproductQuotation)
+      console.log('productQuotation', this.priceInfo.productQuotation)
+      console.log(this.oldproductQuotation !== this.priceInfo.productQuotation)
+      if (this.oldproductQuotation !== this.priceInfo.productQuotation) {
+        var obj = {
+          person: this.userName,
+          price_id: this.priceId,
+          productQuotation: this.priceInfo.productQuotation
+        }
+        this.$post('/priceHistory/save', obj).then((res) => {
+          this.getPriceHistory()
+        })
+      } else {
         this.getPriceHistory()
-      })
+      }
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -361,7 +358,7 @@ export default {
         return item.id === id
       })
       this.supplyType = obj.type
-      this.supplyRegion = obj.region.name
+      this.supplyRegion = obj.supplyRegion.name
       this.supplyCycle = obj.supplyCycle
     }
   },

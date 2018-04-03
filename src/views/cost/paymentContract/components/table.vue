@@ -1,8 +1,9 @@
 <template>
   <div class="payment-contract">
-    <div class="form-module">
-      <h4 class="module-title">
-        <p @click="uploadTableShow = false">物料详情</p>
+    <!-- 物料详情 -->
+    <div class="form-module" v-if="hasPerm('purchaseList:findAllByPaymentContract')">
+      <h4 class="module-title" v-if="hasPerm('purchaseList:save')">
+        <p>物料详情</p>
         <div class="material-table-head fr">
           <button @click.prevent="handleDownload" :loading="downloadLoading">
             <i class="iconfont icon-download"></i>
@@ -18,7 +19,6 @@
           </button>
         </div>
       </h4>
-      <!-- <div  v-show="!uploadTableShow"> -->
       <div>
         <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading" border>
           <el-table-column label="序号" width="60">
@@ -68,9 +68,9 @@
           </el-table-column>
           <el-table-column label="操作" min-width="120" fixed="right">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-              <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
+              <el-button v-if="hasPerm('purchaseList:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+              <el-button v-if="hasPerm('purchaseList:save')" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+              <el-button v-if="hasPerm('purchaseList:delete')" @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -80,11 +80,11 @@
       </div>
     </div>
     <!-- 开票信息 -->
-    <div class="form-module" v-show="editShow">
+    <div class="form-module" v-show="editShow && hasPerm('billing:findAllByPaymentContract')">
       <h4 class="module-title">
         <p>开票信息</p>
         <div class="material-table-head fr">
-          <button @click.prevent="addBilling">
+          <button v-if="hasPerm('billing:save')" @click.prevent="addBilling">
             <i class="iconfont icon-add"></i>
             <span>新增开票信息</span>
           </button>
@@ -110,19 +110,19 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.edit" @click.native.prevent="confirmBillingEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-else @click.native.prevent='editBillingRow(scope.row, scope.$index)' type="text">编辑</el-button>
-            <el-button @click.native.prevent="deleteBillingRow(scope.row.id)" type="text">删除</el-button>
+            <el-button v-if="hasPerm('billing:save') && scope.row.edit" @click.native.prevent="confirmBillingEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-if="hasPerm('billing:save')" @click.native.prevent='editBillingRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-if="hasPerm('billing:delete')" @click.native.prevent="deleteBillingRow(scope.row.id)" type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 付款合同 -->
-    <div class="form-module" v-show="editShow">
+    <div class="form-module" v-show="editShow && hasPerm('payment:findAllByPaymentContract')">
       <h4 class="module-title">
         <p>付款信息</p>
         <div class="material-table-head fr">
-          <button @click.prevent="addPayment">
+          <button v-if="hasPerm('payment:save')" @click.prevent="addPayment">
             <i class="iconfont icon-add"></i>
             <span>新增付款信息</span>
           </button>
@@ -148,9 +148,9 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.edit" @click.native.prevent="confirmPaymentEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-else @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
-            <el-button @click.native.prevent="deletePaymentRow(scope.row.id)" type="text">删除</el-button>
+            <el-button v-if="hasPerm('payment:save') && scope.row.edit" @click.native.prevent="confirmPaymentEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-if="hasPerm('payment:save')" @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-if="hasPerm('payment:delete')" @click.native.prevent="deletePaymentRow(scope.row.id)" type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

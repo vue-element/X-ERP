@@ -94,27 +94,10 @@ export const asyncRouterMap = [
       { path: 'temporary', component: _import('engineering/temporaryEmployment/index'), name: 'temporary', meta: { title: '临时用工管理' }}
     ]
   },
-  { path: '/permission', component: Layout,
-    hidden: true,
-    redirect: '/permission/index',
-    meta: {
-      role: ['admin']
-    },
-    children: [{
-      path: 'index',
-      component: _import('permission/index'),
-      name: 'permission',
-      meta: {
-        title: '权限测试页',
-        icon: 'lock',
-        role: ['admin']
-      }
-    }]
-  },
   {
     path: '/error',
     component: Layout,
-    hidden: false,
+    hidden: true,
     redirect: 'noredirect',
     name: 'errorPages',
     meta: {

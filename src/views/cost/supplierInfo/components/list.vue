@@ -24,8 +24,8 @@
         <el-table-column prop="regAddress" label="注册地址" width="200"></el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('supply:findAllByPage')">查看</el-button>
+            <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" v-if="hasPerm('supply:delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,13 +56,13 @@ export default {
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getSupplierData()
+    this.getSupplyData()
   },
   methods: {
     resize() {
       this.height = winHeight() - 210
     },
-    getSupplierData() {
+    getSupplyData() {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
@@ -83,11 +83,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getSupplierData()
+      this.getSupplyData()
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getSupplierData()
+      this.getSupplyData()
     },
     deleteRow(id) {
       this.$confirm('确认删除此信息?', '提示', {
@@ -103,7 +103,7 @@ export default {
       var projectID = { id: [id] }
       this.$post('/supply/delete', projectID).then(res => {
         if (res.data.success === true) {
-          this.getSupplierData()
+          this.getSupplyData()
           this.$message({
             message: '删除成功',
             type: 'success'
