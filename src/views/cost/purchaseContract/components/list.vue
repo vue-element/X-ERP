@@ -6,7 +6,7 @@
         <template slot-scope="scope">{{scope.$index + 1}}</template>
        </el-table-column>
        <el-table-column prop="contractInfo.name" label="所属项目" fixed width="140"></el-table-column>
-       <el-table-column prop="contractInfo.code" label="关联合同" width="120"></el-table-column>
+       <el-table-column prop="contractInfo.code" label="关联合同" width="140"></el-table-column>
        <el-table-column prop="businessCategory.name" label="业务线"  width="160"></el-table-column>
        <el-table-column prop="code" label="付款合同编号" fixed width="160"></el-table-column>
        <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
@@ -15,7 +15,7 @@
        <el-table-column prop="department" label="申请部门" width="120"></el-table-column>
        <el-table-column prop="paymentObject" label="支付对象" width="100"></el-table-column>
        <el-table-column prop="amount" label="采购金额" width="100"></el-table-column>
-       <el-table-column prop="payableAmount" label="应付金额" width="100"></el-table-column>
+       <el-table-column prop="payableAmount" label="应付金额" width="140"></el-table-column>
        <el-table-column prop="payTime" label="到付时间" width="100"></el-table-column>
        <el-table-column prop="deliveryStatus" label="发货状态" width="100"></el-table-column>
        <el-table-column prop="mention" label="是否自提" width="100"></el-table-column>

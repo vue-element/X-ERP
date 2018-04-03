@@ -2,15 +2,15 @@
 <div class="bussiness-list">
   <el-table class="basic-form" style="width: 100%" :data="bussinessData" :height="height" @selection-change="handleSelectionChange" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
    <el-table-column type="selection" fixed width="40"></el-table-column>
-   <el-table-column align="center" prop="0" fixed="left" label="序号" width="60">
+   <el-table-column align="center" label="序号" fixed width="60">
      <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="name" fixed label="商机名称" width="100"></el-table-column>
-   <el-table-column prop="code" fixed label="商机编号" width="140"></el-table-column>
-   <el-table-column prop="client.name" label="客户名称" width="200"></el-table-column>
-   <el-table-column prop="client.category" label="客户类别" width="200"></el-table-column>
+   <el-table-column prop="name" fixed label="商机名称" min-width="140"></el-table-column>
+   <el-table-column prop="code" fixed label="商机编号" min-width="160"></el-table-column>
+   <el-table-column prop="client.name" label="客户名称" min-width="240"></el-table-column>
+   <el-table-column prop="client.category" label="客户类别" width="160"></el-table-column>
    <el-table-column prop="region.name" label="区域" width="100"></el-table-column>
-   <el-table-column prop="businessCategory.name" label="业务分类"></el-table-column>
+   <el-table-column prop="businessCategory.name" label="业务分类" width="160"></el-table-column>
    <el-table-column prop="startDate" label="预计启动时间" width="140"></el-table-column>
    <el-table-column prop="amount" label="预计成交金额" width="140"></el-table-column>
    <el-table-column prop="businessPerson.name" label="业务负责人" width="120"></el-table-column>

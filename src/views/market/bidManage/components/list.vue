@@ -2,14 +2,14 @@
 <div class="smartCommunity-list">
   <el-table class="basic-form" style="width: 100%"  :data="projectData" :height="height"
   v-loading.body="listLoading" element-loading-text="拼命加载中" border>
-    <el-table-column align="center" prop="0" fixed label="序号" width="60">
+    <el-table-column align="center" label="序号" fixed width="60">
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="business.code" label="商机编号" width="160"></el-table-column>
-   <el-table-column prop="business.name" label="商机名称" width="100"></el-table-column>
+   <el-table-column prop="business.code" label="商机编号" fixed width="120"></el-table-column>
+   <el-table-column prop="business.name" label="商机名称" fixed  min-width="180"></el-table-column>
    <el-table-column prop="business.amount" label="预计成交金额" width="120"></el-table-column>
    <el-table-column prop="business.executeState" label="商机执行状态" width="120"></el-table-column>
-   <el-table-column label="在线协作地址">
+   <el-table-column label="在线协作地址" width="300">
      <template slot-scope="scope">
        <span @click="toURl(scope.row.url)">{{scope.row.url}}</span></template>
    </el-table-column>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { winHeight } from '@/utils'
+import { winHeight, outputmoney } from '@/utils'
 export default {
   name: 'smartCommunityList',
   props: ['searchData'],
@@ -103,6 +103,9 @@ export default {
           if (res.data.success === true) {
             var data = res.data.data
             this.projectData = data.content
+            this.projectData.forEach((item) => {
+              item.business.amount = outputmoney('' + item.business.amount)
+            })
             this.total = data.totalElements
             this.currentPage = data.number + 1
             this.pageSize = data.size

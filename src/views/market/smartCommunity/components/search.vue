@@ -8,10 +8,10 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item">
           <label>项目名称：</label>
-          <el-select v-model="searchData.p_id" placeholder="请选择项目名称" clearable>
+          <el-select v-model="searchData.p_id" placeholder="请选择项目名称" filterable clearable>
            <el-option v-for="item in projectList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
-         </el-select filterable clearable>
+         </el-select>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="12">
