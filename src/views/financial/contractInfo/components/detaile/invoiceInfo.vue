@@ -76,17 +76,10 @@ export default {
     getInvoceInfo() {
       var basicInfoID = this.editData.editData.id
       this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
+        console.log(res)
         this.invoceInfoData = res.data.data.contractBillingList.content
         this.invoceInfo.totalAmount = res.data.data.totalAmount
       })
-    },
-    getInvoceInfoData() {
-      // var basicInfoID = this.editData.editData.id
-      // var pageSize = this.pageSize || 15
-      // var page = this.currentPage - 1 || 0
-      // var url = '/contractBilling/search?size=' + pageSize + '&page=' + page
-      // this.$post(url, basicInfoID, false).then((res) => {
-      // })
     }
   }
 }

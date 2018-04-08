@@ -10,7 +10,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
+            <el-form-item label="合同名称：" prop="contractInfo">
               <p v-if="disabled">{{billingData.contractInfo.name}}</p>
               <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同名称" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
@@ -18,7 +18,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo">
+            <el-form-item label="合同编号：">
               <p v-if="disabled">{{billingData.contractInfo.code}}</p>
               <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
@@ -214,6 +214,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.billingData = _.cloneDeep(this.temp)
       }
     },
     failSave() {

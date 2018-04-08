@@ -200,6 +200,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.paymentData = _.cloneDeep(this.temp)
       }
     },
     failSave() {

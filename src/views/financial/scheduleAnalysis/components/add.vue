@@ -268,6 +268,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.scheduleAnalysisData = _.cloneDeep(this.temp)
       }
     },
     failSave() {

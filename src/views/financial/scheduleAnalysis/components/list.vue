@@ -147,11 +147,4 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.analysis-list{
-  .table{
-    tr.el-table__row.hover-row:hover{
-      background-color: #F96161;
-    }
-  }
-}
 </style>

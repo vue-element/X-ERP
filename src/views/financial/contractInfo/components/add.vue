@@ -12,8 +12,8 @@
       </ul>
     </div>
     <div class="contractInfo-show">
-      <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel" @back="back"></basicInfo>
-      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @back="back"></disclosureInfo>
+      <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel" @changeObj='changeObj'></basicInfo>
+      <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @changeObj='changeObj'></disclosureInfo>
       <subContract v-if="tab === 'subContract'" :editData="editData"></subContract>
       <change v-if="tab === 'change'" :editData="editData"></change>
       <invoiceInfo v-if="tab === 'invoiceInfo'" :editData="editData"></invoiceInfo>
@@ -39,7 +39,8 @@ export default {
     change,
     invoiceInfo,
     returnMoney,
-    payMoney
+    payMoney,
+    isChange: false
   },
   props: ['editData', 'contractMsg'],
   data() {
@@ -53,13 +54,30 @@ export default {
   },
   methods: {
     toggleTab(tab) {
+      if (this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
       this.tab = tab
     },
     cancel () {
       this.$emit('cancel')
     },
-    back() {
-      this.$emit('back')
+    changeObj(status) {
+      this.isChange = status
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
     }
   }
 }

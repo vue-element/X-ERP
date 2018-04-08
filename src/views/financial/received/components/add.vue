@@ -158,6 +158,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.receivedData = _.cloneDeep(this.temp)
       }
     },
     failSave() {

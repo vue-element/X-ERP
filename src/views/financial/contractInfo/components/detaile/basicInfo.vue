@@ -196,7 +196,7 @@ export default {
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
         limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
-        originalAmount: [{ required: true, message: '请输入合同金额' }]
+        originalAmount: [{ required: true, trigger: 'blur' }]
       },
       temp: {}
     }
@@ -248,13 +248,10 @@ export default {
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
             this.loading = false
             if (res.data.success === true) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              if (this.action === 'edit') {
-                this.$emit('back')
-              }
+              this.temp = _.cloneDeep(res.data.data.contractInfo)
+              this.successSave()
+            } else {
+              this.failSave()
             }
           }).catch(() => {
             this.loading = false
@@ -262,29 +259,41 @@ export default {
         }
       })
     },
-    editInfo() {
-      var data = _.cloneDeep(this.editData.editData)
-      this.contractInfo = data.contractInfo
-      console.log(this.contractInfo.term)
-      this.contractInfo.dateShow = [data.contractInfo.startDate, data.contractInfo.endDate].join(' 至 ')
-      this.contractInfo.limit = [data.contractInfo.startDate, data.contractInfo.endDate]
-      this.contractInfo.contractTotalAmount = data.contractInfo.originalAmount + data.contractInfo.changeAmount
+    successSave() {
+      this.$emit('changeObj', false)
+      this.$message({
+        message: '保存成功',
+        type: 'success'
+      })
+      if (this.action === 'add') {
+        this.$emit('toggleTab')
+      } else {
+        this.contractInfo = _.cloneDeep(this.temp)
+        this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
+        this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
+        this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
+        this.editShow = true
+        this.disabled = true
+      }
+    },
+    failSave() {
+      this.$message({
+        message: '保存失败',
+        type: 'error'
+      })
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      if (this.disabled === true) {
-        this.editWord = '编辑'
-        this.editInfo()
-      } else {
-        this.editWord = '取消编辑'
-      }
     },
     toggleAction() {
       if (this.editData.tabState === 'editTab') {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
-        this.editInfo()
+        this.contractInfo = _.cloneDeep(this.editData.editData.contractInfo)
+        this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
+        this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
+        this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
       } else {
         this.action = 'add'
       }
@@ -319,10 +328,19 @@ export default {
         }
       },
       deep: true
+    },
+    disabled (status) {
+      if (status === false) {
+        this.editWord = '取消编辑'
+        this.$emit('changeObj', true)
+      } else {
+        this.editWord = '编辑'
+      }
     }
   },
   computed: {
     contractTotalAmount() {
+      this.contractInfo.originalAmount = this.contractInfo.originalAmount.replace(/,/g, '')
       if (!this.contractInfo.originalAmount && !this.contractInfo.changeAmount || !this.contractInfo.originalAmount && this.contractInfo.changeAmount) {
         this.contractInfo.contractTotalAmount = null
         return null

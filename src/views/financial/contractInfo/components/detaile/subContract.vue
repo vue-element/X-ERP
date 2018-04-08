@@ -23,26 +23,22 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
-    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination>
+        <!-- <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
+    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="100"></el-pagination> -->
       </div>
-      <!-- 分包文件上传弹窗 -->
       <el-dialog title="合同分包附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
-        <form>
-          <div class="describtion">
-            <span>附件说明：</span>
-            <textarea rows="4" v-model="fileForm.describtion" placeholder="请输入附件说明"></textarea>
-          </div>
-          <div class="person">
-            <span>上传人：</span>
-            <input type="text" v-model="fileForm.person" placeholder="请输入上传人">
-          </div>
-          <div class="upfile">
-            <span>附件上传：</span>
+        <el-form :model="fileForm" :rules="rules" class="demo-ruleForm" ref="fileForm">
+          <el-form-item label="上传人" prop="person">
+            <el-input v-model="fileForm.person"></el-input>
+          </el-form-item>
+          <el-form-item label="附件说明" class="textarea">
+            <el-input type="textarea" v-model="fileForm.describtion"></el-input>
+          </el-form-item>
+          <el-form-item label="附件上传" prop="file">
             <input type="file" id="fileupload" @change="getFile($event)">
-          </div>
-          <button class="filebtn" @click="upFile($event)">上传</button>
-        </form>
+          </el-form-item>
+          <el-button type="success" round @click="upFile($event)">上传</el-button>
+        </el-form>
       </el-dialog>
     </div>
   </div>
@@ -56,7 +52,7 @@ export default {
   data() {
     return {
       height: 100,
-      currentPage: 1,
+      // currentPage: 1,
       subContractData: [],
       upFiles: false,
       fileForm: {
@@ -64,6 +60,10 @@ export default {
         describtion: '',
         person: '',
         file: ''
+      },
+      rules: {
+        person: [{ required: true, message: '请输入上传人', trigger: 'blur' }],
+        file: [{ required: true, message: '请选择文件', trigger: 'change' }]
       }
     }
   },
@@ -78,6 +78,7 @@ export default {
     resize() {
       this.height = winHeight() - 335
     },
+    // 点击获取ci_id
     filesBtn() {
       var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
       if (this.editData.tabState === 'addTab' && contractMsg === null) {
@@ -98,6 +99,7 @@ export default {
         }
       }
     },
+    // 获取文件列表
     getSubContractFile() {
       var subContract = null
       if (this.editData.tabState === 'editTab') {
@@ -114,28 +116,34 @@ export default {
         this.subContractData = res.data.data.content
       })
     },
+    // 获取文件信息
     getFile(event) {
       this.fileForm.file = event.target.files[0]
     },
+    // 上传文件
     upFile(event) {
-      event.preventDefault()
-      var fd = new FormData()
-      fd.append('ci_id', this.fileForm.ci_id)
-      fd.append('describtion', this.fileForm.describtion)
-      fd.append('person', this.fileForm.person)
-      fd.append('file', this.fileForm.file)
-      this.$post('/contractSubcontract/save', fd).then((res) => {
-        if (res.data.success === true) {
-          this.getSubContractFile()
-          this.fileForm = {
-            ci_id: '',
-            describtion: '',
-            person: '',
-            file: ''
-          }
-          var obj = document.getElementById('fileupload')
-          obj.value = ''
-          this.upFiles = false
+      this.$refs.fileForm.validate(valid => {
+        if (valid) {
+          event.preventDefault()
+          var fd = new FormData()
+          fd.append('ci_id', this.fileForm.ci_id)
+          fd.append('describtion', this.fileForm.describtion)
+          fd.append('person', this.fileForm.person)
+          fd.append('file', this.fileForm.file)
+          this.$post('/contractSubcontract/save', fd).then((res) => {
+            if (res.data.success === true) {
+              this.getSubContractFile()
+              this.fileForm = {
+                ci_id: '',
+                describtion: '',
+                person: '',
+                file: ''
+              }
+              var obj = document.getElementById('fileupload')
+              obj.value = ''
+              this.upFiles = false
+            }
+          })
         }
       })
     },
@@ -165,6 +173,20 @@ export default {
     downFile(row) {
       window.location.href = row.url
     }
+  },
+  watch: {
+    upFiles() {
+      if (!this.upFiles) {
+        this.fileForm = {
+          ci_id: '',
+          describtion: '',
+          person: '',
+          file: ''
+        }
+        var obj = document.getElementById('fileupload')
+        obj.value = ''
+      }
+    }
   }
 }
 </script>
@@ -176,51 +198,16 @@ export default {
   margin-top:140px;
   .list.form-module{
     margin-bottom: 0;
-    .describtion,
-    .person,
-    .upfile{
-      font-size: 15px;
-      color: black;
-      margin: 15px 10% 20px;
-      span{
-        display: inline-block;
-        width: 100px;
-        height: 30px;
-        text-align: right;
-        vertical-align: top;
-      }
-      textarea{
-        resize: both;
-        max-width: 70%;
-        min-width: 70%
-      }
-      textarea,
-      input[type="text"]{
-        &::-webkit-scrollbar{
-          width: 0;
+    .el-dialog__wrapper{
+      .el-dialog__body{
+        button{
+          line-height: 0.4;
+          background-color: #35d5ba;
+          border-color: #35d5ba;
+          margin: 20px 0 10px 45%;
+          border-radius: 5px;
         }
-        margin-left: 5px;
-        padding-left: 8px;
-        width: 70%;
-        line-height: 26px;
-        border: 1px solid #828282;
-        border-radius: 5px;
-        box-sizing: border-box;
       }
-      input[type="file"]{
-        margin-left: 7px;
-      }
-    }
-    button.filebtn{
-      font-size: 15px;
-      margin: 0 0 20px 45%;
-      width: 10%;
-      height: 30px;
-      background-color: #35d5ba;
-      border: 1px solid #35d5ba;
-      border-radius: 8px;
-      color: #fff;
-      cursor: pointer;
     }
     .module-title{
       position:relative;

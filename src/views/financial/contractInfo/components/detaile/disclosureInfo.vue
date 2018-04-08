@@ -115,17 +115,17 @@
     <!-- 新增回款计划弹窗 -->
     <el-dialog title="回款计划" :visible.sync="planBox" :modal-append-to-body="false">
       <el-form :model="paymentPlan">
-        <el-form-item label="回款条件：" class="textarea" placeholder="请输入回款条件">
+        <el-form-item label="回款条件：" class="textarea">
           <el-input type="textarea" v-model="paymentPlan.paymentCondition"></el-input>
         </el-form-item>
         <el-form-item label="计划回款比例(%)：">
-          <el-input v-model="paymentPlan.ratio" placeholder="请输入计划回款比例"></el-input>
+          <el-input v-model="paymentPlan.ratio"></el-input>
         </el-form-item>
         <el-form-item label="计划回款金额(元)：">
-          <el-input v-model="paymentPlan.amount" placeholder="请输入计划回款金额"></el-input>
+          <el-input v-model="paymentPlan.amount"></el-input>
         </el-form-item>
         <el-form-item class="single-date" label="计划回款时间：">
-          <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择计划回款日期"></el-date-picker>
+          <el-date-picker v-model="paymentPlan.date" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,7 +161,19 @@
     </div>
     <!-- 附件件上传弹窗 -->
     <el-dialog title="合同交底附件上传" :visible.sync="upFiles" :modal-append-to-body="false">
-      <form>
+      <el-form :model="fileForm" :rules="rules" class="demo-ruleForm" ref="fileForm">
+        <el-form-item label="上传人" prop="person">
+          <el-input v-model="fileForm.person"></el-input>
+        </el-form-item>
+        <el-form-item label="附件说明" class="textarea">
+          <el-input type="textarea" v-model="fileForm.describtion"></el-input>
+        </el-form-item>
+        <el-form-item label="附件上传" prop="file">
+          <input type="file" id="fileupload" @change="getFile($event)">
+        </el-form-item>
+        <el-button type="success" round @click="upFile($event)">上传</el-button>
+      </el-form>
+      <!-- <form>
         <div class="describtion">
           <span>附件说明：</span>
           <textarea rows="4" v-model="fileForm.describtion" placeholder="请输入附件说明"></textarea>
@@ -175,7 +187,7 @@
           <input type="file" id="fileupload" @change="getFile($event)">
         </div>
         <button class="filebtn" @click="upFile($event)">上传</button>
-      </form>
+      </form> -->
     </el-dialog>
   </div>
 </template>
@@ -195,7 +207,7 @@ export default {
       disabled: false,
       loading: false,
       sourceFundsList: [],
-      // 合同交底信息
+      // 合同交底信息form表单
       contractBasis: {
         id: '',
         sourceFunds: null,
@@ -210,7 +222,7 @@ export default {
           id: ''
         }
       },
-      // 回款计划
+      // 回款计划表单form表单
       receiveData: [],
       planBox: false,
       paymentPlan: {
@@ -229,28 +241,17 @@ export default {
         describtion: '',
         person: '',
         file: ''
+      },
+      rules: {
+        person: [{ required: true, message: '请输入上传人', trigger: 'blur' }],
+        file: [{ required: true, message: '请选择文件', trigger: 'change' }]
       }
     }
   },
   created() {
     this.getInsertData()
     this.getcontractBasisFile()
-    if (this.editData.tabState === 'editTab') {
-      this.action = 'edit'
-      this.editShow = true
-      this.disabled = true
-      this.showInfo()
-    } else {
-      this.action = 'add'
-      var contractMsg = sessionStorage.getItem('contractMsg')
-      if (contractMsg) {
-        this.disabled = false
-      } else {
-        this.disabled = true
-        return
-      }
-    }
-    // 渲染回款计划表格
+    this.toggleAction()
     this.paymentPlayShow()
   },
   methods: {
@@ -303,6 +304,23 @@ export default {
         this.showInfo()
       } else {
         this.editWord = '取消编辑'
+      }
+    },
+    toggleAction() {
+      if (this.editData.tabState === 'editTab') {
+        this.action = 'edit'
+        this.editShow = true
+        this.disabled = true
+        this.showInfo()
+      } else {
+        this.action = 'add'
+        var contractMsg = sessionStorage.getItem('contractMsg')
+        if (contractMsg) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+          return
+        }
       }
     },
     reset() {
@@ -466,24 +484,28 @@ export default {
       this.fileForm.file = event.target.files[0]
     },
     upFile(event) {
-      event.preventDefault()
-      var fd = new FormData()
-      fd.append('cb_id', this.fileForm.cb_id)
-      fd.append('describtion', this.fileForm.describtion)
-      fd.append('person', this.fileForm.person)
-      fd.append('file', this.fileForm.file)
-      this.$post('/contractBasisEnclosure/save', fd).then((res) => {
-        if (res.data.success === true) {
-          this.getcontractBasisFile()
-          this.fileForm = {
-            ci_id: '',
-            describtion: '',
-            person: '',
-            file: ''
-          }
-          var obj = document.getElementById('fileupload')
-          obj.value = ''
-          this.upFiles = false
+      this.$refs.fileForm.validate(valid => {
+        if (valid) {
+          event.preventDefault()
+          var fd = new FormData()
+          fd.append('cb_id', this.fileForm.cb_id)
+          fd.append('describtion', this.fileForm.describtion)
+          fd.append('person', this.fileForm.person)
+          fd.append('file', this.fileForm.file)
+          this.$post('/contractBasisEnclosure/save', fd).then((res) => {
+            if (res.data.success === true) {
+              this.getcontractBasisFile()
+              this.fileForm = {
+                ci_id: '',
+                describtion: '',
+                person: '',
+                file: ''
+              }
+              var obj = document.getElementById('fileupload')
+              obj.value = ''
+              this.upFiles = false
+            }
+          })
         }
       })
     },
@@ -513,6 +535,20 @@ export default {
     downFile(row) {
       console.log(row.url)
       window.location.href = row.url
+    }
+  },
+  watch: {
+    upFiles() {
+      if (!this.upFiles) {
+        this.fileForm = {
+          ci_id: '',
+          describtion: '',
+          person: '',
+          file: ''
+        }
+        var obj = document.getElementById('fileupload')
+        obj.value = ''
+      }
     }
   },
   mounted() {
@@ -551,51 +587,16 @@ export default {
       }
     }
   }
-  .describtion,
-  .person,
-  .upfile{
-    font-size: 15px;
-    color: black;
-    margin: 15px 10% 20px;
-    span{
-      display: inline-block;
-      width: 100px;
-      height: 30px;
-      text-align: right;
-      vertical-align: top;
-    }
-    textarea{
-      resize: both;
-      max-width: 70%;
-      min-width: 70%
-    }
-    textarea,
-    input[type="text"]{
-      &::-webkit-scrollbar{
-        width: 0;
+  .el-dialog__wrapper{
+    .el-dialog__body{
+      button{
+        line-height: 0.4;
+        background-color: #35d5ba;
+        border-color: #35d5ba;
+        margin: 20px 0 10px 45%;
+        border-radius: 5px;
       }
-      margin-left: 5px;
-      padding-left: 8px;
-      width: 70%;
-      line-height: 26px;
-      border: 1px solid #828282;
-      border-radius: 5px;
-      box-sizing: border-box;
     }
-    input[type="file"]{
-      margin-left: 7px;
-    }
-  }
-  button.filebtn{
-    font-size: 15px;
-    margin: 0 0 20px 45%;
-    width: 10%;
-    height: 30px;
-    background-color: #35d5ba;
-    border: 1px solid #35d5ba;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
   }
 }
 </style>
