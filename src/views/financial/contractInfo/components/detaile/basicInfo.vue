@@ -157,6 +157,15 @@ export default {
   props: ['editData'],
   data() {
     var validateBusiness = this.validateMsg('商机信息不能为空')
+    // var originalAmountValidate = (rule, value, callback) => {
+    //   console.log(value)
+    //   if (!value) {
+    //     callback(new Error('合同金额不能为空'))
+    //   }
+    //   if ((!/^[0-9]*$/.test(value))) {
+    //     console.log(111)
+    //   }
+    // }
     return {
       action: 'add',
       height: 100,
