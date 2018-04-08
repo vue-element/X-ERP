@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,replace: true so the navigation will not leave a history record
           })
         }).catch(() => {
-          store.dispatch('FedLogOut').then(() => {
+          store.dispatch('logout').then(() => {
             Message.error('验证失败,请重新登录')
             next({ path: '/login' })
           })

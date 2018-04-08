@@ -99,8 +99,8 @@ export default {
     editRow(id) {
       this.$get('/project/findUpdateData/' + id).then((res) => {
         var data = res.data.data
-        console.log('data', data)
-        // this.$emit('editRow', data)
+        // console.log('data', data)
+        this.$emit('editRow', data)
       })
     },
     getProjectData() {

@@ -56,7 +56,7 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="供货周期:" prop="supplyCycle">
+            <el-form-item label="供货周期:">
               <p v-if="disabled">{{supplyInfo.supplyCycle}}</p>
               <el-input v-else v-model="supplyInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
             </el-form-item>
@@ -341,7 +341,6 @@ export default {
         licenseNumber: [{ required: true, message: '请输入营业执照号', trigger: 'blur' }],
         regAddress: [{ required: true, message: '请输入注册地址', trigger: 'blur' }],
         enterpriseNature: [{ required: true, message: '请选择企业性质', trigger: 'change' }],
-        supplyCycle: [{ required: true, message: '请输入供货周期', trigger: 'blur' }],
         supplyRegion: [{ required: true, validator: validateRegion, trigger: 'blur' }],
         materialCategory: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
         person: [{ required: true, message: '请输入业务联系人', trigger: 'blur' }],
