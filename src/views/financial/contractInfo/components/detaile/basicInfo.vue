@@ -157,6 +157,15 @@ export default {
   props: ['editData'],
   data() {
     var validateBusiness = this.validateMsg('商机信息不能为空')
+    var originalAmountValidate = (rule, value, callback) => {
+      console.log(value)
+      if (!value) {
+        callback(new Error('合同金额不能为空'))
+      }
+      if ((!/^[0-9]*$/.test(value))) {
+        console.log(111)
+      }
+    }
     return {
       action: 'add',
       height: 100,
@@ -196,7 +205,7 @@ export default {
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
         limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
-        originalAmount: [{ required: true, message: '合同金额不能为空' }, { type: 'number', message: '合同金额必须为数字' }]
+        originalAmount: [{ required: true, validator: originalAmountValidate, trigger: 'blur' }]
       },
       temp: {}
     }
