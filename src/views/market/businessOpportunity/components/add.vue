@@ -134,13 +134,13 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:" prop="firstPersonPhone">
             <p v-if="disabled">{{businessInfo.firstPersonPhone}}</p>
-            <el-input v-else v-model="businessInfo.firstPersonPhone" placeholder="请输入决策人联系人"  min='0'></el-input>
+            <el-input v-else v-model="businessInfo.firstPersonPhone" placeholder="请输入联系方式"  min='0'></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="项目预计启动时间:" class="single-date">
+          <el-form-item label="项目预计启动时间:" class="single-date" prop="startDate">
             <p v-if="disabled">{{businessInfo.startDate}}</p>
             <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.startDate"  placeholder="请输入预计启动时间"></el-date-picker>
           </el-form-item>
@@ -205,9 +205,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="设计负责人:" prop="designPerson">
+          <el-form-item label="设计负责人:">
             <p v-if="disabled">{{businessInfo.designPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable>
+            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -225,9 +225,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="成本负责人:" prop="costPerson">
+          <el-form-item label="成本负责人:">
             <p v-if="disabled">{{businessInfo.costPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人" filterable>
+            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -245,9 +245,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="工程负责人:" prop="projectPerson">
+          <el-form-item label="工程负责人:">
             <p v-if="disabled">{{businessInfo.projectPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人" filterable>
+            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -265,9 +265,9 @@
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
-          <el-form-item label="项目经理:" prop="projectManager">
+          <el-form-item label="项目经理:">
             <p v-if="disabled">{{businessInfo.projectManager.name}}</p>
-            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理" filterable>
+            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -308,10 +308,6 @@ export default {
     var validateClient = this.validateMsg('请选择客户信息')
     var validateCategory = this.validateMsg('请选择业务分类信息')
     var businessPerson = this.validateMsg('请选择业务负责人')
-    var designPerson = this.validateMsg('请选择设计负责人')
-    var costPerson = this.validateMsg('请选择成本负责人')
-    var projectPerson = this.validateMsg('请选择项目负责人')
-    var projectManager = this.validateMsg('请选择项目经理')
     const validPhone = (rule, value, callback) => {
       if ((!validateMobile(value)) && (!validatePhone(value))) {
         callback(new Error('请输入正确的手机或电话号码'))
@@ -350,27 +346,27 @@ export default {
         amount1: '',
         executeState: '',
         businessPerson: {
-          id: null,
+          id: '',
           name: '',
           phone: ''
         },
         designPerson: {
-          id: null,
+          id: '',
           name: '',
           phone: ''
         },
         costPerson: {
-          id: null,
+          id: '',
           name: '',
           phone: ''
         },
         projectPerson: {
-          id: null,
+          id: '',
           name: '',
           phone: ''
         },
         projectManager: {
-          id: null,
+          id: '',
           name: '',
           phone: ''
         }
@@ -392,16 +388,14 @@ export default {
         firstPerson: [{ required: true, message: '请输入甲方决策人', trigger: 'blur' }],
         firstPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
         businessPerson: [{ required: true, validator: businessPerson, trigger: 'change' }],
-        designPerson: [{ required: true, validator: designPerson, trigger: 'change' }],
-        costPerson: [{ required: true, validator: costPerson, trigger: 'change' }],
-        amount1: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }],
-        projectPerson: [{ required: true, validator: projectPerson, trigger: 'change' }],
-        projectManager: [{ required: true, validator: projectManager, trigger: 'change' }]
+        startDate: [{ required: true, message: '请输入预计启动时间', trigger: 'blur' }],
+        amount1: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }]
       },
       temp: {}
     }
   },
   created() {
+    console.log('editData', this.editData)
     this.getInsertData()
     this.toggleAction()
     this.temp = _.cloneDeep(this.businessInfo)
@@ -417,12 +411,18 @@ export default {
         if (valid) {
           this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
+          var arr = ['designPerson', 'costPerson', 'projectPerson', 'projectManager']
+          for (var key in this.businessInfo) {
+            if (arr.indexOf(key) > -1 && this.businessInfo[key].id === '') {
+              delete this.businessInfo[key]
+            }
+          }
           this.$post('/bussiness/save', this.businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {
               this.businessInfo = res.data.data
               this.editInfo()
-              this.temp = _.cloneDeep(res.data.data)
+              this.temp = _.cloneDeep(this.businessInfo)
               this.successSave()
             } else {
               this.failSave()
@@ -447,12 +447,24 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
+      // 人员信息负责人信息需要保存实体，如果未保存，查看会返回null需要转换为对象进行数值保定
+      var arr = ['designPerson', 'costPerson', 'projectPerson', 'projectManager']
+      for (var key in this.businessInfo) {
+        if (arr.indexOf(key) > -1 && this.businessInfo[key] === null) {
+          this.businessInfo[key] = {
+            id: '',
+            name: '',
+            phone: ''
+          }
+        }
+      }
       this.businessInfo.amount1 = outputmoney('' + this.businessInfo.amount)
       var cityOption = this.businessInfo.oldCity.split('-')
       this.cityOption = []
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
+      console.log('hello', this.businessInfo)
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
@@ -484,7 +496,6 @@ export default {
       })
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
       this.businessInfo.createPerson = this.accountName
-      // console.log('userInfo', this.userName)
     },
     cityChange(val) {
       var len = val.length

@@ -99,7 +99,7 @@ export default {
             this.loading = false
             if (res.data.success === true) {
               var data = res.data.data
-              console.log('data', data)
+              // console.log('data', data)
               var token = data.sessionID
               setToken(token)
               this.setToken(token)

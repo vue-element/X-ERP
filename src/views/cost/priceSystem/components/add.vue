@@ -229,9 +229,6 @@ export default {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.oldproductQuotation = _.cloneDeep(this.priceInfo.productQuotation)
-          // console.log('oldproductQuotation', this.oldproductQuotation)
-          // console.log('productQuotation', this.priceInfo.productQuotation)
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -301,10 +298,8 @@ export default {
       })
     },
     savePriceHistory() {
-      console.log('oldproductQuotation', this.oldproductQuotation)
-      console.log('productQuotation', this.priceInfo.productQuotation)
-      console.log(this.oldproductQuotation !== this.priceInfo.productQuotation)
-      if (this.oldproductQuotation !== this.priceInfo.productQuotation) {
+      this.oldproductQuotation = sessionStorage.getItem('oldPrice')
+      if (this.oldproductQuotation !== this.priceInfo.productQuotation1) {
         var obj = {
           person: this.userName,
           price_id: this.priceId,
@@ -312,6 +307,7 @@ export default {
         }
         this.$post('/priceHistory/save', obj).then((res) => {
           this.getPriceHistory()
+          sessionStorage.setItem('oldPrice', this.priceInfo.productQuotation1)
         })
       } else {
         this.getPriceHistory()
@@ -347,6 +343,7 @@ export default {
         this.editShow = true
         this.priceInfo = _.cloneDeep(this.editData.editData.price)
         this.editInfo()
+        sessionStorage.setItem('oldPrice', this.priceInfo.productQuotation1)
       }
     },
     amountChange(val) {
