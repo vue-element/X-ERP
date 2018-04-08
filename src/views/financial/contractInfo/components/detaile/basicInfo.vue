@@ -122,7 +122,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同金额：" prop="originalAmount">
                 <p v-if="disabled">{{contractInfo.originalAmount}}</p>
-                <el-input v-else v-model="contractInfo.originalAmount" placeholder="请输入合同金额"></el-input>
+                <el-input v-else v-model.number="contractInfo.originalAmount" placeholder="请输入合同金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
@@ -196,7 +196,7 @@ export default {
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
         limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
-        originalAmount: [{ required: true, trigger: 'blur' }]
+        originalAmount: [{ required: true, message: '合同金额不能为空' }, { type: 'number', message: '合同金额必须为数字' }]
       },
       temp: {}
     }
@@ -340,7 +340,6 @@ export default {
   },
   computed: {
     contractTotalAmount() {
-      this.contractInfo.originalAmount = this.contractInfo.originalAmount.replace(/,/g, '')
       if (!this.contractInfo.originalAmount && !this.contractInfo.changeAmount || !this.contractInfo.originalAmount && this.contractInfo.changeAmount) {
         this.contractInfo.contractTotalAmount = null
         return null
