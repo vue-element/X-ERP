@@ -62,8 +62,8 @@
           <el-table-column prop="manageCost" label="管理费用"></el-table-column>
           <el-table-column prop="tax" label="税金"></el-table-column>
         </el-table>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3, 4]"
-    :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
+        <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes"
+  :page-size="pageSize" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
       </div>
     </div>
   </div>
@@ -75,9 +75,12 @@ export default {
   props: ['editData'],
   data() {
     return {
-      paymentData: [],
       height: 100,
       currentPage: 1,
+      total: 5,
+      pageSizes: [12, 15, 16],
+      pageSize: 15,
+      paymentData: [],
       contractPayment: {
         totalAmount: '',
         totalMaterialCost: '',
@@ -112,15 +115,29 @@ export default {
     },
     getContractPayment() {
       var paymentID = this.editData.editData.id
-      this.$get('/contractPayment/findAllByContractInfo/' + paymentID).then((res) => {
-        this.paymentData = res.data.data.contractPaymentList.content
-        this.contractPayment.totalProAmount = res.data.data.totalProAmount
-        this.contractPayment.totalMaterialCost = res.data.data.totalMaterialCost
-        this.contractPayment.totalArtificialCost = res.data.data.totalArtificialCost
-        this.contractPayment.totalComprehensiveCost = res.data.data.totalComprehensiveCost
-        this.contractPayment.totalManageCost = res.data.data.totalManageCost
-        this.contractPayment.totalTax = res.data.data.totalTax
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      this.$get('/contractPayment/findAllByContractInfo/' + paymentID + '?size=' + pageSize + '&page=' + page).then((res) => {
+        var data = res.data.data
+        this.paymentData = data.contractPaymentList.content
+        this.contractPayment.totalProAmount = data.totalProAmount
+        this.contractPayment.totalMaterialCost = data.totalMaterialCost
+        this.contractPayment.totalArtificialCost = data.totalArtificialCost
+        this.contractPayment.totalComprehensiveCost = data.totalComprehensiveCost
+        this.contractPayment.totalManageCost = data.totalManageCost
+        this.contractPayment.totalTax = data.totalTax
+        this.total = data.contractPaymentList.totalElements
+        this.currentPage = data.contractPaymentList.number + 1
+        this.pageSize = data.contractPaymentList.size
       })
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getContractPayment()
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getContractPayment()
     }
   }
 }

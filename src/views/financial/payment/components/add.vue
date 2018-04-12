@@ -10,7 +10,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
+            <el-form-item label="合同名称：" prop="contractInfo">
               <p v-if="disabled">{{paymentData.contractInfo.name}}</p>
               <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同名称" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
@@ -18,7 +18,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同编号：" prop="contractInfo">
+            <el-form-item label="合同编号：">
               <p v-if="disabled">{{paymentData.contractInfo.code}}</p>
               <el-select v-else v-model="paymentData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
@@ -81,12 +81,17 @@
 
 <script>
 import _ from 'lodash'
-import { outputmoney, isObjectValueEqual } from '@/utils'
+import { isObjectValueEqual } from '@/utils'
 export default {
   name: 'paymentAdd',
   props: ['editData'],
   data() {
     var validateContractInfo = this.validateMsg('合同信息不能为空')
+    var validateArtificialCost = this.validateAmount('人工成本投入不能为空', '请输入数字值')
+    var validateMaterialCost = this.validateAmount('材料成本投入不能为空', '请输入数字值')
+    var validateComprehensiveCost = this.validateAmount('综合成本投入不能为空', '请输入数字值')
+    var validateManageCost = this.validateAmount('管理费用不能为空', '请输入数字值')
+    var validateTax = this.validateAmount('税金不能为空', '请输入数字值')
     return {
       action: 'add',
       loading: false,
@@ -117,11 +122,11 @@ export default {
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
-        artificialCost: [{ required: true, message: '请输入人工成本投入', trigger: 'blur' }],
-        materialCost: [{ required: true, message: '请输入材料成本投入', trigger: 'blur' }],
-        comprehensiveCost: [{ required: true, message: '请输入综合成本投入', trigger: 'blur' }],
-        manageCost: [{ required: true, message: '请输入管理费用', trigger: 'blur' }],
-        tax: [{ required: true, message: '请输入税金', trigger: 'blur' }],
+        artificialCost: [{ required: true, validator: validateArtificialCost, trigger: 'blur' }],
+        materialCost: [{ required: true, validator: validateMaterialCost, trigger: 'blur' }],
+        comprehensiveCost: [{ required: true, validator: validateComprehensiveCost, trigger: 'blur' }],
+        manageCost: [{ required: true, validator: validateManageCost, trigger: 'blur' }],
+        tax: [{ required: true, validator: validateTax, trigger: 'blur' }],
         inputDate: [{ required: true, message: '请选择投入日期', trigger: 'change' }]
       },
       temp: {}
@@ -209,27 +214,25 @@ export default {
         type: 'error'
       })
     },
-    artificialCost(val) {
-      this.paymentData.artificialCost = outputmoney(val)
-    },
-    materialCost(val) {
-      this.paymentData.materialCost = outputmoney(val)
-    },
-    comprehensiveCost(val) {
-      this.paymentData.comprehensiveCost = outputmoney(val)
-    },
-    manageCost(val) {
-      this.paymentData.manageCost = outputmoney(val)
-    },
-    tax(val) {
-      this.paymentData.tax = outputmoney(val)
-    },
     validateMsg(errMsg) {
       return (rule, value, callback) => {
         if (!value.id) {
           callback(new Error(errMsg))
         } else {
           callback()
+        }
+      }
+    },
+    validateAmount(errMsg, amountMsg) {
+      return (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error(errMsg))
+        } else {
+          if (!Number(value)) {
+            callback(new Error(amountMsg))
+          } else {
+            callback()
+          }
         }
       }
     }

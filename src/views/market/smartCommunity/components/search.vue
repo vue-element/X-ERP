@@ -9,10 +9,6 @@
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="项目名称:">
             <select-dropdown label="项目名称" :listData="projectList"  @onchange="projectChange"></select-dropdown>
-            <!-- <el-select v-model="searchData.name" placeholder="请选择项目名称" filterable clearable>
-             <el-option v-for="item in projectList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select> -->
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">

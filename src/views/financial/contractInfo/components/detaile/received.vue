@@ -28,8 +28,8 @@
           <el-table-column prop="amount" label="回款金额"></el-table-column>
           <el-table-column prop="date" label="回款日期"></el-table-column>
         </el-table>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
-  :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
+        <!-- <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes"
+  :page-size="pageSize" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination> -->
       </div>
     </div>
   </div>
@@ -41,9 +41,12 @@ export default {
   props: ['editData'],
   data() {
     return {
-      contractReceivedData: [],
       height: 100,
-      currentPage: 1,
+      // currentPage: 1,
+      // total: 5,
+      // pageSizes: [12, 15, 16],
+      // pageSize: 15,
+      contractReceivedData: [],
       contractReceived: {
         totalAmount: ''
       }
@@ -68,11 +71,26 @@ export default {
     },
     getContractReceived() {
       var contractReceivedID = this.editData.editData.id
+      // var pageSize = this.pageSize || 15
+      // var page = this.currentPage - 1 || 0
+      // this.$get('/contractReceived/findAllByContractInfo/' + contractReceivedID + '?size=' + pageSize + '&page=' + page).then((res) => {
       this.$get('/contractReceived/findAllByContractInfo/' + contractReceivedID).then((res) => {
-        this.contractReceived.totalAmount = res.data.data.totalAmount
-        this.contractReceivedData = res.data.data.contractReceivedList
+        var data = res.data.data
+        this.contractReceived.totalAmount = data.totalAmount
+        this.contractReceivedData = data.contractReceivedList
+        // this.total = data.contractReceivedList.totalElements
+        // this.currentPage = data.contractReceivedList.number + 1
+        // this.pageSize = data.contractReceivedList.size
       })
     }
+    // handleCurrentChange(val) {
+    //   this.currentPage = val
+    //   this.getContractReceived()
+    // },
+    // handleSizeChange(val) {
+    //   this.pageSize = val
+    //   this.getContractReceived()
+    // }
   }
 }
 </script>

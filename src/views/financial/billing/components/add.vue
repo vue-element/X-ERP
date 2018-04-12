@@ -42,11 +42,9 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="税率：" prop="taxRate">
+            <el-form-item label="税率(%)：" prop="taxRate">
               <p v-if="disabled">{{billingData.taxRate}}</p>
-              <el-select v-else v-model="billingData.taxRate" placeholder="请选择税率">
-                <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id"></el-option>
-              </el-select>
+              <el-input v-else v-model="billingData.taxRate" placeholder="请输入税率"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -102,17 +100,8 @@ export default {
   props: ['editData'],
   data() {
     var validateContractInfo = this.validateMsg('合同信息不能为空')
-    var validateAmount = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('开票金额不能为空'))
-      } else {
-        if (!Number(value)) {
-          callback(new Error('请输入数字值'))
-        } else {
-          callback()
-        }
-      }
-    }
+    var validateAmount = this.validateMount('开票金额不能为空', '请输入数字值')
+    var validateTaxRate = this.validateMount('税金不能为空', '请输入数值')
     return {
       action: 'add',
       loading: false,
@@ -140,7 +129,7 @@ export default {
         amount: [{ required: true, validator: validateAmount, trigger: 'blur' }],
         name: [{ required: true, message: '请输入发票抬头名称', trigger: 'blur' }],
         number: [{ required: true, message: '请输入发票号码', trigger: 'blur' }],
-        taxRate: [{ required: true, message: '请选择税金', trigger: 'change' }],
+        taxRate: [{ required: true, validator: validateTaxRate, trigger: 'blur' }],
         date: [{ required: true, message: '请选择开票日期', trigger: 'blur' }]
       },
       temp: {}
@@ -234,6 +223,19 @@ export default {
           callback()
         }
       }
+    },
+    validateMount(emptyMsg, tipMsg) {
+      return (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error(emptyMsg))
+        } else {
+          if (!Number(value)) {
+            callback(new Error(tipMsg))
+          } else {
+            callback()
+          }
+        }
+      }
     }
   },
   watch: {
@@ -259,14 +261,44 @@ export default {
   computed: {
     tax() {
       if (this.billingData.amount && this.billingData.taxRate) {
-        return (this.billingData.amount * (this.billingData.taxRate.replace(/%/, '') / 100)).toFixed(2)
+        var r = /^-?\d+$/
+        var amount = this.billingData.amount
+        if (!r.test(amount)) {
+          var numAmount = '' + (amount)
+          amount = numAmount.substring(0, numAmount.indexOf('.') + 3)
+        }
+        var numRate = '' + this.billingData.taxRate / 100
+        var taxRate = numRate.substring(0, numRate.indexOf('.') + 3)
+        var numRes = amount * taxRate
+        if (!r.test(numRes)) {
+          numRes = '' + (amount * taxRate)
+          var res = numRes.substring(0, numRes.indexOf('.') + 3)
+          return res
+        } else {
+          return numRes
+        }
       } else {
         return null
       }
     },
     income() {
       if (this.billingData.amount && this.billingData.taxRate) {
-        return (this.billingData.amount - (this.billingData.amount * (this.billingData.taxRate.replace(/%/, '') / 100))).toFixed(2)
+        var r = /^-?\d+$/
+        var amount = this.billingData.amount
+        if (!r.test(amount)) {
+          var numAmount = '' + (amount)
+          amount = numAmount.substring(0, numAmount.indexOf('.') + 3)
+        }
+        var numRate = '' + this.billingData.taxRate / 100
+        var taxRate = numRate.substring(0, numRate.indexOf('.') + 3)
+        var numRes = amount * taxRate
+        if (!r.test(numRes)) {
+          numRes = '' + (amount * taxRate)
+          var res = numRes.substring(0, numRes.indexOf('.') + 3)
+          return (amount - res)
+        } else {
+          return (amount - numRes)
+        }
       } else {
         return null
       }

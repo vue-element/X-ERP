@@ -31,8 +31,8 @@
           <el-table-column prop="number" label="发票号码"></el-table-column>
           <el-table-column prop="content" label="开票内容" width="400"></el-table-column>
         </el-table>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="[1, 2, 3]"
-  :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10"></el-pagination>
+        <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" :total="total"
+       @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
       </div>
     </div>
   </div>
@@ -44,12 +44,12 @@ export default {
   props: ['editData'],
   data() {
     return {
-      invoceInfoData: [],
       height: 100,
-      currentPage: 1,
       total: 5,
+      currentPage: 1,
       pageSizes: [12, 15, 16],
       pageSize: 15,
+      invoceInfoData: [],
       invoceInfo: {
         totalAmount: null
       }
@@ -75,11 +75,24 @@ export default {
     },
     getInvoceInfo() {
       var basicInfoID = this.editData.editData.id
-      this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID).then((res) => {
-        console.log(res)
-        this.invoceInfoData = res.data.data.contractBillingList.content
-        this.invoceInfo.totalAmount = res.data.data.totalAmount
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      this.$get('/contractBilling/findAllByContractInfo/' + basicInfoID + '?size=' + pageSize + '&page=' + page).then((res) => {
+        var data = res.data.data
+        this.invoceInfoData = data.contractBillingList.content
+        this.invoceInfo.totalAmount = data.totalAmount
+        this.total = data.contractBillingList.totalElements
+        this.currentPage = data.contractBillingList.number + 1
+        this.pageSize = data.contractBillingList.size
       })
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getInvoceInfo()
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getInvoceInfo()
     }
   }
 }

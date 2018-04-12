@@ -349,7 +349,6 @@ export function isObjectValueEqual(a1, b1) {
   for (var i = 0; i < aProps.length; i++) {
     var propName = aProps[i]
     if (a[propName] !== b[propName]) {
-      // console.log('a[propName]', propName)
       return false
     }
   }
