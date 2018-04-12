@@ -122,13 +122,13 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同金额：" prop="originalAmount">
                 <p v-if="disabled">{{contractInfo.originalAmount}}</p>
-                <el-input v-else v-model.number="contractInfo.originalAmount" placeholder="请输入合同金额"></el-input>
+                <el-input v-else v-model="contractInfo.originalAmount" placeholder="请输入合同金额"></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="变更金额：">
+              <el-form-item label="变更金额：" prop="changeAmount">
                 <p v-if="disabled">{{contractInfo.changeAmount}}</p>
-                <el-input v-else v-model="contractInfo.changeAmount" placeholder="请输入变更金额"></el-input>
+                <el-input v-else v-model="contractInfo.changeAmount" placeholder="请输入变更金额" error="8989"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -136,7 +136,7 @@
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="合同总额：">
                 <p v-if="disabled">{{contractInfo.contractTotalAmount}}</p>
-                <el-input v-else v-model="contractTotalAmount" disabled></el-input>
+                <el-input v-else v-model="contractTotalAmount" placeholder="自动填充" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -157,15 +157,24 @@ export default {
   props: ['editData'],
   data() {
     var validateBusiness = this.validateMsg('商机信息不能为空')
-    // var originalAmountValidate = (rule, value, callback) => {
-    //   console.log(value)
-    //   if (!value) {
-    //     callback(new Error('合同金额不能为空'))
-    //   }
-    //   if ((!/^[0-9]*$/.test(value))) {
-    //     console.log(111)
-    //   }
-    // }
+    var validateOriginalAmount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('合同金额不能为空'))
+      } else {
+        if (!Number(value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          callback()
+        }
+      }
+    }
+    var validateChangeAmount = (rule, value, callback) => {
+      if (!Number(value)) {
+        callback(new Error('请输入数字值'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       height: 100,
@@ -179,7 +188,6 @@ export default {
       clientList: [],
       regionList: [],
       textList: [],
-      categoryList: [],
       contractInfo: {
         name: '',
         business: { id: null },
@@ -192,7 +200,7 @@ export default {
         term: '',
         originalAmount: '',
         changeAmount: '',
-        contractTotalAmount: '',
+        contractTotalAmount: null,
         startDate: '',
         endDate: '',
         oldCity: '',
@@ -205,15 +213,16 @@ export default {
         text: [{ required: true, message: '请选择合同文本', trigger: 'blur' }],
         term: [{ required: true, message: '请选择合同所属期', trigger: 'blur' }],
         limit: [{ required: true, message: '请选择合同期限', trigger: 'blur' }],
-        originalAmount: [{ required: true, message: '合同金额不能为空' }, { type: 'number', message: '合同金额必须为数字' }]
+        originalAmount: [{ required: true, validator: validateOriginalAmount, trigger: 'blur' }],
+        changeAmount: [{ validator: validateChangeAmount, trigger: 'blur' }]
       },
       temp: {}
     }
   },
   created() {
+    this.temp = _.cloneDeep(this.contractInfo)
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.contractInfo)
   },
   methods: {
     date() {
@@ -238,10 +247,6 @@ export default {
         this.clientList = data.clientList
         this.regionList = data.regionList
       })
-      this.categoryList = [
-        { value: '科技-智慧工程全委' }, { value: '科技-智慧社区改造' }, { value: '科技-物联网大数据平台' }, { value: '科技-设计服务' },
-        { value: '科技-技术服务' }, { value: '科技-技术服务+材料采购' }, { value: '科技-产品营销' }, { value: '机电-设备查验' }, { value: '机电-设施设备运维平台' }, { value: '机电-设备运维全委' }, { value: '机电-电梯第三方监管' }, { value: '机电-节能工程' }, { value: '机电-设备升级改造' }, { value: '机电-设备顾问' }
-      ]
       this.textList = [{ value: '是' }, { value: '否' }]
     },
     add() {
@@ -276,14 +281,13 @@ export default {
       })
       if (this.action === 'add') {
         this.$emit('toggleTab')
-      } else {
-        this.contractInfo = _.cloneDeep(this.temp)
-        this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
-        this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
-        this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
-        this.editShow = true
-        this.disabled = true
       }
+      this.disabled = true
+      this.editShow = true
+      this.contractInfo = _.cloneDeep(this.temp)
+      this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
+      this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
+      this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
     },
     failSave() {
       this.$message({
@@ -293,18 +297,24 @@ export default {
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
+      this.contractInfo = _.cloneDeep(this.editData.editData.contractInfo)
+      this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
+      this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
+      this.contractInfo.contractTotalAmount = (this.contractInfo.originalAmount + this.contractInfo.changeAmount).toFixed(2)
+      this.temp = _.cloneDeep(this.contractInfo)
     },
     toggleAction() {
-      if (this.editData.tabState === 'editTab') {
+      if (this.editData.tabState === 'addTab') {
+        this.action = 'add'
+      } else {
         this.action = 'edit'
         this.editShow = true
         this.disabled = true
         this.contractInfo = _.cloneDeep(this.editData.editData.contractInfo)
         this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
         this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
-        this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
-      } else {
-        this.action = 'add'
+        this.contractInfo.contractTotalAmount = (this.contractInfo.originalAmount + this.contractInfo.changeAmount).toFixed(2)
+        this.temp = _.cloneDeep(this.contractInfo)
       }
     },
     reset() {

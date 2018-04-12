@@ -24,14 +24,14 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="业务类别：">
-              <el-select v-model="searchData.bctg_id" placeholder="请选择业务类别" clearable>
+              <el-select v-model="searchData.bctg_id" placeholder="请选择业务类别" clearable filterable>
                 <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="所属区域：">
-              <el-select v-model="searchData.region_id" placeholder="请选择所属区域" clearable>
+              <el-select v-model="searchData.region_id" placeholder="请选择所属区域" clearable filterable>
                 <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>

@@ -3,17 +3,21 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
-          <button :class="tab === 'addTab' ? 'is-active' : ''" @click="addBtn">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
+          </button>
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
           </button>
         </div>
         <div class="export-btn fr">
@@ -26,8 +30,8 @@
     </div>
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
-      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData"></listComponent>
-      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')"></addComponent>
+      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData" ></listComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')" @toggleTab="listBtn" @changeObj='changeObj'></addComponent>
     </div>
   </div>
 </template>
@@ -50,7 +54,8 @@ export default {
       downloadLoading: false,
       exprotList: [],
       searchData: {},
-      editData: {}
+      editData: {},
+      isChange: false
     }
   },
   created() {
@@ -58,15 +63,59 @@ export default {
   mounted() {},
   methods: {
     toggleTab(tab) {
+      if (this.tab === 'addTab' && this.isChange === true) {
+        this.showPopWin(() => {
+          this.tab = tab
+        })
+        return
+      }
       this.tab = tab
     },
+    listBtn() {
+      this.toggleTab('listTab')
+    },
     addBtn() {
-      this.tab = 'addTab'
-      this.delSession()
-      this.editData = {
-        editData: {},
-        tabState: 'addTab'
+      if (this.editData.tabState === 'editTab') {
+        if (this.isChange === true) {
+          this.showPopWin(() => {
+            this.tab = ''
+            setTimeout(() => {
+              this.tab = 'addTab'
+            }, 50)
+            this.editData.tabState = 'addTab'
+          })
+        } else {
+          this.tab = ''
+          setTimeout(() => {
+            this.tab = 'addTab'
+          }, 50)
+          this.editData.tabState = 'addTab'
+        }
+      } else {
+        this.tab = 'addTab'
+        this.delSession()
+        this.editData.tabState = 'addTab'
       }
+      // this.tab = 'addTab'
+      // this.delSession()
+      // this.editData = {
+      //   editData: {},
+      //   tabState: 'addTab'
+      // }
+    },
+    showPopWin(callback) {
+      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        callback()
+        this.isChange = false
+      }).catch(() => {
+        this.isChange = true
+      })
+    },
+    changeObj(status) {
+      this.isChange = status
     },
     editRow(data) {
       this.tab = 'addTab'

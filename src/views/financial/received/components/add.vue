@@ -10,7 +10,7 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="合同名称：">
+            <el-form-item label="合同名称：" prop="contractBilling">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
               <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同名称" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
@@ -68,6 +68,17 @@ export default {
   props: ['editData'],
   data() {
     var validateContractInfo = this.validateMsg('合同信息不能为空')
+    var validateAmount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('回款金额不能为空'))
+      } else {
+        if (!Number(value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       loading: false,
       editShow: false,
@@ -86,9 +97,9 @@ export default {
         diffAmount: null
       },
       rules: {
-        contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
+        contractBilling: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
         date: [{ required: true, message: '请选择回款日期', trigger: 'change' }],
-        amount: [{ required: true, message: '请输入回款金额', trigger: 'blur' }]
+        amount: [{ required: true, validator: validateAmount, trigger: 'blur' }]
       },
       temp: {}
     }

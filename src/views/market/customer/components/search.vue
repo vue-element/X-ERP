@@ -17,7 +17,7 @@
       <el-col :xs="12" :sm="12" :lg="12">
         <div class="basic-item single-date">
           <label>客户名称:</label>
-          <el-select v-model="searchData.c_id" placeholder="请选择客户类别" filterable clearable>
+          <el-select v-model="searchData.name" placeholder="请选择客户类别" filterable clearable>
            <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
            </el-option>
          </el-select>

@@ -6,9 +6,9 @@
         <li :class="tab === 'disclosureInfo'?'is-active':''" @click="toggleTab('disclosureInfo')">合同交底信息</li>
         <li :class="tab === 'subContract'?'is-active':''" @click="toggleTab('subContract')">分包</li>
         <li :class="tab === 'change'?'is-active':''" @click="toggleTab('change')">变更</li>
-        <li :class="tab === 'invoiceInfo'?'is-active':''" @click="toggleTab('invoiceInfo')">开票信息</li>
-        <li :class="tab === 'returnMoney'?'is-active':''" @click="toggleTab('returnMoney')">回款信息</li>
-        <li :class="tab === 'payMoney'?'is-active':''" @click="toggleTab('payMoney')">成本信息</li>
+        <li :class="tab === 'billing'?'is-active':''" @click="toggleTab('billing')">开票信息</li>
+        <li :class="tab === 'received'?'is-active':''" @click="toggleTab('received')">回款信息</li>
+        <li :class="tab === 'payment'?'is-active':''" @click="toggleTab('payment')">成本信息</li>
       </ul>
     </div>
     <div class="contractInfo-show">
@@ -16,9 +16,9 @@
       <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @changeObj='changeObj'></disclosureInfo>
       <subContract v-if="tab === 'subContract'" :editData="editData"></subContract>
       <change v-if="tab === 'change'" :editData="editData"></change>
-      <invoiceInfo v-if="tab === 'invoiceInfo'" :editData="editData"></invoiceInfo>
-      <returnMoney v-if="tab === 'returnMoney'" :editData="editData"></returnMoney>
-      <payMoney v-if="tab === 'payMoney'" :editData="editData"></payMoney>
+      <billing v-if="tab === 'billing'" :editData="editData"></billing>
+      <received v-if="tab === 'received'" :editData="editData"></received>
+      <payment v-if="tab === 'payment'" :editData="editData"></payment>
     </div>
   </div>
 </template>
@@ -28,18 +28,18 @@ import basicInfo from '../components/detaile/basicInfo'
 import disclosureInfo from '../components/detaile/disclosureInfo'
 import subContract from '../components/detaile/subContract'
 import change from '../components/detaile/change'
-import invoiceInfo from '../components/detaile/invoiceInfo'
-import returnMoney from '../components/detaile/returnMoney'
-import payMoney from '../components/detaile/payMoney'
+import billing from '../components/detaile/billing'
+import received from '../components/detaile/received'
+import payment from '../components/detaile/payment'
 export default {
   components: {
     basicInfo,
     disclosureInfo,
     subContract,
     change,
-    invoiceInfo,
-    returnMoney,
-    payMoney,
+    billing,
+    received,
+    payment,
     isChange: false
   },
   props: ['editData', 'contractMsg'],
@@ -47,8 +47,6 @@ export default {
     return {
       tab: 'basicInfo'
     }
-  },
-  mounted() {
   },
   created() {
   },
@@ -66,6 +64,7 @@ export default {
       this.$emit('cancel')
     },
     changeObj(status) {
+      this.$emit('isChange', status)
       this.isChange = status
     },
     showPopWin(callback) {
@@ -98,20 +97,20 @@ export default {
     z-index: 1002;
     background-color: #fff;
     ul {
-        @include flex;
-        li {
-            width: 148px;
-            height: 28px;
-            line-height: 30px;
-            margin: 5px;
-            text-align: center;
-            border: solid 1px #d2d2d2;
-            overflow: hidden;
-        }
-        li.is-active {
-            border: solid 1px #35d5ba;
-            color: #35d5ba;
-        }
+      @include flex;
+      li {
+        width: 148px;
+        height: 28px;
+        line-height: 30px;
+        margin: 5px;
+        text-align: center;
+        border: solid 1px #d2d2d2;
+        overflow: hidden;
+      }
+      li.is-active {
+        border: solid 1px #35d5ba;
+        color: #35d5ba;
+      }
     }
   }
 }
