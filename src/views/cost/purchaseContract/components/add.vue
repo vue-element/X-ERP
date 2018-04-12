@@ -125,13 +125,18 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="采购金额:">
-              <p >{{paymentContract.amount}}</p>
+            <el-form-item label="计划采购金额:">
+              <p>{{paymentContract.adAmount}}</p>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="实际采购金额:">
+              <p>{{paymentContract.acAmount}}</p>
             </el-form-item>
           </el-col>
         </el-row>
       </div>
-      <table-component :contractId="contractId" :editShow="editShow"></table-component>
+      <table-component :contractId="contractId" :editShow="editShow"  @amountChange='amountChange'></table-component>
     </el-form>
   </div>
 </template>
@@ -148,7 +153,8 @@ export default {
     return {
       editShow: false,
       paymentContract: {
-        amount: null,
+        adAmount: null,
+        acAmount: null,
         applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
         businessCategory: { id: null },
@@ -183,10 +189,21 @@ export default {
       // this.paymentContract.amount = outputmoney('' + this.paymentContract.amount)
       this.paymentContract.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
       this.contractId = this.paymentContract.id
+    },
+    amountChange(amountObj) {
+      this.paymentContract.adAmount = amountObj.adAmount
+      this.paymentContract.acAmount = amountObj.acAmount
+      this.$post('/paymentContract/save', this.paymentContract).then((res) => {
+        // console.log('res', res)
+      })
     }
   },
   computed: {},
-  watch: {}
+  watch: {
+    amountObj(val) {
+      console.log('val', val)
+    }
+  }
 }
 </script>
 

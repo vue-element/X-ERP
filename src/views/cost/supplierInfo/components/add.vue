@@ -153,10 +153,6 @@
             <el-form-item label="税率(%):" prop="taxRate">
               <p v-if="disabled">{{supplyInfo.taxRate}}</p>
               <el-input v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" @change="taxChange"></el-input>
-              <!-- <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" filterable clearable>
-               <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -379,6 +375,11 @@ export default {
             if (res.data.success === true) {
               this.supplyInfo = res.data.data
               this.temp = _.cloneDeep(res.data.data)
+              if (this.supplyInfo.startDate === null || this.supplyInfo.endDate === null) {
+                this.validDateStr = ''
+              } else {
+                this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
+              }
               this.successSave()
             } else {
               this.failSave()
@@ -461,11 +462,16 @@ export default {
         this.disabled = true
         this.editShow = true
         this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
-        this.validDateStr = this.supplyInfo.startDate + '-' + this.supplyInfo.endDate
+        if (this.supplyInfo.startDate === null || this.supplyInfo.endDate === null) {
+          this.validDateStr = ''
+        } else {
+          this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
+        }
       }
     },
     taxChange(val) {
-      this.supplyInfo.taxRate = val + '%'
+      // this.supplyInfo.taxRate =
+      // this.supplyInfo.taxRate = val + '%'
       // console.log('taxChange', val)
     }
   },

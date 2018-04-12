@@ -21,7 +21,7 @@
         <el-table-column prop="enterprisePerson" label="企业法人" width="100">></el-table-column>
         <el-table-column prop="person" label="联系人" width="140"></el-table-column>
         <el-table-column prop="phone" label="联系人电话" width="100"></el-table-column>
-        <el-table-column prop="regAddress" label="注册地址" min-width="200"></el-table-column>
+        <el-table-column prop="regAddress" label="注册地址" min-width="280"></el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('supply:findAllByPage')">查看</el-button>

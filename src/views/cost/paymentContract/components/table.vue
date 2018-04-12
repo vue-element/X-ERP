@@ -20,7 +20,7 @@
         </div>
       </h4>
       <div>
-        <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading" border>
+        <el-table class="basic-form" style="width: 100%" height="300" :data="purchaseList" v-loading.body="listLoading" border>
           <el-table-column label="序号" width="60" fixed>
             <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
@@ -60,7 +60,7 @@
               <span v-else>{{scope.row.adAmount}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单位" min-width="100">
+          <el-table-column label="单位" min-width="80">
             <template slot-scope="scope">
               <el-input v-if="scope.row.edit" type="text" v-model="scope.row.unit" placeholder="请填写"></el-input>
               <span v-else>{{scope.row.unit}}</span>
@@ -160,7 +160,6 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/common.vue'
-import { parseTime } from '@/utils'
 import Vue from 'vue'
 
 export default {
@@ -177,11 +176,11 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      amount: null
+      acAmount: null,
+      adAmount: null
     }
   },
   created() {
-    // console.log('editShow', this.contractId)
     if (this.contractId) {
       this.getPurchaseList()
       this.getBillingList()
@@ -191,8 +190,19 @@ export default {
   methods: {
     getPurchaseList() {
       this.$get('/purchaseList/findAllByPaymentContract/' + this.contractId).then((res) => {
+        var acAmount = 0
+        var adAmount = 0
         if (res.data.success === true) {
           this.purchaseList = res.data.data
+          this.purchaseList.forEach((item) => {
+            acAmount += item.acAmount
+            adAmount += item.adAmount
+          })
+          var amountObj = {
+            acAmount,
+            adAmount
+          }
+          this.$emit('amountChange', amountObj)
         }
       })
     },
@@ -258,7 +268,6 @@ export default {
     selected(data) {
       this.uploadDetail = data.results
       var list = []
-      // console.log('uploadDetail', this.uploadDetail)
       this.uploadDetail.forEach((item) => {
         var obj = {}
         obj = {
@@ -306,11 +315,7 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
+          return v[j]
         })
       )
     },

@@ -181,15 +181,15 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="计划采购金额:" prop="amount">
-              <p v-if="disabled">{{adAmount}}</p>
-              <el-input v-else v-model="adAmount" placeholder="自动生成" disabled></el-input>
+            <el-form-item label="计划采购金额:">
+              <p v-if="disabled">{{paymentContract.adAmount}}</p>
+              <el-input v-else v-model="paymentContract.adAmount" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="实际采购金额:" prop="amount">
-              <p v-if="disabled">{{acAmount}}</p>
-              <el-input v-else v-model="acAmount" placeholder="自动生成" disabled></el-input>
+            <el-form-item label="实际采购金额:">
+              <p v-if="disabled">{{paymentContract.acAmount}}</p>
+              <el-input v-else v-model="paymentContract.acAmount" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -199,7 +199,7 @@
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
       </div>
-      <table-component :contractId="contractId" :editShow="editShow" @purchaseAmount='purchaseAmount'></table-component>
+      <table-component :contractId="contractId" :editShow="editShow" @amountChange='amountChange'></table-component>
     </el-form>
   </div>
 </template>
@@ -231,7 +231,8 @@ export default {
       acAmount: '',
       payableAmount: '',
       paymentContract: {
-        amount: null,
+        adAmount: null,
+        acAmount: null,
         applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
         code: '',
@@ -366,16 +367,24 @@ export default {
       this.paymentContract.payableAmount = val
       this.payableAmount = outputmoney('' + val)
     },
-    // 采购金额根据物料详情的金额动态变化
-    purchaseAmount(val) {
-      this.amount = outputmoney('' + val)
-      this.paymentContract.amount = val
+    amountChange(amountObj) {
+      // console.log('amountChange', amountObj)
+      this.paymentContract.adAmount = amountObj.adAmount
+      this.paymentContract.acAmount = amountObj.acAmount
       this.$post('/paymentContract/save', this.paymentContract).then((res) => {
-        if (res.data.success === true) {
-          // console.log('success')
-        }
+        // console.log('success')
       })
     }
+    // 采购金额根据物料详情的金额动态变化
+  //   purchaseAmount(val) {
+  //     this.amount = outputmoney('' + val)
+  //     this.paymentContract.amount = val
+  //     this.$post('/paymentContract/save', this.paymentContract).then((res) => {
+  //       if (res.data.success === true) {
+  //         // console.log('success')
+  //       }
+  //     })
+  //   }
   },
   computed: {},
   watch: {
@@ -392,7 +401,7 @@ export default {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {
-          if (obj.amount !== this.temp.amount) {
+          if ((obj.adAmount !== this.temp.adAmount) || (obj.acAmount !== this.temp.acAmount)) {
             return
           }
           this.$emit('changeObj', true)
@@ -410,8 +419,8 @@ export default {
           } else {
             name = this.paymentContract.supply.name
           }
+          this.paymentContract.code = this.paymentContract.orderCode + '-' + name
         }
-        this.paymentContract.code = this.paymentContract.orderCode + '-' + name
       },
       deep: true
     }

@@ -5,11 +5,11 @@
         <el-table-column prop="0" label="序号" fixed width="60">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="orderCode" label="订单编号" min-width="160"></el-table-column>
-        <el-table-column prop="code" label="付款合同编号/入库单编号" min-width="180"></el-table-column>
-        <el-table-column prop="department" label="使用部门" min-width="120"></el-table-column>
-        <el-table-column prop="supply.name" label="供应商" min-width="160"></el-table-column>
-        <el-table-column prop="category" label="状态"></el-table-column>
+        <el-table-column prop="paymentContract.orderCode" label="订单编号" min-width="160"></el-table-column>
+        <el-table-column prop="paymentContract.code" label="付款合同编号/入库单编号" min-width="180"></el-table-column>
+        <el-table-column prop="paymentContract.department" label="使用部门" min-width="120"></el-table-column>
+        <el-table-column prop="paymentContract.supply.name" label="供应商" min-width="160"></el-table-column>
+        <el-table-column prop="state" label="状态"></el-table-column>
         <el-table-column label="操作" min-width="140">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
@@ -55,8 +55,10 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = '/paymentContract/rkSearch?size=' + pageSize + '&page=' + page
-      this.$post(url, this.searchData, false).then(res => {
+      // var url = '/inboundList/search?size=' + pageSize + '&page=' + page
+      // this.$post(url, this.searchData, false).then(res => {
+      var url = '/inboundList?size=' + pageSize + '&page=' + page
+      this.$get(url).then(res => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
@@ -64,6 +66,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
+          console.log('content', data.content)
           this.$emit('exportData', data.content)
         }
       }).catch(() => {
@@ -80,7 +83,7 @@ export default {
     },
     deleteRow(id) {
       var projectID = { id: [id] }
-      this.$post('/paymentContract/delete', projectID).then(res => {
+      this.$post('/inboundList/delete', projectID).then(res => {
         if (res.data.success === true) {
           this.getSupplierData()
           this.$message({
@@ -93,7 +96,7 @@ export default {
     checkRow() {},
     exportRow() {},
     seeRow(id) {
-      this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
+      this.$get('/inboundList/findUpdateData/' + id).then((res) => {
         var data = res.data.data
         this.$emit('editRow', data)
       })
