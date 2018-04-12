@@ -56,9 +56,9 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="供货周期:">
+            <el-form-item label="供货周期(天):">
               <p v-if="disabled">{{supplyInfo.supplyCycle}}</p>
-              <el-input v-else v-model="supplyInfo.supplyCycle" placeholder="请输入供货周期"></el-input>
+              <el-input v-else v-model="supplyInfo.supplyCycle" placeholder="请输入供货周期" type="number" min="0"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
@@ -150,12 +150,13 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="税率:" prop="taxRate">
+            <el-form-item label="税率(%):" prop="taxRate">
               <p v-if="disabled">{{supplyInfo.taxRate}}</p>
-              <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" filterable clearable>
+              <el-input v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" @change="taxChange"></el-input>
+              <!-- <el-select v-else v-model="supplyInfo.taxRate" placeholder="请输入税率" filterable clearable>
                <el-option v-for="item in taxRateList" :label="item.value" :value="item.value" :key="item.id">
                </el-option>
-             </el-select>
+             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -462,6 +463,10 @@ export default {
         this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
         this.validDateStr = this.supplyInfo.startDate + '-' + this.supplyInfo.endDate
       }
+    },
+    taxChange(val) {
+      this.supplyInfo.taxRate = val + '%'
+      // console.log('taxChange', val)
     }
   },
   computed: {},

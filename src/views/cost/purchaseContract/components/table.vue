@@ -50,6 +50,13 @@
             <span v-else>{{scope.row.totalAmount}}</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作" min-width="120" fixed="right">
+          <template slot-scope="scope">
+            <el-button v-if="hasPerm('purchaseList:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-if="hasPerm('purchaseList:save')" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-if="hasPerm('purchaseList:delete')" @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <!-- 开票信息 -->

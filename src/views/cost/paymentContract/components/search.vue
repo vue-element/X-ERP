@@ -26,7 +26,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="商机编号:">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择商机编号" filterable clearable>
+              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>

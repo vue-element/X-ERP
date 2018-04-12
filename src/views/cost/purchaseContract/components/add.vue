@@ -49,7 +49,7 @@
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="业务类别:">
-              <p>{{paymentContract.businessCategory.name}}</p>
+              <p>{{paymentContract.contractInfo.businessCategory.name}}</p>
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,8 +178,9 @@ export default {
   },
   methods: {
     getData() {
-      this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
-      this.paymentContract.amount = outputmoney('' + this.paymentContract.amount)
+      this.paymentContract = _.cloneDeep(this.editData.editData.paymentContract)
+      console.log('this.paymentContract', this.paymentContract)
+      // this.paymentContract.amount = outputmoney('' + this.paymentContract.amount)
       this.paymentContract.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
       this.contractId = this.paymentContract.id
     }

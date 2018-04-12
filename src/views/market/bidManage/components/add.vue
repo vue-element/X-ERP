@@ -50,7 +50,7 @@
       </el-row>
     </div>
     <div class="commont-btn" v-show="hasPerm('tenderOffer:save') && !disabled">
-      <el-button @click="add()" :loading="loading">提交</el-button>
+      <el-button @click="add()" :loading="loading">保存</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>

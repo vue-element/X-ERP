@@ -50,7 +50,8 @@ export const asyncRouterMap = [
   { path: '/basic', component: Layout, redirect: 'noredirect', name: 'basic', meta: { title: '基础管理', icon: 'pCenter' },
     children: [
       { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }, menu: 'user' },
-      { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' }
+      { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' },
+      { path: 'permission', component: _import('basic/permission/index'), name: 'permission', meta: { title: '角色与权限管理' }, menu: 'org' }
     ]
   },
   // 市场管理

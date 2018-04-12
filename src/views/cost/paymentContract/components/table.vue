@@ -13,15 +13,15 @@
             <i class="iconfont icon-import"></i>
             <span>导入物料明细</span>
           </button>
-          <button @click.prevent="addMaterial">
+          <!-- <button @click.prevent="addMaterial">
             <i class="iconfont icon-add"></i>
             <span>新增物料明细</span>
-          </button>
+          </button> -->
         </div>
       </h4>
       <div>
         <el-table class="basic-form" style="width: 100%" :data="purchaseList" v-loading.body="listLoading" border>
-          <el-table-column label="序号" width="60">
+          <el-table-column label="序号" width="60" fixed>
             <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
           <el-table-column label="物料名称" min-width="160">
@@ -48,16 +48,16 @@
               <span v-else>{{scope.row.unitPrice}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" min-width="160">
+          <el-table-column label="计划数量" min-width="160">
             <template slot-scope="scope">
               <el-input v-if="scope.row.edit" type="text" v-model.number="scope.row.number" placeholder="请填写"></el-input>
-              <span v-else>{{scope.row.number}}</span>
+              <span v-else>{{scope.row.adNumber}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="总金额" min-width="160">
+          <el-table-column label="计划金额" min-width="160">
             <template slot-scope="scope">
               <el-input v-if="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写"></el-input>
-              <span v-else>{{scope.row.totalAmount}}</span>
+              <span v-else>{{scope.row.adAmount}}</span>
             </template>
           </el-table-column>
           <el-table-column label="单位" min-width="100">
@@ -66,13 +66,13 @@
               <span v-else>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" min-width="120" fixed="right">
+          <!-- <el-table-column label="操作" min-width="120" fixed="right">
             <template slot-scope="scope">
               <el-button v-if="hasPerm('purchaseList:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
               <el-button v-if="hasPerm('purchaseList:save')" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
               <el-button v-if="hasPerm('purchaseList:delete')" @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
       <div v-show="uploadTableShow">
@@ -196,41 +196,42 @@ export default {
         }
       })
     },
-    addMaterial() {
-      if (this.contractId) {
-        var obj = {
-          paymentContract: {
-            id: this.contractId
-          },
-          name: '',
-          brand: '',
-          model: '',
-          unit: '',
-          unitPrice: '',
-          number: '',
-          totalAmount: '',
-          edit: true
-        }
-        this.purchaseList.push(obj)
-      } else {
-        this.$message({
-          message: '请先保存基础信息与付款信息',
-          type: 'warning'
-        })
-      }
-    },
-    editRow(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.purchaseList, index, row)
-    },
-    confirmEdit(row, index) {
-      row.edit = !row.edit
-      Vue.set(this.purchaseList, index, row)
-      this.saveMaterial([row])
-    },
+    // addMaterial() {
+    //   if (this.contractId) {
+    //     var obj = {
+    //       paymentContract: {
+    //         id: this.contractId
+    //       },
+    //       name: '',
+    //       brand: '',
+    //       model: '',
+    //       unit: '',
+    //       unitPrice: '',
+    //       number: '',
+    //       totalAmount: '',
+    //       edit: true
+    //     }
+    //     this.purchaseList.push(obj)
+    //   } else {
+    //     this.$message({
+    //       message: '请先保存基础信息与付款信息',
+    //       type: 'warning'
+    //     })
+    //   }
+    // },
+    // editRow(row, index) {
+    //   row.edit = !row.edit
+    //   Vue.set(this.purchaseList, index, row)
+    // },
+    // confirmEdit(row, index) {
+    //   row.edit = !row.edit
+    //   Vue.set(this.purchaseList, index, row)
+    //   this.saveMaterial([row])
+    // },
     saveMaterial(list) {
       if (this.contractId) {
-        this.$post('/purchaseList/save', { objectList: list }).then((res) => {
+        var url = '/purchaseList/importData/' + this.contractId
+        this.$post(url, { objectList: list }).then((res) => {
           if (res.data.success === true) {
             this.$message({
               message: '保存成功',
@@ -241,37 +242,41 @@ export default {
         })
       }
     },
-    deleteRow(id, index) {
-      if (this.contractId) {
-        this.$post('/purchaseList/delete', { id: [id] }).then((res) => {
-          if (res.data.success === true) {
-            this.getPurchaseList()
-            // this.$message({
-            //   message: '删除成功',
-            //   type: 'success'
-            // })
-          }
-        })
-      }
-    },
+    // deleteRow(id, index) {
+    //   if (this.contractId) {
+    //     this.$post('/purchaseList/delete', { id: [id] }).then((res) => {
+    //       if (res.data.success === true) {
+    //         this.getPurchaseList()
+    //         // this.$message({
+    //         //   message: '删除成功',
+    //         //   type: 'success'
+    //         // })
+    //       }
+    //     })
+    //   }
+    // },
     selected(data) {
       this.uploadDetail = data.results
       var list = []
+      // console.log('uploadDetail', this.uploadDetail)
       this.uploadDetail.forEach((item) => {
         var obj = {}
         obj = {
           paymentContract: {
             id: this.contractId
           },
-          name: item['物料名称'],
+          // acAmount: item['计划金额'],
+          // acNumber: item['计划数量'],
+          adAmount: item['计划金额'],
+          adNumber: item['计划数量'],
           brand: item['品牌'],
           model: item['规格型号'],
+          name: item['物料名称'],
           unit: item['单位'],
-          unitPrice: item['单价'],
-          number: item['数量'],
-          totalAmount: item['总金额']
+          unitPrice: item['单价']
         }
         list.push(obj)
+        console.log('list', list)
       })
       this.saveMaterial(list)
     },
@@ -290,11 +295,11 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '物料名称', '规格型号', '品牌', '单价', '数量', '总金额', '单位']
-        const filterVal = ['index', 'name', 'model', 'brand', 'unitPrice', 'number', 'totalAmount', 'unit']
+        const tHeader = ['序号', '物料名称', '规格型号', '品牌', '单价', '计划数量', '计划金额', '单位']
+        const filterVal = ['index', 'name', 'model', 'brand', 'unitPrice', 'adNumber', 'adAmount', 'unit']
         const list = []
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, this.filename)
+        export_json_to_excel(tHeader, data, '物料明细')
         this.downloadLoading = false
       })
     },

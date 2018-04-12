@@ -14,9 +14,17 @@
            </el-select>
           </el-form-item>
         </el-col>
+        <!-- <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="客户名称:">
+            <el-select v-model="value11" placeholder="请选择客户类别"  filterable clearable>
+             <el-option v-for="item in clientList" :label="item.name" :value="item.name" :key="item.name">
+             </el-option>
+           </el-select>
+          </el-form-item>
+        </el-col> -->
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户名称:">
-            <select-dropdown label="客户名称" :listData="clientList"  @onchange="customerChange"></select-dropdown>
+            <select-dropdown label="客户名称" :listData="categoryList"  @onchange="customerChange"></select-dropdown>
           </el-form-item>
         </el-col>
       </el-row>
@@ -46,13 +54,15 @@
 
 <script>
 import SelectDropdown from '@/components/SelectDropdown'
+
 export default {
-  name: 'SmartCommunitySearch',
   components: {
     SelectDropdown
   },
   data() {
     return {
+      value11: 100,
+      clientShow: false,
       searchData: {
         name: '',
         category: '',
@@ -64,7 +74,7 @@ export default {
       categoryList: []
     }
   },
-  mounted() {
+  created() {
     this.getInsertData()
   },
   methods: {
@@ -89,7 +99,7 @@ export default {
         }
       }
       console.log('searchWord', searchData)
-      this.$emit('searchWord', searchData)
+      // this.$emit('searchWord', searchData)
     },
     searchAll() {
       var searchData = {}

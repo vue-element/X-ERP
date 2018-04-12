@@ -285,11 +285,26 @@
       </el-row>
     </div>
     <div class="commont-btn" v-show="hasPerm('bussiness:save') && !disabled">
-      <el-button @click="add" :loading="loading">提交</el-button>
+      <el-button @click="add" :loading="loading">保存</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>
   </el-form>
+  <div class="revise-record form-module"  v-show="action === 'edit'">
+    <h4 class="module-title">
+      <p>修改记录</p>
+    </h4>
+    <el-table class="basic-form" style="width: 100%"  :data="historyRecord" ref="multipleTable" border>
+      <el-table-column align="center" prop="0" label="序号" width="60">
+        <template slot-scope="scope">{{scope.$index  + 1}}</template>
+      </el-table-column>
+      <el-table-column prop="person" label="修改人" width="100"></el-table-column>
+      <el-table-column prop="time" label="修改时间" width="120"></el-table-column>
+      <el-table-column prop="content" label="修改内容" min-width="280"></el-table-column>
+      <el-table-column prop="dNumber" label="商机修改间隔(天)" width="140"></el-table-column>
+      </el-table-column>
+    </el-table>
+  </div>
 </div>
 </template>
 
@@ -338,13 +353,13 @@ export default {
         name: '',
         sourcePerson: '',
         examineState: '商机线索',
-        keyword: '',
+        keyword: null,
         firstPerson: '',
         firstPersonPhone: '',
         startDate: '',
         amount: null,
         amount1: '',
-        executeState: '',
+        executeState: null,
         businessPerson: {
           id: '',
           name: '',
@@ -391,14 +406,19 @@ export default {
         startDate: [{ required: true, message: '请输入预计启动时间', trigger: 'blur' }],
         amount1: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }]
       },
-      temp: {}
+      temp: {},
+      dialogFormVisible: false,
+      historyRecord: [],
+      lastTime: ''
     }
   },
   created() {
-    console.log('editData', this.editData)
     this.getInsertData()
     this.toggleAction()
     this.temp = _.cloneDeep(this.businessInfo)
+    if (this.businessInfo.id !== null) {
+      this.getRecordHistory()
+    }
   },
   computed: {
     ...mapGetters([
@@ -409,20 +429,28 @@ export default {
     add() {
       this.$refs.businessInfo.validate(valid => {
         if (valid) {
-          this.loading = true
+          // this.loading = true
           this.businessInfo.oldCity = this.cityOption.join('-')
+          var businessInfo = {}
           var arr = ['designPerson', 'costPerson', 'projectPerson', 'projectManager']
           for (var key in this.businessInfo) {
-            if (arr.indexOf(key) > -1 && this.businessInfo[key].id === '') {
-              delete this.businessInfo[key]
+            if (arr.indexOf(key) > -1) { // arr向后台传值都是一个个实体，所以值为空，应该删不向后台传送
+              if (this.businessInfo[key].id !== '') {
+                businessInfo[key] = this.businessInfo[key]
+              }
+            } else {
+              if (this.businessInfo[key]) {
+                businessInfo[key] = this.businessInfo[key]
+              }
             }
           }
-          this.$post('/bussiness/save', this.businessInfo).then((res) => {
+          this.$post('/bussiness/save', businessInfo).then((res) => {
             this.loading = false
             if (res.data.success === true) {
               this.businessInfo = res.data.data
               this.editInfo()
               this.temp = _.cloneDeep(this.businessInfo)
+              this.saveRecordHistory()
               this.successSave()
             } else {
               this.failSave()
@@ -530,6 +558,7 @@ export default {
         type: 'error'
       })
     },
+    // 切换状态
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
         this.action = 'add'
@@ -551,6 +580,67 @@ export default {
           callback()
         }
       }
+    },
+    // 修改记录
+    getRecordHistory() {
+      this.$get('/businessHistory/findAllByBusiness/' + this.businessInfo.id).then((res) => {
+        if (res.data.success === true) {
+          this.historyRecord = res.data.data.content
+          var len = this.historyRecord.length - 1
+          var lastTime = len > 0 ? new Date(this.historyRecord[len].time) : new Date()
+          this.lastTime = lastTime.getTime()
+          // console.log('lastTime', this.lastTime)
+          this.setSession()
+        }
+      })
+    },
+    saveRecordHistory() {
+      var businessHistoryObj = JSON.parse(sessionStorage.getItem('businessHistoryObj')) || {}
+      var content = '' // 监听多字段的变化
+      if (businessHistoryObj.keyword !== this.businessInfo.keyword) {
+        content += '项目需求描述：' + this.businessInfo.keyword + ';  '
+      }
+      if (businessHistoryObj.amount !== this.businessInfo.amount1) {
+        content += '预计成交金额：' + this.businessInfo.amount1 + ';  '
+      }
+      if (businessHistoryObj.startDate !== this.businessInfo.startDate) {
+        content += '项目预计启动时间：' + this.businessInfo.startDate + ';  '
+      }
+      if (businessHistoryObj.firstPerson !== this.businessInfo.firstPerson) {
+        content += '甲方决策人：' + this.businessInfo.firstPerson + ';  '
+      }
+      if (businessHistoryObj.firstPersonPhone !== this.businessInfo.firstPersonPhone) {
+        content += '甲方决策人联系方式：' + this.businessInfo.firstPersonPhone + ';  '
+      }
+      if (businessHistoryObj.executeState !== this.businessInfo.executeState) {
+        content += '商机执行状态：' + this.businessInfo.executeState
+      }
+      if ((businessHistoryObj.id === this.businessInfo.id) && (content !== '')) { // 有值的改变，新增一条修改记录
+        var dNumber = parseInt((new Date().getTime() - parseInt(businessHistoryObj.time)) / (1000 * 60 * 60 * 24))
+        var obj = {
+          business_id: this.businessInfo.id,
+          content: content,
+          dNumber: dNumber
+        }
+        this.$post('/businessHistory/save', obj).then((res) => {
+          this.getRecordHistory()
+        })
+      } else {
+        this.getRecordHistory()
+      }
+    },
+    setSession() {
+      var oldObj = {
+        id: this.businessInfo.id,
+        keyword: this.businessInfo.keyword,
+        amount: this.businessInfo.amount1,
+        startDate: this.businessInfo.startDate,
+        firstPerson: this.businessInfo.firstPerson,
+        firstPersonPhone: this.businessInfo.firstPersonPhone,
+        executeState: this.businessInfo.executeState,
+        time: this.lastTime
+      }
+      sessionStorage.setItem('businessHistoryObj', JSON.stringify(oldObj))
     }
   },
   watch: {
@@ -599,6 +689,12 @@ export default {
       .el-form-item__content {
         width: 81.5% !important;
       }
+    }
+  }
+  .revise-record {
+    .el-table .cell {
+      white-space: normal;
+      height: auto;
     }
   }
 }

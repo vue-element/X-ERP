@@ -5,7 +5,7 @@
         <el-table-column label="序号" fixed width="60">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="name" label="供应商名称" fixed width="140"></el-table-column>
+        <el-table-column prop="name" label="供应商名称" fixed width="180"></el-table-column>
         <el-table-column prop="cooperativeType" label="合作商类别" fixed width="120"></el-table-column>
         <el-table-column prop="type" label="供应商类别" width="120"></el-table-column>
         <el-table-column prop="category" label="供应商类型" width="120"></el-table-column>

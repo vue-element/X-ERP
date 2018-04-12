@@ -38,9 +38,9 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="商机编号:" prop="contractInfo">
+            <el-form-item label="合同编号:">
               <p v-if="disabled">{{paymentContract.contractInfo.code}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择商机编号" filterable clearable>
+              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -49,7 +49,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="所属项目:">
               <p v-if="disabled">{{paymentContract.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择所属项目" filterable clearable>
+              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="自动生成" disabled>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
@@ -67,12 +67,12 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="业务类别:" prop="businessCategory">
-              <p v-if="disabled">{{paymentContract.businessCategory.name}}</p>
-              <el-select v-else v-model="paymentContract.businessCategory.id" placeholder="请选择业务类别" filterable clearable>
-               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+            <el-form-item label="业务类别:">
+              <p v-if="disabled">{{paymentContract.contractInfo.businessCategory.name}}</p>
+             <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="自动生成" disabled>
+              <el-option v-for="item in contractInfoList" :label="item.businessCategory.name" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -181,9 +181,15 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="采购金额:" prop="amount">
-              <p v-if="disabled">{{amount}}</p>
-              <el-input v-else v-model="amount" placeholder="自动生成" disabled></el-input>
+            <el-form-item label="计划采购金额:" prop="amount">
+              <p v-if="disabled">{{adAmount}}</p>
+              <el-input v-else v-model="adAmount" placeholder="自动生成" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="实际采购金额:" prop="amount">
+              <p v-if="disabled">{{acAmount}}</p>
+              <el-input v-else v-model="acAmount" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -207,23 +213,9 @@ export default {
   props: ['editData'],
   components: { tableComponent },
   data() {
-    var validateContract = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('请选择商机编号'))
-      } else {
-        callback()
-      }
-    }
     var validateSupply = (rules, value, callback) => {
       if (!value.id) {
         callback(new Error('请选择供应商信息'))
-      } else {
-        callback()
-      }
-    }
-    var validateBusinessCategory = (rules, value, callback) => {
-      if (!value.id) {
-        callback(new Error('请选择业务类别'))
       } else {
         callback()
       }
@@ -235,13 +227,13 @@ export default {
       disabled: false,
       editShow: false,
       supplyName: '',
-      amount: '',
+      adAmount: '',
+      acAmount: '',
       payableAmount: '',
       paymentContract: {
         amount: null,
         applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
-        businessCategory: { id: null },
         code: '',
         contractInfo: { id: null },
         supply: { id: null },
@@ -270,9 +262,7 @@ export default {
         applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }],
         applicationTime: [{ required: true, message: '请输入申请时间', trigger: 'blur' }],
         orderCode: [{ required: true, message: '请输入订单编号', trigger: 'blur' }],
-        contractInfo: [{ required: true, validator: validateContract, trigger: 'change' }],
         department: [{ required: true, message: '请选择申请部门', trigger: 'blur' }],
-        businessCategory: [{ required: true, validator: validateBusinessCategory, trigger: 'change' }],
         supply: [{ required: true, validator: validateSupply, trigger: 'change' }],
         paymentObject: [{ required: true, message: '请选择支付对象', trigger: 'change' }],
         payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
@@ -337,7 +327,6 @@ export default {
         var data = res.data.data
         this.contractInfoList = data.contractInfoList
         this.supplyList = data.supplyList
-        this.businessCtgList = data.businessCtgList
         this.materialCtgList = data.materialCtgList
         this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
           { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
@@ -367,7 +356,7 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
-        this.paymentContract = _.cloneDeep(this.editData.editData.paymentContractList)
+        this.paymentContract = _.cloneDeep(this.editData.editData.paymentContract)
         this.contractId = this.paymentContract.id
         this.amount = outputmoney('' + this.paymentContract.amount)
         this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)

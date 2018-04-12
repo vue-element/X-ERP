@@ -127,6 +127,7 @@ export default {
         settlementMethod: '',
         region_id: ''
       },
+      supplyList: [],
       supplyRegionList: [],
       typeList: [],
       categoryList: [],

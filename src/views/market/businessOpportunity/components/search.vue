@@ -8,10 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-select placeholder="请选择商机名称" v-model="searchData.b_id" filterable clearable>
-             <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <select-dropdown label="商机名称" :listData="businessList"  @onchange="bussinessChange"></select-dropdown>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -136,12 +133,16 @@
 </template>
 
 <script>
+import SelectDropdown from '@/components/SelectDropdown'
 export default {
   name: 'InvoiceSearch',
+  components: {
+    SelectDropdown
+  },
   data() {
     return {
       searchData: {
-        b_id: '',
+        name: '',
         sourcePerson: '',
         startDate: '',
         startDate1: '',
@@ -176,6 +177,9 @@ export default {
     this.searchData.city_id = this.cityOption[2]
   },
   methods: {
+    bussinessChange(name) {
+      this.searchData.name = name
+    },
     cityChange(val) {
       var len = val.length
       this.searchData.city_id = val[len - 1]
