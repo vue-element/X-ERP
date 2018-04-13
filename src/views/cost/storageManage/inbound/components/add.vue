@@ -54,7 +54,7 @@
             </el-col>
           </el-row>
         </div>
-        <table-component :contractId="contractId" :editShow="editShow" :actionTab="actionTab"></table-component>
+        <table-component :inboundId="inboundId" :editShow="editShow" :actionTab="actionTab"></table-component>
       </el-form>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
-      contractId: '',
+      inboundId: '',
       rules: {}
     }
   },
@@ -99,7 +99,7 @@ export default {
       // this.supplyList = data.supplyList
       // this.contractInfoList = data.contractInfoList
       // this.businessList = data.businessList
-      this.contractId = this.inboundList.id
+      this.inboundId = this.inboundList.id
     },
     toggleTab(tab) {
       this.actionTab = tab

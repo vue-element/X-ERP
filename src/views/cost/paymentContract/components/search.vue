@@ -33,7 +33,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="使用项目:" >
+            <el-form-item label="合同名称／所属项目:" >
               <el-select v-model="searchData.contractInfo_id" placeholder="请选择所属项目" filterable clearable>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>

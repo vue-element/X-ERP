@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="success" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加角色
+          <el-button type="success" icon="plus" @click="showCreate">添加角色
           </el-button>
         </el-form-item>
       </el-form>
@@ -28,7 +28,7 @@
           <el-tag v-if="scope.row.roleName==adminName" type="success">全部</el-tag>
           <div v-else>
             <div v-for="menu in scope.row.menus" style="text-align: left">
-              <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menuName}}</span>
+              <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menu_name}}</span>
               <el-tag v-for="perm in menu.permissions" :key="perm.permissionName" v-text="perm.permissionName"
                       style="margin-right: 3px;"
                       type="primary"></el-tag>
@@ -36,42 +36,43 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('role:update') ||hasPerm('role:delete') ">
+      <el-table-column align="center" label="管理" width="220" >
         <template slot-scope="scope">
           <div v-if="scope.row.roleName!='管理员'">
-            <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('role:update')">修改
+            <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改
             </el-button>
-            <el-button v-if=" scope.row.users && scope.row.users.length===0 && hasPerm('role:delete')" type="danger"
-                       icon="delete"
-                       @click="removeRole(scope.$index)">
-              删除
+            <el-button type="danger" icon="delete" @click="removeRole(scope.$index)">删除
             </el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
       <el-form class="small-space" :model="tempRole" label-position="left" label-width="100px"
                style='width: 500px; margin-left:50px;'>
         <el-form-item label="角色名称" required>
-          <el-input type="text" v-model="tempRole.roleName" style="width: 250px;">
-          </el-input>
+          <el-select v-model="tempRole.roleName" placeholder="请选择角色名称">
+            <el-option v-for="item in roleList" :label="item.name" :value="item.id" :key="item.id">
+            </el-option>
+          </el-select>
+          <!-- <el-input type="text" v-model="tempRole.roleName" style="width: 250px;"> -->
+          <!-- </el-input> -->
         </el-form-item>
         <el-form-item label="菜单&权限" required>
-          <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">
+          <div v-for=" (menu,_index) in allPermission" :key="menu.menu_name">
             <span style="width: 100px;display: inline-block;">
               <el-button :type="isMenuNone(_index)?'':(isMenuAll(_index)?'success':'primary')" size="mini"
                          style="width:80px;"
-                         @click="checkAll(_index)">{{menu.menuName}}</el-button>
+                         @click="checkAll(_index)">{{menu.menu_name}}</el-button>
             </span>
-            <div style="display: inline-block;margin-left:20px;">
+            <!-- <div style="display: inline-block;margin-left:20px;">
               <el-checkbox-group v-model="tempRole.permissions">
                 <el-checkbox v-for="perm in menu.permissions" :label="perm.id" @change="checkRequired(perm,_index)"
                              :key="perm.id">
                   <span :class="{requiredPerm:perm.requiredPerm===1}">{{perm.permissionName}}</span>
                 </el-checkbox>
               </el-checkbox-group>
-            </div>
+            </div> -->
           </div>
           <p style="color:#848484;">说明:红色权限为对应菜单内的必选权限</p>
         </el-form-item>
@@ -102,15 +103,32 @@
           roleId: '',
           permissions: []
         },
-        adminName: '管理员'
+        adminName: '管理员',
+        roleList: []
       }
     },
     created() {
-      this.getList()
+      this.getAllRole()
       this.getAllPermisson()
+      this.getList()
     },
     methods: {
+      getAllRole() {
+        this.$get('/role/findAll').then((res) => {
+          if (res.data.success === true) {
+            this.roleList = res.data.data
+          } else {
+            return
+          }
+        })
+      },
       getAllPermisson() {
+        // this.$get('/permission/findAll').then((res) => {
+        //   if (res.data.success === true) {
+        //     this.allPermission = res.data.data
+        //     console.log(this.allPermission[0])
+        //   }
+        // })
         // 查询所有权限
         // this.api({
         //   url: "/user/listAllPermission",
@@ -121,7 +139,7 @@
       },
       getList() {
         // 查询列表
-        this.listLoading = true
+        // this.listLoading = true
         // this.api({
         //   url: "/user/listRole",
         //   method: "get"

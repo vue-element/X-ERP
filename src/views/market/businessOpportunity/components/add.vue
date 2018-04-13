@@ -492,7 +492,6 @@ export default {
       cityOption.forEach((item) => {
         this.cityOption.push(parseInt(item))
       })
-      console.log('hello', this.businessInfo)
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data

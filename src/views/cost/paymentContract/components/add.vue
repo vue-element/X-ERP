@@ -47,7 +47,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="所属项目:">
+            <el-form-item label="合同名称／所属项目:">
               <p v-if="disabled">{{paymentContract.contractInfo.name}}</p>
               <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="自动生成" disabled>
                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
@@ -235,13 +235,13 @@ export default {
         acAmount: null,
         applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
-        code: '',
-        contractInfo: { id: null },
+        code: '1',
+        contractInfo: { id: '' },
         supply: { id: null },
         deliveryStatus: '未发货',
         department: '财务管理部',
         inputCode: '入库单编号',
-        materialCategory: { id: null },
+        materialCategory: { id: '' },
         mention: '是',
         oddNumber: '',
         optCost: '优化成本',
@@ -284,14 +284,23 @@ export default {
       this.$refs.paymentContract.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/paymentContract/save', this.paymentContract).then(res => {
+          var paymentContract = {}
+          var arr = ['contractInfo', 'materialCategory']
+          for (var key in this.paymentContract) {
+            if (this.paymentContract[key]) {
+              if ((arr.indexOf(key) > -1) && (this.paymentContract[key].id === '')) { // arr向后台传值都是一个个实体，所以值为空，应该删不向后台传送
+                continue
+              } else {
+                paymentContract[key] = this.paymentContract[key]
+              }
+            }
+          }
+          this.$post('/paymentContract/save', paymentContract).then(res => {
             this.loading = false
             if (res.data.success === true) {
-              this.temp = _.cloneDeep(res.data.data)
               this.paymentContract = res.data.data
-              this.amount = outputmoney('' + this.paymentContract.amount)
-              this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
-              this.contractId = res.data.data.id
+              this.hanlderFormat()
+              this.temp = _.cloneDeep(res.data.data)
               this.successSave()
             } else {
               this.failSave()
@@ -358,9 +367,8 @@ export default {
         this.disabled = true
         this.editShow = true
         this.paymentContract = _.cloneDeep(this.editData.editData.paymentContract)
-        this.contractId = this.paymentContract.id
-        this.amount = outputmoney('' + this.paymentContract.amount)
-        this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
+        this.hanlderFormat()
+        this.temp = _.cloneDeep(this.paymentContract)
       }
     },
     pAmountChange(val) {
@@ -368,23 +376,31 @@ export default {
       this.payableAmount = outputmoney('' + val)
     },
     amountChange(amountObj) {
-      // console.log('amountChange', amountObj)
       this.paymentContract.adAmount = amountObj.adAmount
       this.paymentContract.acAmount = amountObj.acAmount
       this.$post('/paymentContract/save', this.paymentContract).then((res) => {
-        // console.log('success')
       })
+    },
+    hanlderFormat() {
+      this.contractId = this.paymentContract.id
+      this.amount = outputmoney('' + this.paymentContract.amount)
+      this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
+      // materialCategory、contractInfo传值的时，空值为传，返回值为null 对两对象做格式转换
+      if (this.paymentContract.materialCategory === null) {
+        this.paymentContract.materialCategory = {
+          id: '',
+          name: ''
+        }
+      }
+      if (this.paymentContract.contractInfo === null) {
+        this.paymentContract.contractInfo = {
+          id: '',
+          name: '',
+          code: '',
+          businessCategory: { name: '' }
+        }
+      }
     }
-    // 采购金额根据物料详情的金额动态变化
-  //   purchaseAmount(val) {
-  //     this.amount = outputmoney('' + val)
-  //     this.paymentContract.amount = val
-  //     this.$post('/paymentContract/save', this.paymentContract).then((res) => {
-  //       if (res.data.success === true) {
-  //         // console.log('success')
-  //       }
-  //     })
-  //   }
   },
   computed: {},
   watch: {

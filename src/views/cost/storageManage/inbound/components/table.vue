@@ -159,7 +159,7 @@ import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['contractId', 'editShow', 'actionTab'],
+  props: ['inboundId', 'editShow', 'actionTab'],
   data() {
     return {
       purchaseList: [],
@@ -180,7 +180,7 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/inboundCheck/findByInboundList/' + this.contractId).then((res) => {
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.inboundId).then((res) => {
         var data = _.cloneDeep(res.data.data) || []
         data.forEach((item) => {
           item.number = item.number ? item.number : item.purchaseList.number
@@ -225,7 +225,7 @@ export default {
     },
     // 审核动态
     getInboundCheck() {
-      this.$get('/inboundCheck/findAllByPaymentContract/' + this.contractId).then((res) => {
+      this.$get('/inboundCheck/findByInboundList/' + this.inboundId).then((res) => {
         // console.log('res', res)
         if (res.data.success === true) {
           this.inboundCheck = res.data.data
@@ -234,15 +234,15 @@ export default {
     },
     submitCheck() {
       var obj = {
-        step: '',
-        stepPerson: '',
-        nextStep: '',
-        nextStepPerson: '',
-        paymentContract: {
-          id: this.contractId
-        },
-        result: '提交审核',
-        time: ''
+        step: '审核中',
+        // stepPerson: '',
+        // nextStep: '',
+        // nextStepPerson: '',
+        inboundList: {
+          id: this.inboundId
+        }
+        // result: '提交审核',
+        // time: ''
       }
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()

@@ -375,11 +375,7 @@ export default {
             if (res.data.success === true) {
               this.supplyInfo = res.data.data
               this.temp = _.cloneDeep(res.data.data)
-              if (this.supplyInfo.startDate === null || this.supplyInfo.endDate === null) {
-                this.validDateStr = ''
-              } else {
-                this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
-              }
+              this.handlerDate()
               this.successSave()
             } else {
               this.failSave()
@@ -395,6 +391,14 @@ export default {
           return false
         }
       })
+    },
+    handlerDate() {
+      if (this.supplyInfo.startDate === null || this.supplyInfo.endDate === null) {
+        this.validDateStr = ''
+      } else {
+        this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
+        this.validDate = [this.supplyInfo.startDate, this.supplyInfo.endDate]
+      }
     },
     reset() {
       this.supplyInfo = _.cloneDeep(this.temp)
@@ -425,7 +429,6 @@ export default {
       this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]
       this.reviewStateList = [{ value: '合格' }, { value: '新引进' }]
       this.settlementMethodList = [{ value: '月结' }, { value: '货到付款' }, { value: '其他' }]
-      this.taxRateList = [{ value: '0%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
       this.sourceList = [{ value: '地产合作商' }, { value: '集团合作商' }, { value: '城市公司合作商' }, { value: '公司集采合作商' }, { value: '办事处推荐' }]
       this.gradeList = [{ value: 'A级' }, { value: 'B级' }, { value: 'C级' }, { value: 'D级' }]
       this.reviewHandleList = [{ value: '继续使用' }, { value: '暂停使用' }, { value: '终止使用' }]
@@ -462,11 +465,7 @@ export default {
         this.disabled = true
         this.editShow = true
         this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
-        if (this.supplyInfo.startDate === null || this.supplyInfo.endDate === null) {
-          this.validDateStr = ''
-        } else {
-          this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
-        }
+        this.handlerDate()
       }
     },
     taxChange(val) {
