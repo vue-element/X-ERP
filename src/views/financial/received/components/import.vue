@@ -1,9 +1,9 @@
 <template>
-  <div class="form-container invoice-import">
-    <upload-excel-component @on-selected-file='selected'></upload-excel-component>
-    <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-      <el-table-column v-for='item of tableHeader' :prop="item" :label="item" :key='item'>
-      </el-table-column>
+  <div class="recevied-import form-container">
+    <upload-excel-component @on-selected-file='selected' class="upLoad"></upload-excel-component>
+    <el-button type="success" @click="dataImport">导入</el-button>
+    <el-table :data="tableData" border highlight-current-row style="width:100%;margin-top:20px;">
+      <el-table-column v-for='item of tableHeader' :prop="item" :label="item" :key='item'></el-table-column>
     </el-table>
   </div>
 </template>
@@ -24,25 +24,26 @@ export default {
     selected(data) {
       this.tableData = data.results
       this.tableHeader = data.header
+    },
+    dataImport() {
+      console.log(this.tableData)
     }
   }
 }
 </script>
 
 
-<style  rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
-.invoice-import.form-container{
-  margin-top: 50px;
-  .form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-        }
-      }
-    }
+.recevied-import.form-container{
+  .upLoad{
+    display: inline-block;
+    text-align: center;
+  }
+  button{
+    line-height: 0.4;
+    background-color: #35d5ba;
+    border-color: #35d5ba;
   }
 }
 </style>

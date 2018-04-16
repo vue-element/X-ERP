@@ -67,11 +67,11 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
           <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
-          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false" @click="printInBound">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>
-      <!--审核动态  -->
+    <!--审核动态  -->
     </div>
     <div v-show="actionTab === 'costCheck'">
       <div class="form-module">
@@ -247,6 +247,10 @@ export default {
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })
+    },
+    // 打印入库单
+    printInBound() {
+      this.$emit('showData', true)
     }
   },
   watch: {

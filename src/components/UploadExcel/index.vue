@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button :loading="loading" type="primary" @click="handleUpload">点击上传</el-button>
+    <el-button :loading="loading" type="primary" @click="handleUpload">选择数据</el-button>
     <input id="excel-upload-input" type="file" accept=".xlsx, .xls" class="c-hide" @change="handkeFileChange">
   </div>
 </template>
@@ -74,8 +74,16 @@ export default {
 </script>
 
 <style scoped>
+.el-button{
+  line-height: 0.4;
+}
 #excel-upload-input{
   display: none;
   z-index: -9999;
+}
+.el-button--primary:focus, .el-button--primary:hover {
+  background: #409EFF;
+  border-color: #409EFF;
+  color: #fff;
 }
 </style>
