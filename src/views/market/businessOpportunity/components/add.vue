@@ -14,36 +14,36 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="创建人:">
-            <p v-if="disabled">{{businessInfo.createPerson}}</p>
-            <el-input v-else placeholder="请输入创建人" v-model="businessInfo.createPerson" disabled></el-input>
+            <p v-show="disabled">{{businessInfo.createPerson}}</p>
+            <el-input v-show="!disabled" placeholder="请输入创建人" v-model="businessInfo.createPerson" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机编码:">
-            <p v-if="disabled">{{businessInfo.code}}</p>
-            <el-input v-else placeholder="自动生成" v-model="businessInfo.code" disabled></el-input>
+            <p v-show="disabled">{{businessInfo.code}}</p>
+            <el-input v-show="!disabled" placeholder="自动生成" v-model="businessInfo.code" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机录入日期:" class="single-date">
-            <p v-if="disabled">{{businessInfo.date}}</p>
-            <el-date-picker v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="businessInfo.date"  placeholder="自动生成" disabled></el-date-picker>
+            <p v-show="disabled">{{businessInfo.date}}</p>
+            <el-date-picker v-show="!disabled" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="businessInfo.date"  placeholder="自动生成" disabled></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机名称:" prop="name">
-            <p v-if="disabled">{{businessInfo.name}}</p>
-            <el-input v-else v-model="businessInfo.name" placeholder="请输入商机名称"></el-input>
+            <p v-show="disabled">{{businessInfo.name}}</p>
+            <el-input v-show="!disabled" v-model="businessInfo.name" placeholder="请输入商机名称"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="区域:" prop="region">
-            <p v-if="disabled">{{businessInfo.region.name}}</p>
-            <el-select v-else v-model="businessInfo.region.id" placeholder="请选择区域" filterable clearable>
+            <p v-show="disabled">{{businessInfo.region.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.region.id" placeholder="请选择区域" filterable clearable>
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -51,22 +51,22 @@
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="城市:" prop="city">
-            <p v-if="disabled">{{businessInfo.city.name}}</p>
-            <el-cascader v-else :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市" filterable clearable></el-cascader>
+            <p v-show="disabled">{{businessInfo.city.name}}</p>
+            <el-cascader v-show="!disabled" :options="cityList" :show-all-levels="false" v-model="cityOption" @change="cityChange" placeholder="请选择城市" filterable clearable></el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机提供人:" prop="sourcePerson">
-            <p v-if="disabled">{{businessInfo.sourcePerson}}</p>
-            <el-input v-else placeholder="请输入商机提供人" v-model="businessInfo.sourcePerson" clearable></el-input>
+            <p v-show="disabled">{{businessInfo.sourcePerson}}</p>
+            <el-input v-show="!disabled" placeholder="请输入商机提供人" v-model="businessInfo.sourcePerson" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="业务分类:" prop="businessCategory">
-            <p v-if="disabled">{{businessInfo.businessCategory.name}}</p>
-            <el-select v-else v-model="businessInfo.businessCategory.id" placeholder="请选择" filterable clearable>
+            <p v-show="disabled">{{businessInfo.businessCategory.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.businessCategory.id" placeholder="请选择" filterable clearable>
               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -76,8 +76,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
-            <p v-if="disabled">{{businessInfo.client.name}}</p>
-            <el-select v-else v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable clearable>
+            <p v-show="disabled">{{businessInfo.client.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable clearable>
               <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -85,8 +85,8 @@
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户类别:">
-            <p v-if="disabled">{{businessInfo.client.category}}</p>
-            <el-select v-else v-model="businessInfo.client.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.client.category}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="自动生成" disabled>
               <el-option v-for="item in clientList" :label="item.category" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -96,8 +96,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.client.phone}}</p>
-            <el-select v-else v-model="businessInfo.client.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.client.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="自动生成" disabled>
               <el-option v-for="item in clientList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -105,8 +105,8 @@
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机审批状态:">
-            <p v-if="disabled">{{businessInfo.examineState}}</p>
-            <el-input :rows="2" v-else v-model="businessInfo.examineState" placeholder="请输入项目关键信息" disabled></el-input>
+            <p v-show="disabled">{{businessInfo.examineState}}</p>
+            <el-input :rows="2" v-show="!disabled" v-model="businessInfo.examineState" placeholder="请输入项目关键信息" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,58 +119,58 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="24" :lg="24">
           <el-form-item label="项目需求描述:" class="pro_describe">
-            <p v-if="disabled">{{businessInfo.keyword}}</p>
-            <el-input v-else v-model="businessInfo.keyword" placeholder="请输入项目需求描述" type="textarea" clearable></el-input>
+            <p v-show="disabled">{{businessInfo.keyword}}</p>
+            <el-input v-show="!disabled" v-model="businessInfo.keyword" placeholder="请输入项目需求描述" type="textarea" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="甲方决策人:" prop="firstPerson">
-            <p v-if="disabled">{{businessInfo.firstPerson}}</p>
-            <el-input v-else v-model="businessInfo.firstPerson" placeholder="请输入甲方决策人"  min='0'></el-input>
+            <p v-show="disabled">{{businessInfo.firstPerson}}</p>
+            <el-input v-show="!disabled" v-model="businessInfo.firstPerson" placeholder="请输入甲方决策人"  min='0'></el-input>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:" prop="firstPersonPhone">
-            <p v-if="disabled">{{businessInfo.firstPersonPhone}}</p>
-            <el-input v-else v-model="businessInfo.firstPersonPhone" placeholder="请输入联系方式"  min='0'></el-input>
+            <p v-show="disabled">{{businessInfo.firstPersonPhone}}</p>
+            <el-input v-show="!disabled" v-model="businessInfo.firstPersonPhone" placeholder="请输入联系方式"  min='0'></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="项目预计启动时间:" class="single-date" prop="startDate">
-            <p v-if="disabled">{{businessInfo.startDate}}</p>
-            <el-date-picker v-else type="date" value-format="yyyy-MM-dd" v-model="businessInfo.startDate"  placeholder="请输入预计启动时间"></el-date-picker>
+            <p v-show="disabled">{{businessInfo.startDate}}</p>
+            <el-date-picker v-show="!disabled" type="date" value-format="yyyy-MM-dd" v-model="businessInfo.startDate"  placeholder="请输入预计启动时间"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="预计成交金额:" prop="amount1">
-            <p v-if="disabled">{{businessInfo.amount1}}</p>
-            <el-input v-else v-model="businessInfo.amount1" @change="amountChange" placeholder="请输入预计成交金额" min='0'></el-input>
+            <p v-show="disabled">{{businessInfo.amount1}}</p>
+            <el-input v-show="!disabled" v-model="businessInfo.amount1" @change="amountChange" placeholder="请输入预计成交金额" min='0'></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="合同签订时间:" class="single-date">
-            <p v-if="disabled">{{contractInfo.signDate}}</p>
-              <el-date-picker v-else type="date" v-model="contractInfo.signDate"  value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="自动生成" disabled></el-date-picker>
+            <p v-show="disabled">{{contractInfo.signDate}}</p>
+              <el-date-picker v-show="!disabled" type="date" v-model="contractInfo.signDate"  value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="自动生成" disabled></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="实际合同金额:">
-            <p v-if="disabled">{{contractInfo.contractTotalAmount}}</p>
-            <el-input v-else v-model="contractInfo.contractTotalAmount" placeholder="自动生成"  min='0' disabled></el-input>
+            <p v-show="disabled">{{contractInfo.contractTotalAmount}}</p>
+            <el-input v-show="!disabled" v-model="contractInfo.contractTotalAmount" placeholder="自动生成"  min='0' disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="商机执行状态:">
-            <p v-if="disabled">{{businessInfo.executeState}}</p>
-            <el-select v-else v-model="businessInfo.executeState" placeholder="请选择">
+            <p v-show="disabled">{{businessInfo.executeState}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.executeState" placeholder="请选择">
               <el-option v-for="item in executeStateList" :label="item.value" :value="item.value" :key="item.id">
               </el-option>
             </el-select>
@@ -186,8 +186,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="业务负责人:" prop="businessPerson">
-            <p v-if="disabled">{{businessInfo.businessPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.businessPerson.id" placeholder="请选择业务负责人" filterable>
+            <p v-show="disabled">{{businessInfo.businessPerson.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.businessPerson.id" placeholder="请选择业务负责人" filterable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -195,8 +195,8 @@
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.businessPerson.phone}}</p>
-            <el-select v-else v-model="businessInfo.businessPerson.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.businessPerson.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.businessPerson.id" placeholder="自动生成" disabled>
               <el-option v-for="item in userList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -206,8 +206,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="设计负责人:">
-            <p v-if="disabled">{{businessInfo.designPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable clearable>
+            <p v-show="disabled">{{businessInfo.designPerson.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.designPerson.id" placeholder="请选择设计负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -215,8 +215,8 @@
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.designPerson.phone}}</p>
-            <el-select v-else v-model="businessInfo.designPerson.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.designPerson.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.designPerson.id" placeholder="自动生成" disabled>
               <el-option v-for="item in userList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -226,8 +226,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="成本负责人:">
-            <p v-if="disabled">{{businessInfo.costPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人" filterable clearable>
+            <p v-show="disabled">{{businessInfo.costPerson.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.costPerson.id" placeholder="请选择成本负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -235,8 +235,8 @@
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.costPerson.phone}}</p>
-            <el-select v-else v-model="businessInfo.costPerson.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.costPerson.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.costPerson.id" placeholder="自动生成" disabled>
               <el-option v-for="item in userList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -246,8 +246,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="工程负责人:">
-            <p v-if="disabled">{{businessInfo.projectPerson.name}}</p>
-            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人" filterable clearable>
+            <p v-show="disabled">{{businessInfo.projectPerson.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.projectPerson.id" placeholder="请选择工程负责人" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -255,8 +255,8 @@
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.projectPerson.phone}}</p>
-            <el-select v-else v-model="businessInfo.projectPerson.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.projectPerson.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.projectPerson.id" placeholder="自动生成" disabled>
               <el-option v-for="item in userList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -266,8 +266,8 @@
       <el-row :gutter="40">
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="项目经理:">
-            <p v-if="disabled">{{businessInfo.projectManager.name}}</p>
-            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="请选择项目经理" filterable clearable>
+            <p v-show="disabled">{{businessInfo.projectManager.name}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.projectManager.id" placeholder="请选择项目经理" filterable clearable>
               <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -275,8 +275,8 @@
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="联系方式:">
-            <p v-if="disabled">{{businessInfo.projectManager.phone}}</p>
-            <el-select v-else v-model="businessInfo.projectManager.id" placeholder="自动生成" disabled>
+            <p v-show="disabled">{{businessInfo.projectManager.phone}}</p>
+            <el-select v-show="!disabled" v-model="businessInfo.projectManager.id" placeholder="自动生成" disabled>
               <el-option v-for="item in userList" :label="item.phone" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -500,13 +500,14 @@ export default {
       })
     },
     toggleEditBtn() {
-      this.disabled = !this.disabled
-      if (this.disabled === true) {
+      if (!this.disabled) {
         this.editWord = '编辑'
         this.businessInfo = _.cloneDeep(this.temp)
       } else {
         this.editWord = '取消编辑'
       }
+
+      this.disabled = !this.disabled
     },
     passCheck() {
       this.businessInfo.examineState = '有效商机'
@@ -549,6 +550,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.editWord = '编辑'
       }
     },
     failSave() {
@@ -645,11 +647,11 @@ export default {
   watch: {
     disabled (status) {
       if (status === false) {
-        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
-      } else {
-        this.editWord = '编辑'
       }
+      // setTimeout(() => {
+      //
+      // }, 100)
     },
     businessInfo: {
       handler(obj) {

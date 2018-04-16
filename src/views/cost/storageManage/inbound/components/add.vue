@@ -54,7 +54,7 @@
             </el-col>
           </el-row>
         </div>
-        <table-component :inboundId="inboundId" :editShow="editShow" :actionTab="actionTab"></table-component>
+        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab"></table-component>
       </el-form>
     </div>
   </div>
@@ -96,10 +96,8 @@ export default {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.inboundList = data.inboundList
-      // this.supplyList = data.supplyList
-      // this.contractInfoList = data.contractInfoList
-      // this.businessList = data.businessList
       this.inboundId = this.inboundList.id
+      this.paymentContractId = this.inboundList.paymentContract.id
     },
     toggleTab(tab) {
       this.actionTab = tab

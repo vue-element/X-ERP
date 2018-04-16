@@ -68,8 +68,8 @@
           <el-button @click="reset">重置</el-button>
           <el-button @click="cancel">取消</el-button>
         </div>
-        <table-component :outboundId="outboundId" :editShow="editShow" :paymentContractId="paymentContractId" :actionTab="actionTab"></table-component>
       </el-form>
+      <table-component :outboundId="outboundId" :editShow="editShow" :paymentContractId="paymentContractId" :actionTab="actionTab"></table-component>
     </div>
   </div>
 </template>

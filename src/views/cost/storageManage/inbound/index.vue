@@ -57,7 +57,7 @@ export default {
     }
   },
   created() {
-    console.log('inbound')
+    // console.log('inbound')
   },
   mounted() {},
   methods: {
@@ -73,7 +73,6 @@ export default {
         editData: data,
         tabState: 'editTab'
       }
-      console.log('editData', this.editData)
       this.tab = 'addTab'
     },
     search(data) {

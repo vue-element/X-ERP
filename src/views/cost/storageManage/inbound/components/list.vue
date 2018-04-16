@@ -67,7 +67,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          console.log('content', data.content)
+          // console.log('content', data.content)
           this.$emit('exportData', data.content)
         }
       }).catch(() => {
