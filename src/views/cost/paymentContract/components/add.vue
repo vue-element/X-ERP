@@ -220,6 +220,13 @@ export default {
         callback()
       }
     }
+    var validateCategory = (rules, value, callback) => {
+      if (!value.id) {
+        callback(new Error('请选择材料类型'))
+      } else {
+        callback()
+      }
+    }
     return {
       action: 'add',
       editWord: '编辑',
@@ -269,6 +276,7 @@ export default {
         payableAmount: [{ required: true, message: '请输入应付金额', trigger: 'blur' }],
         payTime: [{ required: true, message: '请输入到付时间', trigger: 'blur' }],
         code: [{ required: true, message: '请输入付款合同号', trigger: 'blur' }],
+        materialCategory: [{ required: true, validator: validateCategory, trigger: 'change' }],
         deliveryStatus: [{ required: true, message: '请选择发货状态', trigger: 'change' }]
       },
       temp: {}

@@ -26,13 +26,13 @@
               <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
             </el-table-column>
             <el-table-column label="采购数量">
-              <template slot-scope="scope"><span>{{scope.row.purchaseList.number}}</span></template>
+              <template slot-scope="scope"><span>{{scope.row.purchaseList.acNumber}}</span></template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="验收明细">
             <el-table-column label="实收数量">
               <template slot-scope="scope">
-                <input v-if="scope.row.edit" type="text" v-model="scope.row.number" placeholder="请填写">
+                <input v-if="scope.row.edit" type="text" v-model.number="scope.row.number" placeholder="请填写">
                 <span v-else>{{scope.row.number}}</span>
               </template>
             </el-table-column>
@@ -63,11 +63,16 @@
           </el-table-column>
         </el-table>
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click="submitCheck" :disabled="disableCheck">提交审核</el-button>
+          <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
+<<<<<<< HEAD
           <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
           <el-button :loading="false" @click="printInBound">导出入库单</el-button>
+=======
+          <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
+          <el-button :loading="false">导出入库单</el-button>
+>>>>>>> f88f18c4918f39799e582364c8bbc969c3084f44
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>
@@ -112,7 +117,7 @@
           </el-col>
         </el-row>
         <div class="commont-btn">
-          <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
+          <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">导出入库成本核算表</el-button>
           <el-button :loading="false">导出出库成本核算表</el-button>
@@ -128,9 +133,6 @@
         <el-table-column label="序号" width="60" fixed>
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column label="审核步骤" min-width="100">
-          <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
-        </el-table-column>
         <el-table-column label="操作人" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.stepPerson}}</span></template>
         </el-table-column>
@@ -138,7 +140,7 @@
           <template slot-scope="scope"><span>{{scope.row.time}}</span></template>
         </el-table-column>
         <el-table-column label="审核结果" min-width="100">
-          <template slot-scope="scope"><span>{{scope.row.result}}</span></template>
+          <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
         </el-table-column>
         <el-table-column label="下一步骤" min-width="100">
           <template slot-scope="scope"><span>{{scope.row.nextStep}}</span></template>
@@ -159,7 +161,7 @@ import Vue from 'vue'
 
 export default {
   components: { UploadExcelComponent },
-  props: ['inboundId', 'editShow', 'actionTab'],
+  props: ['inboundId', 'editShow', 'actionTab', 'paymentContractId'],
   data() {
     return {
       purchaseList: [],
@@ -180,7 +182,7 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.inboundId).then((res) => {
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         var data = _.cloneDeep(res.data.data) || []
         data.forEach((item) => {
           item.number = item.number ? item.number : item.purchaseList.number
@@ -189,6 +191,8 @@ export default {
           item.quality = item.quality ? item.quality : '完好'
           // 税金、成本、合计计算
           var taxRate = item.purchaseList.paymentContract.supply.taxRate // 税率
+          // taxRate = taxRate / 100
+          // console.log('taxRate',taxRate)
           var unitPrice = item.purchaseList.unitPrice // 单价
           item.unitCost = this.unitCost(taxRate, unitPrice) // 单个成本
           item.unitTaxFee = returnFloat(unitPrice - item.unitCost)
@@ -199,6 +203,8 @@ export default {
     },
     unitCost (taxRate, unitPrice) {
       taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
+      console.log('taxRate', taxRate)
+      console.log('unitPrice', returnFloat(unitPrice / (1 + taxRate)))
       return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
     editRow(row, index) {
@@ -232,18 +238,14 @@ export default {
         }
       })
     },
-    submitCheck() {
+    submitCheck(stepWord) {
       var obj = {
-        step: '审核中',
-        // stepPerson: '',
-        // nextStep: '',
-        // nextStepPerson: '',
+        step: stepWord,
         inboundList: {
           id: this.inboundId
         }
-        // result: '提交审核',
-        // time: ''
       }
+      console.log('obj', obj)
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })

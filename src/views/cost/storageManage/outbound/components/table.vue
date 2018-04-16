@@ -160,7 +160,7 @@ export default {
       })
     },
     showDialog() {
-      if (!this.outboundId) {
+      if (this.outboundId) {
         this.$message({
           message: '请先填写出库信息',
           type: 'warning'

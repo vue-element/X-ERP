@@ -54,11 +54,7 @@
             </el-col>
           </el-row>
         </div>
-<<<<<<< HEAD
-        <table-component :contractId="contractId" :editShow="editShow" :actionTab="actionTab" @showData="showData"></table-component>
-=======
-        <table-component :inboundId="inboundId" :editShow="editShow" :actionTab="actionTab"></table-component>
->>>>>>> 2a0fb16f0f3163ba31cb31fe9a21e32c5ab6fe7c
+        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab"></table-component>
       </el-form>
       <!-- 打印入库单 -->
       <div v-if="printTable" class="printTable">
@@ -192,16 +188,10 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
-<<<<<<< HEAD
-      contractId: '',
-      rules: {},
-      // 打印显示隐藏
       container: true,
       printTable: false
-=======
       inboundId: '',
       rules: {}
->>>>>>> 2a0fb16f0f3163ba31cb31fe9a21e32c5ab6fe7c
     }
   },
   created() {
@@ -219,10 +209,8 @@ export default {
       var data = _.cloneDeep(this.editData.editData)
       console.log(data)
       this.inboundList = data.inboundList
-      // this.supplyList = data.supplyList
-      // this.contractInfoList = data.contractInfoList
-      // this.businessList = data.businessList
       this.inboundId = this.inboundList.id
+      this.paymentContractId = this.inboundList.paymentContract.id
     },
     toggleTab(tab) {
       this.container = true
