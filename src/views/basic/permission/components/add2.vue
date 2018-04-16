@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="success" icon="plus" @click="showCreate">添加角色
+          <el-button type="success" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加角色
           </el-button>
         </el-form-item>
       </el-form>
@@ -50,7 +50,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempRole" label-position="left" label-width="100px"
                style='width: 500px; margin-left:50px;'>
         <el-form-item label="角色名称" required>
@@ -121,7 +121,7 @@
       },
       getList() {
         // 查询列表
-        // this.listLoading = true
+        this.listLoading = true
         // this.api({
         //   url: "/user/listRole",
         //   method: "get"

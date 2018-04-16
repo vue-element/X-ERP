@@ -36,7 +36,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="所属项目:">
+            <el-form-item label="合同名称／所属项目:">
               <p>{{paymentContract.contractInfo.name}}</p>
             </el-form-item>
           </el-col>
