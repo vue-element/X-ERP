@@ -86,11 +86,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="剩余数量" :label-width="formLabelWidth">
-          <el-input v-model="outboundInfo.surplusNumber" auto-complete="off" type="number"  disabled></el-input>
-        </el-form-item>
         <el-form-item label="出库数量" :label-width="formLabelWidth">
-          <el-input v-model="outboundInfo.number" auto-complete="off" type="number" :max="maxNumber" min="0" @change="numberChange" :disabled="!outboundInfo.purchaseList.id" placeholder="请输入出库数量"></el-input>
+          <el-input v-model="outboundInfo.number" auto-complete="off" type="number" :max="maxNumber" min="0" @change="numberChange" :disabled="!outboundInfo.purchaseList.id"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -123,8 +120,7 @@ export default {
       outboundInfo: {
         purchaseList: { id: '' },
         outboundList: { id: '' },
-        number: '',
-        surplusNumber: ''
+        number: ''
       },
       maxNumber: 0,
       formLabelWidth: '120px',
@@ -144,17 +140,9 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
+      this.$get('/purchaseList/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         if (res.data.success === true) {
-          var data = res.data.data
-          var purchaseList = []
-          data.forEach((item) => {
-            item.purchaseList.surplusNumber = item.surplusNumber
-            purchaseList.push(item.purchaseList)
-          })
-          this.purchaseList = purchaseList
-          // this.purchaseList
-          console.log('purchaseList', purchaseList)
+          this.purchaseList = res.data.data
         }
       })
     },
@@ -260,9 +248,8 @@ export default {
     purchaseChange(val) {
       this.purchaseList.forEach((item) => {
         if (item.id === val) {
-          // this.outboundInfo.number = item.acNumber
-          this.outboundInfo.surplusNumber = item.surplusNumber
-          this.maxNumber = _.cloneDeep(item.surplusNumber)
+          this.outboundInfo.number = item.acNumber
+          this.maxNumber = _.cloneDeep(item.number)
         }
       })
     },

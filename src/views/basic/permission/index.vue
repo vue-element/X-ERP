@@ -3,28 +3,22 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button  v-if="hasPerm('client:search')" :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
+        <!-- <button  v-if="hasPerm('client:search')" :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
           <i class="iconfont icon-search" ></i>
           <span>查询</span>
-        </button>
+        </button> -->
         <button v-if="hasPerm('client:findAllByPage')" :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button v-if="hasPerm('client:save')" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <!-- <button v-if="hasPerm('client:save')" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
-        </button>
-        <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+        </button> -->
+        <!-- <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
-        </button>
-      </div>
-      <div class="export-btn fr">
-        <button v-show="tab === 'listTab'" @click="handleDownload()">
-          <i class="iconfont icon-export"></i>
-          <span>数据导出</span>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

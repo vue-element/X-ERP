@@ -150,6 +150,7 @@ export default {
     saveMaterial(obj) {
       if (this.contractId) {
         this.$post('/purchaseList/save', obj).then((res) => {
+          console.log('res', res)
           this.getPurchaseList()
         })
       }

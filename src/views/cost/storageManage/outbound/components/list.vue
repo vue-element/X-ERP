@@ -2,15 +2,15 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
-        <el-table-column label="序号" fixed width="60">
+        <el-table-column label="序号" fixed width="60" fixed="left">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column prop="paymentContract.code" label="付款合同编号" min-width="160"></el-table-column>
+        <el-table-column prop="inboundList.paymentContract.code" label="付款合同编号" min-width="160"></el-table-column>
         <el-table-column prop="code" label="出库单编号" min-width="160"></el-table-column>
-        <el-table-column prop="paymentContract.contractInfo.name" label="项目" min-width="160"></el-table-column>
-        <el-table-column prop="paymentContract.department" label="办事处" min-width="160"></el-table-column>
-        <el-table-column prop="category" label="状态" min-width="160"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column prop="inboundList.paymentContract.contractInfo.name" label="项目" min-width="160"></el-table-column>
+        <el-table-column prop="inboundList.paymentContract.department" label="办事处" min-width="160"></el-table-column>
+        <el-table-column prop="state" label="状态" min-width="160"></el-table-column>
+        <el-table-column label="操作" width="120" fixed="right">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-dropdown>

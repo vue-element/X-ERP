@@ -2,7 +2,7 @@
   <div class="contract-list">
     <div class="table">
       <el-table class="basic-form" style="width: 100%" :data="tableData" :height="height" v-loading.body="listLoading" border>
-        <el-table-column prop="0" label="序号" fixed width="60">
+        <el-table-column prop="0" label="序号" fixed width="60" fixed="left">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column prop="paymentContract.orderCode" label="订单编号" min-width="160"></el-table-column>
@@ -11,7 +11,7 @@
         <el-table-column prop="paymentContract.department" label="使用部门" min-width="120"></el-table-column>
         <el-table-column prop="paymentContract.supply.name" label="供应商" min-width="160"></el-table-column>
         <el-table-column prop="state" label="状态"></el-table-column>
-        <el-table-column label="操作" min-width="140">
+        <el-table-column label="操作" min-width="140" fixed="right">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button>
@@ -67,7 +67,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          // console.log('content', data.content)
+          // console.log('content'
           this.$emit('exportData', data.content)
         }
       }).catch(() => {

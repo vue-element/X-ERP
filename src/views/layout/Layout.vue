@@ -62,12 +62,12 @@ export default {
     border: 10px solid #d2d2d2;
 }
 .app-main {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: fixed;
+    top: 100px;
+    left: 210px;
     right: 0;
     bottom: 0;
-    padding-top: 40px;
+    z-index: 102;
     overflow-y: scroll;
     @include boxSizing;
     @include scrolling;
