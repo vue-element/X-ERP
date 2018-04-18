@@ -1,6 +1,6 @@
 <template>
-<div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height" @selection-change="handleSelectionChange"
+<div class="user-list">
+  <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height"
   v-loading.body="listLoading" element-loading-text="拼命加载中" border>
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
@@ -28,7 +28,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'userList',
-  props: ['searchData'],
+  props: ['searchWord'],
   data() {
     return {
       listLoading: false,
@@ -47,21 +47,11 @@ export default {
       this.resize()
     })
   },
-  watch: {
-  },
   methods: {
     resize() {
       this.height = winHeight() - 210
     },
-    handleSelectionChange(arr) {
-      var selArr = []
-      arr.forEach((item) => {
-        selArr.push(item.id)
-      })
-      this.$emit('selData', selArr)
-    },
     seeRow(row) {
-      console.log('row', row)
       this.$emit('seeRow', row)
     },
     confirmDel(id) {
@@ -86,20 +76,12 @@ export default {
         return false
       })
     },
-    editRow(id) {
-      // this.$get('/project/findUpdateData/' + id).then((res) => {
-      //   var data = res.data.data
-      //   // console.log('data', data)
-      //   this.$emit('editRow', data)
-      // })
-    },
     getUserData() {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      var url = 'account?size=' + pageSize + '&page=' + page
-      // var url = '/project/search?size=' + pageSize + '&page=' + page
-      this.$get(url, this.searchData, false).then((res) => {
+      var url = 'account/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchobj, false).then((res) => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
@@ -123,7 +105,15 @@ export default {
       this.getUserData()
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    searchWord(val) {
+      this.searchobj = {
+        name: val
+      }
+      this.getUserData()
+    }
+  }
 }
 </script>
 

@@ -14,6 +14,7 @@ const getters = {
   token: state => state.account.token,
   permissions: state => state.account.permissions,
   roleCode: state => state.account.roleCode,
-  roleName: state => state.account.roleName
+  roleName: state => state.account.roleName,
+  roleId: state => state.account.roleId
 }
 export default getters

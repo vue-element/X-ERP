@@ -268,11 +268,8 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
-<<<<<<< HEAD
-      container: true,
+      // 打印
       printTable: false,
-=======
->>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
       inboundId: '',
       rules: {},
       container: true,

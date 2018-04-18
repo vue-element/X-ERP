@@ -67,13 +67,8 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
           <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-<<<<<<< HEAD
-          <el-button :loading="false">导出入库单</el-button>
-          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
-=======
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
-          <el-button :loading="false">退回填写</el-button>
->>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
+          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
         </div>
       </div>
     <!--审核动态  -->
@@ -119,19 +114,11 @@
           </el-col>
         </el-row>
         <div class="commont-btn">
-<<<<<<< HEAD
           <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
-          <el-button :loading="false">导出入库单</el-button>
-          <el-button :loading="false">导出入库成本核算表</el-button>
-          <el-button :loading="false">导出出库成本核算表</el-button>
-          <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
-=======
-          <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
           <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
-          <el-button :loading="false">退回填写</el-button>
->>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
+          <!-- <el-button :loading="false">退回填写</el-button> -->
         </div>
       </div>
     </div>

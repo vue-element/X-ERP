@@ -447,6 +447,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.editWord = '编辑'
       }
     },
     failSave() {
@@ -478,10 +479,7 @@ export default {
   watch: {
     disabled(status) {
       if (status === false) {
-        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
-      } else {
-        this.editWord = '编辑'
       }
     },
     supplyInfo: {

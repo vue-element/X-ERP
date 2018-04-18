@@ -145,6 +145,7 @@ export default {
       console.log(contractInfoName)
       for (var i = 0; i < this.contractBillingList.length; i++) {
         for (var key in this.contractBillingList[i]) {
+          console.log(key)
           console.log(this.contractBillingList[i].contractInfo.name)
           // if (this.contractBillingList[i].contractInfo.name === contractInfoName) {
           // }

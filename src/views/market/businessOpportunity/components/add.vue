@@ -649,9 +649,6 @@ export default {
       if (status === false) {
         this.$emit('changeObj', true)
       }
-      // setTimeout(() => {
-      //
-      // }, 100)
     },
     businessInfo: {
       handler(obj) {
