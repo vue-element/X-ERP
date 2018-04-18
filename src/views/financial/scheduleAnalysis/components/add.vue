@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractSchedule:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="scheduleAnalysisData" :rules="rules" ref="scheduleAnalysisData">
@@ -159,7 +159,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn" v-show="!disabled">
+      <div class="commont-btn" v-show="hasPerm('contractSchedule:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -219,7 +219,13 @@ export default {
         if (valid) {
           this.loading = true
           this.getTopoint()
-          this.$post('/contractSchedule/save', this.scheduleAnalysisData).then(res => {
+          var container = {}
+          for (var key in this.scheduleAnalysisData) {
+            if (this.scheduleAnalysisData[key]) {
+              container[key] = this.scheduleAnalysisData[key]
+            }
+          }
+          this.$post('/contractSchedule/save', container).then(res => {
             this.loading = false
             if (res.data.success === true) {
               this.scheduleAnalysisData = res.data.data

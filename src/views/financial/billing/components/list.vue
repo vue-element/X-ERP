@@ -16,12 +16,12 @@
         <el-table-column prop="tax" label="税金" width="120"></el-table-column>
         <el-table-column prop="income" label="收入(不含税)" width="120"></el-table-column>
         <el-table-column prop="date" label="开票日期" width="140"></el-table-column>
-        <el-table-column prop="number" label="发票号码" width="140"></el-table-column>
+        <el-table-column prop="number" label="开票号码" width="140"></el-table-column>
         <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBilling:findAllByPage')">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBilling:delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -1,6 +1,6 @@
 <template>
   <div class="disclosure-info-container form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractBasis:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="contractBasis" ref="contractBasis" class="basic" :rules="rules">
@@ -79,7 +79,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="btn" v-show="!disabled">
+      <div class="btn" v-show="hasPerm('contractBasis:save') && !disabled">
         <div class="common-btn" @click="add" :loading="loading">保&nbsp;&nbsp;&nbsp;存</div>
         <div class="common-btn" @click="reset">重&nbsp;&nbsp;&nbsp;置</div>
         <div class="common-btn" @click="cancel">取&nbsp;&nbsp;&nbsp;消</div>
@@ -153,7 +153,7 @@
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
-              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="deleteFile(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBasisEnclosure:delete')">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -265,7 +265,7 @@ export default {
     // 查看或新增进来的获取contractBasis.id和contractBasis.contractInfo.id值
     add() {
       this.loading = true
-      // 查看
+      // 查看状态
       if (this.editData.tabState === 'editTab') {
         var data = _.cloneDeep(this.editData.editData)
         this.$get('/contractBasis/findAllByContractInfo/' + data.id).then((res) => {
@@ -276,7 +276,7 @@ export default {
             this.disclosureAdd()
           }
         })
-      // 新增
+      // 新增状态
       } else {
         var contractMsg = JSON.parse(sessionStorage.getItem('contractMsg'))
         this.contractBasis.id = contractMsg.contractBasis.id
@@ -286,8 +286,13 @@ export default {
     },
     // 新增
     disclosureAdd() {
-      this.$post('/contractBasis/save', this.contractBasis).then((res) => {
-        console.log(res)
+      var container = {}
+      for (var key in this.contractBasis) {
+        if (this.contractBasis[key]) {
+          container[key] = this.contractBasis[key]
+        }
+      }
+      this.$post('/contractBasis/save', container).then((res) => {
         this.loading = false
         if (res.data.success === true) {
           this.temp = _.cloneDeep(res.data.data)
@@ -569,7 +574,7 @@ export default {
     },
     validateAmount(tipMsg) {
       return (rule, value, callback) => {
-        if (!Number(value)) {
+        if (!Number(value) && value !== '') {
           callback(new Error(tipMsg))
         } else {
           callback()

@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''" v-if="hasPerm('contractBilling:search')">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn" v-if="hasPerm('contractBilling:findAllByPage')">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
-          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn" v-if="hasPerm('contractBilling:save')">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
@@ -40,7 +40,7 @@
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
-      <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
+      <ImportComponent v-if="tab === 'importTab'" @toggleTab="toggleTab"></ImportComponent>
     </div>
   </div>
 </template>
@@ -142,8 +142,8 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票抬头名称', '开票金额(含税)', '税率', '税金', '开票日期', '发票号码', '发票内容']
-        const filterVal = ['index', 'code', 'name', 'name', 'amount', 'taxRate', 'tax', 'income', 'date', 'number', 'content']
+        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票抬头名称', '开票金额(含税)', '税率', '税金', '收入(不含税)', '开票日期', '开票号码', '开票内容']
+        const filterVal = ['index', 'code', 'name', 'region', 'name', 'amount', 'taxRate', 'tax', 'income', 'date', 'number', 'content']
         var list = []
         if (Arr) {
           list = this.exportList

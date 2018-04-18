@@ -67,8 +67,13 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
           <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
+<<<<<<< HEAD
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+=======
+          <el-button :loading="false" @click="InBound">导出入库单</el-button>
+          <el-button :loading="false">退回填写</el-button>
+>>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
         </div>
       </div>
     <!--审核动态  -->
@@ -114,11 +119,19 @@
           </el-col>
         </el-row>
         <div class="commont-btn">
+<<<<<<< HEAD
           <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
           <el-button :loading="false">导出入库单</el-button>
           <el-button :loading="false">导出入库成本核算表</el-button>
           <el-button :loading="false">导出出库成本核算表</el-button>
           <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
+=======
+          <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
+          <el-button :loading="false" @click="InBound">导出入库单</el-button>
+          <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
+          <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
+          <el-button :loading="false">退回填写</el-button>
+>>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
         </div>
       </div>
     </div>
@@ -202,7 +215,7 @@ export default {
       return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
     editRow(row, index) {
-      console.log('row', row)
+      // console.log('row', row)
       row.edit = true
       Vue.set(this.InboundList, index, row)
     },
@@ -242,14 +255,21 @@ export default {
           id: this.inboundId
         }
       }
-      console.log('obj', obj)
+      // console.log('obj', obj)
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })
     },
     // 打印入库单
-    printInBound() {
-      this.$emit('showData', true)
+    InBound() {
+      this.$emit('InBound', true)
+    },
+    // 入库成本核算表
+    InBoundPay() {
+      this.$emit('InBoundPay', true)
+    },
+    outBoundPayTable() {
+      this.$emit('outBoundPay', true)
     }
   },
   watch: {

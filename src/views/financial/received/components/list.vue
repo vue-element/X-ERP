@@ -15,8 +15,8 @@
         <el-table-column prop="date" label="回款日期" width="180"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click="editRow(scope.row.id)" type="text" size="small">查看</el-button>
-            <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractReceived:findAllByPage')">查看</el-button>
+            <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractReceived:delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

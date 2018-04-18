@@ -1,6 +1,6 @@
 <template>
   <div class="payment-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractPayment:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="paymentData" :rules="rules" ref="paymentData">
@@ -70,7 +70,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn" v-show="!disabled">
+      <div class="commont-btn" v-show="hasPerm('contractPayment:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -154,7 +154,13 @@ export default {
           this.paymentData.diffComprehensiveCost = this.paymentData.comprehensiveCost - this.preComprehensiveCost
           this.paymentData.diffManageCost = this.paymentData.manageCost - this.preManageCost
           this.paymentData.diffTax = this.paymentData.tax - this.preTax
-          this.$post('/contractPayment/save', this.paymentData).then(res => {
+          var container = {}
+          for (var key in this.paymentData) {
+            if (this.paymentData[key]) {
+              container[key] = this.paymentData[key]
+            }
+          }
+          this.$post('/contractPayment/save', container).then(res => {
             if (res.data.success === true) {
               this.loading = false
               this.temp = _.cloneDeep(res.data.data)
