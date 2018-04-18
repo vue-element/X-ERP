@@ -321,7 +321,6 @@ export default {
     // 数据获取
     getInboundList() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
       this.paymentContractId = data.inboundList.paymentContract.id
       this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         var data = _.cloneDeep(res.data.data) || []
@@ -342,7 +341,6 @@ export default {
         var total = this.getSum(arr)
         this.total = total
         this.InboundList = data
-        console.log(this.InboundList)
       })
     },
     // 核算表求和

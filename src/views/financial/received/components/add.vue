@@ -144,11 +144,11 @@ export default {
       var contractInfoName = obj.contractInfo.name
       console.log(contractInfoName)
       for (var i = 0; i < this.contractBillingList.length; i++) {
-        for (var key in this.contractBillingList[i]) {
-          console.log(this.contractBillingList[i].contractInfo.name)
-          // if (this.contractBillingList[i].contractInfo.name === contractInfoName) {
-          // }
-        }
+        // for (var key in this.contractBillingList[i]) {
+        //   console.log(this.contractBillingList[i].contractInfo.name)
+        //   // if (this.contractBillingList[i].contractInfo.name === contractInfoName) {
+        //   // }
+        // }
       }
     },
     save() {
