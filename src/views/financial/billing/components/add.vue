@@ -1,6 +1,6 @@
 <template>
   <div class="billing-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractBilling:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="billingData" :rules="rules" ref="billingData">
@@ -83,7 +83,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn" v-show="!disabled">
+      <div class="commont-btn" v-show="hasPerm('contractBilling:save') && !disabled">
         <el-button :loading="loading" @click="save">保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -112,17 +112,18 @@ export default {
       taxRateList: [],
       preAmount: '',
       billingData: {
-        amount: '',
+        amount: null,
         content: '',
         name: '',
         contractInfo: {
-          id: ''
+          id: null
         },
         number: '',
         tax: '',
         taxRate: '',
         income: '',
-        diffAmount: ''
+        diffAmount: 0,
+        date: ''
       },
       rules: {
         contractInfo: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
@@ -156,7 +157,13 @@ export default {
           this.billingData.tax = this.tax
           this.billingData.income = this.income
           this.billingData.diffAmount = this.billingData.amount - this.preAmount
-          this.$post('/contractBilling/save', this.billingData).then(res => {
+          var container = {}
+          for (var key in this.billingData) {
+            if (this.billingData[key]) {
+              container[key] = this.billingData[key]
+            }
+          }
+          this.$post('/contractBilling/save', container).then(res => {
             this.loading = false
             if (res.data.success === true) {
               this.temp = _.cloneDeep(res.data.data)
@@ -261,46 +268,18 @@ export default {
   computed: {
     tax() {
       if (this.billingData.amount && this.billingData.taxRate) {
-        var r = /^-?\d+$/
-        var amount = this.billingData.amount
-        if (!r.test(amount)) {
-          var numAmount = '' + (amount)
-          amount = numAmount.substring(0, numAmount.indexOf('.') + 3)
-        }
-        var numRate = '' + this.billingData.taxRate / 100
-        var taxRate = numRate.substring(0, numRate.indexOf('.') + 3)
-        var numRes = amount * taxRate
-        if (!r.test(numRes)) {
-          numRes = '' + (amount * taxRate)
-          var res = numRes.substring(0, numRes.indexOf('.') + 3)
-          return res
-        } else {
-          return numRes
-        }
-      } else {
-        return null
+        var taxRate = this.billingData.taxRate / 100
+        var numRes = (this.billingData.amount * taxRate)
+        return Math.floor(numRes * 100) / 100
       }
     },
     income() {
       if (this.billingData.amount && this.billingData.taxRate) {
-        var r = /^-?\d+$/
-        var amount = this.billingData.amount
-        if (!r.test(amount)) {
-          var numAmount = '' + (amount)
-          amount = numAmount.substring(0, numAmount.indexOf('.') + 3)
-        }
-        var numRate = '' + this.billingData.taxRate / 100
-        var taxRate = numRate.substring(0, numRate.indexOf('.') + 3)
-        var numRes = amount * taxRate
-        if (!r.test(numRes)) {
-          numRes = '' + (amount * taxRate)
-          var res = numRes.substring(0, numRes.indexOf('.') + 3)
-          return (amount - res)
-        } else {
-          return (amount - numRes)
-        }
-      } else {
-        return null
+        var taxRate = this.billingData.taxRate / 100
+        var numRes = (this.billingData.amount * taxRate)
+        var res = Math.floor(numRes * 100) / 100
+        var income = (this.billingData.amount - res)
+        return Math.floor(income * 100) / 100
       }
     }
   }

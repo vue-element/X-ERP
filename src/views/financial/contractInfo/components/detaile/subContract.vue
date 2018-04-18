@@ -19,7 +19,7 @@
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
               <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>
-              <el-button @click="deleteFile(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="deleteFile(scope.row.id)" type="text" size="small" v-if="hasPerm('contractSubcontract:delete')">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

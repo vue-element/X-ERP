@@ -1,6 +1,6 @@
 <template>
   <div class="received-add form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractReceived:findUpdateData') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="receivedData" :rules="rules" ref="receivedData">
@@ -12,25 +12,25 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：" prop="contractBilling">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同名称" filterable clearable>
-                <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同名称" @change="watchData" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编号" filterable clearable>
-                <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编号" @change="watchData" filterable clearable>
+                <el-option v-for="item in contractInfoList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12" >
-            <el-form-item label="发票号码：">
+            <el-form-item label="发票号码：" prop="contractBilling">
               <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择发票号码" filterable clearable>
+              <el-select v-else v-model="receivedData.contractBilling.number" placeholder="请选择发票号码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -51,7 +51,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="commont-btn" v-show="!disabled">
+      <div class="commont-btn" v-show="hasPerm('contractReceived:save') && !disabled">
         <el-button @click="save" :loading="loading" >保存</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -98,6 +98,7 @@ export default {
       },
       rules: {
         contractBilling: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
+        number: [{ required: true, message: '发票号码不能为空', trigger: 'change' }],
         date: [{ required: true, message: '请选择回款日期', trigger: 'change' }],
         amount: [{ required: true, validator: validateAmount, trigger: 'blur' }]
       },
@@ -113,16 +114,55 @@ export default {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
         if (res.data.success === true) {
+          console.log(res)
           this.contractBillingList = res.data.data.contractBillingList
+          var data = res.data.data.contractBillingList
+          const arrNew = [data[0]]
+          for (var i = 0; i < data.length; i++) {
+            var flag = true
+            for (var j = 0; j < arrNew.length; j++) {
+              if (data[i].contractInfo.code === arrNew[j].contractInfo.code) {
+                flag = false
+                break
+              }
+            }
+            if (flag) {
+              arrNew[arrNew.length] = data[i]
+            }
+          }
+          // 合同编号过滤之后的
+          this.contractInfoList = arrNew
         }
       })
+    },
+    // 获取开票ID
+    watchData(ele) {
+      var obj = this.contractBillingList.find((item) => {
+        return item.id === ele
+      })
+      console.log(obj)
+      // var contractInfoName = obj.contractInfo.name
+      // console.log(contractInfoName)
+      // for (var i = 0; i < this.contractBillingList.length; i++) {
+      //   for (var key in this.contractBillingList[i]) {
+      //     console.log(this.contractBillingList[i].contractInfo.name)
+      //     // if (this.contractBillingList[i].contractInfo.name === contractInfoName) {
+      //     // }
+      //   }
+      // }
     },
     save() {
       this.$refs.receivedData.validate((valid) => {
         if (valid) {
           this.loading = true
           this.receivedData.diffAmount = this.receivedData.amount - this.preAmount
-          this.$post('/contractReceived/save', this.receivedData).then(res => {
+          var container = {}
+          for (var key in this.receivedData) {
+            if (this.receivedData[key]) {
+              container[key] = this.receivedData[key]
+            }
+          }
+          this.$post('/contractReceived/save', container).then(res => {
             if (res.data.success === true) {
               this.loading = false
               this.temp = _.cloneDeep(res.data.data)
@@ -210,8 +250,7 @@ export default {
         this.editWord = '编辑'
       }
     }
-  },
-  computed: {}
+  }
 }
 </script>
 

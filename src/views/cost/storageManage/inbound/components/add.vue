@@ -54,46 +54,36 @@
             </el-col>
           </el-row>
         </div>
-        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab"></table-component>
+        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab" @InBound="InBound" @InBoundPay="InBoundPay" @outBoundPay="outBoundPay"></table-component>
       </el-form>
-      <!-- 打印入库单 -->
-      <div v-if="printTable" class="printTable">
+      <!-- 入库单 -->
+      <div class="printTable" v-if="InboundTable">
         <div id="form_print">
           <div class="container">
             <h3>物料验收入库单</h3>
-            <div class="head">
+            <form class="head" :model="inboundList">
               <div class="left">
-                <label>
-                  供应商：<span></span>
-                </label>
-                <label>
-                  使用部门：<span></span>
-                </label>
-                <label>
-                  使用项目：<span></span>
-                </label>
+                <label>供应商：<span>{{inboundList.paymentContract.supply.name}}</span></label>
+                <label>使用部门：<span>{{inboundList.paymentContract.department}}</span></label>
+                <label>使用项目：<span>{{inboundList.paymentContract.contractInfo.name}}</span></label>
               </div>
               <div class="right">
-                <label>
-                  入库单号：<span></span>
-                </label>
-                <label>
-                  入库日期：<span></span>
-                </label>
+                <label>入库单号：<span>{{inboundList.code}}</span></label>
+                <label>入库日期：<span>{{inboundList.date}}</span></label>
               </div>
-            </div>
-            <!-- <table border="1" cellspacing="0" cellpadding="0">
+            </form>
+            <table border="1" cellspacing="0" cellpadding="0" :data="InboundList">
               <thead>
-                <tr>
+                <tr height="30">
                   <th colspan="5">发货明细</th>
                   <th colspan="4">验收明细</th>
                 </tr>
-                <tr>
+                <tr height="50">
                   <th>序号</th>
                   <th>物料名称</th>
                   <th>规格型号</th>
                   <th>品牌</th>
-                  <th>采购单价</th>
+                  <th>采购数量</th>
                   <th>实收数量</th>
                   <th>核对型号</th>
                   <th>质量、外观(完好/破损)</th>
@@ -101,70 +91,159 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>网络红外枪球摄像机</td>
-                  <td>DS-2CD2T26VD-I5(6mm)</td>
-                  <td>海康</td>
-                  <td>350.0</td>
-                  <td>149</td>
-                  <td>正确</td>
-                  <td>完好</td>
-                  <td>有</td>
+                <tr v-for="item in InboundList">
+                  <td>{{item.index}}</td>
+                  <td>{{item.purchaseList.name}}</td>
+                  <td>{{item.purchaseList.model}}</td>
+                  <td>{{item.purchaseList.brand}}</td>
+                  <td>{{item.purchaseList.acNumber}}</td>
+                  <td>{{item.number}}</td>
+                  <td>{{item.model}}</td>
+                  <td>{{item.quality}}</td>
+                  <td>{{item.certificate}}</td>
                 </tr>
               </tbody>
-            </table> -->
-
-            <el-table class="basic-form" style="width: 100%" :data="InboundList">
-              <el-table-column label="发货明细">
-                <el-table-column label="序号">
-                  <template slot-scope="scope">{{scope.$index + 1}}</template>
-                </el-table-column>
-                <el-table-column label="物料名称">
-                  <template slot-scope="scope"><span>{{scope.row.purchaseList.name}}</span></template>
-                </el-table-column>
-                <el-table-column label="规格型号">
-                  <template slot-scope="scope"><span>{{scope.row.purchaseList.model}}</span></template>
-                </el-table-column>
-                <el-table-column label="品牌">
-                  <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
-                </el-table-column>
-                <el-table-column label="采购数量">
-                  <template slot-scope="scope"><span>{{scope.row.purchaseList.number}}</span></template>
-                </el-table-column>
-              </el-table-column>
-              <el-table-column label="验收明细">
-                <el-table-column label="实收数量">
-                  <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
-                </el-table-column>
-                <el-table-column label="核对型号">
-                  <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-                </el-table-column>
-                <el-table-column label="质量外观">
-                  <template slot-scope="scope"><span>{{scope.row.quality}}</span></template>
-                </el-table-column>
-                <el-table-column label="合格证">
-                  <template slot-scope="scope"><span>{{scope.row.certificate}}</span></template>
-                </el-table-column>
-              </el-table-column>
-            </el-table>
-
-            <div class="footer">
+            </table>
+            <form class="footer">
               <div class="left">
-                <label>制表：
-                  <span></span>
-                </label>
+                <label>制表：<span>卓惠敏</span></label>
               </div>
               <div class="right">
-                <label>审核：
-                  <span></span>
-                </label>
+                <label>审核：<span>罗艺</span></label>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-        <el-button @click="back">返回</el-button>
-        <el-button @click="doPrint">打印</el-button>
+        <div class="btn">
+          <el-button @click="back">返回</el-button>
+          <el-button @click="doPrint">打印</el-button>
+        </div>
+      </div>
+      <!-- 入库核算表 -->
+      <div class="printTable" v-if="InboundPayTable">
+        <div id="form_print">
+          <div class="container">
+            <h3>物料入库成本核算表</h3>
+            <form class="head" :model="inboundList">
+              <div class="left">
+                <label>供应商：<span>{{inboundList.paymentContract.supply.name}}</span></label>
+                <label>使用部门：<span>{{inboundList.paymentContract.department}}</span></label>
+                <label>使用项目：<span>{{inboundList.paymentContract.contractInfo.name}}</span></label>
+              </div>
+              <div class="right">
+                <label>入库核算表号：<span>{{inboundList.tableCode}}</span></label>
+                <label>制表日期：<span>{{inboundList.date}}</span></label>
+              </div>
+            </form>
+            <table border="1" cellspacing="0" cellpadding="0">
+              <thead>
+                <tr height="50">
+                  <th>序号</th>
+                  <th>物料名称</th>
+                  <th>规格型号</th>
+                  <th>品牌</th>
+                  <th>采购单价</th>
+                  <th>数量</th>
+                  <th>单个成本</th>
+                  <th>单个可抵扣税金</th>
+                  <th>合计</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in InboundList">
+                  <td>{{item.index}}</td>
+                  <td>{{item.purchaseList.name}}</td>
+                  <td>{{item.purchaseList.model}}</td>
+                  <td>{{item.purchaseList.brand}}</td>
+                  <td>{{item.purchaseList.unitPrice}}</td>
+                  <td>{{item.number}}</td>
+                  <td>{{item.unitCost}}</td>
+                  <td>{{item.unitTaxFee}}</td>
+                  <td>{{item.totalAmount}}</td>
+                </tr>
+                <tr>
+                  <td colspan="8">合计</td>
+                  <td>{{this.total}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <form class="footer">
+              <div class="left">
+                <label>制表：<span>卓惠敏</span></label>
+              </div>
+              <div class="right">
+                <label>审核：<span>罗艺</span></label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="btn">
+          <el-button @click="back">返回</el-button>
+          <el-button @click="doPrint">打印</el-button>
+        </div>
+      </div>
+      <!-- 出库核算表 -->
+      <div class="printTable" v-if="outboundPayTable">
+        <div id="form_print">
+          <div class="container">
+            <h3>物料出库成本核算表</h3>
+            <form class="head" :model="inboundList">
+              <div class="left">
+                <label>供应商：<span>{{inboundList.paymentContract.supply.name}}</span></label>
+                <label>使用部门：<span>{{inboundList.paymentContract.department}}</span></label>
+                <label>使用项目：<span>{{inboundList.paymentContract.contractInfo.name}}</span></label>
+              </div>
+              <div class="right">
+                <label>出库核算表号：<span>{{inboundList.tableCode}}</span></label>
+                <label>制表日期：<span>{{inboundList.date}}</span></label>
+              </div>
+            </form>
+            <table border="1" cellspacing="0" cellpadding="0">
+              <thead>
+                <tr height="50">
+                  <th>序号</th>
+                  <th>物料名称</th>
+                  <th>规格型号</th>
+                  <th>品牌</th>
+                  <th>采购单价</th>
+                  <th>数量</th>
+                  <th>单个成本</th>
+                  <th>单个可抵扣税金</th>
+                  <th>合计</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in InboundList">
+                  <td>{{item.index}}</td>
+                  <td>{{item.purchaseList.name}}</td>
+                  <td>{{item.purchaseList.model}}</td>
+                  <td>{{item.purchaseList.brand}}</td>
+                  <td>{{item.purchaseList.unitPrice}}</td>
+                  <td>{{item.number}}</td>
+                  <td>{{item.unitCost}}</td>
+                  <td>{{item.unitTaxFee}}</td>
+                  <td>{{item.totalAmount}}</td>
+                </tr>
+                <tr>
+                  <td colspan="8">合计</td>
+                  <td>{{this.total}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <form class="footer">
+              <div class="left">
+                <label>制表：<span>卓惠敏</span></label>
+              </div>
+              <div class="right">
+                <label>审核：<span>罗艺</span></label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="btn">
+          <el-button @click="back">返回</el-button>
+          <el-button @click="doPrint">打印</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -173,6 +252,7 @@
 <script>
 import _ from 'lodash'
 import tableComponent from './table.vue'
+import { returnFloat } from '@/utils'
 export default {
   props: ['editData'],
   components: { tableComponent },
@@ -188,13 +268,21 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
-      container: true,
-      printTable: false
       inboundId: '',
-      rules: {}
+      rules: {},
+      container: true,
+      // 入库单打印
+      InboundTable: false,
+      InboundList: [],
+      // 入库核算表
+      InboundPayTable: false,
+      total: null,
+      // 出库核算表
+      outboundPayTable: false
     }
   },
   created() {
+    this.getInboundList()
     if (this.editData.tabState === 'addTab') {
       this.action = 'add'
     } else {
@@ -207,22 +295,77 @@ export default {
   methods: {
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
-      console.log(data)
       this.inboundList = data.inboundList
       this.inboundId = this.inboundList.id
       this.paymentContractId = this.inboundList.paymentContract.id
     },
     toggleTab(tab) {
-      this.container = true
       this.actionTab = tab
+      this.container = true
+      this.InboundTable = false
+      this.InboundPayTable = false
+      this.outboundPayTable = false
     },
-    showData(status) {
-      this.printTable = status
+    // 打印入库
+    InBound(status) {
+      this.InboundTable = status
       this.container = false
     },
+    // 返回
     back() {
       this.container = true
-      this.printTable = false
+      this.InboundTable = false
+      this.InboundPayTable = false
+      this.outboundPayTable = false
+    },
+    // 数据获取
+    getInboundList() {
+      var data = _.cloneDeep(this.editData.editData)
+      console.log(data)
+      this.paymentContractId = data.inboundList.paymentContract.id
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
+        var data = _.cloneDeep(res.data.data) || []
+        var arr = []
+        data.forEach((item, index) => {
+          item.index = index + 1
+          item.number = item.number ? item.number : item.purchaseList.number
+          item.model = item.model ? item.model : item.purchaseList.model
+          item.certificate = item.certificate ? item.certificate : '有'
+          item.quality = item.quality ? item.quality : '完好'
+          var taxRate = item.purchaseList.paymentContract.supply.taxRate // 税率
+          var unitPrice = item.purchaseList.unitPrice // 单价
+          item.unitCost = this.unitCost(taxRate, unitPrice) // 单个成本
+          item.unitTaxFee = returnFloat(unitPrice - item.unitCost)
+          item.totalAmount = returnFloat(item.unitCost * item.number)
+          arr.push(item.totalAmount)
+        })
+        var total = this.getSum(arr)
+        this.total = total
+        this.InboundList = data
+        console.log(this.InboundList)
+      })
+    },
+    // 核算表求和
+    getSum(arr) {
+      var sum = 0
+      for (var i = 0; i < arr.length; i++) {
+        sum += arr[i]
+      }
+      return sum
+    },
+    unitCost (taxRate, unitPrice) {
+      taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
+      return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
+    },
+    // 入库核算表
+    InBoundPay(status) {
+      this.InboundPayTable = status
+      this.container = false
+    },
+    // 出库核算表
+    outBoundPay(status) {
+      this.outboundPayTable = status
+      this.container = false
     },
     doPrint() {
       var form_print = document.getElementById('form_print')
@@ -253,8 +396,10 @@ export default {
     .printTable{
       #form_print{
         text-align: center;
+        margin-bottom: 50px;
         .container{
           display: inline-block;
+          font-size: 15px;
           h3{
             margin: 20px 0;
             font-size: 22px;
@@ -262,41 +407,45 @@ export default {
           }
           .head{
             display: flex;
-            padding: 0 20px;
-            .left,
-            .right{
-              flex: 1;
+            label{
+              line-height: 20px;
+            }
+            .left{
+              flex: 55%;
+              margin-left: 30px;
             }
             .right{
-              margin-left: 40px;
+              flex: 45%;
             }
           }
           table{
+            height: 200px;
             margin: 10px 0 30px;
             border-collapse: collapse;
-            thead{
-              font-size: 14px;
-            }
-            tbody{
-              font-size: 12px;
-            }
+            overflow-y: scroll;
+            font-size: 14px;
             th, td{
-              max-width: 90px;
-              min-width: 70px;
+              padding: 15px;
+              height: 35px;
             }
             td{
               word-wrap: break-word;
             }
           }
           label{
+            font-weight: 700;
             text-align: left;
             display: block;
             margin-bottom: 10px;
+            line-height: 25px;
           }
           .footer{
             display: flex;
-            .left, .right{
-              flex: 1;
+            .left{
+              flex: 40%;
+            }
+            .right{
+              flex: 60%;
             }
             label{
               text-align: center;
@@ -304,18 +453,28 @@ export default {
           }
         }
       }
-      .el-button{
-        line-height: 0.4;
-        background-color: #35d5ba;
-        border-color: #35d5ba;
-        color: white;
+      .btn{
+        background-color: white;
+        text-align: center;
+        position: fixed;
+        bottom: 31px;
+        left: 245px;
+        right: 50px;
+        height: 50px;
+        line-height: 50px;
+        .el-button{
+          line-height: 0.4;
+          background-color: #35d5ba;
+          border-color: #35d5ba;
+          color: white;
+        }
       }
     }
   }
 }
 @page{
   size: auto;
-  margin: 3mm;
+  margin: 4mm;
 }
 @media print{
   #form_print{
@@ -323,7 +482,7 @@ export default {
   }
   h3{
     text-align: center;
-    margin: 20px 0;
+    margin: 60px 0 30px;
     font-size: 24px;
     font-weight: 500;
   }
@@ -336,10 +495,14 @@ export default {
     margin-left: 30px;
   }
   label{
+    line-height: 20px;
     text-align: left;
     display: block;
     margin-bottom: 10px;
-    font-size: 17px;
+    font-size: 16px;
+  }
+  span{
+    font-weight: 100;
   }
   table {
     margin: 10px 10px 30px;
@@ -349,7 +512,7 @@ export default {
     max-width: 80px;
     min-width:70px;
     padding:5px;
-    font-size: 16px;
+    font-size: 14px;
     word-wrap: break-word;
     text-align: center;
     font-weight: 400;

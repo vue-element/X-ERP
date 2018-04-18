@@ -66,13 +66,8 @@
           <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
-<<<<<<< HEAD
-          <el-button :loading="false" v-if="hasPerm('inboundCheck:save')">通过审核</el-button>
-          <el-button :loading="false" @click="printInBound">导出入库单</el-button>
-=======
           <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-          <el-button :loading="false">导出入库单</el-button>
->>>>>>> f88f18c4918f39799e582364c8bbc969c3084f44
+          <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>
@@ -118,9 +113,9 @@
         </el-row>
         <div class="commont-btn">
           <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
-          <el-button :loading="false">导出入库单</el-button>
-          <el-button :loading="false">导出入库成本核算表</el-button>
-          <el-button :loading="false">导出出库成本核算表</el-button>
+          <el-button :loading="false" @click="InBound">导出入库单</el-button>
+          <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
+          <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
           <el-button :loading="false">退回填写</el-button>
         </div>
       </div>
@@ -203,12 +198,12 @@ export default {
     },
     unitCost (taxRate, unitPrice) {
       taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
-      console.log('taxRate', taxRate)
-      console.log('unitPrice', returnFloat(unitPrice / (1 + taxRate)))
+      // console.log('taxRate', taxRate)
+      // console.log('unitPrice', returnFloat(unitPrice / (1 + taxRate)))
       return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
     editRow(row, index) {
-      console.log('row', row)
+      // console.log('row', row)
       row.edit = true
       Vue.set(this.InboundList, index, row)
     },
@@ -245,14 +240,21 @@ export default {
           id: this.inboundId
         }
       }
-      console.log('obj', obj)
+      // console.log('obj', obj)
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })
     },
     // 打印入库单
-    printInBound() {
-      this.$emit('showData', true)
+    InBound() {
+      this.$emit('InBound', true)
+    },
+    // 入库成本核算表
+    InBoundPay() {
+      this.$emit('InBoundPay', true)
+    },
+    outBoundPayTable() {
+      this.$emit('outBoundPay', true)
     }
   },
   watch: {
@@ -262,7 +264,7 @@ export default {
     InboundList(list) {
       list.forEach((item) => {
         if (item.edit === true) {
-          console.log('isEditing')
+          // console.log('isEditing')
           this.disableCheck = true
         } else {
           this.disableCheck = false

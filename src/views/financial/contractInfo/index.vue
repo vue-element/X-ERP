@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''" v-if="hasPerm('contractInfo:search')">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn" v-if="hasPerm('contractInfo:findAllByPage')">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
-          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn" v-if="hasPerm('contractInfo:save')">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
@@ -96,12 +96,6 @@ export default {
         this.delSession()
         this.editData.tabState = 'addTab'
       }
-      // this.tab = 'addTab'
-      // this.delSession()
-      // this.editData = {
-      //   editData: {},
-      //   tabState: 'addTab'
-      // }
     },
     showPopWin(callback) {
       this.$confirm('信息未保存，是否离开当前页面?', '提示', {

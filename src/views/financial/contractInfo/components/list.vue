@@ -16,8 +16,8 @@
       <el-table-column prop="invoiceNoReceive" label="已开票未回款金额"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
-          <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+          <el-button @click="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:findAllByPage')">查看</el-button>
+          <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:delete')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

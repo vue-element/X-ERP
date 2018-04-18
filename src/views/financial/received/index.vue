@@ -3,15 +3,15 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''" v-if="hasPerm('contractReceived:search')">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn" v-if="hasPerm('contractReceived:findAllByPage')">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
-          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+          <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn" v-if="hasPerm('contractReceived:save')">
             <i class="iconfont icon-add"></i>
             <span>新增</span>
           </button>
@@ -40,7 +40,7 @@
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
-      <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
+      <ImportComponent v-if="tab === 'importTab'"  @toggleTab="toggleTab"></ImportComponent>
     </div>
   </div>
 </template>

@@ -3,11 +3,11 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''" v-if="hasPerm('contractSchedule:search')">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+          <button :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn" v-if="hasPerm('contractSchedule:findAllByPage')">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>

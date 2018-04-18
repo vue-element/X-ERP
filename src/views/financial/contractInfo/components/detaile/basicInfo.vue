@@ -1,6 +1,6 @@
 <template>
     <div class="basicInfo-container form-container">
-      <div class="commont-btn edit-btn" v-show="editShow">
+      <div class="commont-btn edit-btn" v-show="hasPerm('contractInfo:findUpdateData') && editShow">
         <el-button @click="toggleEditBtn">{{editWord}}</el-button>
       </div>
       <el-form :model="contractInfo" :rules="rules" ref="contractInfo" class="basic">
@@ -141,7 +141,7 @@
             </el-col>
           </el-row>
         </div>
-        <div class="commont-btn" v-show="!disabled">
+        <div class="commont-btn" v-show="hasPerm('contractInfo:save') && !disabled">
           <el-button @click="add" :loading="loading">保存</el-button>
           <el-button @click="reset">重置</el-button>
           <el-button @click="cancel">取消</el-button>
@@ -169,7 +169,7 @@ export default {
       }
     }
     var validateChangeAmount = (rule, value, callback) => {
-      if (!Number(value)) {
+      if (!Number(value) && value !== '') {
         callback(new Error('请输入数字值'))
       } else {
         callback()
@@ -257,7 +257,13 @@ export default {
           this.contractInfo.startDate = this.contractInfo.limit[0]
           this.contractInfo.endDate = this.contractInfo.limit[1]
           this.contractInfo.term = this.contractInfo.term + '-01'
-          this.$post('/contractInfo/save', this.contractInfo).then((res) => {
+          var container = {}
+          for (var key in this.contractInfo) {
+            if (this.contractInfo[key]) {
+              container[key] = this.contractInfo[key]
+            }
+          }
+          this.$post('/contractInfo/save', container).then((res) => {
             var contractMsg = res.data.data
             sessionStorage.setItem('contractMsg', JSON.stringify(contractMsg))
             this.loading = false
