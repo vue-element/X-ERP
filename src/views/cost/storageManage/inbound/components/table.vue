@@ -67,8 +67,13 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
           <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
+<<<<<<< HEAD
+          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+=======
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false">退回填写</el-button>
+>>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
         </div>
       </div>
     <!--审核动态  -->
@@ -80,22 +85,14 @@
         </h4>
         <el-row>
           <el-col :xs="24" :sm="24" :lg="24">
-            <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading" border>
+            <el-table class="basic-form"  show-summary style="width: 100%" :data="InboundList" v-loading.body="listLoading" border>
               <el-table-column label="序号" width="60" fixed>
                 <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
-              <el-table-column label="物料名称" min-width="120">
-                <template slot-scope="scope"><span>{{scope.row.purchaseList.name}}</span></template>
-              </el-table-column>
-              <el-table-column label="规格型号" min-width="120">
-                <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-              </el-table-column>
-              <el-table-column label="品牌" min-width="100">
-                <template slot-scope="scope"><span>{{scope.row.purchaseList.brand}}</span></template>
-              </el-table-column>
-              <el-table-column label="采购单价" min-width="100">
-                <template slot-scope="scope"><span>{{scope.row.purchaseList.unitPrice}}</span></template>
-              </el-table-column>
+              <el-table-column label="物料名称" min-width="120" prop="purchaseList.name"></el-table-column>
+              <el-table-column label="规格型号" min-width="120" prop="model"></el-table-column>
+              <el-table-column label="品牌" min-width="100" prop="purchaseList.brand"></el-table-column>
+              <el-table-column label="采购单价" min-width="100" prop="purchaseList.unitPrice"></el-table-column>
               <el-table-column label="数量" min-width="100">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
@@ -105,18 +102,36 @@
               <el-table-column label="单个抵扣税金" min-width="160">
                 <template slot-scope="scope"><span>{{scope.row.unitTaxFee}}</span></template>
               </el-table-column>
-              <el-table-column label="合计" width="100" fixed="right">
-                <template slot-scope="scope"><span>{{scope.row.totalAmount}}</span></template>
+              <el-table-column label="合计" width="120" fixed="right" prop="totalAmount" min-width="180">
+                <template slot-scope="scope">
+                  <el-input v-show="scope.row.edit" type="text" v-model="scope.row.totalAmount" placeholder="请填写"></el-input>
+                  <span v-show="!scope.row.edit">{{scope.row.totalAmount}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" min-width="100" fixed="right">
+                <template slot-scope="scope">
+                  <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+                  <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+                  <!-- <el-button @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button> -->
+                </template>
               </el-table-column>
             </el-table>
           </el-col>
         </el-row>
         <div class="commont-btn">
+<<<<<<< HEAD
+          <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
+          <el-button :loading="false">导出入库单</el-button>
+          <el-button :loading="false">导出入库成本核算表</el-button>
+          <el-button :loading="false">导出出库成本核算表</el-button>
+          <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
+=======
           <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
           <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
           <el-button :loading="false">退回填写</el-button>
+>>>>>>> c037d8a0550705255d0c29bab2e9bb822f8021af
         </div>
       </div>
     </div>
@@ -180,26 +195,23 @@ export default {
       this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         var data = _.cloneDeep(res.data.data) || []
         data.forEach((item) => {
-          item.number = item.number ? item.number : item.purchaseList.number
+          item.number = item.number ? item.number : item.purchaseList.acNumber
           item.model = item.model ? item.model : item.purchaseList.model
           item.certificate = item.certificate ? item.certificate : '有'
           item.quality = item.quality ? item.quality : '完好'
           // 税金、成本、合计计算
           var taxRate = item.purchaseList.paymentContract.supply.taxRate // 税率
-          // taxRate = taxRate / 100
-          // console.log('taxRate',taxRate)
           var unitPrice = item.purchaseList.unitPrice // 单价
           item.unitCost = this.unitCost(taxRate, unitPrice) // 单个成本
           item.unitTaxFee = returnFloat(unitPrice - item.unitCost)
-          item.totalAmount = returnFloat(item.unitCost * item.number)
+          var totalAmount = returnFloat(item.unitCost * item.number)
+          item.totalAmount = item.totalAmount === 0 ? totalAmount : item.totalAmount // 总计（金额）可以根据实际调整
         })
         this.InboundList = data
       })
     },
     unitCost (taxRate, unitPrice) {
       taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
-      // console.log('taxRate', taxRate)
-      // console.log('unitPrice', returnFloat(unitPrice / (1 + taxRate)))
       return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
     editRow(row, index) {
@@ -210,6 +222,8 @@ export default {
     confirmEdit(row, index) {
       row.edit = false
       Vue.set(this.InboundList, index, row)
+      console.log('rowe', row)
+      // var totalAmount = row.totalAmount ? row.totalAmount : 0
       var obj = {
         id: row.id,
         certificate: row.certificate,
@@ -218,7 +232,8 @@ export default {
         purchaseList: {
           id: row.purchaseList.id
         },
-        quality: row.quality
+        quality: row.quality,
+        totalAmount: row.totalAmount
       }
       this.$post('/inboundDetaile/save', obj).then((res) => {
         this.getPurchaseList()
@@ -264,7 +279,6 @@ export default {
     InboundList(list) {
       list.forEach((item) => {
         if (item.edit === true) {
-          // console.log('isEditing')
           this.disableCheck = true
         } else {
           this.disableCheck = false

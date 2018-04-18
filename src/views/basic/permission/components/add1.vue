@@ -16,16 +16,16 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="角色" prop="roleName" width="150"></el-table-column>
-      <el-table-column align="center" label="用户">
+      <!-- <el-table-column align="center" label="用户">
         <template slot-scope="scope">
           <div v-for="user in scope.row.users">
             <div v-text="user.nickname" style="display: inline-block;vertical-align: middle;"></div>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" label="菜单&权限" width="420">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.roleName==adminName" type="success">全部</el-tag>
+          <el-tag v-if="scope.row.roleName==='系统管理员'" type="success">全部</el-tag>
           <div v-else>
             <div v-for="menu in scope.row.menus" style="text-align: left">
               <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menuName}}</span>
@@ -36,26 +36,29 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('role:update') ||hasPerm('role:delete') ">
+      <el-table-column align="center" label="管理" width="220" >
         <template slot-scope="scope">
           <div v-if="scope.row.roleName!='管理员'">
-            <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('role:update')">修改
+            <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改
             </el-button>
-            <el-button v-if=" scope.row.users && scope.row.users.length===0 && hasPerm('role:delete')" type="danger"
-                       icon="delete"
-                       @click="removeRole(scope.$index)">
-              删除
+            <el-button type="danger" icon="delete" @click="removeRole(scope.$index)">删除
             </el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+     @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
       <el-form class="small-space" :model="tempRole" label-position="left" label-width="100px"
                style='width: 500px; margin-left:50px;'>
         <el-form-item label="角色名称" required>
-          <el-input type="text" v-model="tempRole.roleName" style="width: 250px;">
-          </el-input>
+          <el-select v-model="tempRole.roleName" placeholder="请选择角色名称">
+            <el-option v-for="item in roleList" :label="item.name" :value="item.id" :key="item.id">
+            </el-option>
+          </el-select>
+          <!-- <el-input type="text" v-model="tempRole.roleName" style="width: 250px;"> -->
+          <!-- </el-input> -->
         </el-form-item>
         <el-form-item label="菜单&权限" required>
           <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">
@@ -102,15 +105,37 @@
           roleId: '',
           permissions: []
         },
-        adminName: '管理员'
+        adminName: '管理员',
+        roleList: [],
+        total: 5,
+        currentPage: 1,
+        pageSizes: [12, 15, 16],
+        pageSize: 15
       }
     },
     created() {
-      this.getList()
+      this.getAllRole()
       this.getAllPermisson()
+      this.getList()
     },
     methods: {
+      getAllRole() {
+        this.$get('/role/findAll').then((res) => {
+          if (res.data.success === true) {
+            this.roleList = res.data.data
+          } else {
+            return
+          }
+        })
+      },
       getAllPermisson() {
+        this.$get('/permission/findAll').then((res) => {
+          if (res.data.success === true) {
+            this.allPermission = res.data.data.List
+            console.log('allPermission', this.allPermission)
+            // console.log(this.allPermission[0])
+          }
+        })
         // 查询所有权限
         // this.api({
         //   url: "/user/listAllPermission",
@@ -129,6 +154,27 @@
         //   this.listLoading = false;
         //   this.list = data.list;
         // })
+        this.listLoading = true
+        var pageSize = this.pageSize || 15
+        var page = this.currentPage - 1 || 0
+        this.listLoading = true
+        this.$get('/permission/listRolePermission?pageSize=' + pageSize + '&page=' + page).then((res) => {
+          this.listLoading = false
+          this.list = res.data.data.List
+          // console.log('listRolePermission', res)
+          // // this.clientList = data.content
+          // this.total = data.totalElements
+          // this.currentPage = data.number + 1
+          // this.pageSize = data.size
+        })
+      },
+      handleSizeChange(val) {
+        this.pageSize = val
+        this.clientData()
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.clientData()
       },
       getIndex($index) {
         // 表格序号
@@ -144,6 +190,7 @@
       },
       showUpdate($index) {
         var role = this.list[$index]
+        console.log('role', role)
         this.tempRole.roleName = role.roleName
         this.tempRole.roleId = role.roleId
         this.tempRole.permissions = []
@@ -157,37 +204,73 @@
         this.dialogFormVisible = true
       },
       createRole() {
-        if (!this.checkRoleNameUnique()) {
-          return
-        }
-        if (!this.checkPermissionNum()) {
-          return
-        }
+        // console.log('tempRole', this.tempRole)
+        // console.log('Role1', this.checkRoleNameUnique())
+        // if (!this.checkRoleNameUnique()) {
+        //   return
+        // }
+        // // console.log('Permission1', this.checkPermissionNum())
+        // if (!this.checkPermissionNum()) {
+        //   return
+        // }
         // 添加新角色
-        this.api({
-          url: '/user/addRole',
-          method: 'post',
-          data: this.tempRole
-        }).then(() => {
-          this.getList()
-          this.dialogFormVisible = false
+        // this.api({
+        //   url: '/user/addRole',
+        //   method: 'post',
+        //   data: this.tempRole
+        // }).then(() => {
+        //   this.getList()
+        //   this.dialogFormVisible = false
+        // // })
+        var permissions = []
+        this.tempRole.permissions.forEach((permissionId) => {
+          var obj = {
+            p_id: permissionId
+          }
+          permissions.push(obj)
+        })
+        // console.log('permissions', permissions)
+        var roleObj = {
+          role_id: this.tempRole.roleName,
+          permissions: permissions
+        }
+        console.log('roleObj', roleObj)
+        this.$post('/permission/insertRolePermission', roleObj).then((res) => {
+          if (res.data.success === true) {
+            this.getList()
+            this.dialogFormVisible = false
+          }
+          // console.log('res', res)
         })
       },
       updateRole() {
-        if (!this.checkRoleNameUnique(this.tempRole.roleId)) {
-          return
-        }
-        if (!this.checkPermissionNum()) {
-          return
-        }
+        // if (!this.checkRoleNameUnique(this.tempRole.roleId)) {
+        //   return
+        // }
+        // if (!this.checkPermissionNum()) {
+        //   return
+        // }
         // 修改角色
-        this.api({
-          url: '/user/updateRole',
-          method: 'post',
-          data: this.tempRole
-        }).then(() => {
-          this.getList()
-          this.dialogFormVisible = false
+        console.log('tempRole', this.tempRole)
+        var permissions = []
+        this.tempRole.permissions.forEach((permissionId) => {
+          var obj = {
+            p_id: permissionId
+          }
+          permissions.push(obj)
+        })
+        // console.log('permissions', permissions)
+        var roleObj = {
+          role_id: this.tempRole.roleId,
+          permissions: permissions
+        }
+        console.log('roleObj', roleObj)
+        this.$post('/permission/insertRolePermission', roleObj).then((res) => {
+          if (res.data.success === true) {
+            this.getList()
+            this.dialogFormVisible = false
+          }
+          // console.log('res', res)
         })
       },
       checkPermissionNum() {

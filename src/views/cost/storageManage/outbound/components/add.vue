@@ -17,44 +17,38 @@
             <p>出库信息:</p>
           </h4>
           <el-row :gutter="40">
-            <el-col :xs="24" :sm="12" :lg="12">
-              <el-form-item label="付款合同编号:" prop="paymentContract">
-                <p v-if="disabled">{{outboundInfo.paymentContract.code}}</p>
-                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="请选择付款合同编号" filterable clearable>
-                 <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
+            <el-col :sm="24" :md="12" :lg="12">
+              <el-form-item label="付款合同编号/入库单编号:" prop="inboundList">
+                <p v-if="disabled">{{outboundInfo.inboundList.code}}</p>
+                <el-select v-else v-model="outboundInfo.inboundList.id" placeholder="请选择付款合同编号" filterable clearable @change="inboundChange">
+                 <el-option v-for="item in inboundList" :label="item.code" :value="item.id" :key="item.id">
                  </el-option>
                </el-select>
               </el-form-item>
             </el-col>
-            <el-col :xs="24" :sm="12" :lg="12">
+            <el-col :sm="24" :md="12" :lg="12">
               <el-form-item label="项目:">
-                <p v-if="disabled">{{outboundInfo.paymentContract.contractInfo.name}}</p>
-                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="自动生成" disabled>
-                 <el-option v-for="item in paymentContractList" :label="item.contractInfo.name" :value="item.id" :key="item.code">
-                 </el-option>
-               </el-select>
+                <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.contractInfo.name}}</p>
+                <el-input v-else v-model="projectName" placeholder="自动生成" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="40">
-            <el-col :xs="24" :sm="12" :lg="12">
+            <el-col :sm="24" :md="12" :lg="12">
               <el-form-item label="出库单编号:"  prop="code">
                 <p v-if="disabled">{{outboundInfo.code}}</p>
                 <el-input v-else v-model="outboundInfo.code" placeholder="请输入出库单编号"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :xs="24" :sm="12" :lg="12">
+            <el-col :sm="24" :md="12" :lg="12">
               <el-form-item label="办事处:">
-                <p v-if="disabled">{{outboundInfo.paymentContract.department}}</p>
-                <el-select v-else v-model="outboundInfo.paymentContract.id" placeholder="自动生成" disabled>
-                 <el-option v-for="item in paymentContractList" :label="item.department" :value="item.id" :key="item.id">
-                 </el-option>
-               </el-select>
+                <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.department}}</p>
+               <el-input v-else v-model="departmentName" placeholder="自动生成" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="40">
-            <el-col :xs="24" :sm="12" :lg="12">
+            <el-col :sm="24" :md="12" :lg="12">
               <el-form-item label="出库日期:" class="single-date" prop="date">
                 <p v-if="disabled">{{outboundInfo.date}}</p>
                 <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="outboundInfo.date" placeholder="选择日期"></el-date-picker>
@@ -97,11 +91,12 @@ export default {
       editShow: false,
       outboundInfo: {
         code: '出库单编号',
-        paymentContract: { id: '' },
+        inboundList: { id: '' },
         date: ''
       },
-      paymentContractList: [],
-      contractList: [],
+      projectName: '',
+      departmentName: '',
+      inboundList: [],
       projectList: [],
       regionList: [],
       paymentContractId: '',
@@ -128,7 +123,7 @@ export default {
             if (res.data.success === true) {
               this.outboundInfo = res.data.data
               this.outboundId = this.outboundInfo.id
-              this.paymentContractId = this.outboundInfo.paymentContract.id
+              this.paymentContractId = this.outboundInfo.inboundList.paymentContract.id
               this.successSave()
             } else {
               this.failSave()
@@ -153,9 +148,12 @@ export default {
       this.$emit('toggleTab')
     },
     editInfo() {
-      this.outboundInfo = this.outboundInfo.outboundList
-      this.paymentContractId = this.outboundInfo.paymentContract.id
       this.outboundId = this.outboundInfo.id
+      this.paymentContractId = this.outboundInfo.inboundList.paymentContract.id
+      if (this.outboundId) {
+        this.projectName = this.outboundInfo.inboundList.paymentContract.contractInfo.name
+        this.departmentName = this.outboundInfo.inboundList.paymentContract.department
+      }
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -173,8 +171,7 @@ export default {
     getInsertData() {
       this.$get('/outboundList/findInsertData').then((res) => {
         var data = res.data.data
-        this.paymentContractList = data.paymentContractList || []
-        this.contractList = data.contractInfoList || []
+        this.inboundList = data.inboundListArrary || []
         this.projectList = data.projectList || []
         this.regionList = data.regionList || []
       })
@@ -188,7 +185,8 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
-        this.outboundInfo = this.editData.editData
+        this.outboundInfo = this.editData.editData.outboundList
+        // console.log('outboundInfo', this.outboundInfo)
         this.editInfo()
       }
     },
@@ -206,6 +204,14 @@ export default {
         message: '保存失败',
         type: 'error'
       })
+    },
+    // 根据付款合同编号，自动生成项目，办事处
+    inboundChange(id) {
+      var obj = this.inboundList.find((item) => {
+        return item.id === id
+      })
+      this.projectName = obj.paymentContract.contractInfo.name
+      this.departmentName = obj.paymentContract.department
     }
   },
   computed: {},

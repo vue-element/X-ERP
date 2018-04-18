@@ -1,4 +1,4 @@
- :sm:md<template>
+  :sm:md<template>
   <div class="payment-contract-add form-container">
     <el-form :model="paymentContract" ref="paymentContract">
       <div class="form-module">

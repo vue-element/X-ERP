@@ -3,26 +3,14 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <!-- <button :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')" >
-          <i class="iconfont icon-search"></i>
-          <span>查询</span>
-        </button> -->
         <button :class="tab === 'listTab' ? 'is-active' : ''" @click="toggleTab('listTab')">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <!-- <button :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
-          <i class="iconfont icon-add"></i>
-          <span>新增</span>
-        </button> -->
         <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
           <i class="iconfont icon-seeAll"></i>
           <span>查看明细</span>
         </button>
-        <!-- <button v-show="deleteShow" @click="delSelectData">
-          <i class="iconfont icon-delete"></i>
-          <span>删除</span>
-        </button> -->
       </div>
       <div class="export-btn fr">
         <button v-show="tab === 'listTab'" @click="handleDownload()">
@@ -33,146 +21,154 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <transition name="fade" mode="out-in">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
-    </transition>
+    <div class="organization-list">
+      <el-col :span="4">
+        <el-tree class="org-tree" :data="orgtree" :props="defaultProps" @node-click="handleNodeClick" :style="{height: height + 'px'}" default-expand-all></el-tree>
+      </el-col>
+      <el-col :span="20" :offset="0">
+        <transition name="el-zoom-in-top" mode="out-in">
+          <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height" @selection-change="handleSelectionChange"
+          v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+            <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
+              <template slot-scope="scope">{{scope.$index  + 1}}</template>
+           </el-table-column>
+           <el-table-column prop="organization.name" label="组织名称" min-width="200"></el-table-column>
+           <el-table-column prop="organization.code" label="组织编号" min-width="180"></el-table-column>
+           <el-table-column prop="organization.organization.name" label="上级组织名称" min-width="200"></el-table-column>
+           <el-table-column prop="organization.organization.code" label="上级组织编号" min-width="180"></el-table-column>
+           <!-- <el-table-column prop="name" label="责任人" width="100"></el-table-column>
+           <el-table-column prop="phone" label="责任人联系方式" min-width="180"></el-table-column>
+           <el-table-column prop="name" label="组织类型" width="100"></el-table-column> -->
+           <!-- <el-table-column fixed="right" label="操作" width="120">
+              <template slot-scope="scope">
+                <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>
+                <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column> -->
+          </el-table>
+        </transition>
+        <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+         @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+      </el-col>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
-import AddComponent from './components/add'
-import ListComponent from './components/list'
-import SearchComponent from './components/search'
+import { winHeight } from '@/utils'
 export default {
   name: 'organization',
-  components: {
-    AddComponent,
-    ListComponent,
-    SearchComponent
-  },
   data() {
     return {
-      searchData: {},
-      editData: {},
-      listData: '',
       tab: 'listTab',
-      selArr: [],
-      deleteShow: false,
-      exprotList: [],
-      isChange: false
+      isCollapse: false,
+      listLoading: false,
+      total: 5,
+      currentPage: 1,
+      pageSizes: [12, 15, 16],
+      pageSize: 15,
+      userData: [],
+      height: 100,
+      orgtree: [],
+      orgId: '',
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
+      // searchData: {},
+      // editData: {},
+      // listData: '',
+      //
+      // selArr: [],
+      // deleteShow: false,
+      // exprotList: [],
+      // isChange: false
     }
   },
   mounted() {
   },
   created() {
+    this.getOrgTree()
+    this.resize()
+    window.addEventListener('resize', () => {
+      this.resize()
+    })
   },
   methods: {
-    toggleTab(tab) {
-      if (this.tab === 'addTab' && this.isChange === true) {
-        this.showPopWin(() => {
-          this.tab = tab
-        })
-        return
-      }
-      this.tab = tab
-    },
-    selData(selArr) {
-      this.selArr = selArr
-      if (this.selArr.length > 0) {
-        this.deleteShow = true
-      } else {
-        this.deleteShow = false
-      }
-    },
-    addBtn() {
-      if (this.editData.tabState === 'editTab') { // 编辑状态点击新增
-        if (this.isChange === true) { // 有值的变化
-          this.showPopWin(() => {
-            this.tab = '' // tab为空，在变为 ‘addTab’重新渲染add组件
-            setTimeout(() => {
-              this.tab = 'addTab'
-            }, 50)
-            this.editData.tabState = 'addTab'
-          })
-        } else { // 没有值的变化
-          this.tab = ''
-          setTimeout(() => {
-            this.tab = 'addTab'
-          }, 50)
-          this.editData.tabState = 'addTab'
-        }
-      } else {
-        this.tab = 'addTab'
-        this.editData.tabState = 'addTab'
-      }
-    },
-    seeRow(data) {
-      this.toggleTab('addTab')
-      this.editData = {
-        editData: data,
-        tabState: 'editTab'
-      }
-    },
-    delSelectData() {
-      var id = { id: this.selArr }
-      this.$post('/project/delete', id).then((res) => {
-        console.log('res', res)
-        this.$refs.del.getProjectData()
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
+    getOrgTree() {
+      this.listLoading = true
+      this.$get('org/tree').then((res) => {
+        this.listLoading = false
+        this.orgtree = res.data
+      }).catch(() => {
+        this.listLoading = false
       })
     },
-    searchWord(data) {
-      this.toggleTab('listTab')
-      this.searchData = data
+    handleNodeClick(data) {
+      console.log('data', data)
+      if (data.children === null || data.children.length === 0) {
+        console.log('this.last', data.value)
+        this.orgId = data.value
+        this.getUserList()
+      }
     },
-    showPopWin(callback) {
-      this.$confirm('信息未保存，是否离开当前页面?', '提示', {
+    getUserList() {
+      this.listLoading = true
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      this.$get('/user/findByOrganization/' + this.orgId + '?size=' + pageSize + '&page=' + page).then((res) => {
+        this.listLoading = false
+        var data = res.data.data
+        this.userData = data.content
+        this.total = data.totalElements
+        this.currentPage = data.number + 1
+        this.pageSize = data.size
+      })
+    },
+    resize() {
+      this.height = winHeight() - 210
+    },
+    handleSelectionChange(arr) {
+      var selArr = []
+      arr.forEach((item) => {
+        selArr.push(item.id)
+      })
+      this.$emit('selData', selArr)
+    },
+    seeRow(row) {
+      this.$emit('seeRow', row)
+    },
+    deleteRow(id) {
+      this.$confirm('确认删除此信息?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        callback()
-        this.isChange = false
+        // this.confirmDel(id)
       }).catch(() => {
-        this.isChange = true
+        return false
       })
     },
-    changeObj(res) {
-      this.isChange = res
-    },
-    exportData(data) {
-      this.exprotList = data
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单位数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
-          '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
-        const filterVal = ['id', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
-          'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']
-        const list = this.exprotList
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '智慧社区数据库')
-        this.downloadLoading = false
+    confirmDel(id) {
+      var projectID = { id: [id] }
+      this.$post('/account/delete', projectID).then((res) => {
+        if (res.data.success === true) {
+          this.getUserData()
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
       })
     },
-    formatJson(filterVal, jsonData) {
-      var list = ['client', 'region', 'city']
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (list.indexOf(j) !== -1) {
-            return v[j]['name']
-          } else {
-            return v[j]
-          }
-        })
-      )
+    //  页码处理
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getUserList()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getUserList()
     }
   },
   computed: {}
@@ -188,6 +184,14 @@ export default {
 .basic-form {
   .el-table__fixed-body-wrapper {
     margin: 28px 0;
+  }
+}
+.organization-list {
+  height: 100%;
+  .org-tree {
+    // height: 100%;
+    overflow-y: auto;
+    position: relative;
   }
 }
 </style>

@@ -5,12 +5,13 @@
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
-   <el-table-column prop="name" label="名称" width="200"></el-table-column>
+   <el-table-column prop="name" label="账户名" min-width="100"></el-table-column>
+   <el-table-column prop="name" label="名称" min-width="160"></el-table-column>
+   <el-table-column prop="role.name" label="角色" min-width="180"></el-table-column>
    <!-- <el-table-column prop="city.name" label="工号" width="100"></el-table-column> -->
-   <el-table-column prop="role.name" label="所属组织名称" width="120"></el-table-column>
-   <el-table-column prop="role.code" label="所属组织编号" width="120"></el-table-column>
-    <el-table-column prop="role.name" label="角色"></el-table-column>
-   <el-table-column prop="name" label="账户名" width="100"></el-table-column>
+   <el-table-column prop="role.name" label="所属组织名称" min-width="180"></el-table-column>
+   <el-table-column prop="role.code" label="所属组织编号" min-width="180"></el-table-column>
+
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
         <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>

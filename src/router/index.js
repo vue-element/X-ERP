@@ -51,8 +51,9 @@ export const asyncRouterMap = [
     children: [
       { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }, menu: 'user' },
       { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' },
-      { path: 'permission', component: _import('basic/permission/index'), name: 'permission', meta: { title: '权限管理' }, menu: 'org' },
-      { path: 'role', component: _import('basic/role/index'), name: 'role', meta: { title: '角色管理' }, menu: 'org' }
+      { path: 'permission', component: _import('basic/permission/index'), name: 'permission', meta: { title: '权限管理' }, menu: 'permission' },
+      { path: 'role', component: _import('basic/role/index'), name: 'role', meta: { title: '角色管理' }, menu: 'role' },
+      { path: 'region', component: _import('basic/region/index'), name: 'region', meta: { title: '区域管理' }, menu: 'region' }
     ]
   },
   // 市场管理
