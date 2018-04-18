@@ -71,6 +71,7 @@
           <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
         </div>
       </div>
+    <!--审核动态  -->
     </div>
     <div v-show="actionTab === 'costCheck'">
       <div class="form-module">
@@ -245,6 +246,10 @@ export default {
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })
+    },
+    // 打印入库单
+    printInBound() {
+      this.$emit('showData', true)
     }
   },
   watch: {
