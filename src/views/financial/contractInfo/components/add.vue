@@ -11,7 +11,7 @@
         <li :class="tab === 'payment'?'is-active':''" @click="toggleTab('payment')">成本信息</li>
       </ul>
     </div>
-    <div class="contractInfo-show">
+    <div class="contractInfo-show form-container">
       <basicInfo v-if="tab === 'basicInfo'" :editData="editData" @cancel="cancel" @changeObj='changeObj'></basicInfo>
       <disclosureInfo v-if="tab === 'disclosureInfo'" :editData="editData" @cancel="cancel" @changeObj='changeObj'></disclosureInfo>
       <subContract v-if="tab === 'subContract'" :editData="editData"></subContract>
@@ -112,6 +112,10 @@ export default {
         color: #35d5ba;
       }
     }
+  }
+  .contractInfo-show{
+    border: none;
+    margin: 100px 10px 130px;
   }
 }
 </style>

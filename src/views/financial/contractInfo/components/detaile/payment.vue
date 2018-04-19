@@ -43,7 +43,7 @@
         </el-row>
       </div>
     </el-form>
-    <div class="list form-module">
+    <div class="form-module table">
       <h4 class="module-title">
         <p>成本详情</p>
       </h4>
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 562
+      this.height = winHeight() - 545
     },
     getContractPayment() {
       var paymentID = this.editData.editData.id
@@ -146,38 +146,14 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .contractPayment-container.form-container{
-  border:none;
-  margin-top:140px;
   &::-webkit-scrollbar{
     width: 0;
   }
-  .total.form-module{
-    .el-row{
-      margin-bottom:10px;
-      .el-col{
-        .item {
-          margin-top: 20px;
-          label {
-            // color: #000;
-            // width: 18%;
-            // line-height: 16px;
-            // word-wrap: wrap;
-            // font-size: 14px;
-            // vertical-align:middle;
-            // display:inline-block;
-            // text-align:right;
-          }
-          input {
-            width: 50%;
-            height: 32px;
-            border: 1px solid #828282;
-            @include borderRadius(4px);
-            text-indent: 12px;
-            vertical-align:middle;
-          }
-        }
-      }
-    }
+  h4.module-title{
+    padding: 5px 0;
+  }
+  .table.form-module{
+    margin-bottom: 0;
   }
 }
 </style>

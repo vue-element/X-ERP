@@ -21,11 +21,13 @@ export default {
     return {
       height: 100,
       hasData: true,
+      arrList: [],
       tableData: [],
       tableHeader: []
     }
   },
   created() {
+    this.getListItem()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -69,14 +71,43 @@ export default {
         delete item.税率
         delete item['收入(不含税)']
       })
-      this.$post('/contractBilling/importData', data).then((res) => {
+      var arrList = this.arrList
+      var flag = true
+      for (var i = 0; i < data.length; i++) {
+        for (var j = 0; j < arrList.length; j++) {
+          if (data[i].number === arrList[j]) {
+            flag = false
+            break
+          }
+        }
+      }
+      if (flag) {
+        this.$post('/contractBilling/importData', data).then((res) => {
+          if (res.data.success === true) {
+            this.$confirm('数据导入成功', '提示', {
+              confirmButtonText: '确定',
+              type: 'success'
+            }).then(() => {
+              this.$emit('toggleTab', 'listTab')
+            })
+          }
+        })
+      } else {
+        this.$confirm('数据导入失败，开票号码出现重复', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        })
+      }
+    },
+    getListItem() {
+      this.$get('/contractBilling').then((res) => {
         if (res.data.success === true) {
-          this.$confirm('数据导入成功', '提示', {
-            confirmButtonText: '确定',
-            type: 'success'
-          }).then(() => {
-            this.$emit('toggleTab', 'listTab')
-          })
+          var data = res.data.data.content
+          var arrList = []
+          for (var i = 0; i < data.length; i++) {
+            arrList.push(data[i].number)
+          }
+          this.arrList = arrList
         }
       })
     },

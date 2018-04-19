@@ -43,7 +43,7 @@
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
           <el-button  v-if="hasPerm('outboundCheck:save')" :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-          <el-button :loading="false">导出出库单</el-button>
+          <el-button :loading="false" @click="outBound">导出出库单</el-button>
           <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
         </div>
       </div>
@@ -153,8 +153,6 @@ export default {
             purchaseList.push(item.purchaseList)
           })
           this.purchaseList = purchaseList
-          // this.purchaseList
-          console.log('purchaseList', purchaseList)
         }
       })
     },
@@ -274,6 +272,9 @@ export default {
       } else if (val < 0) {
         this.outboundInfo.number = 0
       }
+    },
+    outBound() {
+      this.$emit('outBound', true)
     }
   },
   watch: {
