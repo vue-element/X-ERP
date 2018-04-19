@@ -268,6 +268,8 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
+      // 打印
+      printTable: false,
       inboundId: '',
       rules: {},
       container: true,

@@ -62,6 +62,16 @@
              </el-select>
             </el-form-item>
           </el-col>
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-form-item label="有效期限:" class="range-date">
+              <el-date-picker v-model="searchData.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+              </el-date-picker>
+              <!-- <el-select v-model="searchData.reviewState" placeholder="请选择评审状态" filterable clearable>
+               <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
+               </el-option>
+             </el-select> -->
+            </el-form-item>
+          </el-col>
         </el-row>
       </div>
       <div class="commont-btn">
@@ -89,7 +99,8 @@ export default {
         system: '',
         specModel: '',
         brand: '',
-        supply_id: null
+        supply_id: null,
+        validDate: []
       },
       rules: {}
     }
@@ -129,7 +140,19 @@ export default {
       ]
     },
     search() {
-      this.$emit('search', this.searchData)
+      var searchData = {}
+      for (var key in this.searchData) {
+        if (this.searchData[key]) {
+          if (key === 'validDate') {
+            searchData['startDate'] = this.searchData['validDate'][0]
+            searchData['endDate'] = this.searchData['validDate'][1]
+          } else {
+            searchData[key] = this.searchData[key]
+          }
+        }
+      }
+      // console.log('search', searchData)
+      this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}

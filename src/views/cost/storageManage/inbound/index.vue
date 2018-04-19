@@ -92,12 +92,18 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '订单编号', '付款合同编号/入库单编号', '使用部门', '供应商']
-        const filterVal = ['index', 'orderCode', 'code', 'department', 'supply.name']
-        const list = this.exprotList
+        const tHeader = ['序号', '订单编号', '付款合同编号/入库单编号', '使用部门', '供应商', '状态']
+        const filterVal = ['index', 'orderCode', 'code', 'department', 'supplyName', 'state']
+        var list = this.exprotList
         var i = 1
+        // console.log('list', list)
+        // return
         list.forEach((item) => {
           item.index = i
+          item.orderCode = item.paymentContract.orderCode
+          item.code = item.paymentContract.code
+          item.department = item.paymentContract.department
+          item.supplyName = item.paymentContract.supply.name
           i++
         })
         const data = this.formatJson(filterVal, list)

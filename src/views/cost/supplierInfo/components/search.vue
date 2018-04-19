@@ -8,6 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商名称:">
+              <!-- <select-dropdown label="供应商名称" :listData="supplyList"  @onchange="supplyChange"></select-dropdown> -->
               <el-select v-model="searchData.s_id" placeholder="请选择供应商" filterable clearable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
@@ -94,9 +95,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="40">
-
-        </el-row>
       </div>
       <div class="commont-btn">
         <el-button :loading="loading" @click="search">查询</el-button>
@@ -107,8 +105,12 @@
 </template>
 
 <script>
+// import SelectDropdown from '@/components/SelectDropdown'
 export default {
   name: 'supplierSearch',
+  // components: {
+  //   SelectDropdown
+  // },
   data() {
     return {
       loading: false,
@@ -145,6 +147,9 @@ export default {
     this.getInsertData()
   },
   methods: {
+    supplyChange(name) {
+      this.searchData.name = name
+    },
     getInsertData() {
       this.$get('/supply/findInsertData').then((res) => {
         if (res.data.success === true) {

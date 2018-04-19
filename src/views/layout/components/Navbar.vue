@@ -12,11 +12,11 @@
     <!-- <li>
       <span class="help">帮助</span>
       <i class="iconfont icon-help"></i>
-    </li>
-    <li>
-      <span class="setting">设置</span>
-      <i class="iconfont icon-setting"></i>
     </li> -->
+    <li>
+      <span class="setting">修改密码</span>
+      <i class="iconfont icon-setting"></i>
+    </li>
     <li @click="logout">
       <span class="logout">退出</span>
       <i class="iconfont icon-out"></i>

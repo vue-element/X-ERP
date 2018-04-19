@@ -118,7 +118,11 @@
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
           <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
+<<<<<<< HEAD
           <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
+=======
+          <!-- <el-button :loading="false">退回填写</el-button> -->
+>>>>>>> 2adb774c5544f0c994236ffa8b06c213f4980f3a
         </div>
       </div>
     </div>

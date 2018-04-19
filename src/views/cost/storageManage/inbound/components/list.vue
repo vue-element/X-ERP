@@ -14,7 +14,7 @@
         <el-table-column label="操作" min-width="140" fixed="right">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button>
+            <!-- <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button> -->
             <el-button @click.native.prevent="exportRow(scope.row.id)" type="text">导出</el-button>
           </template>
         </el-table-column>
@@ -67,8 +67,8 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          // console.log('content'
-          this.$emit('exportData', data.content)
+          // console.log('this.tableData', this.tableData)
+          this.$emit('exportData', this.tableData)
         }
       }).catch(() => {
         this.listLoading = false
@@ -94,7 +94,6 @@ export default {
         }
       })
     },
-    checkRow() {},
     exportRow() {},
     seeRow(id) {
       this.$get('/inboundList/findUpdateData/' + id).then((res) => {

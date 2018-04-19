@@ -111,6 +111,13 @@
              </el-select>
             </el-form-item>
           </el-col>
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="价格有效期限:" class="range-date validDate" prop="validDate">
+              <p v-if="disabled">{{validDateStr}}</p>
+              <el-date-picker v-else v-model="priceInfo.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" @change="validDateChange"
+              start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :ms="24" :md="24" :lg="24">
@@ -174,6 +181,8 @@ export default {
       disabled: false,
       editShow: false,
       priceId: null,
+      validDate: [],
+      validDateStr: '',
       priceInfo: {
         brand: '',
         code: '',
@@ -188,7 +197,8 @@ export default {
         system: '',
         type: '',
         unit: '',
-        source: ''
+        source: '',
+        validDate: []
       },
       oldproductQuotation: '',
       supplyType: '',
@@ -211,7 +221,8 @@ export default {
         productQuotation1: [{ required: true, message: '请输入产品最新报价', trigger: 'blur' }],
         region: [{ required: true, validator: validateRegion, trigger: 'change' }],
         applicationPerson: [{ required: true, message: '请输入申请人', trigger: 'blur' }],
-        source: [{ required: true, message: '请输入价格来源', trigger: 'change' }]
+        source: [{ required: true, message: '请输入价格来源', trigger: 'change' }],
+        validDate: [{ required: true, message: '请输入价格有效期限', trigger: 'change' }]
       },
       temp: {}
     }
@@ -225,10 +236,17 @@ export default {
     }
   },
   methods: {
+    validDateChange(val) {
+      this.disabled = true
+      this.disabled = false
+      // console.log('val', val)
+    },
     save() {
       this.$refs.priceInfo.validate((valid) => {
         if (valid) {
           this.loading = true
+          this.priceInfo.startDate = this.priceInfo.validDate[0]
+          this.priceInfo.endDate = this.priceInfo.validDate[1]
           this.$post('/price/save', this.priceInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -252,6 +270,7 @@ export default {
     },
     reset() {
       this.priceInfo = _.cloneDeep(this.temp)
+      this.editInfo()
     },
     cancel() {
       this.$emit('toggleTab')
@@ -265,12 +284,21 @@ export default {
         this.supplyRegion = this.priceInfo.supply.supplyRegion.name
         this.supplyCycle = this.priceInfo.supply.supplyCycle
       }
+      // 有效期限
+      if (this.priceInfo.startDate === null || this.priceInfo.endDate === null) {
+        this.validDateStr = ''
+      } else {
+        this.validDateStr = this.priceInfo.startDate + '  至  ' + this.priceInfo.endDate
+        this.priceInfo.validDate = [this.priceInfo.startDate, this.priceInfo.endDate]
+        console.log('validDate', this.priceInfo.validDate)
+      }
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
       if (this.disabled === true) {
         this.editWord = '编辑'
         this.priceInfo = _.cloneDeep(this.temp)
+        // console.log('priceInfo', this.priceInfo)
         this.editInfo()
       } else {
         this.editWord = '取消编辑'
@@ -324,6 +352,7 @@ export default {
       } else {
         this.editShow = true
         this.disabled = true
+        this.editWord = '编辑'
       }
     },
     failSave() {
@@ -367,10 +396,7 @@ export default {
   watch: {
     disabled(status) {
       if (status === false) {
-        this.editWord = '取消编辑'
         this.$emit('changeObj', true)
-      } else {
-        this.editWord = '编辑'
       }
     },
     priceInfo: {
