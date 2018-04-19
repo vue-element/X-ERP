@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+    <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="rules" ref="loginForm" label-position="left">
       <div class="title">
         <h3>X-ERP项目管理系统</h3>
         <p>X-ERP PROJECT MANAGEMENT SYSTEM</p>
@@ -42,21 +42,21 @@ export default {
     //     callback()
     //   }
     // }
-    // const validatePassword = (rule, value, callback) => {
-    //   if (value.length < 5) {
-    //     callback(new Error('密码不能小于6位'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码不能小于6位'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: '',
         password: ''
       },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: '请输入用户名' }],
-        password: [{ required: true, trigger: 'blur', validator: '请输入密码' }]
+      rules: {
+        username: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
       showDialog: false,
@@ -111,6 +111,8 @@ export default {
               Cookies.set('password', password, { expires: 7 })
               if (this.isKeepPw === true) {
                 Cookies.set('isKeepPw', true)
+              } else {
+                Cookies.remove('isKeepPw')
               }
               this.$router.push({ path: '/' })
             } else {

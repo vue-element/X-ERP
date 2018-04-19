@@ -466,6 +466,12 @@ export default {
         }
       })
     },
+    passCheck() {
+      this.$post('/bussiness/examine/' + this.businessInfo.id).then((res) => {
+        this.businessInfo.examineState = res.data.data
+        this.temp = _.cloneDeep(this.businessInfo)
+      })
+    },
     reset() {
       this.businessInfo = _.cloneDeep(this.temp)
       this.editInfo()
@@ -487,15 +493,16 @@ export default {
         }
       }
       this.businessInfo.amount1 = outputmoney('' + this.businessInfo.amount)
-      var cityOption = this.businessInfo.oldCity.split('-')
-      this.cityOption = []
-      cityOption.forEach((item) => {
-        this.cityOption.push(parseInt(item))
-      })
+      if (this.businessInfo.oldCity !== null) {
+        var cityOption = this.businessInfo.oldCity.split('-')
+        this.cityOption = []
+        cityOption.forEach((item) => {
+          this.cityOption.push(parseInt(item))
+        })
+      }
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
-          // this.contractInfo.contractTotalAmount = outputmoney('' + this.businessInfo.contractTotalAmount)
         }
       })
     },
@@ -508,10 +515,6 @@ export default {
       }
 
       this.disabled = !this.disabled
-    },
-    passCheck() {
-      this.businessInfo.examineState = '有效商机'
-      this.add()
     },
     getInsertData() {
       this.$get('/bussiness/findInsertData').then((res) => {
@@ -534,11 +537,6 @@ export default {
       this.businessInfo.amount1 = outputmoney(val)
     },
     //  所属年月日转化为年月格式
-    dateChange(date) {
-      // var d = new Date(date)
-      // var newDate = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).substr(-2)
-      // this.businessInfo.date = newDate
-    },
     successSave() {
       this.$emit('changeObj', false)
       this.$message({

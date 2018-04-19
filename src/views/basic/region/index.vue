@@ -8,12 +8,6 @@
           <span>新增</span>
         </button>
       </div>
-      <div class="export-btn fr">
-        <button @click="handleDownload()">
-          <i class="iconfont icon-export"></i>
-          <span>数据导出</span>
-        </button>
-      </div>
     </div>
   </div>
   <el-table style="width: 100%"  :data="regionList" :height="height" v-loading.body="listLoading" element-loading-text="拼命加载中" border>

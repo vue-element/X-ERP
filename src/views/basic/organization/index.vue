@@ -12,44 +12,40 @@
           <span>查看明细</span>
         </button>
       </div>
-      <div class="export-btn fr">
-        <button v-show="tab === 'listTab'" @click="handleDownload()">
-          <i class="iconfont icon-export"></i>
-          <span>数据导出</span>
-        </button>
-      </div>
     </div>
   </div>
   <div class="compotent-tab" >
     <div class="organization-list">
-      <el-col :span="4">
-        <el-tree class="org-tree" :data="orgtree" :props="defaultProps" @node-click="handleNodeClick" :style="{height: height + 'px'}" default-expand-all></el-tree>
-      </el-col>
-      <el-col :span="20" :offset="0">
-        <transition name="el-zoom-in-top" mode="out-in">
-          <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height" @selection-change="handleSelectionChange"
-          v-loading.body="listLoading" element-loading-text="拼命加载中" border>
-            <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
-              <template slot-scope="scope">{{scope.$index  + 1}}</template>
-           </el-table-column>
-           <el-table-column prop="organization.name" label="组织名称" min-width="200"></el-table-column>
-           <el-table-column prop="organization.code" label="组织编号" min-width="180"></el-table-column>
-           <el-table-column prop="organization.organization.name" label="上级组织名称" min-width="200"></el-table-column>
-           <el-table-column prop="organization.organization.code" label="上级组织编号" min-width="180"></el-table-column>
-           <!-- <el-table-column prop="name" label="责任人" width="100"></el-table-column>
-           <el-table-column prop="phone" label="责任人联系方式" min-width="180"></el-table-column>
-           <el-table-column prop="name" label="组织类型" width="100"></el-table-column> -->
-           <!-- <el-table-column fixed="right" label="操作" width="120">
-              <template slot-scope="scope">
-                <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>
-                <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
-              </template>
-            </el-table-column> -->
-          </el-table>
-        </transition>
-        <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
-         @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
-      </el-col>
+      <el-row :gutter="10">
+        <el-col :span="4">
+          <el-tree class="org-tree" :data="orgtree" :props="defaultProps" @node-click="handleNodeClick" :style="{height: height + 'px'}" default-expand-all></el-tree>
+        </el-col>
+        <el-col :span="20">
+          <transition name="el-zoom-in-top" mode="out-in">
+            <el-table class="basic-form" style="width: 100%"  :data="userData" :height="height" @selection-change="handleSelectionChange"
+            v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+              <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
+                <template slot-scope="scope">{{scope.$index  + 1}}</template>
+             </el-table-column>
+             <el-table-column prop="name" label="姓名" width="100"></el-table-column>
+             <el-table-column prop="organization.name" label="组织名称" min-width="200"></el-table-column>
+             <el-table-column prop="organization.code" label="组织编号" min-width="180"></el-table-column>
+             <el-table-column prop="organization.organization.name" label="上级组织名称" min-width="200"></el-table-column>
+             <el-table-column prop="organization.organization.code" label="上级组织编号" min-width="180"></el-table-column>
+             <!-- <el-table-column prop="phone" label="责任人联系方式" min-width="180"></el-table-column>
+             <el-table-column prop="name" label="组织类型" width="100"></el-table-column> -->
+             <!-- <el-table-column fixed="right" label="操作" width="120">
+                <template slot-scope="scope">
+                  <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>
+                  <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+                </template>
+              </el-table-column> -->
+            </el-table>
+          </transition>
+          <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+           @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </div>
@@ -76,14 +72,6 @@ export default {
         children: 'children',
         label: 'label'
       }
-      // searchData: {},
-      // editData: {},
-      // listData: '',
-      //
-      // selArr: [],
-      // deleteShow: false,
-      // exprotList: [],
-      // isChange: false
     }
   },
   mounted() {
@@ -106,9 +94,8 @@ export default {
       })
     },
     handleNodeClick(data) {
-      console.log('data', data)
       if (data.children === null || data.children.length === 0) {
-        console.log('this.last', data.value)
+        // console.log('this.last', data.value)
         this.orgId = data.value
         this.getUserList()
       }
@@ -189,9 +176,15 @@ export default {
 .organization-list {
   height: 100%;
   .org-tree {
-    // height: 100%;
+    background-color: #ccc;
+    @include borderRadius(4px);
+    @include boxSizing;
+    padding: 15px 4px;
     overflow-y: auto;
     position: relative;
+    // .el-tree-node .is-current {
+    //   background-color: #35d5ba !important;
+    // }
   }
 }
 </style>

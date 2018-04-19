@@ -11,7 +11,7 @@
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button v-if="hasPerm('bussiness:findInsertData')" @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
+        <button v-if="hasPerm('bussiness:save')" @click="addBtn" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -25,7 +25,7 @@
         </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'listTab'" @click="handleDownload()">
+        <button v-show="hasPerm('bussiness:export') && tab === 'listTab'" @click="handleDownload()">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -34,7 +34,7 @@
   </div>
   <div class="compotent-tab">
     <AddComponent v-if="tab === 'addTab'" :editData="editData"  @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData" @exportData="exportData" @editRow="editRow"></ListComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" ref="del" :searchData="searchData" @exportData="exportData" @editRow="editRow" :pageObj="pageObj"></ListComponent>
     <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -63,11 +63,12 @@ export default {
       selArr: [],
       exprotList: [],
       editData: {},
-      isChange: false
+      isChange: false,
+      pageObj: {}
     }
   },
   created() {
-    console.log('this.listPermission', this.listPermission)
+    // console.log('this.listPermission', this.listPermission)
   },
   mounted() {
   },
@@ -134,6 +135,10 @@ export default {
       })
     },
     editRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
@@ -141,6 +146,7 @@ export default {
       }
     },
     searchWord(data) {
+      this.pageObj = {}
       this.toggleTab('listTab')
       this.searchData = data
     },

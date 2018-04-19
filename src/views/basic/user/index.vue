@@ -1,5 +1,5 @@
 <template>
-<div class="app-container">
+<div class="app-container userManage-container">
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
@@ -28,7 +28,7 @@
   <div class="compotent-tab" >
     <transition name="fade" mode="out-in">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchWord="searchWord"  ref="search"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchWord="searchWord"  ref="search" :pageObj="pageObj"></ListComponent>
     </transition>
   </div>
 </div>
@@ -51,7 +51,8 @@ export default {
       tab: 'listTab',
       selArr: [],
       deleteShow: false,
-      isChange: false
+      isChange: false,
+      pageObj: {}
     }
   },
   mounted() {
@@ -91,6 +92,10 @@ export default {
       }
     },
     seeRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
@@ -98,6 +103,7 @@ export default {
       }
     },
     hanlderSearch() {
+      this.pageObj = {}
       this.$refs.search.getUserData()
     },
     searchChange(searchWord) {
@@ -132,27 +138,39 @@ export default {
 }
 .user-search {
   width: 300px;
-  height: 40px;
+  height: 36px;
+  line-height: 36px;
   margin-left: 10px;
-  float: left;
   .el-input{
     width: 200px;
+    height: 36px;
+    float: left;
     display: inline-block;
-    // height: 30px;
-    // line-height: 30px;
-    // input.el-input__inner{
-    //   display: inline-block;
-    //   width: 240px!important;
-    //   height: 30px!important;
-    //   line-height: 30px!important;
-    // }
+    input.el-input__inner {
+      height: 34px;
+    }
   }
   .el-button{
-    width: 60px;
+    width: 50px;
+    height: 34px;
+    float: left;
     display: inline-block;
     margin:0;
-    padding:12px;
+    padding:6px;
     background-color: #35d5ba !important;
   }
 }
+</style>
+<style  rel="stylesheet/scss" lang="scss">
+@import "src/styles/mixin.scss";
+  .userManage-container {
+    .user-search{
+      .el-input {
+       input {
+         height: 34px;
+         line-height: 34px;
+       }
+      }
+    }
+  }
 </style>

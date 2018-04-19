@@ -28,7 +28,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'userList',
-  props: ['searchWord'],
+  props: ['searchWord', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -41,6 +41,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getUserData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -52,6 +56,8 @@ export default {
       this.height = winHeight() - 210
     },
     seeRow(row) {
+      row.currentPage = this.currentPage
+      row.pageSize = this.pageSize
       this.$emit('seeRow', row)
     },
     confirmDel(id) {

@@ -3,15 +3,15 @@
   <div class="form-head-attached clearfix">
     <div class="form-inner">
       <div class="crud-btn fl">
-        <button  v-if="hasPerm('client:search')" :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
+        <button v-show="hasPerm('client:search')" :class="tab === 'searchTab' ? 'is-active' : ''" @click="toggleTab('searchTab')">
           <i class="iconfont icon-search" ></i>
           <span>查询</span>
         </button>
-        <button v-if="hasPerm('client:findAllByPage')" :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
+        <button v-show="hasPerm('client:findAllByPage')" :class="tab === 'listTab' ? 'is-active' : ''" @click="listBtn">
           <i class="iconfont icon-seeAll"></i>
           <span>查看</span>
         </button>
-        <button v-if="hasPerm('client:save')" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
+        <button v-show="hasPerm('client:save')" :class="(tab === 'addTab' && editData.tabState ==='addTab') ? 'is-active' : ''" @click="addBtn">
           <i class="iconfont icon-add"></i>
           <span>新增</span>
         </button>
@@ -21,7 +21,7 @@
         </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'listTab'" @click="handleDownload()">
+        <button v-show="hasPerm('client:export') && tab === 'listTab'" @click="handleDownload()">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -29,8 +29,8 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj' ></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData"  :pageObj="pageObj"></ListComponent>
     <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -57,11 +57,11 @@ export default {
       selArr: [],
       height: 100,
       exprotList: [],
-      isChange: false
+      isChange: false,
+      pageObj: {}
     }
   },
-  created() {
-  },
+  created() {},
   mounted() {
   },
   methods: {
@@ -100,6 +100,10 @@ export default {
       }
     },
     seeRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
@@ -107,6 +111,7 @@ export default {
       }
     },
     searchWord(data) {
+      this.pageObj = {}
       this.toggleTab('listTab')
       this.searchData = data
     },

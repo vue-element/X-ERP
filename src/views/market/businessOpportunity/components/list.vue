@@ -30,9 +30,10 @@
 
 <script>
 import { winHeight, outputmoney } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   name: 'businessList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -45,6 +46,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -67,6 +72,8 @@ export default {
     seeRow(id) {
       this.$get('/bussiness/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     },
@@ -94,6 +101,7 @@ export default {
     },
     getProjectData() {
       this.listLoading = true
+      this.searchData.role_code = this.roleCode
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/bussiness/search?size=' + pageSize + '&page=' + page
@@ -129,7 +137,11 @@ export default {
       this.getProjectData()
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

@@ -30,24 +30,27 @@
 </template>
 
 <script>
-import {
-  winHeight
-} from '@/utils'
+import { winHeight } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   name: 'smartCommunityList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 16],
+      pageSizes: [2, 15, 16],
       pageSize: 15,
       projectData: [],
       height: 100
     }
   },
   created() {
+    if (this.pageObj) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -69,6 +72,8 @@ export default {
     seeRow(id) {
       this.$get('/project/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('seeRow', data)
       })
     },
@@ -99,12 +104,14 @@ export default {
     editRow(id) {
       this.$get('/project/findUpdateData/' + id).then((res) => {
         var data = res.data.data
-        // console.log('data', data)
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     },
     getProjectData() {
       this.listLoading = true
+      this.searchData.role_code = this.roleCode
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
       var url = '/project/search?size=' + pageSize + '&page=' + page
@@ -132,7 +139,11 @@ export default {
       this.getProjectData()
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

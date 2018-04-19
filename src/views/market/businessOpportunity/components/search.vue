@@ -8,7 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <select-dropdown label="商机名称" :listData="businessList"  @onchange="bussinessChange"></select-dropdown>
+            <el-input v-model="searchData.name" placeholder="请输入商机名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -133,12 +133,8 @@
 </template>
 
 <script>
-import SelectDropdown from '@/components/SelectDropdown'
 export default {
   name: 'InvoiceSearch',
-  components: {
-    SelectDropdown
-  },
   data() {
     return {
       searchData: {
@@ -177,9 +173,6 @@ export default {
     this.searchData.city_id = this.cityOption[2]
   },
   methods: {
-    bussinessChange(name) {
-      this.searchData.name = name
-    },
     cityChange(val) {
       var len = val.length
       this.searchData.city_id = val[len - 1]

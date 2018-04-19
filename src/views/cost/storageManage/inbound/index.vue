@@ -13,7 +13,7 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="handleDownload()" :loading="downloadLoading">
+          <button v-if="hasPerm('paymentContract:export')" @click="handleDownload()" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>

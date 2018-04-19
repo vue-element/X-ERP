@@ -27,7 +27,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'customerInput',
-  props: ['searchData'],
+  props: ['searchData', 'editData'],
   data() {
     return {
       listLoading: false,
@@ -40,6 +40,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.clientData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -55,6 +59,8 @@ export default {
     seeRow(id) {
       this.$get('/client/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('seeRow', data)
       })
     },
