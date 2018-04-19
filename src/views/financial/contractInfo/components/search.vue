@@ -8,14 +8,14 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-select v-model="searchData.ci_id" placeholder="请选择合同名称" filterable clearable>
+              <el-select v-model="searchData.name" placeholder="请选择合同名称" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编码：">
-              <el-select v-model="searchData.ci_id" placeholder="请选择合同编码" filterable clearable>
+              <el-select v-model="searchData.code" placeholder="请选择合同编码" filterable clearable>
                 <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -67,7 +67,8 @@ export default {
       businessCtgList: [],
       regionList: [],
       searchData: {
-        ci_id: null,
+        name: '',
+        code: '',
         bctg_id: '',
         region_id: null,
         signDate: '',
@@ -115,7 +116,7 @@ export default {
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .contractInfo-search.form-container{
-  margin-top:90px;
+  margin-top:50px;
   &::-webkit-scrollbar{
     width: 0;
   }

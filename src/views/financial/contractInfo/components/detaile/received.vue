@@ -14,7 +14,7 @@
         </el-row>
       </div>
     </el-form>
-    <div class="form-module">
+    <div class="form-module table">
       <h4 class="module-title">
         <p>回款详情</p>
       </h4>
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     resize() {
-      this.height = winHeight() - 475
+      this.height = winHeight() - 445
     },
     getContractReceived() {
       var contractReceivedID = this.editData.editData.id
@@ -98,10 +98,14 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .returnMoney-container.form-container{
-  border:none;
-  margin-top:140px;
   &::-webkit-scrollbar{
     width: 0;
+  }
+  h4.module-title {
+    padding: 5px 0;
+  }
+  .table.form-module{
+    margin-bottom: 0;
   }
 }
 </style>

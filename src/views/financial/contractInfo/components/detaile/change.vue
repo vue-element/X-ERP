@@ -192,8 +192,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .contractChange-container.form-container{
-  border:none;
-  margin-top:140px;
   .list.form-module{
     margin-bottom: 0;
     .el-dialog__wrapper{

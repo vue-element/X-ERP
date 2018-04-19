@@ -625,8 +625,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .disclosure-info-container.form-container{
-  margin-top:140px;
-  margin-bottom:20px;
   &::-webkit-scrollbar{
     width:0;
   }

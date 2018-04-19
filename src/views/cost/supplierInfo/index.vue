@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { parseTime } from '@/utils'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'

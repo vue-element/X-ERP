@@ -113,9 +113,8 @@ export default {
   methods: {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
+        console.log(res)
         if (res.data.success === true) {
-          console.log(res)
-          this.contractBillingList = res.data.data.contractBillingList
           var data = res.data.data.contractBillingList
           const arrNew = [data[0]]
           for (var i = 0; i < data.length; i++) {
@@ -130,27 +129,31 @@ export default {
               arrNew[arrNew.length] = data[i]
             }
           }
-          // 合同编号过滤之后的
           this.contractInfoList = arrNew
         }
       })
     },
-    // 获取开票ID
+    // 获取开票号码
     watchData(ele) {
-      var obj = this.contractBillingList.find((item) => {
-        return item.id === ele
-      })
-      console.log(obj)
-      var contractInfoName = obj.contractInfo.name
-      console.log(contractInfoName)
-      for (var i = 0; i < this.contractBillingList.length; i++) {
-        for (var key in this.contractBillingList[i]) {
-          console.log(key)
-          console.log(this.contractBillingList[i].contractInfo.name)
-          // if (this.contractBillingList[i].contractInfo.name === contractInfoName) {
-          // }
+      this.$get('/contractReceived/findInsertData').then(res => {
+        if (res.data.success === true) {
+          var contractBillingList = res.data.data.contractBillingList
+          if (ele) {
+            var obj = contractBillingList.find((item) => {
+              return item.id === ele
+            })
+            var contractInfoName = obj.contractInfo.name
+            var numList = []
+            for (var i = 0; i < contractBillingList.length; i++) {
+              console.log(contractBillingList[i].contractInfo.name)
+              if (contractBillingList[i].contractInfo.name === contractInfoName) {
+                numList.push(contractBillingList[i])
+              }
+            }
+            this.contractBillingList = numList
+          }
         }
-      }
+      })
     },
     save() {
       this.$refs.receivedData.validate((valid) => {
