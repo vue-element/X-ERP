@@ -43,10 +43,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户名称:">
-            <el-select placeholder="请选择客户名称" v-model="searchData.client_id" filterable clearable>
-             <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -155,6 +152,7 @@ export default {
         bp_id: '',
         region_id: ''
       },
+      clientName: '',
       cityOption: [],
       userList: [],
       clientList: [],
@@ -213,21 +211,46 @@ export default {
       this.$get('/bussiness/findInsertData').then((res) => {
         var data = res.data.data
         this.cityList = data.cityList
-        this.clientList = data.clientList
+        // this.clientList = data.clientList
         this.regionList = data.regionList
         this.businessCtgList = data.businessCtgList
         this.userList = data.userList
         this.businessList = data.businessList
       })
-      // this.$get('/bussiness').then((res) => {
-      //   this.businessList = res.data.data.content
-      // })
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
       this.examineStateList = [{ value: '商机线索' }, { value: '有效商机' }]
+    },
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
+        var data = res.data.data
+        for (var i of data.clientNameList) {
+          i.value = i.name
+        }
+        list = data.clientNameList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        // console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.searchData.client_id = item.id
     }
   },
-  computed: {}
+  computed: {
+  },
+  watch: {
+    clientName(value) {
+      if (!value) {
+        this.searchData.client_id = ''
+      }
+    }
+  }
 }
 </script>
 

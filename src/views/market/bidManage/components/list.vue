@@ -42,7 +42,7 @@ export default {
     }
   },
   created() {
-    if (this.pageObj) {
+    if (this.pageObj.currentPage) {
       this.currentPage = this.pageObj.currentPage
       this.pageSize = this.pageObj.pageSize
     }

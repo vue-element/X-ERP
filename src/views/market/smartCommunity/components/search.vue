@@ -30,10 +30,11 @@
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户信息:">
-            <el-select v-model="searchData.client_id" placeholder="请选择客户信息" filterable clearable>
+            <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
+            <!-- <el-select v-model="searchData.client_id" placeholder="请选择客户信息" filterable clearable>
              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
-           </el-select>
+           </el-select> -->
           </el-form-item>
         </el-col>
       </el-row>
@@ -95,6 +96,7 @@ export default {
       communityTypeList: [],
       contractModeList: [],
       archFormatList: [],
+      clientName: '',
       searchData: {
         region_id: '',
         client_id: '',
@@ -147,9 +149,36 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('searchWord', searchData)
+    },
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
+        var data = res.data.data
+        for (var i of data.clientNameList) {
+          i.value = i.name
+        }
+        list = data.clientNameList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        // console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.searchData.client_id = item.id
     }
   },
   computed: {
+  },
+  watch: {
+    clientName(value) {
+      if (!value) {
+        this.searchData.client_id = ''
+      }
+    }
   }
 }
 </script>

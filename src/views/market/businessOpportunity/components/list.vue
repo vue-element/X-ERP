@@ -46,9 +46,7 @@ export default {
     }
   },
   created() {
-    // console.log('this.currentPage', this.pageObj)
     if (this.pageObj.currentPage) {
-      console.log('this.currentPage', this.pageObj.currentPage)
       this.currentPage = this.pageObj.currentPage
       this.pageSize = this.pageObj.pageSize
     }
@@ -74,11 +72,8 @@ export default {
     seeRow(id) {
       this.$get('/bussiness/findUpdateData/' + id).then((res) => {
         var data = res.data.data
-        console.log('this.currentPage', res.data)
-        console.log('this.currentPage', this.currentPage)
         data.currentPage = this.currentPage
         data.pageSize = this.pageSize
-        console.log('this.currentPage', data)
         this.$emit('editRow', data)
       })
     },

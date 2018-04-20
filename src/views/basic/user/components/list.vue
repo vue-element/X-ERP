@@ -41,7 +41,7 @@ export default {
     }
   },
   created() {
-    if (this.pageObj) {
+    if (this.pageObj.currentPage) {
       this.currentPage = this.pageObj.currentPage
       this.pageSize = this.pageObj.pageSize
     }
@@ -80,7 +80,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        // this.confirmDel(id)
+        this.confirmDel(id)
       }).catch(() => {
         return false
       })

@@ -54,7 +54,7 @@ export const asyncRouterMap = [
       { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '账户管理' }, menu: 'user' },
       { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' },
       { path: 'region', component: _import('basic/region/index'), name: 'region', meta: { title: '区域管理' }, menu: 'region' },
-      { path: 'modifyPassword', component: _import('basic/modifyPassword/index'), name: 'modifyPassword', meta: { title: '修改密码' }, hidden: true, menu: 'region' }
+      { path: 'modifyPassword', component: _import('basic/modifyPassword/index'), name: 'modifyPassword', meta: { title: '修改密码' }, menu: 'account', hidden: true }
     ]
   },
   // 市场管理

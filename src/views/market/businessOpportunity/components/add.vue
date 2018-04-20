@@ -2,7 +2,7 @@
 <div class="business-container busniess-add form-container"  ref="ele">
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
-  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:findUpdateData')">{{editWord}}</el-button>
+  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:update')">{{editWord}}</el-button>
   <el-button v-show="(this.disabled === true) && hasPerm('bussiness:examine')" @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">
@@ -438,6 +438,10 @@ export default {
     passCheck() {
       this.$post('/bussiness/examine/' + this.businessInfo.id).then((res) => {
         this.businessInfo.examineState = res.data.data
+        this.$message({
+          message: '审批通过',
+          type: 'success'
+        })
         this.temp = _.cloneDeep(this.businessInfo)
       })
     },
@@ -564,6 +568,7 @@ export default {
         }
       })
     },
+    // 与本地保存的上条记录与这次保存的关键词对比，关键字段修改，调用修改接口
     saveRecordHistory() {
       var businessHistoryObj = JSON.parse(sessionStorage.getItem('businessHistoryObj')) || {}
       var content = '' // 监听多字段的变化

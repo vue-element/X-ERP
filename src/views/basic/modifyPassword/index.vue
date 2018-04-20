@@ -89,7 +89,7 @@ export default {
             id: this.accountId,
             password: this.userInfo.password
           }
-          this.$post('/shiro/password', obj, false).then((res) => {
+          this.$post('/account/password', obj, false).then((res) => {
             this.loading = false
             if (res.data.success === true) {
               this.$message({
