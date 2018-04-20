@@ -77,6 +77,10 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
             <p v-show="disabled">{{businessInfo.client.name}}</p>
+            <!-- <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="请选择客户名称" filterable clearable @change="filterClient">
+              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select> -->
             <el-autocomplete v-show="!disabled" v-model="businessInfo.client.name" :fetch-suggestions="querySearchAsync1" @select="clientSelect" placeholder="请输入内容"></el-autocomplete>
           </el-form-item>
         </el-col>
@@ -84,6 +88,10 @@
           <el-form-item label="客户类别:">
             <p v-show="disabled">{{businessInfo.client.category}}</p>
             <el-input v-show="!disabled" v-model="businessInfo.client.category" placeholder="自动生成" disabled></el-input>
+            <!-- <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="自动生成" disabled>
+              <el-option v-for="item in clientList" :label="item.category" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select> -->
           </el-form-item>
         </el-col>
       </el-row>
@@ -92,6 +100,10 @@
           <el-form-item label="联系方式:">
             <p v-show="disabled">{{businessInfo.client.phone}}</p>
             <el-input v-show="!disabled" v-model="businessInfo.client.phone" placeholder="自动生成" disabled></el-input>
+            <!-- <el-select v-show="!disabled" v-model="businessInfo.client.id" placeholder="自动生成" disabled>
+              <el-option v-for="item in clientList" :label="item.phone" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select> -->
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">

@@ -27,7 +27,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'customerInput',
-  props: ['searchData', 'editData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,

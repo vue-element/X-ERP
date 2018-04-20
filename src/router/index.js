@@ -51,7 +51,7 @@ export const asyncRouterMap = [
     children: [
       { path: 'permission', component: _import('basic/permission/index'), name: 'permission', meta: { title: '权限管理' }, menu: 'permission' },
       { path: 'role', component: _import('basic/role/index'), name: 'role', meta: { title: '角色管理' }, menu: 'role' },
-      { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '用户管理' }, menu: 'user' },
+      { path: 'user', component: _import('basic/user/index'), name: 'user', meta: { title: '账户管理' }, menu: 'user' },
       { path: 'organization', component: _import('basic/organization/index'), name: 'organization', meta: { title: '组织架构管理' }, menu: 'org' },
       { path: 'region', component: _import('basic/region/index'), name: 'region', meta: { title: '区域管理' }, menu: 'region' },
       { path: 'modifyPassword', component: _import('basic/modifyPassword/index'), name: 'modifyPassword', meta: { title: '修改密码' }, hidden: true, menu: 'region' }
