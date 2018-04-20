@@ -77,7 +77,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
             <p v-show="disabled">{{businessInfo.client.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.client.name" :fetch-suggestions="querySearchAsync1" @select="clientSelect" placeholder="请输入内容"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.client.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请输入内容"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
@@ -178,7 +178,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="业务负责人:" prop="businessPerson">
             <p v-show="disabled">{{businessInfo.businessPerson.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.businessPerson.name" :fetch-suggestions="querySearchAsync" @select="businessPersonSelect" placeholder="请输入业务负责人"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.businessPerson.name" :fetch-suggestions="querySearchAsync" @select="businessPersonSelect" placeholder="请输入业务负责人" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
@@ -192,7 +192,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="设计负责人:">
             <p v-show="disabled">{{businessInfo.designPerson.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.designPerson.name" :fetch-suggestions="querySearchAsync" @select="designPersonSelect" placeholder="请输入设计负责人"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.designPerson.name" :fetch-suggestions="querySearchAsync" @select="designPersonSelect" placeholder="请输入设计负责人" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
@@ -206,7 +206,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="成本负责人:">
             <p v-show="disabled">{{businessInfo.costPerson.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.costPerson.name" :fetch-suggestions="querySearchAsync" @select="costPersonSelect" placeholder="请输入成本负责人"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.costPerson.name" :fetch-suggestions="querySearchAsync" @select="costPersonSelect" placeholder="请输入成本负责人" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
@@ -220,7 +220,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="工程负责人:">
             <p v-show="disabled">{{businessInfo.projectPerson.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.projectPerson.name" :fetch-suggestions="querySearchAsync" @select="projectPersonSelect" placeholder="请输入工程负责人"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.projectPerson.name" :fetch-suggestions="querySearchAsync" @select="projectPersonSelect" placeholder="请输入工程负责人" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
@@ -234,7 +234,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="项目经理:">
             <p v-show="disabled">{{businessInfo.projectManager.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.projectManager.name" :fetch-suggestions="querySearchAsync" @select="projectManagerSelect" placeholder="请输入项目经理"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.projectManager.name" :fetch-suggestions="querySearchAsync" @select="projectManagerSelect" placeholder="请输入项目经理" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
        <el-col :sm="24" :md="12" :lg="12">
@@ -283,7 +283,15 @@ export default {
     var validateCity = this.validateMsg('请选择城市信息')
     var validateClient = this.validateMsg('请选择客户信息')
     var validateCategory = this.validateMsg('请选择业务分类信息')
-    var businessPerson = this.validateMsg('请选择业务负责人')
+    // var businessPerson = this.validateMsg('请选择业务负责人')
+    const businessPerson = (rule, value, callback) => {
+      console.log('value', value)
+      if ((!value.name)) {
+        callback(new Error('请选择业务负责人'))
+      } else {
+        callback()
+      }
+    }
     const validPhone = (rule, value, callback) => {
       if ((!validateMobile(value)) && (!validatePhone(value))) {
         callback(new Error('请输入正确的手机或电话号码'))
@@ -387,65 +395,6 @@ export default {
     ])
   },
   methods: {
-    // 客户信息搜索
-    querySearchAsync1(queryString, callback) {
-      var list = [{}]
-      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.clientNameList) {
-          i.value = i.name
-        }
-        list = data.clientNameList
-        if (list.length === 0) {
-          list = [{ value: '暂无数据' }]
-        }
-        console.log('list', list)
-        callback(list)
-      }).catch((error) => {
-        console.log(error)
-      })
-    },
-    clientSelect(item) {
-      console.log('client', item)
-      this.businessInfo.client = item
-    },
-    // 人员信息搜索
-    querySearchAsync(queryString, callback) {
-      var list = [{}]
-      this.$get('/bussiness/findInsertData?userName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.userNameList) {
-          i.value = i.name
-        }
-        list = data.userNameList
-        if (list.length === 0) {
-          list = [{ value: '暂无数据' }]
-        }
-        callback(list)
-      }).catch((error) => {
-        console.log(error)
-      })
-    },
-
-    businessPersonSelect(item) {
-      this.businessInfo.businessPerson = item
-    },
-    designPersonSelect(item) {
-      this.businessInfo.designPerson = item
-    },
-    costPersonSelect(item) {
-      this.businessInfo.costPerson = item
-    },
-    projectPersonSelect(item) {
-      this.businessInfo.projectPerson = item
-    },
-    projectManagerSelect(item) {
-      this.businessInfo.projectManager = item
-    },
-    // businessPersonSelect(item) {
-    //   this.businessInfo.businessPerson = item
-    // },
-    filterClient() {},
     add() {
       this.$refs.businessInfo.validate(valid => {
         if (valid) {
@@ -523,6 +472,8 @@ export default {
       this.$get('/contractInfo/findAllByBussiness/' + this.businessInfo.id).then((res) => {
         if (res.data.success === true && res.data.data) {
           this.contractInfo = res.data.data
+        } else {
+          return false
         }
       })
     },
@@ -647,6 +598,59 @@ export default {
       } else {
         this.getRecordHistory()
       }
+    },
+    // 客户信息搜索
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
+        var data = res.data.data
+        for (var i of data.clientNameList) {
+          i.value = i.name
+        }
+        list = data.clientNameList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.businessInfo.client = item
+    },
+    // 人员信息搜索
+    querySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/bussiness/findInsertData?userName=' + queryString).then((res) => {
+        var data = res.data.data
+        for (var i of data.userNameList) {
+          i.value = i.name
+        }
+        list = data.userNameList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    businessPersonSelect(item) {
+      this.businessInfo.businessPerson = item
+    },
+    designPersonSelect(item) {
+      this.businessInfo.designPerson = item
+    },
+    costPersonSelect(item) {
+      this.businessInfo.costPerson = item
+    },
+    projectPersonSelect(item) {
+      this.businessInfo.projectPerson = item
+    },
+    projectManagerSelect(item) {
+      this.businessInfo.projectManager = item
     },
     setSession() {
       var oldObj = {
