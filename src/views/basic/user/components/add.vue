@@ -1,9 +1,9 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <!-- <div class="commont-btn edit-btn" v-show="editShow">
+  <div class="commont-btn edit-btn" v-show="editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
-  </div> -->
+  </div>
   <el-form :model="userMsg" :rules="rules" ref="userMsg">
     <div class="form-module">
       <h4 class="module-title">
@@ -11,43 +11,29 @@
       </h4>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="姓名:" prop="client">
+          <el-form-item label="账户名:" prop="client">
             <p v-if="disabled">{{userMsg.name}}</p>
             <el-input v-else v-model="userMsg.name" placeholder="请输入账户名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="工号:" prop="region">
-            <p v-if="disabled">{{userMsg.name}}</p>
-            <el-input v-else v-model="userMsg.name" placeholder="请输入工号"></el-input>
+          <el-form-item label="角色名称:" prop="city">
+            <p v-if="disabled">{{userMsg.role.name}}</p>
+            <el-select v-else v-model="userMsg.role.id" placeholder="请选择" filterable clearable>
+              <el-option v-for="item in roleList" :label="item.name" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="所属组织名称:" prop="city">
-            <p v-if="disabled">{{userMsg.role.name}}</p>
-            <el-input v-else v-model="userMsg.role.name" placeholder="请输入工号"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="所属组织编号:"  prop="name">
+          <el-form-item label="角色编码:"  prop="name">
             <p v-if="disabled">{{userMsg.role.code}}</p>
-            <el-input v-else v-model="userMsg.role.code" placeholder="请输入项目名称"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="角色:" prop="buildNum">
-            <p v-if="disabled">{{userMsg.role.name}}</p>
-            <el-input v-else v-model="userMsg.role.name" type="number" min="0" placeholder="请输入楼栋及单位数量"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="账号:" prop="address">
-            <p v-if="disabled">{{userMsg.name}}</p>
-            <el-input v-else v-model="userMsg.name" placeholder="请输入项目地址"></el-input>
+            <el-select v-else v-model="userMsg.role.id" placeholder="请选择" filterable clearable>
+              <el-option v-for="item in roleList" :label="item.code" :value="item.id" :key="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -74,6 +60,7 @@ export default {
       disabled: false,
       editShow: false,
       rules: {},
+      roleList: [],
       userMsg: {
         name: '',
         role: {
@@ -95,7 +82,7 @@ export default {
       this.$refs[userMsg].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$post('/project/save', this.userMsg).then((res) => {
+          this.$post('/account/save', this.userMsg).then((res) => {
             this.loading = false
             if (res.data.success === true) {
               this.temp = _.cloneDeep(res.data.data)
@@ -114,6 +101,7 @@ export default {
         }
       })
     },
+    editInfo() {},
     reset() {
       this.userMsg = _.cloneDeep(this.temp)
     },
@@ -128,14 +116,14 @@ export default {
         this.editInfo()
       }
     },
-    getInsertData() {
-      this.$get('/project/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
-      })
-    },
+    // getInsertData() {
+    //   this.$get('/project/findInsertData').then((res) => {
+    //     var data = res.data.data
+    //     this.cityList = data.cityList
+    //     this.clientList = data.clientList
+    //     this.regionList = data.regionList
+    //   })
+    // },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
         this.action = 'add'
@@ -145,8 +133,8 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
-        // console.log('editData', this.editData)
-        this.userMsg = _.cloneDeep(this.editData.editData)
+        this.userMsg = this.editData.editData.account
+        this.roleList = this.editData.editData.roleList
       }
     },
     successSave() {

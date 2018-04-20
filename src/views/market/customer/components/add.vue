@@ -1,7 +1,7 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container customer-input" ref="ele">
-  <div class="commont-btn edit-top-btn" v-show="hasPerm('client:findUpdateData') && editShow">
+  <div class="commont-btn edit-top-btn" v-show="hasPerm('client:update') && editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
   </div>
   <el-form :model="client" :rules="rules" ref="client">

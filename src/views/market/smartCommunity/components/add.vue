@@ -1,7 +1,7 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <div class="commont-btn edit-btn" v-show="hasPerm('project:findUpdateData') && editShow">
+  <div class="commont-btn edit-btn" v-show="hasPerm('project:update') && editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
   </div>
   <el-form :model="mainMsg" :rules="rules" ref="mainMsg">
@@ -220,12 +220,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.a}}</p>
-                <input v-else type="text" v-model="carObj.a">
+                <input v-else type="text" v-model="carObj.a" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.a1}}</p>
-                <input v-else type="text" v-model="carObj.a1">
+                <input v-else type="text" v-model="carObj.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -233,12 +233,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.b}}</p>
-                <input v-else type="text" v-model="carObj.b">
+                <input v-else type="text" v-model="carObj.b" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.b1}}</p>
-                <input v-else type="text" v-model="carObj.b1">
+                <input v-else type="text" v-model="carObj.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -246,12 +246,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.c}}</p>
-                <input v-else type="text" v-model="carObj.c">
+                <input v-else type="text" v-model="carObj.c" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{carObj.c1}}</p>
-                <input v-else type="text" v-model="carObj.c1">
+                <input v-else type="text" v-model="carObj.c1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -260,12 +260,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.a}}</p>
-                <input v-else type="text" v-model="personObj.a">
+                <input v-else type="text" v-model="personObj.a" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.a1}}</p>
-                <input v-else type="text" v-model="personObj.a1">
+                <input v-else type="text" v-model="personObj.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -273,12 +273,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.b}}</p>
-                <input v-else type="text" v-model="personObj.b">
+                <input v-else type="text" v-model="personObj.b" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.b1}}</p>
-                <input v-else type="text" v-model="personObj.b1">
+                <input v-else type="text" v-model="personObj.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -286,12 +286,12 @@
               <td>入口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.c}}</p>
-                <input v-else type="text" v-model="personObj.c">
+                <input v-else type="text" v-model="personObj.c" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
                 <p v-if="disabled">{{personObj.c1}}</p>
-                <input v-else type="text" v-model="personObj.c1">
+                <input v-else type="text" v-model="personObj.c1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -299,14 +299,14 @@
               <td>客梯</td>
               <td colspan="4">
                 <p v-if="disabled">{{elevatorObj.a}}</p>
-                <input v-else type="text" v-model="elevatorObj.a">
+                <input v-else type="text" v-model="elevatorObj.a" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>货梯</td>
               <td colspan="4">
                 <p v-if="disabled">{{elevatorObj.b}}</p>
-                <input v-else type="text" v-model="elevatorObj.b">
+                <input v-else type="text" v-model="elevatorObj.b" placeholder="请输入">
               </td>
             </tr>
           </table>
@@ -318,56 +318,56 @@
               <td>电梯机房</td>
               <td>
                 <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a">
+                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>配电房</td>
               <td>
                 <p v-if="disabled">{{machineRoomObj.a1}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a1">
+                <input v-else type="text" v-model="machineRoomObj.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>水泵房</td>
               <td>
                 <p v-if="disabled">{{machineRoomObj.b}}</p>
-                <input v-else type="text" v-model="machineRoomObj.b">
+                <input v-else type="text" v-model="machineRoomObj.b" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>空调机房</td>
               <td>
                 <p v-if="disabled">{{machineRoomObj.b1}}</p>
-                <input v-else type="text" v-model="machineRoomObj.b1">
+                <input v-else type="text" v-model="machineRoomObj.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>暖通机房</td>
               <td>
                 <p v-if="disabled">{{machineRoomObj.c}}</p>
-                <input v-else type="text" v-model="machineRoomObj.c">
+                <input v-else type="text" v-model="machineRoomObj.c" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td colspan="2">监控中心</td>
               <td>
                 <p v-if="disabled">{{otherObj.a}}</p>
-                <input v-else type="text" v-model="otherObj.a">
+                <input v-else type="text" v-model="otherObj.a" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td colspan="2">客户中心</td>
               <td>
                 <p v-if="disabled">{{otherObj.b}}</p>
-                <input v-else type="text" v-model="otherObj.b">
+                <input v-else type="text" v-model="otherObj.b" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td colspan="2">会所</td>
               <td>
                 <p v-if="disabled">{{otherObj.c}}</p>
-                <input v-else type="text" v-model="otherObj.c">
+                <input v-else type="text" v-model="otherObj.c" placeholder="请输入">
               </td>
             </tr>
           </table>

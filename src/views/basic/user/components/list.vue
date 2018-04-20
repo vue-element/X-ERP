@@ -6,15 +6,15 @@
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
    </el-table-column>
    <el-table-column prop="name" label="账户名" min-width="100"></el-table-column>
-   <el-table-column prop="name" label="名称" min-width="160"></el-table-column>
-   <el-table-column prop="role.name" label="角色" min-width="180"></el-table-column>
-   <!-- <el-table-column prop="city.name" label="工号" width="100"></el-table-column> -->
-   <el-table-column prop="role.name" label="所属组织名称" min-width="180"></el-table-column>
-   <el-table-column prop="role.code" label="所属组织编号" min-width="180"></el-table-column>
+   <!-- <el-table-column prop="name" label="名称" min-width="160"></el-table-column> -->
+   <!-- <el-table-column prop="role.name" label="角色" min-width="180"></el-table-column> -->
+   <!-- <el-table-column prop="loginTime" label="最后登录时间" width="100"></el-table-column> -->
+   <el-table-column prop="role.name" label="角色名称" min-width="180"></el-table-column>
+   <el-table-column prop="role.code" label="角色编号" min-width="180"></el-table-column>
 
    <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="seeRow(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" size="small">查看</el-button>
         <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
@@ -28,7 +28,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'userList',
-  props: ['searchWord'],
+  props: ['searchWord', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -41,6 +41,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getUserData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -51,8 +55,13 @@ export default {
     resize() {
       this.height = winHeight() - 210
     },
-    seeRow(row) {
-      this.$emit('seeRow', row)
+    seeRow(id) {
+      this.$get('/account/findUpdateData/' + id).then((res) => {
+        var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
+        this.$emit('seeRow', data)
+      })
     },
     confirmDel(id) {
       var projectID = { id: [id] }
@@ -71,7 +80,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        // this.confirmDel(id)
+        this.confirmDel(id)
       }).catch(() => {
         return false
       })

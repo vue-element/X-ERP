@@ -13,7 +13,7 @@
       <span class="help">帮助</span>
       <i class="iconfont icon-help"></i>
     </li> -->
-    <li>
+    <li @click.prevent="revisePassword">
       <span class="setting">修改密码</span>
       <i class="iconfont icon-setting"></i>
     </li>
@@ -55,6 +55,10 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    revisePassword() {
+      console.log('2222')
+      this.$router.push({ path: '/basic/modifyPassword' })
+    },
     getUserInfo() {
       this.user.name = this.accountName
       this.user.department = this.roleName

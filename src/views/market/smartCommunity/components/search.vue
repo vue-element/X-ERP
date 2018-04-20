@@ -8,7 +8,8 @@
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="项目名称:">
-            <select-dropdown label="项目名称" :listData="projectList"  @onchange="projectChange"></select-dropdown>
+            <el-input v-model="searchData.name" placeholder="请输入项目名称" clearable></el-input>
+            <!-- <select-dropdown label="项目名称" :listData="projectList"  @onchange="projectChange"></select-dropdown> -->
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
@@ -29,10 +30,11 @@
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户信息:">
-            <el-select v-model="searchData.client_id" placeholder="请选择客户信息" filterable clearable>
+            <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
+            <!-- <el-select v-model="searchData.client_id" placeholder="请选择客户信息" filterable clearable>
              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
-           </el-select>
+           </el-select> -->
           </el-form-item>
         </el-col>
       </el-row>
@@ -77,12 +79,12 @@
 </template>
 
 <script>
-import SelectDropdown from '@/components/SelectDropdown'
+// import SelectDropdown from '@/components/SelectDropdown'
 export default {
   name: 'SmartCommunitySearch',
-  components: {
-    SelectDropdown
-  },
+  // components: {
+  //   SelectDropdown
+  // },
   data() {
     return {
       height: 100,
@@ -94,6 +96,7 @@ export default {
       communityTypeList: [],
       contractModeList: [],
       archFormatList: [],
+      clientName: '',
       searchData: {
         region_id: '',
         client_id: '',
@@ -109,9 +112,9 @@ export default {
     this.searchData.city_id = this.cityOption[2]
   },
   methods: {
-    projectChange(name) {
-      this.searchData.name = name
-    },
+    // projectChange(name) {
+    //   this.searchData.name = name
+    // },
     getInsertData() {
       this.$get('/project/findInsertData').then((res) => {
         var data = res.data.data
@@ -146,9 +149,37 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('searchWord', searchData)
+    },
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
+        var data = res.data.data
+        for (var i of data.clientNameList) {
+          i.value = i.name
+        }
+        list = data.clientNameList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        // console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.searchData.client_id = item.id
     }
   },
-  computed: {}
+  computed: {
+  },
+  watch: {
+    clientName(value) {
+      if (!value) {
+        this.searchData.client_id = ''
+      }
+    }
+  }
 }
 </script>
 

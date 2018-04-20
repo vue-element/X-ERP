@@ -25,7 +25,7 @@
         </button>
       </div>
       <div class="export-btn fr">
-        <button v-show="tab === 'listTab'" @click="handleDownload()">
+        <button v-show="hasPerm('tenderOffer:export') && tab === 'listTab'" @click="handleDownload()">
           <i class="iconfont icon-export"></i>
           <span>数据导出</span>
         </button>
@@ -35,7 +35,7 @@
   <div class="compotent-tab" >
     <transition name="fade" mode="out-in">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del" :pageObj="pageObj"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
     </transition>
   </div>
@@ -62,7 +62,8 @@ export default {
       selArr: [],
       deleteShow: false,
       exprotList: [],
-      isChange: false
+      isChange: false,
+      pageObj: {}
     }
   },
   mounted() {
@@ -110,11 +111,20 @@ export default {
       }
     },
     seeRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
+    },
+    searchWord(data) {
+      this.pageObj = {}
+      this.toggleTab('listTab')
+      this.searchData = data
     },
     delSelectData() {
       var id = { id: this.selArr }
@@ -126,10 +136,6 @@ export default {
           type: 'success'
         })
       })
-    },
-    searchWord(data) {
-      this.toggleTab('listTab')
-      this.searchData = data
     },
     showPopWin(callback) {
       this.$confirm('信息未保存，是否离开当前页面?', '提示', {

@@ -62,7 +62,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="8" :lg="8">
-            <el-form-item label="供货区域:" prop="region">
+            <el-form-item label="供货区域:" prop="supplyRegion">
               <p v-if="disabled">{{supplyInfo.supplyRegion.name}}</p>
               <el-select v-else v-model="supplyInfo.supplyRegion.id" placeholder="请输入供货区域" filterable clearable>
                 <el-option v-for="item in supplyRegionList" :label="item.name" :value="item.id" :key="item.id">

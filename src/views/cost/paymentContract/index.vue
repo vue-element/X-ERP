@@ -134,8 +134,8 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '申请人', '申请时间', '申请部门', '业务线', '商机编号', '合同名称／使用项目', '支付对象', '应付金额', '到付时间', '发货状态', '是否自提', '账期']
-        const filterVal = ['index', 'applicationPerson', 'applicationTime', 'department', 'contractInfoBusName', 'contranctCode', 'contranctName', 'paymentObject', 'payableAmount', 'payTime', 'deliveryStatus', 'mention', 'term']
+        const tHeader = ['序号', '申请人', '申请时间', '申请部门', '业务线', '合同编号', '合同名称／使用项目', '支付对象', '实际采购金额', '计划采购金额', '应付金额', '到付时间', '是否自提', '账期', '发货状态']
+        const filterVal = ['index', 'applicationPerson', 'applicationTime', 'department', 'contractInfoBusName', 'contranctCode', 'contranctName', 'paymentObject', 'acAmount', 'adAmount', 'payableAmount', 'payTime', 'mention', 'term', 'deliveryStatus']
         // console.log('exprotList', this.exprotList)
         var list = []
         if (Arr) {
@@ -152,11 +152,10 @@ export default {
         } else {
           list = []
         }
-
         const data = this.formatJson(filterVal, list)
         console.log('data', data)
         // return
-        export_json_to_excel(tHeader, data, '供应商信息')
+        export_json_to_excel(tHeader, data, '付款合同信息表')
         this.downloadLoading = false
       })
     },

@@ -16,7 +16,7 @@
 <script>
 export default {
   name: 'SelectDropdown',
-  props: ['label', 'listData', 'onchange'],
+  props: ['label', 'listData'],
   data() {
     return {
       dropdownShow: false,

@@ -15,7 +15,7 @@
    </el-table-column>
    <el-table-column fixed="right" label="操作" width="180">
       <template slot-scope="scope">
-        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small" v-if="hasPerm('tenderOffer:findInsertData')">表格查看/编辑</el-button>
+        <el-button @click.native.prevent="saveUrl(scope.row)" type="text" size="small" v-if="hasPerm('tenderOffer:findUpdateData')">表格查看/编辑</el-button>
         <el-button @click.native.prevent="exportExcel(scope.row)" type="text" size="small">表格导出</el-button>
       </template>
     </el-table-column>
@@ -29,7 +29,7 @@
 import { winHeight, outputmoney } from '@/utils'
 export default {
   name: 'smartCommunityList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -42,6 +42,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getProjectData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -71,6 +75,8 @@ export default {
     seeRow(id) {
       this.$get('/project/findUpdateData/' + id).then(res => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('seeRow', data)
       })
     },

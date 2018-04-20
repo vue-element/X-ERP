@@ -130,21 +130,24 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '申请人', '申请时间', '业务类别', '申请部门', '商机编号', '使用项目', '支付对象', '应付金额', '到付时间', '发货状态', '是否自提', '账期']
-        const filterVal = ['index', 'applicationPerson', 'applicationTime', 'businessCategory.name', 'department', 'contractInfo.code', 'contractInfo.name', 'paymentObject', 'payableAmount', 'payTime', 'deliveryStatus', 'mention', 'term']
+        const tHeader = ['序号', '申请人', '申请时间', '申请部门', '业务线', '合同编号', '合同名称／使用项目', '支付对象', '实际采购金额', '计划采购金额', '应付金额', '到付时间', '发货状态', '是否自提', '账期']
+        const filterVal = ['index', 'applicationPerson', 'applicationTime', 'department', 'contractInfoBusName', 'contranctCode', 'contranctName', 'paymentObject', 'acAmount', 'adAmount', 'payableAmount', 'payTime', 'deliveryStatus', 'mention', 'term']
         var list = []
-        var i = 1
         if (Arr) {
+          var i = 1
           list = this.exprotList
           list.forEach((item) => {
             item.index = i
             i++
+            item.contranctCode = item.contractInfo === null ? '' : item.contractInfo.code
+            item.contranctName = item.contractInfo === null ? '' : item.contractInfo.name
+            item.contractInfoBusName = item.contractInfo === null ? '' : item.contractInfo.businessCategory.name
           })
         } else {
           list = []
         }
         const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '供应商信息')
+        export_json_to_excel(tHeader, data, '采购合同信息表')
         this.downloadLoading = false
       })
     },

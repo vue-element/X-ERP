@@ -11,6 +11,7 @@ const getters = {
 
   userName: state => state.account.userName,
   accountName: state => state.account.accountName,
+  accountId: state => state.account.accountId,
   token: state => state.account.token,
   permissions: state => state.account.permissions,
   roleCode: state => state.account.roleCode,

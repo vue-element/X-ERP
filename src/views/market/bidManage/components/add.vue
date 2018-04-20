@@ -1,7 +1,7 @@
 <template>
 <!-- 社区建设单项目信息表 -->
 <div class="form-container smartCommunity-add" ref="ele">
-  <div class="commont-btn edit-btn" v-show="hasPerm('tenderOffer:findUpdateData') && editShow">
+  <div class="commont-btn edit-btn" v-show="hasPerm('tenderOffer:update') && editShow">
     <el-button @click="toggleEditBtn">{{editWord}}</el-button>
   </div>
   <el-form :model="mainMsg" :rules="rules" ref="mainMsg">
