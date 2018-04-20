@@ -241,6 +241,7 @@ export default {
     },
     getInsertData() {
       this.$get('/contractInfo/findInsertData').then((res) => {
+        console.log(res)
         var data = res.data.data
         for (var i = 0; i < data.businessList.length; i++) {
           if (data.businessList[i].region.name === '' || data.businessList[i].city.name === '') {
@@ -249,6 +250,7 @@ export default {
           }
         }
         this.businessList = data.businessList
+        console.log(this.businessList)
         this.cityList = data.cityList
         this.clientList = data.clientList
         this.regionList = data.regionList
@@ -309,7 +311,11 @@ export default {
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
-      this.clone()
+      this.contractInfo = _.cloneDeep(this.temp)
+      this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
+      this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
+      this.contractInfo.contractTotalAmount = (this.contractInfo.originalAmount + this.contractInfo.changeAmount).toFixed(2)
+      this.temp = _.cloneDeep(this.contractInfo)
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {

@@ -113,7 +113,6 @@ export default {
   methods: {
     getInsertData() {
       this.$get('/contractReceived/findInsertData').then((res) => {
-        console.log(res)
         if (res.data.success === true) {
           var data = res.data.data.contractBillingList
           const arrNew = [data[0]]
@@ -145,7 +144,6 @@ export default {
             var contractInfoName = obj.contractInfo.name
             var numList = []
             for (var i = 0; i < contractBillingList.length; i++) {
-              console.log(contractBillingList[i].contractInfo.name)
               if (contractBillingList[i].contractInfo.name === contractInfoName) {
                 numList.push(contractBillingList[i])
               }

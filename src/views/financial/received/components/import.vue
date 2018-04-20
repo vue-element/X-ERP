@@ -21,11 +21,15 @@ export default {
     return {
       height: 100,
       hasData: true,
+      billingList: [],
       tableData: [],
-      tableHeader: []
+      tableHeader: [],
+      select: null,
+      in: null
     }
   },
   created() {
+    this.getBillingList()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -44,9 +48,31 @@ export default {
           }
         }
       }
-      this.tableData = data.results
+      var tableData = data.results
+      this.select = tableData.length
+      var filterCode = []
+      for (let i = 0; i < tableData.length; i++) {
+        for (let j = 0; j < this.billingList.length; j++) {
+          if (tableData[i].合同编号 === this.billingList[j].contractInfo.code) {
+            filterCode.push(tableData[i])
+            break
+          }
+        }
+      }
+      var filter = []
+      for (let i = 0; i < filterCode.length; i++) {
+        for (var j = 0; j < this.billingList.length; j++) {
+          if (filterCode[i].发票号码 === this.billingList[j].number) {
+            if (filterCode[i].合同编号 === this.billingList[j].contractInfo.code) {
+              filter.push(filterCode[i])
+            }
+          }
+        }
+      }
+      this.tableData = filter
     },
     dataImport() {
+      this.in = this.tableData.length
       var data = this.tableData
       data.forEach((item) => {
         item.cb_number = item.发票号码
@@ -60,7 +86,7 @@ export default {
       })
       this.$post('/contractReceived/importData', data).then((res) => {
         if (res.data.success === true) {
-          this.$confirm('数据导入成功', '提示', {
+          this.$confirm('数据导入成功，选择' + this.select + '条，成功导入' + this.in + '条', '提示', {
             confirmButtonText: '确定',
             type: 'success'
           }).then(() => {
@@ -76,6 +102,16 @@ export default {
     reset() {
       this.tableData = null
       this.tableHeader = null
+    },
+    getBillingList() {
+      this.$get('/contractBilling').then(res => {
+        var data = res.data.data.content
+        var billingList = []
+        for (var i = 0; i < data.length; i++) {
+          billingList.push(data[i])
+        }
+        this.billingList = billingList
+      })
     }
   },
   watch: {

@@ -21,13 +21,17 @@ export default {
     return {
       height: 100,
       hasData: true,
-      arrList: [],
+      arrList: [], // 合同开票列表
+      contractList: [], // 合同信息列表
       tableData: [],
-      tableHeader: []
+      tableHeader: [],
+      select: null,
+      in: null
     }
   },
   created() {
     this.getListItem()
+    this.getContractList()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -39,17 +43,36 @@ export default {
     },
     selected(data) {
       this.tableHeader = this.curtail(data.header)
-      for (var i = 0; i < data.results.length; i++) {
+      for (let i = 0; i < data.results.length; i++) {
         for (var key in data.results[i]) {
           if (key === '序号') {
             delete data.results[i][key]
           }
         }
       }
-      this.tableData = data.results
+      var tableData = data.results
+      this.select = tableData.length
+      // 过滤导入数据的开票号码、合同编号
+      for (let i = 0; i < tableData.length; i++) {
+        for (let j = 0; j < this.arrList.length; j++) {
+          if (tableData[i].开票号码 === this.arrList[j]) {
+            tableData.splice(i, 1)
+          }
+        }
+      }
+      var filter = []
+      for (let i = 0; i < tableData.length; i++) {
+        for (let j = 0; j < this.contractList.length; j++) {
+          if (tableData[i].合同编号 === this.contractList[j]) {
+            filter.push(tableData[i])
+          }
+        }
+      }
+      this.tableData = filter
     },
     dataImport() {
       var data = this.tableData
+      this.in = data.length
       data.forEach((item) => {
         item.ci_code = item.合同编号
         item.name = item.发票抬头名称
@@ -71,33 +94,16 @@ export default {
         delete item.税率
         delete item['收入(不含税)']
       })
-      var arrList = this.arrList
-      var flag = true
-      for (var i = 0; i < data.length; i++) {
-        for (var j = 0; j < arrList.length; j++) {
-          if (data[i].number === arrList[j]) {
-            flag = false
-            break
-          }
+      this.$post('/contractBilling/importData', data).then((res) => {
+        if (res.data.success === true) {
+          this.$confirm('数据导入成功，选择' + this.select + '条，成功导入' + this.in + '条', '提示', {
+            confirmButtonText: '确定',
+            type: 'success'
+          }).then(() => {
+            this.$emit('toggleTab', 'listTab')
+          })
         }
-      }
-      if (flag) {
-        this.$post('/contractBilling/importData', data).then((res) => {
-          if (res.data.success === true) {
-            this.$confirm('数据导入成功', '提示', {
-              confirmButtonText: '确定',
-              type: 'success'
-            }).then(() => {
-              this.$emit('toggleTab', 'listTab')
-            })
-          }
-        })
-      } else {
-        this.$confirm('数据导入失败，开票号码出现重复', '提示', {
-          confirmButtonText: '确定',
-          type: 'warning'
-        })
-      }
+      })
     },
     getListItem() {
       this.$get('/contractBilling').then((res) => {
@@ -108,6 +114,18 @@ export default {
             arrList.push(data[i].number)
           }
           this.arrList = arrList
+        }
+      })
+    },
+    getContractList() {
+      this.$get('/contractInfo').then(res => {
+        if (res.data.success === true) {
+          var data = res.data.data.content
+          var contractList = []
+          for (var i = 0; i < data.length; i++) {
+            contractList.push(data[i].code)
+          }
+          this.contractList = contractList
         }
       })
     },

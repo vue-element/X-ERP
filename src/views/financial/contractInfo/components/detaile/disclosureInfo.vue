@@ -1,6 +1,6 @@
 <template>
   <div class="disclosure-info-container form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractBasis:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="contractBasis" ref="contractBasis" class="basic" :rules="rules">
