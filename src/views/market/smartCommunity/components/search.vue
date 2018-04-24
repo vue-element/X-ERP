@@ -8,7 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="项目名称:">
-            <el-input v-model="searchData.name" placeholder="请输入项目名称" clearable></el-input>
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="projectSearchAsync" @select="projectSelect" placeholder="请选择项目名称"></el-autocomplete>
             <!-- <select-dropdown label="项目名称" :listData="projectList"  @onchange="projectChange"></select-dropdown> -->
           </el-form-item>
         </el-col>
@@ -31,10 +31,6 @@
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户信息:">
             <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
-            <!-- <el-select v-model="searchData.client_id" placeholder="请选择客户信息" filterable clearable>
-             <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select> -->
           </el-form-item>
         </el-col>
       </el-row>
@@ -79,7 +75,8 @@
 </template>
 
 <script>
-// import SelectDropdown from '@/components/SelectDropdown'
+import { mapGetters } from 'vuex'
+import { cityList, regionList } from '@/utils/selectList'
 export default {
   name: 'SmartCommunitySearch',
   // components: {
@@ -98,10 +95,12 @@ export default {
       archFormatList: [],
       clientName: '',
       searchData: {
+        archFormat: '',
+        contractMode: '',
+        communityType: '',
         region_id: '',
         client_id: '',
         city_id: '',
-        contractMode: '',
         name: ''
       },
       firstEntry: ''
@@ -116,12 +115,11 @@ export default {
     //   this.searchData.name = name
     // },
     getInsertData() {
-      this.$get('/project/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
-        this.projectList = data.projectList
+      cityList().then((data) => {
+        this.cityList = data
+      })
+      regionList().then((data) => {
+        this.regionList = data
       })
       this.archFormatList = [{ name: '多层' }, { name: '高层' }, { name: '小高层' }, { name: '别墅' }, { name: '商业' }, { name: '写字楼' }]
       this.communityTypeList = [{ name: '开放式小区' }, { name: '封闭式小区' }]
@@ -150,18 +148,36 @@ export default {
       var searchData = {}
       this.$emit('searchWord', searchData)
     },
-    clientSearchAsync(queryString, callback) {
+    // 项目搜索
+    projectSearchAsync(queryString, callback) {
       var list = [{}]
-      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.clientNameList) {
+      this.$get('/keywordQuery/projectName?role_code=' + this.roleCode + '&projectName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
           i.value = i.name
         }
-        list = data.clientNameList
         if (list.length === 0) {
           list = [{ value: '暂无数据' }]
         }
-        // console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    projectSelect(item) {
+      this.searchData.name = item.name
+    },
+    // 客户搜索
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/clientName?clientName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
         callback(list)
       }).catch((error) => {
         console.log(error)
@@ -172,6 +188,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
   },
   watch: {
     clientName(value) {

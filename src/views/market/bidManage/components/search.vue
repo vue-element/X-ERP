@@ -8,18 +8,12 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-select placeholder="请选择商机名称" v-model="searchData.business_id" filterable clearable>
-             <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <el-autocomplete v-model="bussiness.name" :fetch-suggestions="bussinessNameSearch" @select="bussinessSelect" placeholder="请选择商机名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-select placeholder="请选择商机编码" v-model="searchData.business_id" filterable clearable>
-             <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <el-autocomplete v-model="bussiness.code" :fetch-suggestions="bussinessCodeSearch" @select="bussinessSelect" placeholder="请选择商机编码"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -33,11 +27,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'SmartCommunitySearch',
   data() {
     return {
       height: 100,
+      bussiness: {
+        id: '',
+        name: '',
+        code: ''
+      },
       searchData: {
         business_id: null
       },
@@ -45,15 +45,8 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
   },
   methods: {
-    getInsertData() {
-      this.$get('/bussiness/findInsertData').then((res) => {
-        var data = res.data.data
-        this.businessList = data.businessList
-      })
-    },
     search() {
       var searchData = {}
       for (var key in this.searchData) {
@@ -66,9 +59,61 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('searchWord', searchData)
+    },
+    // 商机编号变化
+    bussinessCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessCode?role_code=' + this.roleCode + '&bussinessCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 商机名称变化
+    bussinessNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessName?role_code=' + this.roleCode + '&businessName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    bussinessSelect(item) {
+      this.bussiness = item
+      this.searchData.business_id = item.id
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  },
+  watch: {
+    bussiness: {
+      handler(obj) {
+        if (obj.name === '' || obj.code === '') {
+          obj.name = ''
+          obj.code = ''
+          this.searchData.business_id = ''
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 

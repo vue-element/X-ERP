@@ -33,11 +33,11 @@
     </div>
   </div>
   <div class="compotent-tab" >
-    <transition name="fade" mode="out-in">
-      <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del" :pageObj="pageObj"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
-    </transition>
+    <!-- <transition name="fade" mode="out-in"> -->
+    <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
+    <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del" :pageObj="pageObj"></ListComponent>
+    <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
+    <!-- </transition> -->
   </div>
 </div>
 </template>

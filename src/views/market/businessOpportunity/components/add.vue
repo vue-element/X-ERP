@@ -77,7 +77,7 @@
         <el-col :sm="24" :md="12" :lg="12">
           <el-form-item label="客户名称:" prop="client">
             <p v-show="disabled">{{businessInfo.client.name}}</p>
-            <el-autocomplete v-show="!disabled" v-model="businessInfo.client.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请输入内容"></el-autocomplete>
+            <el-autocomplete v-show="!disabled" v-model="businessInfo.client.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请输入客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :sm="24" :md="12" :lg="12">
@@ -271,10 +271,10 @@
 
 <script>
 import _ from 'lodash'
-import { isObjectValueEqual } from '@/utils'
+import { isObjectValueEqual, outputmoney } from '@/utils'
 import { mapGetters } from 'vuex'
-import { outputmoney } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
+import { cityList, regionList, businessCtgList } from '@/utils/selectList'
 export default {
   name: 'businessOpportunityAdd',
   props: ['editData'],
@@ -312,7 +312,7 @@ export default {
       },
       businessInfo: {
         city: { id: null },
-        client: { id: null },
+        client: { id: null, name: '' },
         region: { id: '' },
         businessCategory: { id: null },
         oldCity: '',
@@ -384,7 +384,6 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.businessInfo)
     if (this.businessInfo.id !== null) {
       this.getRecordHistory()
     }
@@ -492,13 +491,14 @@ export default {
       this.disabled = !this.disabled
     },
     getInsertData() {
-      this.$get('/bussiness/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
-        this.userList = data.userList
-        this.businessCtgList = data.businessCtgList
+      cityList().then((data) => {
+        this.cityList = data
+      })
+      regionList().then((data) => {
+        this.regionList = data
+      })
+      businessCtgList().then((data) => {
+        this.businessCtgList = data
       })
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
       this.businessInfo.createPerson = this.accountName
@@ -545,6 +545,7 @@ export default {
         this.businessInfo = this.editData.editData.business
         this.editInfo()
       }
+      this.temp = _.cloneDeep(this.businessInfo)
     },
     validateMsg(errMsg) {
       return (rule, value, callback) => {
@@ -607,16 +608,14 @@ export default {
     // 客户信息搜索
     clientSearchAsync(queryString, callback) {
       var list = [{}]
-      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.clientNameList) {
+      this.$get('/keywordQuery/clientName?clientName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
           i.value = i.name
         }
-        list = data.clientNameList
         if (list.length === 0) {
           list = [{ value: '暂无数据' }]
         }
-        console.log('list', list)
         callback(list)
       }).catch((error) => {
         console.log(error)
@@ -628,12 +627,11 @@ export default {
     // 人员信息搜索
     querySearchAsync(queryString, callback) {
       var list = [{}]
-      this.$get('/bussiness/findInsertData?userName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.userNameList) {
+      this.$get('/keywordQuery/userName?userName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
           i.value = i.name
         }
-        list = data.userNameList
         if (list.length === 0) {
           list = [{ value: '暂无数据' }]
         }
@@ -685,14 +683,31 @@ export default {
           this.$emit('changeObj', true)
         }
         // 人员信息的联系方式的自动生成
-        obj.businessPerson.phone = obj.businessPerson.name ? obj.businessPerson.phone : ''
-        obj.designPerson.phone = obj.designPerson.name ? obj.designPerson.phone : ''
-        obj.costPerson.phone = obj.costPerson.name ? obj.costPerson.phone : ''
-        obj.projectPerson.phone = obj.projectPerson.name ? obj.projectPerson.phone : ''
-        obj.projectManager.phone = obj.projectManager.name ? obj.projectManager.phone : ''
-        // 客户名称的联系方式的自动生成
-        obj.client.phone = obj.client.name ? obj.client.phone : ''
-        obj.client.category = obj.client.name ? obj.client.category : ''
+        if (obj.businessPerson.name === '') {
+          obj.businessPerson.phone = ''
+          obj.businessPerson.id = ''
+        }
+        if (obj.designPerson.name === '') {
+          obj.designPerson.phone = ''
+          obj.designPerson.id = ''
+        }
+        if (obj.costPerson.name === '') {
+          obj.costPerson.phone = ''
+          obj.costPerson.id = ''
+        }
+        if (obj.projectPerson.name === '') {
+          obj.projectPerson.phone = ''
+          obj.projectPerson.id = ''
+        }
+        if (obj.projectManager.name === '') {
+          obj.projectManager.phone = ''
+          obj.projectManager.id = ''
+        }
+        if (obj.client.name === '') {
+          obj.client.id = ''
+          obj.client.phone = ''
+          obj.client.category = ''
+        }
       },
       deep: true
     }

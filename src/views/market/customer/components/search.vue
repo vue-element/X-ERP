@@ -8,7 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户名称:">
-            <el-input v-model="searchData.name" placeholder="请输入客户名称" clearable></el-input>
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请输入客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
@@ -55,7 +55,6 @@ export default {
         type: '',
         person: ''
       },
-      clientList: [],
       typeList: [],
       categoryList: []
     }
@@ -65,14 +64,8 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/client/findInsertData').then((res) => {
-        if (res.data.success === true) {
-          this.clientList = res.data.data.clientList
-        }
-      })
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.typeList = [{ value: '多层' }, { value: '高层' }, { value: '小高层' }, { value: '别墅' }, { value: '商业' }, { value: '写字楼' }, { value: '其他' }]
-      this.clients = this.categoryList
     },
     search() {
       var searchData = {}
@@ -87,6 +80,25 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('searchWord', searchData)
+    },
+    // 客户搜索
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/clientName?clientName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.searchData.name = item.name
     }
   }
 }

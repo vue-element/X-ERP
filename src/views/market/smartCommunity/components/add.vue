@@ -13,10 +13,7 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户信息：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
-            <el-select v-else v-model="mainMsg.client.id" placeholder="请选择客户信息" filterable clearable>
-              <el-option v-for="item in clientList" :label="item.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+            <el-autocomplete v-else v-model="mainMsg.client.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -385,6 +382,7 @@
 <script>
 import _ from 'lodash'
 import { isObjectValueEqual, outputmoney } from '@/utils'
+import { cityList, regionList } from '@/utils/selectList'
 export default {
   name: 'smartCommunityAdd',
   props: ['editData'],
@@ -445,7 +443,8 @@ export default {
           id: ''
         },
         client: {
-          id: ''
+          id: '',
+          name: ''
         },
         address: '',
         archFormat: '',
@@ -516,7 +515,6 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.mainMsg)
   },
   mounted() {},
   methods: {
@@ -531,9 +529,9 @@ export default {
           this.$post('/project/save', this.mainMsg).then((res) => {
             this.loading = false
             if (res.data.success === true) {
-              this.temp = _.cloneDeep(res.data.data)
               this.mainMsg = res.data.data
               this.editInfo()
+              this.temp = _.cloneDeep(this.mainMsg)
               this.successSave()
             } else {
               this.failSave()
@@ -557,8 +555,6 @@ export default {
         this.otherObj = { a: '', b: '', c: '', category: 4 }
         this.cityOption = []
       } else {
-        this.mainMsg = _.cloneDeep(this.temp)
-        // this.mainMsg = _.cloneDeep(this.editData.editData.project)
         this.editInfo()
       }
     },
@@ -593,14 +589,15 @@ export default {
       if (this.disabled === true) {
         this.mainMsg = _.cloneDeep(this.temp)
         this.editInfo()
+        // this.temp=
       }
     },
     getInsertData() {
-      this.$get('/project/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
+      cityList().then((data) => {
+        this.cityList = data
+      })
+      regionList().then((data) => {
+        this.regionList = data
       })
       this.archFormatList = [{ name: '多层' }, { name: '高层' }, { name: '小高层' }, { name: '别墅' }, { name: '商业' }, { name: '写字楼' }]
     },
@@ -613,10 +610,10 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
-        // this.mainMsg = _.cloneDeep(this.temp)
-        this.mainMsg = _.cloneDeep(this.editData.editData.project)
+        this.mainMsg = this.editData.editData.project
         this.editInfo()
       }
+      this.temp = _.cloneDeep(this.mainMsg)
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -647,6 +644,25 @@ export default {
     facilityChange() {
       this.disabled = true
       this.disabled = false
+    },
+    // 客户搜索
+    clientSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/clientName?clientName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    clientSelect(item) {
+      this.mainMsg.client = item
     }
   },
   computed: {},
@@ -665,6 +681,9 @@ export default {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.client.name === '') {
+          obj.client.id = ''
         }
       },
       deep: true

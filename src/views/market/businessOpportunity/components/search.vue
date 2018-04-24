@@ -8,15 +8,12 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-input v-model="searchData.name" placeholder="请输入商机名称" clearable></el-input>
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="businessNameSearch" @select="businessNameSelect" placeholder="请输入商机名称" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-select placeholder="请选择商机编码" v-model="searchData.b_id" filterable clearable>
-             <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <el-autocomplete v-model="searchData.code" :fetch-suggestions="businessCodeSearch" @select="businessCodeSelect" placeholder="请输入商机编码" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -107,10 +104,7 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务线负责人:">
-            <el-select placeholder="请选择业务线负责人" v-model="searchData.bp_id" filterable clearable>
-             <el-option v-for="item in userList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <el-autocomplete v-model="businessPerson" :fetch-suggestions="querySearchAsync" @select="businessPersonSelect" placeholder="请输入业务负责人" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -130,12 +124,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { cityList, regionList, businessCtgList } from '@/utils/selectList'
 export default {
   name: 'InvoiceSearch',
   data() {
     return {
       searchData: {
         name: '',
+        code: '',
         sourcePerson: '',
         startDate: '',
         startDate1: '',
@@ -153,6 +150,7 @@ export default {
         region_id: ''
       },
       clientName: '',
+      businessPerson: '',
       cityOption: [],
       userList: [],
       clientList: [],
@@ -197,7 +195,6 @@ export default {
           }
         }
       }
-      // console.log('searchWord', searchData)
       this.$emit('searchWord', searchData)
     },
     searchAll() {
@@ -208,31 +205,30 @@ export default {
       this.$emit('searchWord', searchData)
     },
     getInsertData() {
-      this.$get('/bussiness/findInsertData').then((res) => {
-        var data = res.data.data
-        this.cityList = data.cityList
-        // this.clientList = data.clientList
-        this.regionList = data.regionList
-        this.businessCtgList = data.businessCtgList
-        this.userList = data.userList
-        this.businessList = data.businessList
+      cityList().then((data) => {
+        this.cityList = data
+      })
+      regionList().then((data) => {
+        this.regionList = data
+      })
+      businessCtgList().then((data) => {
+        this.businessCtgList = data
       })
       this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
       this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
       this.examineStateList = [{ value: '商机线索' }, { value: '有效商机' }]
     },
+    // 客户信息
     clientSearchAsync(queryString, callback) {
       var list = [{}]
-      this.$get('/bussiness/findInsertData?clientName=' + queryString).then((res) => {
-        var data = res.data.data
-        for (var i of data.clientNameList) {
+      this.$get('/keywordQuery/clientName?clientName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
           i.value = i.name
         }
-        list = data.clientNameList
         if (list.length === 0) {
           list = [{ value: '暂无数据' }]
         }
-        // console.log('list', list)
         callback(list)
       }).catch((error) => {
         console.log(error)
@@ -240,14 +236,81 @@ export default {
     },
     clientSelect(item) {
       this.searchData.client_id = item.id
+    },
+    // 人员信息搜索
+    querySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/userName?userName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    businessPersonSelect(item) {
+      this.searchData.bp_id = item.id
+    },
+    // 商机名称
+    businessNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessName?role_code=' + this.roleCode + '&businessName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    businessNameSelect(item) {
+      this.searchData.name = item.name
+    },
+    // 商机编号
+    businessCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessCode?role_code=' + this.roleCode + '&bussinessCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        console.log('list', list)
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    businessCodeSelect(item) {
+      this.searchData.code = item.code
     }
   },
   computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
   },
   watch: {
     clientName(value) {
+      console.log('value', value)
       if (!value) {
         this.searchData.client_id = ''
+      }
+    },
+    businessPerson(value) {
+      if (!value) {
+        this.searchData.bp_id = ''
       }
     }
   }
