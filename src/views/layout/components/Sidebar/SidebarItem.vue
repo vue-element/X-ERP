@@ -1,6 +1,6 @@
 <template>
   <div class="menu-wrapper">
-    <template v-for="item in routes" v-if="!item.hidden&&item.children">
+    <template v-for="item in routes" v-if="!item.hidden && item.children && !allChildrenHidden(item)">
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name" @click="ayy(item)">
         <el-menu-item :index="item.path+'/'+item.children[0].path" class='submenu-title-noDropdown'>
           <span v-if="item.children[0].meta&&item.children[0].meta.icon" :class="'iconfont icon-' + item.children[0].meta.icon"></span>
@@ -17,7 +17,7 @@
         <template v-for="child in item.children" v-if="!child.hidden">
           <sidebar-item class="nest-menu" v-if="!child.hideChildren && child.children && child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
 
-          <router-link v-else :to="item.path+'/'+child.path" :key="child.name">
+          <router-link v-else-if="!child.hidden" :to="item.path+'/'+child.path" :key="child.name">
             <el-menu-item :index="item.path+'/'+child.path">
               <span v-if="child.meta&&child.meta.icon" :class="'iconfont icon-' + child.meta.icon"></span>
               <span v-if="child.meta&&child.meta.title">{{child.meta.title}}</span>
@@ -41,6 +41,10 @@ export default {
   created() {
   },
   methods: {
+    allChildrenHidden(item) {
+      var list = item.children.filter(child => !child.hidden)
+      return list.length === 0
+    },
     ayy(item) {
       // console.log(item.children[0].name)
     }
