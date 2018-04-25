@@ -7,19 +7,13 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="合同名称：" class="single-date">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
-               <el-option v-for="item in contractBillingList" :label="item.contractInfo.name" :value="item.contractInfo.id" :key="item.id">
-               </el-option>
-             </el-select>
+            <el-form-item label="合同名称：">
+              <el-autocomplete v-model="searchData.receivedName" :fetch-suggestions="receivedNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractBillingList" :label="item.contractInfo.code" :value="item.contractInfo.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.receivedCode" :fetch-suggestions="receivedCodeSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -33,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'paymentSearch',
   data() {
@@ -46,29 +41,47 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
+  },
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
   },
   methods: {
-    getInsertData() {
-      this.$get('/contractReceived/findInsertData').then((res) => {
-        if (res.data.success === true && res.data.data.contractBillingList) {
-          var data = res.data.data.contractBillingList
-          const arrNew = [data[0]]
-          for (var i = 0; i < data.length; i++) {
-            var flag = true
-            for (var j = 0; j < arrNew.length; j++) {
-              if (data[i].contractInfo.id === arrNew[j].contractInfo.id) {
-                flag = false
-                break
-              }
-            }
-            if (flag) {
-              arrNew[arrNew.length] = data[i]
-            }
-          }
-          this.contractBillingList = arrNew
+    receivedNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
         }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
       })
+    },
+    receivedCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ciSelect(item) {
+      this.searchData.contractInfo_id = item.id
+      this.searchData.receivedName = item.name
+      this.searchData.receivedCode = item.code
     },
     search() {
       this.$emit('search', this.searchData)

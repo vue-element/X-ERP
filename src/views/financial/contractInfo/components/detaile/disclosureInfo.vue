@@ -249,7 +249,8 @@ export default {
         ratio: [{ required: true, message: '请输入回款比例', trigger: 'blur' }],
         amount: [{ required: true, message: '请输入回款金额', trigger: 'blur' }],
         date: [{ required: true, message: '请输入回款日期', trigger: 'change' }]
-      }
+      },
+      temp: {}
     }
   },
   created() {
@@ -319,11 +320,10 @@ export default {
       })
       if (this.action === 'add') {
         this.$emit('toggleTab')
-      } else {
-        this.contractBasis = _.cloneDeep(this.temp)
-        this.editShow = true
-        this.disabled = true
       }
+      this.contractBasis = _.cloneDeep(this.temp)
+      this.disabled = true
+      this.editShow = true
     },
     failSave() {
       this.$message({

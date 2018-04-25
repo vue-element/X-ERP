@@ -10,19 +10,15 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="商机编码：" prop="business">
+            <el-form-item label="商机编码：">
               <p v-if="disabled">{{contractInfo.business.code}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机编码" @change="category" filterable clearable>
-                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.code" :fetch-suggestions="businessCodeSearchAsync" @select="clientSelect" placeholder="请选择商机编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="商机名称：">
+            <el-form-item label="商机名称：" prop="business">
               <p v-if="disabled">{{contractInfo.business.name}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="请选择商机名称" filterable clearable>
-                <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.name" :fetch-suggestions="businessNameSearchAsync" @select="clientSelect" placeholder="请选择商机名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -30,9 +26,7 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{contractInfo.code}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
-                <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.code" placeholder="自动填充" disabled></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -46,17 +40,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="业务类别：">
               <p v-if="disabled">{{contractInfo.business.businessCategory.name}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
-                <el-option v-for="item in businessList" :label="item.businessCategory.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.businessCategory.name" placeholder="自动填充" disabled></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="客户类别：">
               <p v-if="disabled">{{contractInfo.business.client.category}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
-                <el-option v-for="item in businessList" :label="item.client.category" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.client.category" placeholder="自动填充" disabled></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -64,17 +54,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="城市：" prop="city">
               <p v-if="disabled">{{contractInfo.business.city.name}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
-                <el-option v-for="item in businessList" :label="item.city.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.city.name" placeholder="自动填充" disabled></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="办事处：">
               <p v-if="disabled">{{contractInfo.business.region.name}}</p>
-              <el-select v-else v-model="contractInfo.business.id" placeholder="自动填充" disabled>
-                <el-option v-for="item in businessList" :label="item.region.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="contractInfo.business.region.name" placeholder="自动填充" disabled></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -153,6 +139,7 @@
 <script>
 import _ from 'lodash'
 import { isObjectValueEqual } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   props: ['editData'],
   data() {
@@ -190,11 +177,21 @@ export default {
       textList: [],
       contractInfo: {
         name: '',
-        business: { id: null },
-        businessCategory: { id: null },
-        region: { id: null },
-        city: { id: null },
-        client: { id: null },
+        business: {
+          id: null,
+          businessCategory: {
+            name: ''
+          },
+          client: {
+            category: ''
+          },
+          city: {
+            name: ''
+          },
+          region: {
+            name: ''
+          }
+        },
         text: '',
         signDate: '',
         term: '',
@@ -220,41 +217,55 @@ export default {
     }
   },
   created() {
-    this.temp = _.cloneDeep(this.contractInfo)
     this.getInsertData()
     this.toggleAction()
+    this.temp = _.cloneDeep(this.contractInfo)
   },
   methods: {
     date() {
       this.disabled = true
       this.disabled = false
     },
-    category(value) {
-      for (var i = 0; i < this.businessList.length; i++) {
-        if (this.businessList[i].id === value) {
-          this.contractInfo.businessCategory.id = this.businessList[i].businessCategory.id
-          this.contractInfo.region.id = this.businessList[i].region.id
-          this.contractInfo.city.id = this.businessList[i].city.id
-          this.contractInfo.client.id = this.businessList[i].client.id
+    businessCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessCode?role_code=' + role_code + '&bussinessCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
         }
-      }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    businessNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessName?role_code=' + role_code + '&businessName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    clientSelect(item) {
+      this.contractInfo.business.id = item.id
+      this.contractInfo.business.code = item.code
+      this.contractInfo.business.name = item.name
+      this.contractInfo.business.businessCategory.name = item.businessCtg
+      this.contractInfo.business.client.category = item.clientCtg
+      this.contractInfo.business.city.name = item.cityName
+      this.contractInfo.business.region.name = item.regionName
     },
     getInsertData() {
-      this.$get('/contractInfo/findInsertData').then((res) => {
-        console.log(res)
-        var data = res.data.data
-        for (var i = 0; i < data.businessList.length; i++) {
-          if (data.businessList[i].region.name === '' || data.businessList[i].city.name === '') {
-            data.businessList[i].region.name = null
-            data.businessList[i].city.name === null
-          }
-        }
-        this.businessList = data.businessList
-        console.log(this.businessList)
-        this.cityList = data.cityList
-        this.clientList = data.clientList
-        this.regionList = data.regionList
-      })
       this.textList = [{ value: '是' }, { value: '否' }]
     },
     add() {
@@ -299,6 +310,7 @@ export default {
       this.disabled = true
       this.editShow = true
       this.contractInfo = _.cloneDeep(this.temp)
+      this.contractInfo.term = (this.contractInfo.term).substring(7, -1)
       this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = this.contractInfo.originalAmount + this.contractInfo.changeAmount
@@ -312,6 +324,7 @@ export default {
     toggleEditBtn() {
       this.disabled = !this.disabled
       this.contractInfo = _.cloneDeep(this.temp)
+      this.contractInfo.term = (this.contractInfo.term).substring(7, -1)
       this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = (this.contractInfo.originalAmount + this.contractInfo.changeAmount).toFixed(2)
@@ -329,6 +342,7 @@ export default {
     },
     clone() {
       this.contractInfo = _.cloneDeep(this.editData.editData.contractInfo)
+      this.contractInfo.term = (this.contractInfo.term).substring(7, -1)
       this.contractInfo.dateShow = [this.contractInfo.startDate, this.contractInfo.endDate].join(' 至 ')
       this.contractInfo.limit = [this.contractInfo.startDate, this.contractInfo.endDate]
       this.contractInfo.contractTotalAmount = (this.contractInfo.originalAmount + this.contractInfo.changeAmount).toFixed(2)
@@ -387,7 +401,10 @@ export default {
         this.contractInfo.contractTotalAmount = (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)
         return (parseFloat(this.contractInfo.originalAmount) + parseFloat(this.contractInfo.changeAmount)).toFixed(2)
       }
-    }
+    },
+    ...mapGetters([
+      'userName'
+    ])
   }
 }
 </script>

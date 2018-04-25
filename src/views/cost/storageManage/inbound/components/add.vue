@@ -104,12 +104,12 @@
                 </tr>
               </tbody>
             </table>
-            <form class="footer">
+            <form class="footer" :model="inboundList">
               <div class="left">
-                <label>制表：<span>卓惠敏</span></label>
+                <label>制表：<span>{{inboundList.person}}</span></label>
               </div>
               <div class="right">
-                <label>审核：<span>罗艺</span></label>
+                <label>审核：<span>{{inboundList.checkPerson}}</span></label>
               </div>
             </form>
           </div>
@@ -253,6 +253,7 @@
 import _ from 'lodash'
 import tableComponent from './table.vue'
 import { returnFloat } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   props: ['editData'],
   components: { tableComponent },
@@ -300,6 +301,7 @@ export default {
       this.inboundList = data.inboundList
       this.inboundId = this.inboundList.id
       this.paymentContractId = this.inboundList.paymentContract.id
+      this.inboundList.checkPerson = this.$store.state.account.userName
     },
     toggleTab(tab) {
       this.actionTab = tab
@@ -378,7 +380,11 @@ export default {
       return false
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
+  }
 }
 </script>
 

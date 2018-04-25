@@ -7,8 +7,8 @@
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column prop="code" label="合同编号" width="160"></el-table-column>
-        <el-table-column prop="name" label="合同名称" width="260"></el-table-column>
+        <el-table-column prop="ciCode" label="合同编号" width="160"></el-table-column>
+        <el-table-column prop="ciName" label="合同名称" width="260"></el-table-column>
         <el-table-column prop="region" label="所属办事处" width="130"></el-table-column>
         <el-table-column prop="name" label="发票抬头名称" width="260"></el-table-column>
         <el-table-column prop="amount" label="开票金额(含税)" width="140"></el-table-column>
@@ -68,13 +68,13 @@ export default {
           var data = res.data.data
           for (var i = 0; i < data.content.length; i++) {
             var region = data.content[i].contractInfo.business.region.name
-            var code = data.content[i].contractInfo.code
-            var name = data.content[i].contractInfo.name
+            var ciCode = data.content[i].contractInfo.code
+            var ciName = data.content[i].contractInfo.name
             var index = i + 1
             data.content[i].region = region
             data.content[i].index = index
-            data.content[i].code = code
-            data.content[i].name = name
+            data.content[i].ciCode = ciCode
+            data.content[i].ciName = ciName
           }
           this.total = data.totalElements
           this.currentPage = data.number + 1

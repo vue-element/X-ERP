@@ -8,18 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称:" class="single-date">
-              <el-select v-model="analysisData.contractInfo_id" placeholder="请选择合同名称" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="analysisData.scheduleName" :fetch-suggestions="scheduleNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号:" class="single-date">
-              <el-select v-model="analysisData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="analysisData.scheduleCode" :fetch-suggestions="scheduleCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -97,6 +91,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'scheduleManageSearch',
   data() {
@@ -130,9 +125,6 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/contractSchedule/findInsertData').then((res) => {
-        this.contractInfoList = res.data.data.contractInfoList
-      })
       this.stageList = [{ value: '未进场' }, { value: '施工中' }, { value: '已完工' }]
       this.projectStatusList = [{ value: '正常' }, { value: '滞后' }, { value: '严重滞后' }]
       this.receivedStatusList = [{ value: '正常' }, { value: '提前' }, { value: '滞后' }, { value: '严重滞后' }]
@@ -141,6 +133,41 @@ export default {
       this.comprehensiveStatusList = [{ value: '正常' }, { value: '超支' }]
       this.paymentBalanceStatusList = [{ value: '正常' }, { value: '异常' }]
       this.cashBalanceStatusList = [{ value: '正常' }, { value: '异常' }]
+    },
+    scheduleNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    scheduleCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ciSelect(item) {
+      this.analysisData.contractInfo_id = item.id
+      this.analysisData.scheduleName = item.name
+      this.analysisData.scheduleCode = item.code
     },
     search() {
       var searchData = {}
@@ -156,7 +183,11 @@ export default {
       this.$emit('search', searchData)
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
+  }
 }
 </script>
 

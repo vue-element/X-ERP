@@ -118,11 +118,8 @@
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
           <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
           <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
-<<<<<<< HEAD
           <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
-=======
           <!-- <el-button :loading="false">退回填写</el-button> -->
->>>>>>> 2adb774c5544f0c994236ffa8b06c213f4980f3a
         </div>
       </div>
     </div>
@@ -213,7 +210,7 @@ export default {
     confirmEdit(row, index) {
       row.edit = false
       Vue.set(this.InboundList, index, row)
-      console.log('rowe', row)
+      // console.log('rowe', row)
       // var totalAmount = row.totalAmount ? row.totalAmount : 0
       var obj = {
         id: row.id,
@@ -233,7 +230,6 @@ export default {
     // 审核动态
     getInboundCheck() {
       this.$get('/inboundCheck/findByInboundList/' + this.inboundId).then((res) => {
-        // console.log('res', res)
         if (res.data.success === true) {
           this.inboundCheck = res.data.data
         }
@@ -246,7 +242,6 @@ export default {
           id: this.inboundId
         }
       }
-      // console.log('obj', obj)
       this.$post('/inboundCheck/save', obj).then((res) => {
         this.getInboundCheck()
       })

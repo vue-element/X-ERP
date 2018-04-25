@@ -105,10 +105,10 @@
             </table>
             <form class="footer">
               <div class="left">
-                <label>制表：<span>卓惠敏</span></label>
+                <label>制表：<span>{{}}</span></label>
               </div>
               <div class="right">
-                <label>审核：<span>罗艺</span></label>
+                <label>审核：<span>{{}}</span></label>
               </div>
             </form>
           </div>

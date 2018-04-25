@@ -251,7 +251,6 @@ export default {
       }
       console.log('submit', JSON.stringify(obj))
       this.$post('/outboundCheck/save', obj).then((res) => {
-        console.log(res)
         this.getOutboundCheck()
       })
     },
