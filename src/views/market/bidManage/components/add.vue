@@ -13,45 +13,34 @@
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码" prop="business">
             <p v-if="disabled">{{mainMsg.business.code}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机编码" filterable clearable>
-              <el-option v-for="item in businessList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-            </el-select>
+            <el-autocomplete v-show="!disabled" v-model="mainMsg.business.code" :fetch-suggestions="bussinessCodeSearch" @select="bussinessSelect" placeholder="请选择商机编码"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称">
             <p v-if="disabled">{{mainMsg.business.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="请选择商机名称" filterable clearable>
-              <el-option v-for="item in businessList" :label="item.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+            <el-autocomplete v-show="!disabled" v-model="mainMsg.business.name" :fetch-suggestions="bussinessNameSearch" @select="bussinessSelect" placeholder="请选择商机名称"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户名称">
-            <p v-if="disabled">{{mainMsg.business.client.name}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="自动生成" disabled>
-              <el-option v-for="item in businessList" :label="item.client.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+            <p v-if="disabled">{{mainMsg.business.clientName}}</p>
+            <el-input v-else v-model="mainMsg.business.clientName" placeholder="自动生成" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="预计成交金额">
             <p v-if="disabled">{{mainMsg.business.amount}}</p>
-            <el-select v-else v-model="mainMsg.business.id" placeholder="自动生成" disabled>
-              <el-option v-for="item in businessList" :label="item.amount" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+            <el-input v-else v-model="mainMsg.business.amount" placeholder="自动生成" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </div>
     <div class="commont-btn" v-show="hasPerm('tenderOffer:save') && !disabled">
       <el-button @click="add()" :loading="loading">保存</el-button>
-      <el-button @click="reset">重置</el-button>
+      <!-- <el-button @click="reset">重置</el-button> -->
       <el-button @click="cancel">取消</el-button>
     </div>
   </el-form>
@@ -59,6 +48,7 @@
 </template>
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import { isObjectValueEqual } from '@/utils'
 export default {
   name: 'smartCommunityAdd',
@@ -77,12 +67,18 @@ export default {
       loading: false,
       disabled: false,
       editShow: false,
+      bussinessCode: '',
+      bussinessName: '',
       rules: {
         business: [{ required: true, validator: validateBusiness, trigger: 'change' }]
       },
       mainMsg: {
         business: {
-          id: null
+          id: null,
+          code: '',
+          name: '',
+          amount: '',
+          clientName: ''
         }
       },
       businessList: [],
@@ -90,7 +86,6 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
     this.toggleAction()
     this.temp = _.cloneDeep(this.mainMsg)
   },
@@ -117,9 +112,11 @@ export default {
         }
       })
     },
-    reset() {
-
-    },
+    // reset() {
+    //   // console.log(this.mainMsg)
+    //   // console.log(this.temp)
+    //   this.mainMsg = _.cloneDeep(this.temp)
+    // },
     cancel() {
       this.$emit('changeObj', false)
       this.$emit('toggleTab')
@@ -131,13 +128,6 @@ export default {
       } else {
         this.editWord = '取消编辑'
       }
-    },
-    getInsertData() {
-      this.$get('/tenderOffer/findInsertData').then((res) => {
-        var data = res.data.data
-        this.businessList = data.businessList
-        console.log('business', this.businessList)
-      })
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -168,16 +158,66 @@ export default {
         this.disabled = true
         this.editShow = true
       }
+    },
+    // 商机编号变化
+    bussinessCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessCode?role_code=' + this.roleCode + '&bussinessCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 商机名称变化
+    bussinessNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/bussinessName?role_code=' + this.roleCode + '&businessName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    bussinessSelect(item) {
+      this.mainMsg.business = item
+    },
+    bussinessFocus() {
+      console.log('this.mainMsg.business', this.mainMsg.business)
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  },
   watch: {
     mainMsg: {
       handler(obj) {
-        if (isObjectValueEqual(obj, this.temp)) {
+        if (isObjectValueEqual(obj.business, this.temp)) {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.business.code === '' || obj.business.name === '') {
+          obj.business.id = null
+          obj.business.code = ''
+          obj.business.name = ''
+          obj.business.amount = ''
+          obj.business.clientName = ''
+          this.temp.business = obj.business // 商机清空，temp与business保持一致
         }
       },
       deep: true
