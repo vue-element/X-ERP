@@ -14,7 +14,7 @@
       <el-table-column prop="invoicedAmount" label="已开票金额" width="150"></el-table-column>
       <el-table-column prop="receivedAmount" label="已回款金额" width="150"></el-table-column>
       <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" min-width="180"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
           <el-button @click="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:findAllByPage')">查看</el-button>
           <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:delete')">删除</el-button>
@@ -58,7 +58,7 @@ export default {
       var page = this.currentPage - 1 || 0
       var url = '/contractInfo/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
-        var data = res.data.data
+        var data = res.data.data || []
         for (var i = 0; i < data.content.length; i++) {
           data.content[i].term = (data.content[i].term + '').slice(0, -3)
           var invoiceNoReceive = data.content[i].invoicedAmount - data.content[i].receivedAmount

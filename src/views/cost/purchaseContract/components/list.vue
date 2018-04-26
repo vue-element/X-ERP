@@ -28,7 +28,7 @@
             <el-button class="el-dropdown-link" type="text">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a" @click.native.prevent="downloadPL(scope.row.id)">生成采购清单</el-dropdown-item>
-              <el-dropdown-item command="b">生成采购合同</el-dropdown-item>
+              <el-dropdown-item command="b" @click.native.prevent="downloadPC(scope.row.id)">生成采购合同</el-dropdown-item>
               <!-- <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" >删除</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>

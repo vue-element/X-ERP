@@ -8,18 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编码"  filterable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.billingName" :fetch-suggestions="billingNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-select v-model="searchData.contractInfo_id" clearable placeholder="请选择合同编号" filterable ref="element">
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.billingCode" :fetch-suggestions="billingCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -52,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'invoiceSearch',
   data() {
@@ -61,22 +56,54 @@ export default {
       contractInfoList: [],
       searchData: {
         contractInfo_id: null,
-        content: '',
+        name: '',
         number: '',
         date: ''
       }
     }
   },
   created() {
-    this.getInsertData()
+  },
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
   },
   methods: {
-    getInsertData() {
-      this.$get('/contractBilling/findInsertData').then(res => {
-        if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
+    billingNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
         }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
       })
+    },
+    billingCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ciSelect(item) {
+      this.searchData.contractInfo_id = item.id
+      this.searchData.billingName = item.name
+      this.searchData.billingCode = item.code
     },
     search() {
       var searchData = {}
@@ -90,8 +117,7 @@ export default {
           }
         }
       }
-      searchData['date'] = this.searchData['date'][0]
-      searchData['date1'] = this.searchData['date'][1]
+      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

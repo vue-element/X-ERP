@@ -139,20 +139,24 @@ export default {
       this.exportList = data
     },
     handleDownload(Arr) {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票号码', '回款金额', '回款日期']
-        const filterVal = ['index', 'code', 'name', 'region', 'number', 'amount', 'date']
-        var list = []
-        if (Arr) {
-          list = this.exportList
-        } else {
-          list = []
+      this.$post('/contractReceived/export').then(res => {
+        if (res.data.success === true) {
+          this.downloadLoading = true
+          require.ensure([], () => {
+            const { export_json_to_excel } = require('@/vendor/Export2Excel')
+            const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票号码', '回款金额', '回款日期']
+            const filterVal = ['index', 'code', 'name', 'region', 'number', 'amount', 'date']
+            var list = []
+            if (Arr) {
+              list = this.exportList
+            } else {
+              list = []
+            }
+            const data = this.formatJson(filterVal, list)
+            export_json_to_excel(tHeader, data, '合同回款信息')
+            this.downloadLoading = false
+          })
         }
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '合同回款信息')
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {

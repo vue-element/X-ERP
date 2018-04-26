@@ -12,17 +12,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：" prop="contractBilling">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.name}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同名称" @change="watchData" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.contractInfo.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="receivedData.contractBilling.contractInfo.name" :fetch-suggestions="contractNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{receivedData.contractBilling.contractInfo.code}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择合同编号" @change="watchData" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.contractInfo.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="receivedData.contractBilling.contractInfo.code" :fetch-suggestions="contractCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,6 +59,7 @@
 <script>
 import _ from 'lodash'
 import { outputmoney, isObjectValueEqual } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   name: 'receivedPaymentAdd',
   props: ['editData'],
@@ -90,7 +87,12 @@ export default {
       preAmount: null,
       receivedData: {
         contractBilling: {
-          id: null
+          id: null,
+          contractInfo: {
+            id: null,
+            code: '',
+            name: ''
+          }
         },
         amount: null,
         date: '',
@@ -106,51 +108,46 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
     this.toggleAction()
     this.temp = _.cloneDeep(this.receivedData)
   },
   methods: {
-    getInsertData() {
-      this.$get('/contractReceived/findInsertData').then((res) => {
-        if (res.data.success === true) {
-          var data = res.data.data.contractBillingList
-          const arrNew = [data[0]]
-          for (var i = 0; i < data.length; i++) {
-            var flag = true
-            for (var j = 0; j < arrNew.length; j++) {
-              if (data[i].contractInfo.code === arrNew[j].contractInfo.code) {
-                flag = false
-                break
-              }
-            }
-            if (flag) {
-              arrNew[arrNew.length] = data[i]
-            }
-          }
-          this.contractInfoList = arrNew
+    contractNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
         }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
       })
     },
-    // 获取开票号码
-    watchData(ele) {
-      this.$get('/contractReceived/findInsertData').then(res => {
-        if (res.data.success === true) {
-          var contractBillingList = res.data.data.contractBillingList
-          if (ele) {
-            var obj = contractBillingList.find((item) => {
-              return item.id === ele
-            })
-            var contractInfoName = obj.contractInfo.name
-            var numList = []
-            for (var i = 0; i < contractBillingList.length; i++) {
-              if (contractBillingList[i].contractInfo.name === contractInfoName) {
-                numList.push(contractBillingList[i])
-              }
-            }
-            this.contractBillingList = numList
-          }
+    contractCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
         }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ciSelect(item) {
+      this.receivedData.contractBilling.id = item.id
+      this.receivedData.contractBilling.contractInfo.code = item.code
+      this.receivedData.contractBilling.contractInfo.name = item.name
+      this.$get('/contractBilling/findAllByContractInfo/' + item.id).then((res) => {
+        this.contractBillingList = res.data.data.contractBillingList.content
       })
     },
     save() {
@@ -225,7 +222,7 @@ export default {
     },
     validateMsg(errMsg) {
       return (rule, value, callback) => {
-        if (!value.id) {
+        if (!value) {
           callback(new Error(errMsg))
         } else {
           callback()
@@ -252,6 +249,11 @@ export default {
         this.editWord = '编辑'
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
   }
 }
 </script>

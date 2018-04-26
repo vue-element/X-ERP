@@ -12,17 +12,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：" prop="contractInfo">
               <p v-if="disabled">{{billingData.contractInfo.name}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同名称" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="billingData.contractInfo.name" :fetch-suggestions="contractNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{billingData.contractInfo.code}}</p>
-              <el-select v-else v-model="billingData.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-else v-model="billingData.contractInfo.code" :fetch-suggestions="contractCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,6 +91,7 @@
 <script>
 import { outputmoney, isObjectValueEqual } from '@/utils'
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 export default {
   name: 'invoiceAdd',
   props: ['editData'],
@@ -137,18 +134,44 @@ export default {
     }
   },
   created() {
-    this.getInsertData()
     this.toggleAction()
     this.temp = _.cloneDeep(this.billingData)
   },
   methods: {
-    getInsertData() {
-      this.$get('/contractBilling/findInsertData').then((res) => {
-        if (res.data.success === true) {
-          this.contractInfoList = res.data.data.contractInfoList
+    contractNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
         }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
       })
-      this.taxRateList = [{ value: '3%' }, { value: '6%' }, { value: '11%' }, { value: '13%' }, { value: '17%' }]
+    },
+    contractCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ciSelect(item) {
+      this.billingData.contractInfo.id = item.id
+      this.billingData.contractInfo.code = item.code
+      this.billingData.contractInfo.name = item.name
     },
     save() {
       this.$refs.billingData.validate(valid => {
@@ -281,7 +304,10 @@ export default {
         var income = (this.billingData.amount - res)
         return Math.floor(income * 100) / 100
       }
-    }
+    },
+    ...mapGetters([
+      'userName'
+    ])
   }
 }
 </script>

@@ -21,10 +21,10 @@
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
           </button> -->
-          <!-- <button @click="handleDownload()" :loading="downloadLoading" v-show="tab === 'listTab'">
+          <button @click="handleDownload()" :loading="downloadLoading" v-show="tab === 'listTab'">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
-          </button> -->
+          </button>
           <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
@@ -47,8 +47,6 @@ import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
 import ImportComponent from './components/import'
-// import FileSaver from 'file-saver'
-// import XLSX from 'xlsx'
 export default {
   name: 'scheduleManage',
   components: {
@@ -137,34 +135,25 @@ export default {
     exportData(data) {
       this.exportList = data
     },
-    // handleDownload () {
-    //   var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-    //   console.log(wb)
-    //   var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-    //   console.log(wbout)
-    //   try {
-    //     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '项目进度分析')
-    //   } catch (e) {
-    //     if (typeof console !== 'undefined') console.log(e, wbout)
-    //   }
-    //   return wbout
-    // }
     handleDownload(Arr) {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '合同编码', '合同名称', '项目所属阶段', '完工百分比(%)', '项目状态', '回款比例(%)', '回款状态', '材料采购比例(%)', '材料进度匹配度', '人工支出比例(%)', '人工进度匹配度', '综合支出比例(%)', '综合进度匹配', '收入成本差异-收支差额(元)', '收支成本差异-状态', '付现差异-付现差额(元)', '付现差异-状态']
-
-        const filterVal = ['index', 'code', 'name', 'stage', 'finishPercentage', 'projectStatus', 'receivedPercentage', 'receivedStatus', 'materialPercentage', 'materialStatus', 'artificialPercentage', 'artificialStatus', 'comprehensivePercentage', 'comprehensiveStatus', 'paymentBalance', 'paymentBalanceStatus', 'cashBalance', 'cashBalanceStatus']
-        var list = []
-        if (Arr) {
-          list = this.exportList
-        } else {
-          list = []
+      this.$post('/contractSchedule/export').then(res => {
+        if (res.data.success === true) {
+          this.downloadLoading = true
+          require.ensure([], () => {
+            const { export_json_to_excel } = require('@/vendor/Export2Excel')
+            const tHeader = ['序号', '合同编码', '合同名称', '项目所属阶段', '完工百分比(%)', '项目状态', '回款比例(%)', '回款状态', '材料采购比例(%)', '材料进度匹配度', '人工支出比例(%)', '人工进度匹配度', '综合支出比例(%)', '综合进度匹配', '收入成本差异-收支差额(元)', '收支成本差异-状态', '付现差异-付现差额(元)', '付现差异-状态']
+            const filterVal = ['index', 'code', 'name', 'stage', 'finishPercentage', 'projectStatus', 'receivedPercentage', 'receivedStatus', 'materialPercentage', 'materialStatus', 'artificialPercentage', 'artificialStatus', 'comprehensivePercentage', 'comprehensiveStatus', 'paymentBalance', 'paymentBalanceStatus', 'cashBalance', 'cashBalanceStatus']
+            var list = []
+            if (Arr) {
+              list = this.exportList
+            } else {
+              list = []
+            }
+            const data = this.formatJson(filterVal, list)
+            export_json_to_excel(tHeader, data, '项目进度分析')
+            this.downloadLoading = false
+          })
         }
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '项目进度分析')
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {

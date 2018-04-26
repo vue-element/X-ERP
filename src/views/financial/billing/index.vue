@@ -139,20 +139,24 @@ export default {
       this.exportList = data
     },
     handleDownload(Arr) {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票抬头名称', '开票金额(含税)', '税率', '税金', '收入(不含税)', '开票日期', '开票号码', '开票内容']
-        const filterVal = ['index', 'code', 'name', 'region', 'name', 'amount', 'taxRate', 'tax', 'income', 'date', 'number', 'content']
-        var list = []
-        if (Arr) {
-          list = this.exportList
-        } else {
-          list = []
+      this.$post('/contractBilling/export').then(res => {
+        if (res.data.success === true) {
+          this.downloadLoading = true
+          require.ensure([], () => {
+            const { export_json_to_excel } = require('@/vendor/Export2Excel')
+            const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '发票抬头名称', '开票金额(含税)', '税率', '税金', '收入(不含税)', '开票日期', '开票号码', '开票内容']
+            const filterVal = ['index', 'code', 'name', 'region', 'name', 'amount', 'taxRate', 'tax', 'income', 'date', 'number', 'content']
+            var list = []
+            if (Arr) {
+              list = this.exportList
+            } else {
+              list = []
+            }
+            const data = this.formatJson(filterVal, list)
+            export_json_to_excel(tHeader, data, '合同开票信息')
+            this.downloadLoading = false
+          })
         }
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '合同开票信息')
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {

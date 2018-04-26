@@ -135,20 +135,24 @@ export default {
       this.exprotList = data
     },
     handleDownload(Arr) {
-      this.downloadLoading = true
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '合同所属期', '变更后合同金额', '已开票金额', '已回款金额', '已开票未回款金额']
-        const filterVal = ['index', 'code', 'name', 'region', 'term', 'changeAmount', 'invoicedAmount', 'receivedAmount', 'invoiceNoReceive']
-        var list = []
-        if (Arr) {
-          list = this.exprotList
-        } else {
-          list = []
+      this.$post('/contractInfo/export').then(res => {
+        if (res.data.success === true) {
+          this.downloadLoading = true
+          require.ensure([], () => {
+            const { export_json_to_excel } = require('@/vendor/Export2Excel')
+            const tHeader = ['序号', '合同编号', '合同名称', '所属办事处', '合同所属期', '变更后合同金额', '已开票金额', '已回款金额', '已开票未回款金额']
+            const filterVal = ['index', 'code', 'name', 'region', 'term', 'changeAmount', 'invoicedAmount', 'receivedAmount', 'invoiceNoReceive']
+            var list = []
+            if (Arr) {
+              list = this.exprotList
+            } else {
+              list = []
+            }
+            const data = this.formatJson(filterVal, list)
+            export_json_to_excel(tHeader, data, '合同信息')
+            this.downloadLoading = false
+          })
         }
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '合同信息')
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {

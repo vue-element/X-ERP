@@ -8,32 +8,24 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-select v-model="searchData.name" placeholder="请选择合同名称" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-model="searchData.name" :fetch-suggestions="contractNameSearchAsync" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="合同编码：">
-              <el-select v-model="searchData.code" placeholder="请选择合同编码" filterable clearable>
-                <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="contractCodeSearchAsync" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="业务类别：">
-              <el-select v-model="searchData.bctg_id" placeholder="请选择业务类别" clearable filterable>
-                <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-model="searchData.ctgName" :fetch-suggestions="businessCtgSearchAsync" @select="ctgSelect" placeholder="请选择客户名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="所属区域：">
-              <el-select v-model="searchData.region_id" placeholder="请选择所属区域" clearable filterable>
-                <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id"></el-option>
-              </el-select>
+              <el-autocomplete v-model="searchData.regionName" :fetch-suggestions="regionSearchAsync" @select="regionSelect" placeholder="请选择客户名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,6 +52,7 @@
 
 <script>
 import { winHeight } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -69,7 +62,7 @@ export default {
       searchData: {
         name: '',
         code: '',
-        bctg_id: '',
+        bctg_id: null,
         region_id: null,
         signDate: '',
         term: ''
@@ -77,26 +70,90 @@ export default {
     }
   },
   created() {
-    this.getFindInsertData()
   },
   methods: {
-    getFindInsertData() {
-      this.$get('/contractInfo/findInsertData').then((res) => {
-        var data = res.data.data
-        this.contractInfoList = data.contractInfoList
-        this.businessCtgList = data.businessCtgList
-        this.regionList = data.regionList
+    contractNameSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
       })
+    },
+    contractCodeSearchAsync(queryString, callback) {
+      var role_code = this.$store.state.account.userName
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.code
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    // 业务分类
+    businessCtgSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/businessCtg').then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    ctgSelect(item) {
+      this.searchData.bctg_id = item.id
+    },
+    // 所属区域
+    regionSearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/region').then(res => {
+        var data = res.data
+        for (const i of data.objectList) {
+          i.value = i.name
+        }
+        list = data.objectList
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      })
+    },
+    regionSelect(item) {
+      this.searchData.region_id = item.id
     },
     search() {
       var searchData = {}
+      console.log(this.searchData)
       for (var key in this.searchData) {
         if (this.searchData[key]) {
+          searchData[key] = this.searchData[key]
           if (key === 'term') {
             searchData['term'] = this.searchData['term'] + '-01'
+          } else if (key === 'ctgName') {
+            delete searchData['ctgName']
+          } else if (key === 'regionName') {
+            delete searchData[key]
           }
         }
       }
+      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {
@@ -109,6 +166,11 @@ export default {
     window.addEventListener('resize', () => {
       this.$refs.ele.style.height = winHeight() - 180 + 'px'
     })
+  },
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
   }
 }
 </script>
