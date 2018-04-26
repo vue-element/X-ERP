@@ -8,8 +8,7 @@
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="项目名称:">
-            <el-autocomplete v-model="searchData.name" :fetch-suggestions="projectSearchAsync" @select="projectSelect" placeholder="请选择项目名称"></el-autocomplete>
-            <!-- <select-dropdown label="项目名称" :listData="projectList"  @onchange="projectChange"></select-dropdown> -->
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="projectSearchAsync" placeholder="请选择项目名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
@@ -30,7 +29,7 @@
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
           <el-form-item label="客户信息:">
-            <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
+            <el-autocomplete v-model="searchData.client_name" :fetch-suggestions="clientSearchAsync" placeholder="请选择客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -79,9 +78,6 @@ import { mapGetters } from 'vuex'
 import { cityList, regionList } from '@/utils/selectList'
 export default {
   name: 'SmartCommunitySearch',
-  // components: {
-  //   SelectDropdown
-  // },
   data() {
     return {
       height: 100,
@@ -93,13 +89,12 @@ export default {
       communityTypeList: [],
       contractModeList: [],
       archFormatList: [],
-      clientName: '',
       searchData: {
         archFormat: '',
         contractMode: '',
         communityType: '',
         region_id: '',
-        client_id: '',
+        client_name: '',
         city_id: '',
         name: ''
       },
@@ -111,9 +106,6 @@ export default {
     this.searchData.city_id = this.cityOption[2]
   },
   methods: {
-    // projectChange(name) {
-    //   this.searchData.name = name
-    // },
     getInsertData() {
       cityList().then((data) => {
         this.cityList = data
@@ -164,9 +156,6 @@ export default {
         console.log(error)
       })
     },
-    projectSelect(item) {
-      this.searchData.name = item.name
-    },
     // 客户搜索
     clientSearchAsync(queryString, callback) {
       var list = [{}]
@@ -182,9 +171,6 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-    },
-    clientSelect(item) {
-      this.searchData.client_id = item.id
     }
   },
   computed: {
@@ -193,11 +179,6 @@ export default {
     ])
   },
   watch: {
-    clientName(value) {
-      if (!value) {
-        this.searchData.client_id = ''
-      }
-    }
   }
 }
 </script>

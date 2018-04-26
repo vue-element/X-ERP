@@ -16,10 +16,11 @@
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="付款合同编号/入库单号:">
-              <el-select v-model="searchData.code" placeholder="请选择付款合同编号" filterable clearable>
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
+              <!-- <el-select v-model="searchData.code" placeholder="请选择付款合同编号" filterable clearable>
                <el-option v-for="item in paymentContractList" :label="item.code" :value="item.code" :key="item.id">
                </el-option>
-             </el-select>
+             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -34,10 +35,11 @@
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="供应商:">
-              <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
+              <el-autocomplete v-model="searchData.supply_name" :fetch-suggestions="supplySearchAsync" placeholder="请选择供应商"></el-autocomplete>
+              <!-- <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
-             </el-select>
+             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -59,6 +61,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'paymentContractSearch',
   data() {
@@ -70,7 +73,7 @@ export default {
         code: '',
         department: '',
         inputDate: '',
-        supply_id: ''
+        supply_name: ''
       },
       paymentContractList: [],
       supplyList: [],
@@ -82,13 +85,13 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/paymentContract/findInsertData').then((res) => {
-        var data = res.data.data
-        this.paymentContractList = data.paymentContractList
-        this.supplyList = data.supplyList
-        this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
-          { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
-      })
+      // this.$get('/paymentContract/findInsertData').then((res) => {
+      //   var data = res.data.data
+      //   this.paymentContractList = data.paymentContractList
+      //   this.supplyList = data.supplyList
+      // })
+      this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
+        { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
     },
     search() {
       var searchData = {}
@@ -119,9 +122,45 @@ export default {
           this.searchData[key] = ''
         }
       }
+    },
+    // 供应商搜索
+    supplySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/supplyName?supplyName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 付款合同搜索
+    codeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

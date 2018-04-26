@@ -2,7 +2,7 @@
 <div class="business-container busniess-add form-container"  ref="ele">
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
-  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:update')">{{editWord}}</el-button>
+  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:update') && (businessInfo.businessPerson.name === businessInfo.createPerson)">{{editWord}}</el-button>
   <el-button v-show="(this.disabled === true) && hasPerm('bussiness:examine')" @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">

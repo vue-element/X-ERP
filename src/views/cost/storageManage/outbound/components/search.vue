@@ -7,17 +7,34 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="付款合同编号:">
-              <el-select v-model="searchData.paymentContract_id" placeholder="请选择付款合同编号" filterable clearable>
+            <el-form-item label="付款合同编号/入库单号:">
+              <el-autocomplete v-model="searchData.inboundList_name" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
+              <!-- <el-select v-model="searchData.paymentContract_id" placeholder="请选择付款合同编号" filterable clearable>
                <el-option v-for="item in paymentContractList" :label="item.code" :value="item.id" :key="item.id">
                </el-option>
-             </el-select>
+             </el-select> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="项目:">
-              <el-select v-model="searchData.paymentContract_id" placeholder="自动生成" disabled>
-               <el-option v-for="item in paymentContractList" :label="item.project" :value="item.id" :key="item.id">
+            <el-form-item label="合同名称／所属项目:">
+              <el-autocomplete v-model="searchData.project_name" :fetch-suggestions="contractNameSearch" placeholder="请选择合同名称"></el-autocomplete>
+              <!-- <el-select v-model="searchData.region_id" placeholder="请输入合同名称">
+               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
+               </el-option>
+             </el-select> -->
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :sm="24" :md="12" :lg="12">
+            <el-form-item label="出库单编号:">
+              <el-input v-model="searchData.code" placeholder="请填写出库单编号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="办事处:">
+              <el-select v-model="searchData.region_id" placeholder="请输入办事处">
+               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -27,14 +44,6 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="出库日期:" class="range-date">
               <el-date-picker v-model="searchData.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="办事处:">
-              <el-select v-model="searchData.paymentContract_id" placeholder="自动生成" disabled>
-               <el-option v-for="item in paymentContractList" :label="item.department" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,6 +57,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { regionList } from '@/utils/selectList'
 export default {
   name: 'paymentContractSearch',
   data() {
@@ -55,11 +66,10 @@ export default {
       loading: false,
       disabled: false,
       searchData: {
-        contractInfo_id: '',
-        orderNumber: '',
+        inboundList_name: '',
         code: '',
         region_id: '',
-        project_id: '',
+        project_name: '',
         date: ''
       },
       projectList: [],
@@ -74,12 +84,15 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/outboundList/findInsertData').then((res) => {
-        var data = res.data.data
-        this.paymentContractList = data.paymentContractList || []
-        this.projectList = data.projectList || []
-        this.regionList = data.regionList || []
-        this.contractInfoList = data.contractInfoList || []
+      // this.$get('/outboundList/findInsertData').then((res) => {
+      //   var data = res.data.data
+      //   this.paymentContractList = data.paymentContractList || []
+      //   this.projectList = data.projectList || []
+      //   this.regionList = data.regionList || []
+      //   this.contractInfoList = data.contractInfoList || []
+      // })
+      regionList().then((data) => {
+        this.regionList = data
       })
     },
     search() {
@@ -100,9 +113,45 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    },
+    // 合同名称搜索
+    contractNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 付款合同搜索
+    codeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="supply-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('supply:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('supply:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="supplyInfo" :rules="rules" ref="supplyInfo">
@@ -74,7 +74,7 @@
             <el-form-item label="物资类别:" prop="materialCategory">
               <p v-if="disabled">{{supplyInfo.materialCategory}}</p>
               <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别" filterable clearable>
-               <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
+               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -259,6 +259,7 @@
 
 <script>
 import _ from 'lodash'
+import { supplyRegionList, materialCtgList } from '@/utils/selectList'
 import { outputmoney, isObjectValueEqual } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
 export default {
@@ -320,7 +321,7 @@ export default {
       },
       cooperativeTypeList: [],
       enterpriseNatureList: [],
-      materialCategoryList: [],
+      materialCtgList: [],
       invoiceTypeList: [],
       categoryList: [],
       typeList: [],
@@ -416,14 +417,14 @@ export default {
       }
     },
     getInsertData() {
-      this.$get('/supply/findInsertData').then((res) => {
-        if (res.data.success === true) {
-          this.supplyRegionList = res.data.data.supplyRegionList
-        }
+      supplyRegionList().then((data) => {
+        this.supplyRegionList = data
+      })
+      materialCtgList().then((data) => {
+        this.materialCtgList = data
       })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
       this.enterpriseNatureList = [{ value: '国企' }, { value: '民企' }, { value: '合资' }, { value: '外企' }]
-      this.materialCategoryList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
       this.invoiceTypeList = [{ value: '小规模纳税人' }, { value: '一般纳税人' }, { value: '普通' }]
       this.categoryList = [{ value: '常用型' }, { value: '临时型' }, { value: '历史型' }]
       this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]

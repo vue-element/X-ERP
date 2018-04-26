@@ -33,7 +33,7 @@
             <el-form-item label="产品类型:" prop="type">
               <p v-if="disabled">{{priceInfo.type}}</p>
               <el-select v-else v-model="priceInfo.type" placeholder="请选择产品类型" filterable clearable>
-               <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
+               <el-option v-for="item in typeList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -66,10 +66,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供应商:" prop="supply">
               <p v-if="disabled">{{priceInfo.supply.name}}</p>
-              <el-select v-else v-model="priceInfo.supply.id" @change="supplyChange" placeholder="请选择供应商" filterable clearable>
-               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-else v-model="priceInfo.supply.name" :fetch-suggestions="supplySearchAsync" @select="supplySelect" placeholder="请选择供应商"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -77,13 +74,13 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供应商类型:">
               <p v-if="disabled">{{priceInfo.supply.type}}</p>
-              <el-input v-else v-model="supplyType" placeholder="自动生成" disabled></el-input>
+              <el-input v-else v-model="priceInfo.supply.type" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供应区域:">
               <p v-if="disabled">{{priceInfo.supply.supplyRegion.name}}</p>
-              <el-input v-else v-model="supplyRegion" placeholder="自动生成" disabled></el-input>
+              <el-input v-else v-model="priceInfo.supply.supplyRegion.name" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -91,7 +88,7 @@
           <el-col :ms="24" :md="12" :lg="12">
             <el-form-item label="供货周期(天):">
               <p v-if="disabled">{{priceInfo.supply.supplyCycle}}</p>
-              <el-input v-else v-model="supplyCycle" placeholder="自动生成" disabled></el-input>
+              <el-input v-else v-model="priceInfo.supply.supplyCycle" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :ms="24" :md="12" :lg="12">
@@ -114,7 +111,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="价格有效期限:" class="range-date validDate" prop="validDate">
               <p v-if="disabled">{{validDateStr}}</p>
-              <el-date-picker v-else v-model="priceInfo.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" @change="validDateChange"
+              <el-date-picker v-else v-model="priceInfo.validDate" format="yyyy-MM-dd" type="daterange" @change="validDateChange"
               start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -154,6 +151,7 @@
 
 <script>
 import _ from 'lodash'
+import { materialCtgList } from '@/utils/selectList'
 import { mapGetters } from 'vuex'
 import { outputmoney, isObjectValueEqual } from '@/utils'
 export default {
@@ -190,9 +188,16 @@ export default {
         name: '',
         productQuotation: '',
         productQuotation1: '',
-        region: { id: null },
         specModel: '',
-        supply: { id: null },
+        supply: {
+          id: null,
+          name: '',
+          type: '',
+          supplyCycle: '',
+          supplyRegion: {
+            name: ''
+          }
+        },
         supplyCycle: '',
         system: '',
         type: '',
@@ -201,10 +206,9 @@ export default {
         validDate: []
       },
       oldproductQuotation: '',
-      supplyType: '',
-      supplyRegion: '',
-      supplyCycle: '',
-      regionList: [],
+      // supplyType: '',
+      // supplyRegion: '',
+      // supplyCycle: '',
       supplyList: [],
       systemList: [],
       typeList: [],
@@ -279,18 +283,12 @@ export default {
       this.priceInfo.productQuotation1 = outputmoney('' + this.priceInfo.productQuotation)
       this.priceId = this.priceInfo.id
       this.historyPriceList = this.priceInfo.priceHistoryList
-      if (this.priceInfo.supply.id) {
-        this.supplyType = this.priceInfo.supply.type
-        this.supplyRegion = this.priceInfo.supply.supplyRegion.name
-        this.supplyCycle = this.priceInfo.supply.supplyCycle
-      }
       // 有效期限
       if (this.priceInfo.startDate === null || this.priceInfo.endDate === null) {
         this.validDateStr = ''
       } else {
         this.validDateStr = this.priceInfo.startDate + '  至  ' + this.priceInfo.endDate
         this.priceInfo.validDate = [this.priceInfo.startDate, this.priceInfo.endDate]
-        console.log('validDate', this.priceInfo.validDate)
       }
     },
     toggleEditBtn() {
@@ -305,14 +303,11 @@ export default {
       }
     },
     getInsertData() {
-      this.$get('/price/findInsertData').then(res => {
-        var data = res.data.data
-        this.regionList = data.regionList
-        this.supplyList = data.supplyList
+      materialCtgList().then((data) => {
+        this.typeList = data
       })
       this.systemList = [{ value: '停车场系统' }, { value: '监控系统' }, { value: '门禁系统' }, { value: '巡更系统' }, { value: '电子围栏系统' }, { value: '对讲系统' },
         { value: '背景音乐系统' }, { value: '会议系统' }, { value: '机房工程系统' }, { value: '报警系统' }, { value: '消防系统' }, { value: '综合布线系统' }, { value: '通用类' }]
-      this.typeList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
       this.sourceList = [{ value: '地产集采价格' }, { value: '集团集采价格' }, { value: '公司集采价格' }, { value: '询价价格' }]
     },
     getPriceHistory() {
@@ -379,13 +374,26 @@ export default {
       this.priceInfo.productQuotation = val
       this.priceInfo.productQuotation1 = outputmoney(val)
     },
-    supplyChange(id) {
-      var obj = this.supplyList.find((item) => {
-        return item.id === id
+    // 供应商搜索
+    supplySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/supplyName?supplyName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
       })
-      this.supplyType = obj.type
-      this.supplyRegion = obj.supplyRegion.name
-      this.supplyCycle = obj.supplyCycle
+    },
+    supplySelect(item) {
+      // console.log('item', item)
+      this.priceInfo.supply = item
+      this.temp.supply = item
     }
   },
   computed: {
@@ -407,6 +415,12 @@ export default {
           this.$emit('changeObj', true)
         }
         // 供应商关联数据
+        if (obj.supply.name === '') {
+          obj.supply.id = null
+          obj.supply.type = ''
+          obj.supply.supplyCycle = ''
+          obj.supply.supplyRegion = ''
+        }
       },
       deep: true
     }

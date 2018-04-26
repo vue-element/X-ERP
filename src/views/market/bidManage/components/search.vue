@@ -8,12 +8,12 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-autocomplete v-model="bussiness.name" :fetch-suggestions="bussinessNameSearch" @select="bussinessSelect" placeholder="请选择商机名称"></el-autocomplete>
+            <el-autocomplete v-model="searchData.b_name" :fetch-suggestions="bussinessNameSearch"  placeholder="请选择商机名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-autocomplete v-model="bussiness.code" :fetch-suggestions="bussinessCodeSearch" @select="bussinessSelect" placeholder="请选择商机编码"></el-autocomplete>
+            <el-autocomplete v-model="searchData.b_code" :fetch-suggestions="bussinessCodeSearch" placeholder="请选择商机编码"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -33,13 +33,9 @@ export default {
   data() {
     return {
       height: 100,
-      bussiness: {
-        id: '',
-        name: '',
-        code: ''
-      },
       searchData: {
-        business_id: null
+        b_name: '',
+        b_code: ''
       },
       businessList: []
     }
@@ -91,10 +87,6 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-    },
-    bussinessSelect(item) {
-      this.bussiness = item
-      this.searchData.business_id = item.id
     }
   },
   computed: {
@@ -103,16 +95,6 @@ export default {
     ])
   },
   watch: {
-    bussiness: {
-      handler(obj) {
-        if (obj.name === '' || obj.code === '') {
-          obj.name = ''
-          obj.code = ''
-          this.searchData.business_id = ''
-        }
-      },
-      deep: true
-    }
   }
 }
 </script>

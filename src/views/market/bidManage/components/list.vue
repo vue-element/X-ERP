@@ -27,6 +27,7 @@
 
 <script>
 import { winHeight, outputmoney } from '@/utils'
+import { mapGetters } from 'vuex'
 export default {
   name: 'smartCommunityList',
   props: ['searchData', 'pageObj'],
@@ -96,6 +97,7 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
+      this.searchData.role_code = this.roleCode
       var url = '/tenderOffer/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false)
         .then(res => {
@@ -126,7 +128,11 @@ export default {
       this.getProjectData()
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

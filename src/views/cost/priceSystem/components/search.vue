@@ -8,18 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品编号:">
-              <el-select v-model="searchData.p_id" placeholder="请选择产品编号" filterable clearable>
-               <el-option v-for="item in priceList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="priceCodeSearch" @select="priceSelect" placeholder="请输入产品编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品名称:">
-              <el-select v-model="searchData.p_id" placeholder="请选择产品名称" filterable clearable>
-               <el-option v-for="item in priceList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.name" :fetch-suggestions="priceNameSearch" @select="priceSelect" placeholder="请输入产品名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -27,7 +21,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="产品类型:" >
               <el-select v-model="searchData.type" placeholder="请选择产品类型" filterable clearable>
-               <el-option v-for="item in typeList" :label="item.value" :value="item.value" :key="item.id">
+               <el-option v-for="item in typeList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -35,7 +29,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="系统:">
               <el-select v-model="searchData.system" placeholder="请选择系统" filterable clearable>
-               <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.id">
+               <el-option v-for="item in systemList" :label="item.value" :value="item.value" :key="item.value">
                </el-option>
              </el-select>
             </el-form-item>
@@ -56,20 +50,13 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商:">
-              <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
-               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.supply_name" :fetch-suggestions="supplySearchAsync" placeholder="请选择供应商"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="有效期限:" class="range-date">
               <el-date-picker v-model="searchData.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
               </el-date-picker>
-              <!-- <el-select v-model="searchData.reviewState" placeholder="请选择评审状态" filterable clearable>
-               <el-option v-for="item in reviewStateList" :label="item.value" :value="item.value" :key="item.id">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -83,6 +70,7 @@
 </template>
 
 <script>
+import { materialCtgList } from '@/utils/selectList'
 export default {
   name: 'supplierSearch',
   data() {
@@ -94,12 +82,13 @@ export default {
       supplyList: [],
       priceList: [],
       searchData: {
-        p_id: '',
+        name: '',
+        code: '',
         type: '',
         system: '',
         specModel: '',
         brand: '',
-        supply_id: null,
+        supply_name: '',
         validDate: []
       },
       rules: {}
@@ -110,11 +99,6 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/price/findInsertData').then(res => {
-        var data = res.data.data
-        this.supplyList = data.supplyList
-        this.priceList = data.priceList
-      })
       this.systemList = [
         { value: '停车场系统' },
         { value: '监控系统' },
@@ -130,14 +114,9 @@ export default {
         { value: '综合布线系统' },
         { value: '通用类' }
       ]
-      this.typeList = [
-        { value: '主材' },
-        { value: '线材' },
-        { value: '工器具' },
-        { value: '辅材' },
-        { value: '其他' },
-        { value: '行政类' }
-      ]
+      materialCtgList().then((data) => {
+        this.typeList = data
+      })
     },
     search() {
       var searchData = {}
@@ -157,9 +136,63 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    },
+    // 供应商搜索
+    supplySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/supplyName?supplyName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 产品编号搜索
+    priceCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/priceCode?priceCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    priceSelect(item) {
+      this.searchData.code = item.code
+      this.searchData.name = item.name
+    },
+    // 产品名称搜索
+    priceNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/priceName?priceName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+  }
 }
 </script>
 

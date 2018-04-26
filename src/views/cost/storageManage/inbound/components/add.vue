@@ -393,6 +393,7 @@ export default {
         float: right;
       }
     }
+    // 打印
     .printTable{
       #form_print{
         text-align: center;

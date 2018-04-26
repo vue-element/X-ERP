@@ -8,12 +8,12 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-autocomplete v-model="searchData.name" :fetch-suggestions="businessNameSearch" @select="businessNameSelect" placeholder="请输入商机名称" clearable></el-autocomplete>
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="businessNameSearch" @select="businessSelect" placeholder="请输入商机名称" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-autocomplete v-model="searchData.code" :fetch-suggestions="businessCodeSearch" @select="businessCodeSelect" placeholder="请输入商机编码" clearable></el-autocomplete>
+            <el-autocomplete v-model="searchData.code" :fetch-suggestions="businessCodeSearch" @select="businessSelect" placeholder="请输入商机编码" clearable></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,7 +40,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户名称:">
-            <el-autocomplete v-model="clientName" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
+            <el-autocomplete v-model="searchData.client_name" :fetch-suggestions="clientSearchAsync" placeholder="请选择客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -143,13 +143,12 @@ export default {
         date: '',
         date1: '',
         city_id: '',
-        client_id: '',
+        client_name: '',
         ctg_id: '',
         clientCtg: '',
         bp_id: '',
         region_id: ''
       },
-      clientName: '',
       businessPerson: '',
       cityOption: [],
       userList: [],
@@ -234,9 +233,9 @@ export default {
         console.log(error)
       })
     },
-    clientSelect(item) {
-      this.searchData.client_id = item.id
-    },
+    // clientSelect(item) {
+    //   this.searchData.client_id = item.id
+    // },
     // 人员信息搜索
     querySearchAsync(queryString, callback) {
       var list = [{}]
@@ -272,7 +271,8 @@ export default {
         console.log(error)
       })
     },
-    businessNameSelect(item) {
+    businessSelect(item) {
+      this.searchData.code = item.code
       this.searchData.name = item.name
     },
     // 商机编号
@@ -291,9 +291,6 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-    },
-    businessCodeSelect(item) {
-      this.searchData.code = item.code
     }
   },
   computed: {
@@ -302,12 +299,6 @@ export default {
     ])
   },
   watch: {
-    clientName(value) {
-      console.log('value', value)
-      if (!value) {
-        this.searchData.client_id = ''
-      }
-    },
     businessPerson(value) {
       if (!value) {
         this.searchData.bp_id = ''

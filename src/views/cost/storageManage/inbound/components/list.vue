@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { winHeight } from '@/utils'
 export default {
   name: 'paymentContractList',
@@ -56,10 +57,11 @@ export default {
       this.listLoading = true
       var pageSize = this.pageSize || 15
       var page = this.currentPage - 1 || 0
-      // var url = '/inboundList/search?size=' + pageSize + '&page=' + page
-      // this.$post(url, this.searchData, false).then(res => {
-      var url = '/inboundList?size=' + pageSize + '&page=' + page
-      this.$get(url).then(res => {
+      this.searchData.role_code = this.roleCode
+      var url = '/inboundList/search?size=' + pageSize + '&page=' + page
+      this.$post(url, this.searchData, false).then(res => {
+      // var url = '/inboundList?size=' + pageSize + '&page=' + page
+      // this.$get(url).then(res => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
@@ -67,7 +69,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          // console.log('this.tableData', this.tableData)
+          console.log('this.tableData', this.tableData)
           this.$emit('exportData', this.tableData)
         }
       }).catch(() => {
@@ -105,6 +107,9 @@ export default {
   watch: {
   },
   computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
   }
 }
 </script>

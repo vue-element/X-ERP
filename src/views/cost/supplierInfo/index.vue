@@ -29,7 +29,7 @@
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload('Arr')" :loading="downloadLoading">
+          <button v-if="hasPerm('supply:export')" @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>

@@ -8,11 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="供应商名称:">
-              <!-- <select-dropdown label="供应商名称" :listData="supplyList"  @onchange="supplyChange"></select-dropdown> -->
-              <el-select v-model="searchData.s_id" placeholder="请选择供应商" filterable clearable>
-               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.name" :fetch-suggestions="supplySearchAsync" @select="supplySelect" placeholder="请输入供应商名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
@@ -44,7 +40,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="物资类别:">
               <el-select v-model="searchData.materialCategory" placeholder="请选择物资类别" filterable clearable>
-               <el-option v-for="item in materialCategoryList" :label="item.value" :value="item.value" :key="item.id">
+               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>
@@ -66,7 +62,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
-            <el-form-item label="供货周期:" >
+            <el-form-item label="供货周期（天）:" >
                 <el-input v-model="searchData.supplyCycle" placeholder="请输入供货周期"></el-input>
             </el-form-item>
           </el-col>
@@ -105,19 +101,16 @@
 </template>
 
 <script>
-// import SelectDropdown from '@/components/SelectDropdown'
+import { supplyRegionList, materialCtgList } from '@/utils/selectList'
 export default {
   name: 'supplierSearch',
-  // components: {
-  //   SelectDropdown
-  // },
   data() {
     return {
       loading: false,
       disabled: false,
       contractInfoList: [],
       searchData: {
-        s_id: '',
+        name: '',
         materialCategory: '',
         enterpriseNature: '',
         cooperativeType: '',
@@ -129,11 +122,10 @@ export default {
         settlementMethod: '',
         region_id: ''
       },
-      supplyList: [],
       supplyRegionList: [],
       typeList: [],
       categoryList: [],
-      materialCategoryList: [],
+      materialCtgList: [],
       enterpriseNatureList: [],
       cooperativeTypeList: [],
       regionList: [],
@@ -151,17 +143,14 @@ export default {
       this.searchData.name = name
     },
     getInsertData() {
-      this.$get('/supply/findInsertData').then((res) => {
-        if (res.data.success === true) {
-          var data = res.data.data
-          // this.regionList = data.regionList
-          this.supplyRegionList = res.data.data.supplyRegionList
-          this.supplyList = data.supplyList
-        }
+      supplyRegionList().then((data) => {
+        this.supplyRegionList = data
+      })
+      materialCtgList().then((data) => {
+        this.materialCtgList = data
       })
       this.cooperativeTypeList = [{ value: '物资供应商' }, { value: '业务分包商' }]
       this.enterpriseNatureList = [{ value: '国企' }, { value: '民企' }, { value: '合资' }, { value: '外企' }]
-      this.materialCategoryList = [{ value: '主材' }, { value: '线材' }, { value: '工器具' }, { value: '辅材' }, { value: '其他' }, { value: '行政类' }]
       this.invoiceTypeList = [{ value: '小规模纳税人' }, { value: '一般纳税人' }, { value: '普通' }]
       this.categoryList = [{ value: '常用型' }, { value: '临时型' }, { value: '历史型' }]
       this.typeList = [{ value: '战略供方' }, { value: '甲方指定' }, { value: '普通合格' }, { value: '试用' }, { value: '临时供方' }]
@@ -181,6 +170,25 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    },
+    // 供应商搜索
+    supplySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/supplyName?supplyName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    supplySelect(item) {
+      this.searchData.name = item.name
     }
   },
   computed: {}

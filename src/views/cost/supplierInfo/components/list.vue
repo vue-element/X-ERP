@@ -24,7 +24,7 @@
         <el-table-column prop="regAddress" label="注册地址" min-width="280"></el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('supply:findAllByPage')">查看</el-button>
+            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('supply:findUpdateData')">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" v-if="hasPerm('supply:delete')">删除</el-button>
           </template>
         </el-table-column>

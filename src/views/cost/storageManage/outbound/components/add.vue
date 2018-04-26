@@ -21,16 +21,17 @@
               <el-col :sm="24" :md="12" :lg="12">
                 <el-form-item label="付款合同编号/入库单编号:" prop="inboundList">
                   <p v-if="disabled">{{outboundInfo.inboundList.code}}</p>
-                  <el-select v-else v-model="outboundInfo.inboundList.id" placeholder="请选择付款合同编号" filterable clearable @change="inboundChange">
+                  <el-autocomplete v-else v-model="outboundInfo.inboundList.code" :fetch-suggestions="codeSearch" @select="codeSelect" placeholder="请选择付款合同编号"></el-autocomplete>
+                  <!-- <el-select v-else v-model="outboundInfo.inboundList.id" placeholder="请选择付款合同编号" filterable clearable @change="inboundChange">
                    <el-option v-for="item in inboundList" :label="item.code" :value="item.id" :key="item.id">
                    </el-option>
-                 </el-select>
+                 </el-select> -->
                 </el-form-item>
               </el-col>
               <el-col :sm="24" :md="12" :lg="12">
-                <el-form-item label="项目:">
+                <el-form-item label="合同名称／所属项目:">
                   <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.contractInfo.name}}</p>
-                  <el-input v-else v-model="projectName" placeholder="自动生成" disabled></el-input>
+                  <el-input v-else v-model="outboundInfo.inboundList.paymentContract.contractInfo.name" placeholder="自动生成" disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -44,7 +45,7 @@
               <el-col :sm="24" :md="12" :lg="12">
                 <el-form-item label="办事处:">
                   <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.department}}</p>
-                 <el-input v-else v-model="departmentName" placeholder="自动生成" disabled></el-input>
+                  <el-input v-else v-model="outboundInfo.inboundList.paymentContract.department" placeholder="自动生成" disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -145,14 +146,21 @@ export default {
       editShow: false,
       outboundInfo: {
         code: '出库单编号',
-        inboundList: { id: '' },
+        inboundList: {
+          id: '',
+          code: '',
+          paymentContract: {
+            contractInfo: {
+              name: ''
+            },
+            department: ''
+          }
+        },
         date: ''
       },
       projectName: '',
       departmentName: '',
       inboundList: [],
-      projectList: [],
-      regionList: [],
       paymentContractId: '',
       contractId: '',
       outboundId: '',
@@ -230,12 +238,10 @@ export default {
       this.outBoundTable = false
     },
     getInsertData() {
-      this.$get('/outboundList/findInsertData').then((res) => {
-        var data = res.data.data
-        this.inboundList = data.inboundListArrary || []
-        this.projectList = data.projectList || []
-        this.regionList = data.regionList || []
-      })
+      // this.$get('/outboundList/findInsertData').then((res) => {
+      //   var data = res.data.data
+      //   this.inboundList = data.inboundListArrary || []
+      // })
     },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
@@ -264,6 +270,25 @@ export default {
         message: '保存失败',
         type: 'error'
       })
+    },
+    // 付款合同搜索
+    codeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    codeSelect(item) {
+      this.outboundInfo.inboundList.id = item.id
     },
     // 根据付款合同编号，自动生成项目，办事处
     inboundChange(id) {
@@ -316,6 +341,14 @@ export default {
       } else {
         this.editWord = '编辑'
       }
+    },
+    outboundInfo: {
+      handler(obj) {
+        if (obj.inboundList.code === '') {
+          obj.inboundList.id === ''
+        }
+      },
+      deep: true
     }
   }
 }

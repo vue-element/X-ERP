@@ -4,6 +4,7 @@ var materialCtg = null
 var supplyRegion = null
 var region = null
 var city = null
+// var busniessCtg = null
 
 export async function businessCtgList() {
   if (!businessCtg) {
@@ -44,3 +45,11 @@ export async function cityList() {
   }
   return city
 }
+
+// export async function busniessCtgList() {
+//   if (!busniessCtg) {
+//     var res = await get('/keywordQuery/city')
+//     busniessCtg = res.data.objectList
+//   }
+//   return busniessCtg
+// }

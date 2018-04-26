@@ -8,46 +8,35 @@
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="订单编号:">
-              <el-select v-model="searchData.orderCode" placeholder="请选择订单编号" filterable clearable>
+              <!-- <el-autocomplete v-model="searchData.orderCode" :fetch-suggestions="orderCodeSearch" placeholder="请选择订单编号"></el-autocomplete> -->
+              <!-- <el-select v-model="searchData.orderCode" placeholder="请选择订单编号" filterable clearable>
                <el-option v-for="item in paymentContractList" :label="item.orderCode" :value="item.orderCode" :key="item.id">
                </el-option>
-             </el-select>
+             </el-select> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="付款合同编号:">
-              <el-select v-model="searchData.code" placeholder="请选择付款合同编号" filterable clearable>
-               <el-option v-for="item in paymentContractList" :label="item.code" :value="item.code" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="商机编号:">
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+            <el-form-item label="合同编号:">
+              <el-autocomplete v-model="searchData.contractInfo_code" :fetch-suggestions="contractCodeSearch" @select="contractSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="合同名称／所属项目:" >
-              <el-select v-model="searchData.contractInfo_id" placeholder="请选择所属项目" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.contractInfo_name" :fetch-suggestions="contractNameSearch" @select="contractSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="业务类型:">
-              <el-select v-model="searchData.b_ctg_id" placeholder="请选择业务类别" filterable clearable>
-               <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <select-dropdown label="材料类型" :listData="businessCtgList"  @onchange="businessCtgChange"></select-dropdown>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
@@ -72,10 +61,7 @@
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="材料类型:">
-              <el-select v-model="searchData.m_ctg_id" placeholder="请选择材料类型" filterable clearable>
-                <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
-                </el-option>
-             </el-select>
+              <select-dropdown label="材料类型" :listData="materialCtgList"  @onchange="materialCtgChange"></select-dropdown>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
@@ -106,10 +92,15 @@
     </el-form>
   </div>
 </template>
-
 <script>
+import SelectDropdown from '@/components/SelectDropdown.vue'
+import { mapGetters } from 'vuex'
+import { businessCtgList, materialCtgList } from '@/utils/selectList'
 export default {
   name: 'paymentContractSearch',
+  components: {
+    SelectDropdown
+  },
   data() {
     return {
       loading: false,
@@ -119,19 +110,17 @@ export default {
         code: '',
         project: '',
         department: '',
-        b_ctg_id: '',
-        m_ctg_id: '',
+        b_ctg_name: '',
+        m_ctg_name: '',
         deliveryStatus: '',
-        contractInfo_id: '',
+        contractInfo_code: '',
+        contractInfo_name: '',
         applicationTime: '',
         amount: '',
         amount1: ''
       },
-      paymentContractList: [],
-      contractInfoList: [],
       businessCtgList: [],
       materialCtgList: [],
-      supplyList: [],
       departmentList: []
     }
   },
@@ -140,15 +129,13 @@ export default {
   },
   methods: {
     getInsertData() {
-      this.$get('/paymentContract/findInsertData').then((res) => {
-        var data = res.data.data
-        this.businessCtgList = data.businessCtgList
-        this.contractInfoList = data.contractInfoList
-        this.materialCtgList = data.materialCtgList
-        this.paymentContractList = data.paymentContractList
-        this.supplyList = data.supplyList
-        this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
-          { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
+      this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
+        { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
+      businessCtgList().then((data) => {
+        this.businessCtgList = data
+      })
+      materialCtgList().then((data) => {
+        this.materialCtgList = data
       })
     },
     search() {
@@ -178,7 +165,6 @@ export default {
         amount: 0,
         amount1: 0
       }
-      console.log('search2', searchData)
       this.$emit('search', searchData)
     },
     reset() {
@@ -187,9 +173,71 @@ export default {
           this.searchData[key] = ''
         }
       }
+    },
+    businessCtgChange(name) {
+      this.searchData.b_ctg_name = name
+    },
+    materialCtgChange(name) {
+      this.searchData.m_ctg_name = name
+    },
+    // 付款合同搜索
+    codeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 合同编号搜索
+    contractCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 合同名称搜索
+    contractNameSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    contractSelect(item) {
+      this.searchData.contractInfo_name = item.name
+      this.searchData.contractInfo_code = item.code
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  }
 }
 </script>
 

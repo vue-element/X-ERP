@@ -1,4 +1,4 @@
-:sm:md<template>
+<template>
   <div class="payment-contract-add form-container">
     <div class="commont-btn edit-btn" v-show="hasPerm('paymentContract:findUpdateData') && editShow" >
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
@@ -32,7 +32,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="付款合同编号:">
               <p v-if="disabled">{{paymentContract.code}}</p>
-              <el-input v-else v-model="paymentContract.code" placeholder="请输入付款合同号" disabled></el-input>
+              <el-input v-else v-model="paymentContract.code" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -40,19 +40,13 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="合同编号:">
               <p v-if="disabled">{{paymentContract.contractInfo.code}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="请选择合同编号" filterable clearable>
-               <el-option v-for="item in contractInfoList" :label="item.code" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-else v-model="paymentContract.contractInfo.code" :fetch-suggestions="contractCodeSearch" @select="contractCodeSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="合同名称／所属项目:">
               <p v-if="disabled">{{paymentContract.contractInfo.name}}</p>
-              <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="自动生成" disabled>
-               <el-option v-for="item in contractInfoList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-input v-else v-model="paymentContract.contractInfo.name" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -68,11 +62,8 @@
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="业务类别:">
-              <p v-if="disabled">{{paymentContract.contractInfo.businessCategory.name}}</p>
-             <el-select v-else v-model="paymentContract.contractInfo.id" placeholder="自动生成" disabled>
-              <el-option v-for="item in contractInfoList" :label="item.businessCategory.name" :value="item.id" :key="item.id">
-              </el-option>
-            </el-select>
+              <p v-if="disabled">{{paymentContract.contractInfo.business.businessCategory.name}}</p>
+              <el-input v-else v-model="paymentContract.contractInfo.business.businessCategory.name" placeholder="自动生成" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -143,10 +134,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="供应商:" prop="supply">
               <p v-if="disabled">{{paymentContract.supply.name}}</p>
-              <el-select v-else v-model="paymentContract.supply.id" placeholder="请选择供应商" filterable clearable>
-                <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-                </el-option>
-             </el-select>
+              <el-autocomplete v-else v-model="paymentContract.supply.name" :fetch-suggestions="supplySearchAsync" @select="supplySelect" placeholder="请选择供应商"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
@@ -206,6 +194,8 @@
 
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
+import { materialCtgList } from '@/utils/selectList'
 import { isObjectValueEqual, outputmoney } from '@/utils'
 import tableComponent from './table.vue'
 export default {
@@ -233,7 +223,6 @@ export default {
       loading: false,
       disabled: false,
       editShow: false,
-      supplyName: '',
       adAmount: '',
       acAmount: '',
       payableAmount: '',
@@ -242,9 +231,18 @@ export default {
         acAmount: null,
         applicationPerson: '廖淑萍',
         applicationTime: '2018-03-19',
-        code: '1',
-        contractInfo: { id: '' },
-        supply: { id: null },
+        code: '',
+        contractInfo: {
+          id: '',
+          code: '',
+          name: '',
+          business: {
+            businessCategory: {
+              name: ''
+            }
+          }
+        },
+        supply: { id: null, name: '' },
         deliveryStatus: '未发货',
         department: '财务管理部',
         inputCode: '入库单编号',
@@ -260,9 +258,6 @@ export default {
         signNumber: '',
         term: ''
       },
-      contractInfoList: [],
-      businessCtgList: [],
-      supplyList: [],
       materialCtgList: [],
       departmentList: [],
       contractId: '',
@@ -293,7 +288,7 @@ export default {
         if (valid) {
           this.loading = true
           var paymentContract = {}
-          var arr = ['contractInfo', 'materialCategory']
+          var arr = ['contractInfo']
           for (var key in this.paymentContract) {
             if (this.paymentContract[key]) {
               if ((arr.indexOf(key) > -1) && (this.paymentContract[key].id === '')) { // arr向后台传值都是一个个实体，所以值为空，应该删不向后台传送
@@ -341,14 +336,11 @@ export default {
       }
     },
     getInsertData() {
-      this.$get('/paymentContract/findInsertData').then((res) => {
-        var data = res.data.data
-        this.contractInfoList = data.contractInfoList
-        this.supplyList = data.supplyList
-        this.materialCtgList = data.materialCtgList
-        this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
-          { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
+      materialCtgList().then((data) => {
+        this.materialCtgList = data
       })
+      this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
+        { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -394,23 +386,61 @@ export default {
       this.amount = outputmoney('' + this.paymentContract.amount)
       this.payableAmount = outputmoney('' + this.paymentContract.payableAmount)
       // materialCategory、contractInfo传值的时，空值为传，返回值为null 对两对象做格式转换
-      if (this.paymentContract.materialCategory === null) {
-        this.paymentContract.materialCategory = {
-          id: '',
-          name: ''
-        }
-      }
       if (this.paymentContract.contractInfo === null) {
         this.paymentContract.contractInfo = {
           id: '',
           name: '',
           code: '',
-          businessCategory: { name: '' }
+          business: {
+            businessCategory: { name: '' }
+          }
         }
       }
+    },
+    // 合同编号搜索
+    contractCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    contractCodeSelect(item) {
+      this.paymentContract.contractInfo = item
+    },
+    // 供应商搜索
+    supplySearchAsync(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/supplyName?supplyName=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.name
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    supplySelect(item) {
+      this.paymentContract.supply.id = item.id
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  },
   watch: {
     disabled(status) {
       if (status === false) {
@@ -430,20 +460,23 @@ export default {
           }
           this.$emit('changeObj', true)
         }
+        // 供应商为空
+        if (obj.supply.name === '') {
+          obj.supply.id = ''
+        }
+        // 合同编号为空
+        if (obj.contractInfo.code === '') {
+          obj.contractInfo.id = ''
+          obj.contractInfo.name = ''
+          obj.contractInfo.business.businessCategory.name = ''
+        }
         // 付款合同编号拼接
-        var supplyId = this.paymentContract.supply.id
-        var name = ''
-        if (supplyId) {
-          if (this.supplyList.length > 0) {
-            this.supplyList.forEach((item) => {
-              if (item.id === supplyId) {
-                name = item.name
-              }
-            })
-          } else {
-            name = this.paymentContract.supply.name
-          }
-          this.paymentContract.code = this.paymentContract.orderCode + '-' + name
+        var supplyName = this.paymentContract.supply.name
+        var orderCode = this.paymentContract.orderCode
+        if (supplyName && orderCode) {
+          this.paymentContract.code = orderCode + '-' + supplyName
+        } else {
+          this.paymentContract.code = ''
         }
       },
       deep: true

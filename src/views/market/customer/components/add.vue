@@ -109,7 +109,6 @@
 import _ from 'lodash'
 import { isObjectValueEqual } from '@/utils'
 import { validatePhone, validateMobile } from '@/utils/validate'
-// import { businessCtgList, materialCtgList } from '@/utils/selectList'
 export default {
   name: 'customer',
   props: ['editData'],
