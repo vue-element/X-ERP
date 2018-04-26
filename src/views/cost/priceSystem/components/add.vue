@@ -1,6 +1,6 @@
 <template>
   <div class="supply-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('price:findUpdateData') && editShow">
+      <div class="commont-btn edit-btn" v-show="hasPerm('price:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="priceInfo" :rules="rules" ref="priceInfo">
@@ -135,7 +135,7 @@
         <h4 class="module-title">
           <p>产品报价历史</p>
         </h4>
-        <el-table class="basic-form" style="width: 100%"  :data="historyPriceList" ref="multipleTable">
+        <el-table class="basic-form" style="width: 100%" height="240"  :data="historyPriceList" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
             <template slot-scope="scope">{{scope.$index  + 1}}</template>
           </el-table-column>
@@ -144,6 +144,8 @@
           <el-table-column prop="time" label="修改时间"></el-table-column>
           </el-table-column>
         </el-table>
+        <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+         @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
       </div>
     </el-form>
   </div>
@@ -228,7 +230,12 @@ export default {
         source: [{ required: true, message: '请输入价格来源', trigger: 'change' }],
         validDate: [{ required: true, message: '请输入价格有效期限', trigger: 'change' }]
       },
-      temp: {}
+      temp: {},
+      // 产品报价历史
+      total: 5,
+      currentPage: 1,
+      pageSizes: [5, 10, 15],
+      pageSize: 5
     }
   },
   created() {
@@ -310,10 +317,26 @@ export default {
         { value: '背景音乐系统' }, { value: '会议系统' }, { value: '机房工程系统' }, { value: '报警系统' }, { value: '消防系统' }, { value: '综合布线系统' }, { value: '通用类' }]
       this.sourceList = [{ value: '地产集采价格' }, { value: '集团集采价格' }, { value: '公司集采价格' }, { value: '询价价格' }]
     },
+    //  页码处理
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getPriceHistory()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getPriceHistory()
+    },
     getPriceHistory() {
-      this.$get('/priceHistory/findAllByPrice/' + this.priceId).then((res) => {
+      var pageSize = this.pageSize || 5
+      var page = this.currentPage - 1 || 0
+      var url = '/priceHistory/findAllByPrice/' + this.priceId
+      this.$get(url + '?size=' + pageSize + '&page=' + page).then((res) => {
         if (res.data.success === true) {
-          this.historyPriceList = res.data.data.content
+          var data = res.data.data
+          this.historyPriceList = data.content
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
           this.historyPriceList.forEach((item) => {
             item.productQuotation = outputmoney('' + item.productQuotation)
           })

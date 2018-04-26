@@ -3,11 +3,11 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('paymentContract:search')" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('paymentContract:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
@@ -17,7 +17,7 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="handleDownload('Arr')" :loading="downloadLoading">
+          <button v-if="hasPerm('paymentContract:export')" @click="handleDownload('Arr')" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>

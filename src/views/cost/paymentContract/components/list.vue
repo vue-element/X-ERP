@@ -23,7 +23,7 @@
         <el-table-column prop="term" label="账期" width="100"></el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('paymentContract:findAllByPage')">查看</el-button>
+            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('paymentContract:findUpdateData')">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" v-if="hasPerm('paymentContract:delete')">删除</el-button>
           </template>
         </el-table-column>

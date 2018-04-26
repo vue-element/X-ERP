@@ -3,13 +3,13 @@
     <div class="form-head-attached">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button v-if="hasPerm('paymentContract:search')" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('inboundList:search')" @click="toggleTab('searchTab')" :class="tab === 'searchTab' ? 'is-active' : ''">
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
           <button v-if="hasPerm('paymentContract:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
-            <span>查看明细</span>
+            <span>查看</span>
           </button>
         </div>
         <div class="export-btn fr">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
@@ -57,7 +58,6 @@ export default {
     }
   },
   created() {
-    // console.log('inbound')
   },
   mounted() {},
   methods: {
@@ -129,7 +129,10 @@ export default {
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
-    }
+    },
+    ...mapGetters([
+      'roleCode'
+    ])
   },
   watch: {
   }

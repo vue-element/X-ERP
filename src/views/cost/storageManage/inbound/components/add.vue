@@ -2,9 +2,9 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="toggleTab('inboundInfo')">入库填写</li>
-        <li :class="actionTab === 'officeCheck' ? 'is-active' : ''" @click="toggleTab('officeCheck')">办事处审核</li>
-        <li :class="actionTab === 'costCheck' ? 'is-active' : ''" @click="toggleTab('costCheck')">成本部审核</li>
+        <li v-show="actionTab === 'inboundInfo'" class="is-active" @click="toggleTab('inboundInfo')">入库填写</li>
+        <li v-show="actionTab === 'officeCheck'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li v-show="actionTab === 'costCheck'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
@@ -54,7 +54,8 @@
             </el-col>
           </el-row>
         </div>
-        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab" @InBound="InBound" @InBoundPay="InBoundPay" @outBoundPay="outBoundPay"></table-component>
+        <table-component :inboundId="inboundId" :paymentContractId="paymentContractId" :editShow="editShow" :actionTab="actionTab"
+        @InBound="InBound" @InBoundPay="InBoundPay" @outBoundPay="outBoundPay"></table-component>
       </el-form>
       <!-- 入库单 -->
       <div class="printTable" v-if="InboundTable">
@@ -269,6 +270,7 @@ export default {
       categoryList: [],
       supplyList: [],
       contractInfoList: [],
+      keyCode: '',
       // 打印
       printTable: false,
       inboundId: '',
@@ -286,6 +288,7 @@ export default {
   },
   created() {
     this.getInboundList()
+    this.judgeCode()
     if (this.editData.tabState === 'addTab') {
       this.action = 'add'
     } else {
@@ -296,6 +299,32 @@ export default {
     }
   },
   methods: {
+    judgeCode() {
+      var keyCode = ''
+      var ISXHB = this.roleCode.indexOf('xhb') > 0
+      var lastStr = this.roleCode[this.roleCode.length - 1]
+      if (ISXHB) {
+        if (lastStr === '1') {
+          keyCode = 'Manage'
+        } else if (lastStr === '2') {
+          keyCode = 'Assistant'
+        } else if (lastStr === '3') {
+          keyCode = 'Financial'
+        } else if (lastStr === '4') {
+          keyCode = 'Cost'
+        }
+      }
+      if (this.roleCode === 'marketinga' || this.roleCode === 'admin') {
+        keyCode = 'Manage'
+      } else if (this.roleCode === 'marketing') {
+        keyCode = 'Assistant'
+      }
+      if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
+        keyCode = 'Account'
+      }
+      // console.log('keyCode', keyCode)
+      this.keyCode = keyCode
+    },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.inboundList = data.inboundList
@@ -305,18 +334,6 @@ export default {
     },
     toggleTab(tab) {
       this.actionTab = tab
-      this.container = true
-      this.InboundTable = false
-      this.InboundPayTable = false
-      this.outboundPayTable = false
-    },
-    // 打印入库
-    InBound(status) {
-      this.InboundTable = status
-      this.container = false
-    },
-    // 返回
-    back() {
       this.container = true
       this.InboundTable = false
       this.InboundPayTable = false
@@ -359,6 +376,18 @@ export default {
       taxRate = parseFloat(taxRate) / 100 // 转化税率（小数点）
       return returnFloat(unitPrice / (1 + taxRate)) // 单价中包含税金，并且保留2位小数
     },
+    // 打印入库
+    InBound(status) {
+      this.InboundTable = status
+      this.container = false
+    },
+    // 返回
+    back() {
+      this.container = true
+      this.InboundTable = false
+      this.InboundPayTable = false
+      this.outboundPayTable = false
+    },
     // 入库核算表
     InBoundPay(status) {
       this.InboundPayTable = status
@@ -382,8 +411,20 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'userName',
+      'roleCode'
     ])
+  },
+  watch: {
+    keyCode(val) {
+      if (val === 'Assistant') {
+        this.actionTab = 'inboundInfo'
+      } else if (val === 'Manage') {
+        this.actionTab = 'officeCheck'
+      } else if (val === 'Account') {
+        this.actionTab = 'costCheck'
+      }
+    }
   }
 }
 </script>

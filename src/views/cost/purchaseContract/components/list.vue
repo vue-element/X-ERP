@@ -23,12 +23,12 @@
        <el-table-column prop="term" label="账期" width="100"></el-table-column>
        <el-table-column label="操作" fixed="right" width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
+          <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('paymentContract:findUpdateData')">查看</el-button>
           <el-dropdown @command="handleCommand">
             <el-button class="el-dropdown-link" type="text">更多</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a" @click.native.prevent="downloadPL(scope.row.id)">生成采购清单</el-dropdown-item>
-              <el-dropdown-item command="b" @click.native.prevent="downloadPC(scope.row.id)">生成采购合同</el-dropdown-item>
+              <!-- <el-dropdown-item command="b" @click.native.prevent="downloadPC(scope.row.id)">生成采购合同</el-dropdown-item> -->
               <!-- <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" >删除</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>

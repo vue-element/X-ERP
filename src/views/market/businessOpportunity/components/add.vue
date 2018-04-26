@@ -255,7 +255,7 @@
     <h4 class="module-title">
       <p>修改记录</p>
     </h4>
-    <el-table class="basic-form" style="width: 100%"  :data="historyRecord" ref="multipleTable" border>
+    <el-table class="basic-form" style="width: 100%" height="240"  :data="historyRecord" ref="multipleTable" border>
       <el-table-column align="center" prop="0" label="序号" width="60">
         <template slot-scope="scope">{{scope.$index  + 1}}</template>
       </el-table-column>
@@ -265,6 +265,8 @@
       <el-table-column prop="dNumber" label="商机修改间隔(天)" width="140"></el-table-column>
       </el-table-column>
     </el-table>
+    <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+     @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
   </div>
 </div>
 </template>
@@ -378,7 +380,11 @@ export default {
       temp: {},
       dialogFormVisible: false,
       historyRecord: [],
-      lastTime: ''
+      lastTime: '',
+      total: 5,
+      currentPage: 1,
+      pageSizes: [5, 10, 15],
+      pageSize: 5
     }
   },
   created() {
@@ -556,15 +562,31 @@ export default {
         }
       }
     },
+    //  页码处理
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getRecordHistory()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getRecordHistory()
+    },
     // 修改记录
     getRecordHistory() {
-      this.$get('/businessHistory/findAllByBusiness/' + this.businessInfo.id).then((res) => {
+      var pageSize = this.pageSize || 15
+      var page = this.currentPage - 1 || 0
+      var url = '/businessHistory/findAllByBusiness/' + this.businessInfo.id
+      this.$get(url + '?size=' + pageSize + '&page=' + page).then((res) => {
         if (res.data.success === true) {
-          this.historyRecord = res.data.data.content
+          var data = res.data.data
+          this.historyRecord = data.content
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
+          // 商机修改间隔
           var len = this.historyRecord.length - 1
           var lastTime = len > 0 ? new Date(this.historyRecord[len].time) : new Date()
           this.lastTime = lastTime.getTime()
-          // console.log('lastTime', this.lastTime)
           this.setSession()
         }
       })

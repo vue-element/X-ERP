@@ -13,7 +13,7 @@
         <el-table-column prop="state" label="状态"></el-table-column>
         <el-table-column label="操作" min-width="140" fixed="right">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
+            <el-button v-if="hasPerm('inboundList:findUpdateData')" @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <!-- <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button> -->
             <el-button @click.native.prevent="exportRow(scope.row.id)" type="text">导出</el-button>
           </template>
@@ -60,7 +60,7 @@ export default {
       this.searchData.role_code = this.roleCode
       var url = '/inboundList/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then(res => {
-      // var url = '/inboundList?size=' + pageSize + '&page=' + page
+      // var url = '/inboundList/findAllByPage/' + this.roleCode + '?size=' + pageSize + '&page=' + page
       // this.$get(url).then(res => {
         this.listLoading = false
         if (res.data.success === true) {
@@ -69,7 +69,7 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          console.log('this.tableData', this.tableData)
+          // console.log('this.tableData', this.tableData)
           this.$emit('exportData', this.tableData)
         }
       }).catch(() => {

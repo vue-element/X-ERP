@@ -2,14 +2,14 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li :class="actionTab === 'inboundInfo' ? 'is-active' : ''" @click="toggleTab('inboundInfo')">出库填写</li>
-        <li :class="actionTab === 'officeCheck' ? 'is-active' : ''" @click="toggleTab('officeCheck')">办事处审核</li>
-        <li :class="actionTab === 'costCheck' ? 'is-active' : ''" @click="toggleTab('costCheck')">成本部审核</li>
+        <li v-show="actionTab === 'inboundInfo'" class="is-active" @click="toggleTab('inboundInfo')">出库填写</li>
+        <li v-show="actionTab === 'officeCheck'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li v-show="actionTab === 'costCheck'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
       <div class="container" v-if="container">
-        <div class="commont-btn edit-btn" v-show="hasPerm('outboundList:findUpdateData') && editShow">
+        <div class="commont-btn edit-btn" v-show="hasPerm('outboundList:update') && editShow">
           <el-button @click="toggleEditBtn">{{editWord}}</el-button>
         </div>
         <el-form :model="outboundInfo" :rules="rules" ref="outboundInfo">
@@ -21,11 +21,7 @@
               <el-col :sm="24" :md="12" :lg="12">
                 <el-form-item label="付款合同编号/入库单编号:" prop="inboundList">
                   <p v-if="disabled">{{outboundInfo.inboundList.code}}</p>
-                  <el-autocomplete v-else v-model="outboundInfo.inboundList.code" :fetch-suggestions="codeSearch" @select="codeSelect" placeholder="请选择付款合同编号"></el-autocomplete>
-                  <!-- <el-select v-else v-model="outboundInfo.inboundList.id" placeholder="请选择付款合同编号" filterable clearable @change="inboundChange">
-                   <el-option v-for="item in inboundList" :label="item.code" :value="item.id" :key="item.id">
-                   </el-option>
-                 </el-select> -->
+                  <el-autocomplete v-else v-model="outboundInfo.inboundList.code" :fetch-suggestions="inboundCodeSearch" @select="inboundCodeSelect" placeholder="请选择付款合同编号"></el-autocomplete>
                 </el-form-item>
               </el-col>
               <el-col :sm="24" :md="12" :lg="12">
@@ -125,6 +121,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import tableComponent from './table.vue'
 export default {
   props: ['editData'],
@@ -138,6 +135,7 @@ export default {
       }
     }
     return {
+      keyCode: '',
       action: 'add',
       actionTab: 'inboundInfo',
       editWord: '编辑',
@@ -176,12 +174,40 @@ export default {
     }
   },
   created() {
+    this.judgeCode()
     this.getInsertData()
     this.toggleAction()
-    this.getOutboundList()
-    this.temp = _.cloneDeep(this.outboundInfo)
+    if (this.outboundId) {
+      this.getOutboundList()
+    }
   },
   methods: {
+    judgeCode() {
+      var keyCode = ''
+      var ISXHB = this.roleCode.indexOf('xhb') > 0
+      var lastStr = this.roleCode[this.roleCode.length - 1]
+      if (ISXHB) {
+        if (lastStr === '1') {
+          keyCode = 'Manage'
+        } else if (lastStr === '2') {
+          keyCode = 'Assistant'
+        } else if (lastStr === '3') {
+          keyCode = 'Financial'
+        } else if (lastStr === '4') {
+          keyCode = 'Cost'
+        }
+      }
+      if (this.roleCode === 'marketinga') {
+        keyCode = 'Manage'
+      } else if (this.roleCode === 'marketing' || this.roleCode === 'admin') {
+        keyCode = 'Assistant'
+      }
+      if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
+        keyCode = 'Account'
+      }
+      // console.log('keyCode', keyCode)
+      this.keyCode = keyCode
+    },
     save() {
       this.$refs.outboundInfo.validate((valid) => {
         if (valid) {
@@ -255,6 +281,7 @@ export default {
         this.outboundInfo = this.editData.editData.outboundList
         this.editInfo()
       }
+      this.temp = _.cloneDeep(this.outboundInfo)
     },
     successSave() {
       this.$emit('changeObj', false)
@@ -271,10 +298,10 @@ export default {
         type: 'error'
       })
     },
-    // 付款合同搜索
-    codeSearch(queryString, callback) {
+    // 入库单编号搜索
+    inboundCodeSearch(queryString, callback) {
       var list = [{}]
-      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+      this.$get('/keywordQuery/inboundListCode?role_code=' + this.roleCode + '&inboundListCode=' + queryString).then((res) => {
         list = res.data.objectList
         for (var i of list) {
           i.value = i.code
@@ -287,7 +314,7 @@ export default {
         console.log(error)
       })
     },
-    codeSelect(item) {
+    inboundCodeSelect(item) {
       this.outboundInfo.inboundList.id = item.id
     },
     // 根据付款合同编号，自动生成项目，办事处
@@ -332,8 +359,24 @@ export default {
       return false
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
+  },
   watch: {
+    keyCode(val) {
+      if (val === 'Assistant') {
+        this.actionTab = 'inboundInfo'
+        this.disabled = false
+      } else if (val === 'Manage') {
+        this.actionTab = 'officeCheck'
+        this.disabled = true
+      } else if (val === 'Account') {
+        this.actionTab = 'costCheck'
+        this.disabled = true
+      }
+    },
     disabled(status) {
       if (status === false) {
         this.editWord = '取消编辑'

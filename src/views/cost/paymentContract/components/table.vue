@@ -2,14 +2,14 @@
   <div class="payment-contract">
     <!-- 物料详情 -->
     <div class="form-module" v-if="hasPerm('purchaseList:findAllByPaymentContract')">
-      <h4 class="module-title" v-if="hasPerm('purchaseList:save')">
+      <h4 class="module-title">
         <p>物料详情</p>
         <div class="material-table-head fr">
           <button @click.prevent="handleDownload" :loading="downloadLoading">
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click.prevent="uploadMaterial">
+          <button @click.prevent="uploadMaterial" v-if="hasPerm('purchaseList:importData')">
             <i class="iconfont icon-import"></i>
             <span>导入物料明细</span>
           </button>
@@ -20,7 +20,7 @@
         </div>
       </h4>
       <div>
-        <el-table class="basic-form" style="width: 100%" height="300" :data="purchaseList" v-loading.body="listLoading" border>
+        <el-table class="el-table-sm" style="width: 100%" height="240" :data="purchaseList" v-loading.body="listLoading" border>
           <el-table-column label="序号" width="60" fixed>
             <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
@@ -90,9 +90,9 @@
           </button>
         </div>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="billingList" v-loading.body="listLoading">
+      <el-table class="el-table-sm" style="width: 100%" :data="billingList" v-loading.body="listLoading" height="240">
         <el-table-column label="序号">
-          <template slot-scope="scope">
+          <template slot-scope="scope" width="100">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
@@ -110,12 +110,14 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button v-if="hasPerm('billing:save') && scope.row.edit" @click.native.prevent="confirmBillingEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-if="hasPerm('billing:save')" @click.native.prevent='editBillingRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-show="hasPerm('billing:save') && scope.row.edit" @click.native.prevent="confirmBillingEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-show="hasPerm('billing:update') && !scope.row.edit" @click.native.prevent='editBillingRow(scope.row, scope.$index)' type="text">编辑</el-button>
             <el-button v-if="hasPerm('billing:delete')" @click.native.prevent="deleteBillingRow(scope.row.id)" type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="page" background :current-page="currentPageB" :page-sizes="pageSizes" :page-size="pageSizeB"  :total="totalB"
+       @size-change="billSizeChange" @current-change="billCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     </div>
     <!-- 付款合同 -->
     <div class="form-module" v-show="editShow && hasPerm('payment:findAllByPaymentContract')">
@@ -128,8 +130,8 @@
           </button>
         </div>
       </h4>
-      <el-table class="basic-form" style="width: 100%" :data="paymentList" v-loading.body="listLoading">
-        <el-table-column label="序号">
+      <el-table class="el-table-sm" style="width: 100%" :data="paymentList" v-loading.body="listLoading" height="240">
+        <el-table-column label="序号" width="100">
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
@@ -148,12 +150,14 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button v-if="hasPerm('payment:save') && scope.row.edit" @click.native.prevent="confirmPaymentEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-if="hasPerm('payment:save')" @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-show="hasPerm('payment:save') && scope.row.edit" @click.native.prevent="confirmPaymentEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-show="hasPerm('payment:updat') && !scope.row.edit" @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
             <el-button v-if="hasPerm('payment:delete')" @click.native.prevent="deletePaymentRow(scope.row.id)" type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="page" background :current-page="currentPageP" :page-sizes="pageSizes" :page-size="pageSizeP"  :total="totalP"
+       @size-change="paymentSizeChange" @current-change="paymentCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     </div>
   </div>
 </template>
@@ -177,7 +181,15 @@ export default {
       downloadLoading: false,
       comfirmUploading: false,
       acAmount: null,
-      adAmount: null
+      adAmount: null,
+      // 开票付款合同
+      totalP: 5,
+      currentPageP: 1,
+      pageSizeP: 5,
+      pageSizes: [5, 10, 15],
+      totalB: 5,
+      currentPageB: 1,
+      pageSizeB: 5
     }
   },
   created() {
@@ -323,9 +335,24 @@ export default {
       console.log('val', val)
     },
     // 开票信息
+    billSizeChange(val) {
+      this.pageSizeB = val
+      this.getBillingList()
+    },
+    billCurrentChange(val) {
+      this.currentPageB = val
+      this.getBillingList()
+    },
     getBillingList() {
-      this.$get('/billing/findAllByPaymentContract/' + this.contractId).then((res) => {
-        this.billingList = res.data.data.content
+      var pageSize = this.pageSizeB || 5
+      var page = this.currentPageB - 1 || 0
+      var query = '?size=' + pageSize + '&page=' + page
+      this.$get('/billing/findAllByPaymentContract/' + this.contractId + query).then((res) => {
+        var data = res.data.data
+        this.billingList = data.content
+        this.totalB = data.totalElements
+        this.currentPageB = data.number + 1
+        this.pageSizeB = data.size
       })
     },
     addBilling() {
@@ -369,9 +396,24 @@ export default {
       })
     },
     // 付款信息
+    paymentSizeChange(val) {
+      this.pageSizeP = val
+      this.getPaymentList()
+    },
+    paymentCurrentChange(val) {
+      this.currentPageP = val
+      this.getPaymentList()
+    },
     getPaymentList() {
-      this.$get('/payment/findAllByPaymentContract/' + this.contractId).then((res) => {
-        this.paymentList = res.data.data.content
+      var pageSize = this.pageSizeP || 5
+      var page = this.currentPageP - 1 || 0
+      var query = '?size=' + pageSize + '&page=' + page
+      this.$get('/payment/findAllByPaymentContract/' + this.contractId + query).then((res) => {
+        var data = res.data.data
+        this.paymentList = data.content
+        this.totalP = data.totalElements
+        this.currentPageP = data.number + 1
+        this.pageSizeP = data.size
       })
     },
     addPayment() {

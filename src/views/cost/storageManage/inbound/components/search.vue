@@ -8,19 +8,13 @@
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="订单编号:">
-              <el-select v-model="searchData.orderCode" placeholder="请选择订单编号" filterable clearable>
-               <el-option v-for="item in paymentContractList" :label="item.orderCode" :value="item.orderCode" :key="item.id">
-               </el-option>
-             </el-select>
+              <el-autocomplete v-model="searchData.orderCode" :fetch-suggestions="orderCodeSearch" placeholder="请选择订单编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="付款合同编号/入库单号:">
-              <el-autocomplete v-model="searchData.code" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
-              <!-- <el-select v-model="searchData.code" placeholder="请选择付款合同编号" filterable clearable>
-               <el-option v-for="item in paymentContractList" :label="item.code" :value="item.code" :key="item.id">
-               </el-option>
-             </el-select> -->
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="inboundCodeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
+              <!-- <el-autocomplete v-model="searchData.code" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -36,10 +30,6 @@
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="供应商:">
               <el-autocomplete v-model="searchData.supply_name" :fetch-suggestions="supplySearchAsync" placeholder="请选择供应商"></el-autocomplete>
-              <!-- <el-select v-model="searchData.supply_id" placeholder="请选择供应商" filterable clearable>
-               <el-option v-for="item in supplyList" :label="item.name" :value="item.id" :key="item.id">
-               </el-option>
-             </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -85,11 +75,6 @@ export default {
   },
   methods: {
     getInsertData() {
-      // this.$get('/paymentContract/findInsertData').then((res) => {
-      //   var data = res.data.data
-      //   this.paymentContractList = data.paymentContractList
-      //   this.supplyList = data.supplyList
-      // })
       this.departmentList = [{ value: '财务管理部' }, { value: '成本管理部' }, { value: '市场管理部' }, { value: '工程技术部' }, { value: '人事行政部' }, { value: '运维及质量安全部' }, { value: '研发设计部' },
         { value: '华南办事处' }, { value: '华东办事处' }, { value: '华北办事处' }, { value: '华中办事处' }, { value: '西部办事处' }, { value: '北方办事处' }, { value: '深圳办事处' }]
     },
@@ -105,15 +90,10 @@ export default {
           }
         }
       }
-      console.log('search1', searchData)
       this.$emit('search', searchData)
     },
     searchAll() {
-      var searchData = {
-        amount: 0,
-        amount1: 0
-      }
-      console.log('search2', searchData)
+      var searchData = {}
       this.$emit('search', searchData)
     },
     reset() {
@@ -122,6 +102,22 @@ export default {
           this.searchData[key] = ''
         }
       }
+    },
+    // 订单编号搜索
+    orderCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/orderCode?role_code=' + this.roleCode + '&orderCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
     },
     // 供应商搜索
     supplySearchAsync(queryString, callback) {
@@ -139,10 +135,10 @@ export default {
         console.log(error)
       })
     },
-    // 付款合同搜索
-    codeSearch(queryString, callback) {
+    // 入库单号搜索
+    inboundCodeSearch(queryString, callback) {
       var list = [{}]
-      this.$get('/keywordQuery/paymentContractCode?role_code=' + this.roleCode + '&paymentContractCode=' + queryString).then((res) => {
+      this.$get('/keywordQuery/inboundListCode?role_code=' + this.roleCode + '&inboundListCode=' + queryString).then((res) => {
         list = res.data.objectList
         for (var i of list) {
           i.value = i.code

@@ -1,10 +1,10 @@
 <template>
   <div class="payment-contract">
     <div class="form-module" v-if="hasPerm('outboundDetaile:findAllByPage')">
-      <h4 class="module-title" v-if="hasPerm('outboundDetaile:save')">
+      <h4 class="module-title">
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
-          <button @click.prevent="showDialog">
+          <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save')">
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -32,8 +32,8 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button v-if="hasPerm('outboundDetaile:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-              <el-button v-if="hasPerm('outboundDetaile:save')" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+              <el-button v-show="hasPerm('outboundDetaile:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+              <el-button v-show="hasPerm('outboundDetaile:save') && !scope.row.edit" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
               <el-button v-if="hasPerm('outboundDetaile:delete')" @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -41,10 +41,15 @@
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
           <el-button  v-if="hasPerm('outboundCheck:save')" :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
+          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
           <el-button :loading="false" @click="outBound">导出出库单</el-button>
-          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+        </div>
+        <div class="commont-btn"  v-show="actionTab === 'costCheck'">
+          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
+          <el-button :loading="false" @click="outBound">导出出库单</el-button>
+          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
         </div>
       </div>
     </div>

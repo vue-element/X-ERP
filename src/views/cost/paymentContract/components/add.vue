@@ -1,6 +1,6 @@
 <template>
   <div class="payment-contract-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('paymentContract:findUpdateData') && editShow" >
+    <div class="commont-btn edit-btn" v-show="hasPerm('paymentContract:update') && editShow" >
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="paymentContract" :rules="rules" ref="paymentContract">
@@ -18,7 +18,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="申请时间:" class="single-date" prop="applicationTime">
               <p v-if="disabled">{{paymentContract.applicationTime}}</p>
-              <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
+              <el-date-picker  v-else type="date" format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -245,7 +245,6 @@ export default {
         supply: { id: null, name: '' },
         deliveryStatus: '未发货',
         department: '财务管理部',
-        inputCode: '入库单编号',
         materialCategory: { id: '' },
         mention: '是',
         oddNumber: '',
@@ -298,6 +297,7 @@ export default {
               }
             }
           }
+          console.log('paymentContract', JSON.stringify(paymentContract))
           this.$post('/paymentContract/save', paymentContract).then(res => {
             this.loading = false
             if (res.data.success === true) {

@@ -53,6 +53,7 @@ export default {
   name: 'role',
   data() {
     return {
+      height: '',
       roleList: [],
       roleInfo: {
         name: '',

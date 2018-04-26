@@ -8,11 +8,7 @@
         <el-row :gutter="40">
           <el-col :xs="24" :md="12" :lg="12">
             <el-form-item label="订单编号:">
-              <!-- <el-autocomplete v-model="searchData.orderCode" :fetch-suggestions="orderCodeSearch" placeholder="请选择订单编号"></el-autocomplete> -->
-              <!-- <el-select v-model="searchData.orderCode" placeholder="请选择订单编号" filterable clearable>
-               <el-option v-for="item in paymentContractList" :label="item.orderCode" :value="item.orderCode" :key="item.id">
-               </el-option>
-             </el-select> -->
+              <el-autocomplete v-model="searchData.orderCode" :fetch-suggestions="orderCodeSearch" placeholder="请选择订单编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
@@ -70,14 +66,14 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :md="12" :lg="12">
-            <el-form-item label="采购金额:">
+            <el-form-item label="计划采购金额:">
               <el-row>
                 <el-col :span="10">
-                  <el-input v-model="searchData.amount" placeholder="请输入金额"></el-input>
+                  <el-input v-model="searchData.adAmount" placeholder="请输入金额"></el-input>
                 </el-col>
                 <el-col class="line" :span="4" style="text-align:center">——</el-col>
                 <el-col :span="10">
-                  <el-input v-model="searchData.amount1" placeholder="请输入金额"></el-input>
+                  <el-input v-model="searchData.adAmount1" placeholder="请输入金额"></el-input>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -116,8 +112,8 @@ export default {
         contractInfo_code: '',
         contractInfo_name: '',
         applicationTime: '',
-        amount: '',
-        amount1: ''
+        adAmount: '',
+        adAmount1: ''
       },
       businessCtgList: [],
       materialCtgList: [],
@@ -149,21 +145,25 @@ export default {
             searchData[key] = this.searchData[key]
           }
         } else {
-          if (key === 'amount') {
-            searchData['amount'] = 0
+          if (key === 'adAmount') {
+            searchData['adAmount'] = 0
           }
-          if (key === 'amount1') {
-            searchData['amount1'] = 0
+          if (key === 'adAmount1') {
+            searchData['adAmount1'] = 0
           }
         }
       }
+      searchData.acAmount = 0
+      searchData.acAmount1 = 0
       console.log('search1', searchData)
       this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {
-        amount: 0,
-        amount1: 0
+        adAmount: 0,
+        adAmount1: 0,
+        acAmount: 0,
+        acAmount1: 0
       }
       this.$emit('search', searchData)
     },
@@ -179,6 +179,22 @@ export default {
     },
     materialCtgChange(name) {
       this.searchData.m_ctg_name = name
+    },
+    // 订单编号搜索
+    orderCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/orderCode?role_code=' + this.roleCode + '&orderCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
     },
     // 付款合同搜索
     codeSearch(queryString, callback) {

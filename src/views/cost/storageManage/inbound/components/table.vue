@@ -11,7 +11,7 @@
             </button>
           </div> -->
         </h4>
-        <el-table class="basic-form" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
+        <el-table class="el-table-sm" style="width: 100%" :data="InboundList" v-loading.body="listLoading">
           <el-table-column label="发货明细">
             <el-table-column label="序号">
               <template slot-scope="scope">{{scope.$index + 1}}</template>
@@ -62,13 +62,13 @@
             </el-table-column>
           </el-table-column>
         </el-table>
-        <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
+        <div class="commont-btn"  v-show="hasPerm('inboundCheck:save') && actionTab === 'inboundInfo'">
           <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
         </div>
         <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
-          <el-button :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
+          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
           <el-button :loading="false" @click="InBound">导出入库单</el-button>
-          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
         </div>
       </div>
     <!--审核动态  -->
@@ -80,7 +80,7 @@
         </h4>
         <el-row>
           <el-col :xs="24" :sm="24" :lg="24">
-            <el-table class="basic-form"  show-summary style="width: 100%" :data="InboundList" v-loading.body="listLoading" border>
+            <el-table class="el-table-sm"  show-summary style="width: 100%" :data="InboundList" v-loading.body="listLoading" border>
               <el-table-column label="序号" width="60" fixed>
                 <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
@@ -115,11 +115,9 @@
         </el-row>
         <div class="commont-btn">
           <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
-          <el-button :loading="false" @click="InBound">导出入库单</el-button>
-          <el-button :loading="false" @click="InBoundPay">导出入库成本核算表</el-button>
-          <el-button :loading="false" @click="outBoundPayTable">导出出库成本核算表</el-button>
-          <!-- <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
-          <!-- <el-button :loading="false">退回填写</el-button> -->
+          <el-button @click="InBound">导出入库单</el-button>
+          <el-button @click="InBoundPay">导出入库成本核算表</el-button>
+          <el-button @click="outBoundPayTable">导出出库成本核算表</el-button>
         </div>
       </div>
     </div>
@@ -156,6 +154,7 @@ import UploadExcelComponent from '@/components/UploadExcel/common.vue'
 import { returnFloat } from '@/utils'
 import _ from 'lodash'
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { UploadExcelComponent },
@@ -248,13 +247,16 @@ export default {
     },
     // 打印入库单
     InBound() {
+      this.submitCheck('成本核算')
       this.$emit('InBound', true)
     },
     // 入库成本核算表
     InBoundPay() {
+      this.submitCheck('成本核算')
       this.$emit('InBoundPay', true)
     },
     outBoundPayTable() {
+      this.submitCheck('成本核算')
       this.$emit('outBoundPay', true)
     }
   },
@@ -271,6 +273,11 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roleCode'
+    ])
   }
 }
 </script>
