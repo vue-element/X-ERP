@@ -18,7 +18,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="申请时间:" class="single-date" prop="applicationTime">
               <p v-if="disabled">{{paymentContract.applicationTime}}</p>
-              <el-date-picker  v-else type="date" format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
+              <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="paymentContract.applicationTime" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>

@@ -40,7 +40,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="物资类别:">
               <el-select v-model="searchData.materialCategory" placeholder="请选择物资类别" filterable clearable>
-               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
+               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.name" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>

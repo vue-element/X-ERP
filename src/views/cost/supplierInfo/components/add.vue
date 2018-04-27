@@ -74,7 +74,7 @@
             <el-form-item label="物资类别:" prop="materialCategory">
               <p v-if="disabled">{{supplyInfo.materialCategory}}</p>
               <el-select v-else v-model="supplyInfo.materialCategory" placeholder="请选择物资类别" filterable clearable>
-               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.id" :key="item.id">
+               <el-option v-for="item in materialCtgList" :label="item.name" :value="item.name" :key="item.id">
                </el-option>
              </el-select>
             </el-form-item>

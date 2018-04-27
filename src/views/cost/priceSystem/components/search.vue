@@ -53,12 +53,12 @@
               <el-autocomplete v-model="searchData.supply_name" :fetch-suggestions="supplySearchAsync" placeholder="请选择供应商"></el-autocomplete>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="12">
+          <!-- <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="有效期限:" class="range-date">
               <el-date-picker v-model="searchData.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
       </div>
       <div class="commont-btn">

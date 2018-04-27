@@ -57,8 +57,10 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {
-        amount: 0,
-        amount1: 0
+        adAmount: 0,
+        adAmount1: 0,
+        acAmount: 0,
+        acAmount1: 0
       },
       isChange: false,
       exprotList: []

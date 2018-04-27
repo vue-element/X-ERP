@@ -111,7 +111,7 @@
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="价格有效期限:" class="range-date validDate" prop="validDate">
               <p v-if="disabled">{{validDateStr}}</p>
-              <el-date-picker v-else v-model="priceInfo.validDate" format="yyyy-MM-dd" type="daterange" @change="validDateChange"
+              <el-date-picker v-else v-model="priceInfo.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" @change="validDateChange"
               start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>

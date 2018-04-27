@@ -127,7 +127,6 @@
 import { mapGetters } from 'vuex'
 import { cityList, regionList, businessCtgList } from '@/utils/selectList'
 export default {
-  name: 'InvoiceSearch',
   data() {
     return {
       searchData: {
