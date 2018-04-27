@@ -2,9 +2,9 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li v-show="actionTab === 'inboundInfo'" class="is-active" @click="toggleTab('inboundInfo')">出库填写</li>
-        <li v-show="actionTab === 'officeCheck'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
-        <li v-show="actionTab === 'costCheck'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
+        <li v-show="actionTab === 'inboundInfo' || roleCode === 'admin'" class="is-active" @click="toggleTab('inboundInfo')">出库填写</li>
+        <li v-show="actionTab === 'officeCheck' || roleCode === 'admin'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li v-show="actionTab === 'costCheck' || roleCode === 'admin'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
@@ -368,7 +368,6 @@ export default {
     keyCode(val) {
       if (val === 'Assistant') {
         this.actionTab = 'inboundInfo'
-        this.disabled = false
       } else if (val === 'Manage') {
         this.actionTab = 'officeCheck'
         this.disabled = true

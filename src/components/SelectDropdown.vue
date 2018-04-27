@@ -41,6 +41,7 @@ export default {
       } else {
         this.clients = this.listData
       }
+      // console.log('clients', this.clients)
     },
     listData(val) {
       this.clients = val
@@ -67,7 +68,7 @@ export default {
       this.dropdownShow = false
       // this.cancelBlur = false
     },
-    inputFocus(val) {
+    inputFocus() {
       this.dropdownShow = true
       this.$emit('onchange', this.value)
       // this.cancelBlur = false

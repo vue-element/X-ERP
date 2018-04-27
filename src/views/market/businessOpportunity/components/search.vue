@@ -47,18 +47,15 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="客户类别:">
-            <el-select placeholder="请选择客户类别" v-model="searchData.clientCtg" filterable clearable>
-             <el-option v-for="item in categoryList" :label="item.value" :value="item.value" :key="item.id">
+            <el-select placeholder="请选择客户类别" v-model="searchData.client_ctg" filterable clearable>
+             <el-option v-for="item in categoryList" :label="item.name" :value="item.name" :key="item.id">
              </el-option>
            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="业务分类:">
-            <el-select placeholder="请选择业务分类" v-model="searchData.ctg_id" filterable clearable>
-             <el-option v-for="item in businessCtgList" :label="item.name" :value="item.id" :key="item.id">
-             </el-option>
-           </el-select>
+            <select-dropdown label="业务分类" :listData="businessCtgList"  @onchange="businessCtgChange"></select-dropdown>
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,8 +122,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import SelectDropdown from '@/components/SelectDropdown.vue'
 import { cityList, regionList, businessCtgList } from '@/utils/selectList'
 export default {
+  components: {
+    SelectDropdown
+  },
   data() {
     return {
       searchData: {
@@ -143,8 +144,8 @@ export default {
         date1: '',
         city_id: '',
         client_name: '',
-        ctg_id: '',
-        clientCtg: '',
+        client_ctg: '',
+        bussinesCtg_name: '',
         bp_id: '',
         region_id: ''
       },
@@ -167,6 +168,13 @@ export default {
     this.searchData.city_id = this.cityOption[2]
   },
   methods: {
+    businessCtgChange(name) {
+      this.searchData.bussinesCtg_name = name
+    },
+    categoryChange(name) {
+      // console.log('name',name)
+      this.searchData.client_ctg = name
+    },
     cityChange(val) {
       var len = val.length
       this.searchData.city_id = val[len - 1]
@@ -203,6 +211,9 @@ export default {
       this.$emit('searchWord', searchData)
     },
     getInsertData() {
+      this.categoryList = [{ name: '中海物业' }, { name: '外部物业' }, { name: '中海地产' }, { name: '外部地产' }, { name: '其他客户' }]
+      this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
+      this.examineStateList = [{ value: '商机线索' }, { value: '有效商机' }]
       cityList().then((data) => {
         this.cityList = data
       })
@@ -212,9 +223,6 @@ export default {
       businessCtgList().then((data) => {
         this.businessCtgList = data
       })
-      this.categoryList = [{ value: '中海物业' }, { value: '外部物业' }, { value: '中海地产' }, { value: '外部地产' }, { value: '其他客户' }]
-      this.executeStateList = [{ value: '前期接洽' }, { value: '招投标' }, { value: '中标' }, { value: '合同会签' }, { value: '纸质版合同签订' }, { value: '放弃' }]
-      this.examineStateList = [{ value: '商机线索' }, { value: '有效商机' }]
     },
     // 客户信息
     clientSearchAsync(queryString, callback) {

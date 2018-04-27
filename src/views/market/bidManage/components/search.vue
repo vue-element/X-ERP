@@ -8,12 +8,12 @@
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机名称:">
-            <el-autocomplete v-model="searchData.b_name" :fetch-suggestions="bussinessNameSearch"  placeholder="请选择商机名称"></el-autocomplete>
+            <el-autocomplete v-model="searchData.b_name" :fetch-suggestions="bussinessNameSearch" @select="businessSelect" placeholder="请选择商机名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
           <el-form-item label="商机编码:">
-            <el-autocomplete v-model="searchData.b_code" :fetch-suggestions="bussinessCodeSearch" placeholder="请选择商机编码"></el-autocomplete>
+            <el-autocomplete v-model="searchData.b_code" :fetch-suggestions="bussinessCodeSearch" @select="businessSelect" placeholder="请选择商机编码"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,6 +87,10 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+    businessSelect(item) {
+      this.searchData.b_code = item.code
+      this.searchData.b_name = item.name
     }
   },
   computed: {

@@ -62,13 +62,18 @@
             </el-table-column>
           </el-table-column>
         </el-table>
+        <!--  办事处填写 -->
         <div class="commont-btn"  v-show="hasPerm('inboundCheck:save') && actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
+          <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')"
+          :disabled="disableCheck || checkPerm !== 'tjsh'">{{firstStep}}</el-button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
-          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-          <el-button :loading="false" @click="InBound">导出入库单</el-button>
-          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+        <!--  办事处经理填写 -->
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck' && checkPerm !=='tjsh'">
+          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('审核通过')"
+          :disabled="checkPerm !=='shtg'">通过审核</el-button>
+          <el-button  @click="InBound">导出入库单</el-button>
+          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('退回填写')"
+          :disabled="checkPerm !=='shtg'">退回填写</el-button>
         </div>
       </div>
     <!--审核动态  -->
@@ -113,11 +118,11 @@
             </el-table>
           </el-col>
         </el-row>
-        <div class="commont-btn">
+        <div class="commont-btn" v-show="checkPerm ==='cbhs'">
           <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
           <el-button @click="InBound">导出入库单</el-button>
-          <el-button @click="InBoundPay">导出入库成本核算表</el-button>
-          <el-button @click="outBoundPayTable">导出出库成本核算表</el-button>
+          <el-button @click="InBoundPay" v-show="hasPerm('inboundCheck:save')">导出入库成本核算表</el-button>
+          <el-button @click="outBoundPayTable" v-show="hasPerm('inboundCheck:save')">导出出库成本核算表</el-button>
         </div>
       </div>
     </div>
@@ -161,6 +166,8 @@ export default {
   props: ['inboundId', 'editShow', 'actionTab', 'paymentContractId'],
   data() {
     return {
+      firstStep: '提交审核',
+      checkPerm: '',
       purchaseList: [],
       InboundList: [],
       isDisabled: false,
@@ -247,7 +254,11 @@ export default {
     },
     // 打印入库单
     InBound() {
-      this.submitCheck('成本核算')
+      console.log('actionTab', this.actionTab)
+      var lastStep = this.inboundCheck[this.inboundCheck.length - 1].step === '审核通过'
+      if (this.actionTab === 'costCheck' && lastStep) {
+        this.submitCheck('成本核算')
+      }
       this.$emit('InBound', true)
     },
     // 入库成本核算表
@@ -261,17 +272,33 @@ export default {
     }
   },
   watch: {
-    actionTab(data) {
-      // console.log(data)
-    },
     InboundList(list) {
-      list.forEach((item) => {
-        if (item.edit === true) {
-          this.disableCheck = true
-        } else {
-          this.disableCheck = false
-        }
+      var hasEdit = list.find(item => {
+        return item.edit === true
       })
+      if (!hasEdit) {
+        this.disableCheck = false
+      } else {
+        this.disableCheck = true
+      }
+    },
+    inboundCheck(list) {
+      var checkPerm = ''
+      var len = list.length
+      if (len === 0) {
+        checkPerm = 'tjsh'
+      } else {
+        var lastStep = list[len - 1].step
+        if (lastStep === '退回填写') {
+          checkPerm = 'tjsh'
+        } else if (lastStep === '提交审核') {
+          checkPerm = 'shtg'
+        } else if (lastStep === '审核通过' || lastStep === '成本核算') {
+          checkPerm = 'cbhs'
+        }
+      }
+      // console.log('checkPerm', checkPerm)
+      this.checkPerm = checkPerm
     }
   },
   computed: {
@@ -281,7 +308,6 @@ export default {
   }
 }
 </script>
-
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";

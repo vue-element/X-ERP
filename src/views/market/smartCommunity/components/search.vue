@@ -90,15 +90,16 @@ export default {
       contractModeList: [],
       archFormatList: [],
       searchData: {
+        name: '',
+        firstEntry: '',
         archFormat: '',
-        contractMode: '',
         communityType: '',
+        contractMode: '',
         region_id: '',
-        client_name: '',
         city_id: '',
-        name: ''
-      },
-      firstEntry: ''
+        client_name: ''
+      }
+      // firstEntry: ''
     }
   },
   created() {

@@ -38,18 +38,24 @@
             </template>
           </el-table-column>
         </el-table>
+        <!--  办事处填写 -->
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
+          <el-button  v-show="hasPerm('outboundCheck:save')"  @click.prevent="submitCheck('提交审核')"
+          :disabled="disableCheck || checkPerm !== 'tjsh'">提交审核</el-button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-          <el-button :loading="false" @click="outBound">导出出库单</el-button>
-          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+        <!--  办事处经理填写 -->
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck' && checkPerm !=='tjsh'">
+          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('审核通过')"
+          :disabled="checkPerm !=='shtg'">通过审核</el-button>
+          <el-button  @click="outBound">导出出库单</el-button>
+          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')"
+          :disabled="checkPerm !=='shtg'">退回填写</el-button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'costCheck'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('成本核算')">通过审核</el-button>
-          <el-button :loading="false" @click="outBound">导出出库单</el-button>
-          <el-button  v-if="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+        <!--  成本部填写 -->
+        <div class="commont-btn"  v-show="actionTab === 'costCheck' && checkPerm ==='cbhs'">
+          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
+          <el-button  @click="outBound">导出出库单</el-button>
+          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
         </div>
       </div>
     </div>
@@ -116,6 +122,7 @@ export default {
   props: ['editShow', 'outboundId', 'paymentContractId', 'actionTab'],
   data() {
     return {
+      checkPerm: '',
       purchaseList: [],
       uploadDetail: [],
       isDisabled: false,
@@ -123,7 +130,6 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false,
       dialogFormVisible: false,
       outboundInfo: {
         purchaseList: { id: '' },
@@ -278,19 +284,42 @@ export default {
       }
     },
     outBound() {
+      var lastStep = this.outboundCheck[this.outboundCheck.length - 1].step === '审核通过'
+      if (this.actionTab === 'costCheck' && lastStep) {
+        this.submitCheck('成本核算')
+      }
       this.$emit('outBound', true)
     }
   },
   watch: {
     outboundList(list) {
-      list.forEach((item) => {
-        if (item.edit === true) {
-          console.log('isEditing')
-          this.disableCheck = true
-        } else {
-          this.disableCheck = false
-        }
+      var hasEdit = list.find(item => {
+        return item.edit === true
       })
+      if (!hasEdit) {
+        this.disableCheck = false
+      } else {
+        this.disableCheck = true
+      }
+    },
+    outboundCheck(list) {
+      var checkPerm = ''
+      var len = list.length
+      if (len === 0) {
+        checkPerm = 'tjsh'
+      } else {
+        var lastStep = list[len - 1].step
+        console.log('step', lastStep)
+        if (lastStep === '退回填写') {
+          checkPerm = 'tjsh'
+        } else if (lastStep === '提交审核') {
+          checkPerm = 'shtg'
+        } else if (lastStep === '审核通过' || lastStep === '成本核算') {
+          checkPerm = 'cbhs'
+        }
+      }
+      console.log('checkPerm', checkPerm)
+      this.checkPerm = checkPerm
     }
   },
   computed: {
