@@ -100,12 +100,12 @@
                 </tr>
               </tbody>
             </table>
-            <form class="footer">
+            <form class="footer" :model="outboundInfo">
               <div class="left">
-                <label>制表：<span>{{}}</span></label>
+                <label>制表：<span>{{outboundInfo.person}}</span></label>
               </div>
               <div class="right">
-                <label>审核：<span>{{}}</span></label>
+                <label>审核：<span>{{this.$store.state.account.userName}}</span></label>
               </div>
             </form>
           </div>
@@ -205,7 +205,6 @@ export default {
       if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
         keyCode = 'Account'
       }
-      // console.log('keyCode', keyCode)
       this.keyCode = keyCode
     },
     save() {
@@ -361,6 +360,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'userName',
       'roleCode'
     ])
   },

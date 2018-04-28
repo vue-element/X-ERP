@@ -322,7 +322,6 @@ export default {
       if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
         keyCode = 'Account'
       }
-      // console.log('keyCode', keyCode)
       this.keyCode = keyCode
     },
     editInfo() {
