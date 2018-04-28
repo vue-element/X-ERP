@@ -1,10 +1,10 @@
 <template>
   <div class="payment-contract">
     <div class="form-module" v-if="hasPerm('outboundDetaile:findAllByPage')">
-      <h4 class="module-title" v-if="hasPerm('outboundDetaile:save')">
+      <h4 class="module-title">
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
-          <button @click.prevent="showDialog">
+          <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save')">
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -32,19 +32,30 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button v-if="hasPerm('outboundDetaile:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-              <el-button v-if="hasPerm('outboundDetaile:save')" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+              <el-button v-show="hasPerm('outboundDetaile:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+              <el-button v-show="hasPerm('outboundDetaile:save') && !scope.row.edit" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
               <el-button v-if="hasPerm('outboundDetaile:delete')" @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <!--  办事处填写 -->
         <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" :loading="checkLoading" @click.prevent="submitCheck('提交审核')" :disabled="disableCheck">提交审核</el-button>
+          <el-button  v-show="hasPerm('outboundCheck:save')"  @click.prevent="submitCheck('提交审核')"
+          :disabled="disableCheck || (checkPerm !=='tjsh' && checkPerm !== 'firstStep')">提交审核</el-button>
         </div>
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck' || actionTab === 'costCheck'">
-          <el-button  v-if="hasPerm('outboundCheck:save')" :loading="false" @click.prevent="submitCheck('审核通过')">通过审核</el-button>
-          <el-button :loading="false">导出出库单</el-button>
-          <el-button :loading="false" @click.prevent="submitCheck('退回填写')">退回填写</el-button>
+        <!--  办事处经理填写 -->
+        <div class="commont-btn"  v-show="actionTab === 'officeCheck' && checkPerm !=='firstStep' && checkPerm !=='tjsh'">
+          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('审核通过')"
+          :disabled="checkPerm !=='shtg'">通过审核</el-button>
+          <el-button  @click="outBound">导出出库单</el-button>
+          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')"
+          :disabled="checkPerm !=='shtg'">退回填写</el-button>
+        </div>
+        <!--  成本部填写 -->
+        <div class="commont-btn"  v-show="actionTab === 'costCheck' && checkPerm ==='cbhs'">
+          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
+          <el-button  @click="outBound">导出出库单</el-button>
+          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
         </div>
       </div>
     </div>
@@ -86,8 +97,11 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="剩余数量" :label-width="formLabelWidth">
+          <el-input v-model="outboundInfo.surplusNumber" auto-complete="off" type="number"  disabled></el-input>
+        </el-form-item>
         <el-form-item label="出库数量" :label-width="formLabelWidth">
-          <el-input v-model="outboundInfo.number" auto-complete="off" type="number" :max="maxNumber" min="0" @change="numberChange" :disabled="!outboundInfo.purchaseList.id"></el-input>
+          <el-input v-model="outboundInfo.number" auto-complete="off" type="number" :max="maxNumber" min="0" @change="numberChange" :disabled="!outboundInfo.purchaseList.id" placeholder="请输入出库数量"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -108,6 +122,7 @@ export default {
   props: ['editShow', 'outboundId', 'paymentContractId', 'actionTab'],
   data() {
     return {
+      checkPerm: 'tjsh',
       purchaseList: [],
       uploadDetail: [],
       isDisabled: false,
@@ -115,12 +130,12 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false,
       dialogFormVisible: false,
       outboundInfo: {
         purchaseList: { id: '' },
         outboundList: { id: '' },
-        number: ''
+        number: '',
+        surplusNumber: ''
       },
       maxNumber: 0,
       formLabelWidth: '120px',
@@ -140,9 +155,15 @@ export default {
   },
   methods: {
     getPurchaseList() {
-      this.$get('/purchaseList/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
+      this.$get('/inboundDetaile/findAllByPaymentContract/' + this.paymentContractId).then((res) => {
         if (res.data.success === true) {
-          this.purchaseList = res.data.data
+          var data = res.data.data
+          var purchaseList = []
+          data.forEach((item) => {
+            item.purchaseList.surplusNumber = item.surplusNumber
+            purchaseList.push(item.purchaseList)
+          })
+          this.purchaseList = purchaseList
         }
       })
     },
@@ -228,6 +249,7 @@ export default {
       this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
         if (res.data.success === true) {
           this.outboundCheck = res.data.data
+          console.log('outboundCheck', this.outboundCheck)
         }
       })
     },
@@ -241,15 +263,15 @@ export default {
       }
       console.log('submit', JSON.stringify(obj))
       this.$post('/outboundCheck/save', obj).then((res) => {
-        console.log(res)
         this.getOutboundCheck()
       })
     },
     purchaseChange(val) {
       this.purchaseList.forEach((item) => {
         if (item.id === val) {
-          this.outboundInfo.number = item.acNumber
-          this.maxNumber = _.cloneDeep(item.number)
+          // this.outboundInfo.number = item.acNumber
+          this.outboundInfo.surplusNumber = item.surplusNumber
+          this.maxNumber = _.cloneDeep(item.surplusNumber)
         }
       })
     },
@@ -261,18 +283,51 @@ export default {
       } else if (val < 0) {
         this.outboundInfo.number = 0
       }
+    },
+    outBound() {
+      var lastStep = this.outboundCheck[this.outboundCheck.length - 1].step === '审核通过'
+      if (this.actionTab === 'costCheck' && lastStep) {
+        this.submitCheck('成本核算')
+      }
+      this.$emit('outBound', true)
     }
   },
   watch: {
+    outboundId(val) {
+      if (val) {
+        this.getOutboundCheck()
+      }
+    },
     outboundList(list) {
-      list.forEach((item) => {
-        if (item.edit === true) {
-          console.log('isEditing')
-          this.disableCheck = true
-        } else {
-          this.disableCheck = false
-        }
+      var hasEdit = list.find(item => {
+        return item.edit === true
       })
+      if (!hasEdit) {
+        this.disableCheck = false
+      } else {
+        this.disableCheck = true
+      }
+    },
+    outboundCheck(list) {
+      console.log(1)
+      console.log('list', list)
+      var checkPerm = ''
+      var len = list.length
+      if (len === 0) {
+        checkPerm = 'firstStep'
+      } else {
+        var lastStep = list[len - 1].step
+        console.log('step', lastStep)
+        if (lastStep === '退回填写') {
+          checkPerm = 'tjsh'
+        } else if (lastStep === '提交审核') {
+          checkPerm = 'shtg'
+        } else if (lastStep === '审核通过' || lastStep === '成本核算') {
+          checkPerm = 'cbhs'
+        }
+      }
+      console.log('checkPerm', checkPerm)
+      this.checkPerm = checkPerm
     }
   },
   computed: {

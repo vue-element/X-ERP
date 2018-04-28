@@ -12,13 +12,13 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="商机编码：">
               <p v-if="disabled">{{contractInfo.business.code}}</p>
-              <el-autocomplete v-else v-model="contractInfo.business.code" :fetch-suggestions="businessCodeSearchAsync" @select="clientSelect" placeholder="请选择商机编号"></el-autocomplete>
+              <el-autocomplete v-else v-model="contractInfo.business.code" :fetch-suggestions="businessCodeSearchAsync" @select="businessSelect" placeholder="请选择商机编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="商机名称：" prop="business">
               <p v-if="disabled">{{contractInfo.business.name}}</p>
-              <el-autocomplete v-else v-model="contractInfo.business.name" :fetch-suggestions="businessNameSearchAsync" @select="clientSelect" placeholder="请选择商机名称"></el-autocomplete>
+              <el-autocomplete v-else v-model="contractInfo.business.name" :fetch-suggestions="businessNameSearchAsync" @select="businessSelect" placeholder="请选择商机名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -179,6 +179,8 @@ export default {
         name: '',
         business: {
           id: null,
+          code: '',
+          name: '',
           businessCategory: {
             name: ''
           },
@@ -227,7 +229,7 @@ export default {
       this.disabled = false
     },
     businessCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/bussinessCode?role_code=' + role_code + '&bussinessCode=' + queryString).then(res => {
         var data = res.data
@@ -256,11 +258,11 @@ export default {
         callback(list)
       })
     },
-    clientSelect(item) {
+    businessSelect(item) {
       this.contractInfo.business.id = item.id
       this.contractInfo.business.code = item.code
       this.contractInfo.business.name = item.name
-      this.contractInfo.business.businessCategory.name = item.businessCtg
+      this.contractInfo.business.businessCategory.name = item.businessCtg.name
       this.contractInfo.business.client.category = item.clientCtg
       this.contractInfo.business.city.name = item.cityName
       this.contractInfo.business.region.name = item.regionName
@@ -375,6 +377,15 @@ export default {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.business.code === '' || obj.business.name === '') {
+          this.contractInfo.business.id = ''
+          this.contractInfo.business.code = ''
+          this.contractInfo.business.name = ''
+          this.contractInfo.business.businessCategory.name = ''
+          this.contractInfo.business.client.category = ''
+          this.contractInfo.business.city.name = ''
+          this.contractInfo.business.region.name = ''
         }
       },
       deep: true

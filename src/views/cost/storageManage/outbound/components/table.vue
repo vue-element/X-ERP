@@ -39,23 +39,24 @@
           </el-table-column>
         </el-table>
         <!--  办事处填写 -->
-        <div class="commont-btn"  v-show="actionTab === 'inboundInfo'">
-          <el-button  v-show="hasPerm('outboundCheck:save')"  @click.prevent="submitCheck('提交审核')"
-          :disabled="disableCheck || checkPerm !== 'tjsh'">提交审核</el-button>
+        <!-- <div class="commont-btn" v-show="hasPerm('outboundCheck:submit')"> -->
+        <div class="commont-btn">
+          <el-button @click.prevent="submitCheck('提交审核')"
+          :disabled="disableCheck || checkPerm ==='shtg' || checkPerm === 'cbhs'">提交审核</el-button>
         </div>
+        <br>
         <!--  办事处经理填写 -->
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck' && checkPerm !=='tjsh'">
-          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('审核通过')"
-          :disabled="checkPerm !=='shtg'">通过审核</el-button>
-          <el-button  @click="outBound">导出出库单</el-button>
-          <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')"
-          :disabled="checkPerm !=='shtg'">退回填写</el-button>
+        <!-- <div class="commont-btn" v-show="hasPerm('outboundCheck:officeCheck') && checkPerm !=='firstStep' && checkPerm !=='tjsh'"> -->
+        <div class="commont-btn" v-show="checkPerm !=='firstStep' && checkPerm !=='tjsh'">
+          <el-button @click.prevent="submitCheck('审核通过')" :disabled="checkPerm !=='shtg'">通过审核</el-button>
+          <el-button @click="outBound" v-show="checkPerm ==='lastStep'">导出出库单</el-button>
+          <el-button @click.prevent="submitCheck('退回填写')" :disabled="checkPerm !=='shtg'">退回填写</el-button>
         </div>
+        <br>
         <!--  成本部填写 -->
-        <div class="commont-btn"  v-show="actionTab === 'costCheck' && checkPerm ==='cbhs'">
-          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
-          <el-button  @click="outBound">导出出库单</el-button>
-          <!-- <el-button  v-show="hasPerm('outboundCheck:save')" @click.prevent="submitCheck('退回填写')">退回填写</el-button> -->
+        <!-- <div class="commont-btn"  v-show="hasPerm('outboundCheck:costCheck') && checkPerm ==='cbhs'"> -->
+        <div class="commont-btn" v-show="checkPerm ==='cbhs' || checkPerm ==='lastStep'">
+          <el-button @click="outBound">导出出库单</el-button>
         </div>
       </div>
     </div>
@@ -68,9 +69,6 @@
         <el-table-column label="序号">
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
-        <!-- <el-table-column label="审核步骤">
-          <template slot-scope="scope"><span>{{scope.row.step}}</span></template>
-        </el-table-column> -->
         <el-table-column label="操作人">
           <template slot-scope="scope"><span>{{scope.row.stepPerson}}</span></template>
         </el-table-column>
@@ -122,7 +120,7 @@ export default {
   props: ['editShow', 'outboundId', 'paymentContractId', 'actionTab'],
   data() {
     return {
-      checkPerm: '',
+      checkPerm: 'tjsh',
       purchaseList: [],
       uploadDetail: [],
       isDisabled: false,
@@ -249,6 +247,7 @@ export default {
       this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
         if (res.data.success === true) {
           this.outboundCheck = res.data.data
+          console.log('outboundCheck', this.outboundCheck)
         }
       })
     },
@@ -260,8 +259,16 @@ export default {
           id: this.outboundId
         }
       }
-      console.log('submit', JSON.stringify(obj))
-      this.$post('/outboundCheck/save', obj).then((res) => {
+      var url = ''
+      if (stepWord === '提交审核') {
+        url = '/outboundCheck/submit'
+      } else if (stepWord === '审核通过' || stepWord === '退回填写') {
+        url = '/outboundCheck/officeCheck'
+      } else if (stepWord === '成本核算') {
+        url = '/outboundCheck/costCheck'
+      }
+      // console.log('submit', JSON.stringify(obj))
+      this.$post(url, obj).then((res) => {
         this.getOutboundCheck()
       })
     },
@@ -284,14 +291,19 @@ export default {
       }
     },
     outBound() {
-      var lastStep = this.outboundCheck[this.outboundCheck.length - 1].step === '审核通过'
-      if (this.actionTab === 'costCheck' && lastStep) {
+      // console.log()
+      if (this.checkPerm !== 'lastStep') {
         this.submitCheck('成本核算')
       }
       this.$emit('outBound', true)
     }
   },
   watch: {
+    outboundId(val) {
+      if (val) {
+        this.getOutboundCheck()
+      }
+    },
     outboundList(list) {
       var hasEdit = list.find(item => {
         return item.edit === true
@@ -306,7 +318,7 @@ export default {
       var checkPerm = ''
       var len = list.length
       if (len === 0) {
-        checkPerm = 'tjsh'
+        checkPerm = 'firstStep'
       } else {
         var lastStep = list[len - 1].step
         console.log('step', lastStep)
@@ -314,8 +326,10 @@ export default {
           checkPerm = 'tjsh'
         } else if (lastStep === '提交审核') {
           checkPerm = 'shtg'
-        } else if (lastStep === '审核通过' || lastStep === '成本核算') {
+        } else if (lastStep === '审核通过') {
           checkPerm = 'cbhs'
+        } else if (lastStep === '成本核算') {
+          checkPerm = 'lastStep'
         }
       }
       console.log('checkPerm', checkPerm)

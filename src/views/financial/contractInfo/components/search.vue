@@ -20,12 +20,12 @@
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="业务类别：">
-              <el-autocomplete v-model="searchData.ctgName" :fetch-suggestions="businessCtgSearchAsync" @select="ctgSelect" placeholder="请选择客户名称"></el-autocomplete>
+              <el-autocomplete v-model="searchData.businessCtg_name" :fetch-suggestions="businessCtgSearchAsync" placeholder="请选择业务类别"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="所属区域：">
-              <el-autocomplete v-model="searchData.regionName" :fetch-suggestions="regionSearchAsync" @select="regionSelect" placeholder="请选择客户名称"></el-autocomplete>
+              <el-autocomplete v-model="searchData.regionName" :fetch-suggestions="regionSearchAsync" @select="regionSelect" placeholder="请选择所属区域"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -62,7 +62,7 @@ export default {
       searchData: {
         name: '',
         code: '',
-        bctg_id: null,
+        businessCtg_name: null,
         region_id: null,
         signDate: '',
         term: ''
@@ -116,9 +116,6 @@ export default {
         }
         callback(list)
       })
-    },
-    ctgSelect(item) {
-      this.searchData.bctg_id = item.id
     },
     // 所属区域
     regionSearchAsync(queryString, callback) {

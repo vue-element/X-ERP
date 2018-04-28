@@ -9,7 +9,6 @@
           <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="付款合同编号/入库单号:">
               <el-autocomplete v-model="searchData.inboundList_name" :fetch-suggestions="inboundCodeSearch" placeholder="请选择付款合同编号"></el-autocomplete>
-              <!-- <el-autocomplete v-model="searchData.inboundList_name" :fetch-suggestions="codeSearch" placeholder="请选择付款合同编号"></el-autocomplete> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -21,7 +20,7 @@
         <el-row :gutter="40">
           <el-col :sm="24" :md="12" :lg="12">
             <el-form-item label="出库单编号:">
-              <el-input v-model="searchData.code" placeholder="请填写出库单编号"></el-input>
+              <el-autocomplete v-model="searchData.code" :fetch-suggestions="outboundCodeSearch" placeholder="请选择出库单编号"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :lg="12">
@@ -103,7 +102,7 @@ export default {
     // 合同名称搜索
     contractNameSearch(queryString, callback) {
       var list = [{}]
-      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+      this.$get('/keywordQuery/contractInfoName?contractInfoName=' + queryString + '&role_code=' + this.roleCode).then((res) => {
         list = res.data.objectList
         for (var i of list) {
           i.value = i.name
@@ -120,6 +119,22 @@ export default {
     inboundCodeSearch(queryString, callback) {
       var list = [{}]
       this.$get('/keywordQuery/inboundListCode?role_code=' + this.roleCode + '&inboundListCode=' + queryString).then((res) => {
+        list = res.data.objectList
+        for (var i of list) {
+          i.value = i.code
+        }
+        if (list.length === 0) {
+          list = [{ value: '暂无数据' }]
+        }
+        callback(list)
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    // 入库单号搜索
+    outboundCodeSearch(queryString, callback) {
+      var list = [{}]
+      this.$get('/keywordQuery/outboundListCode?role_code=' + this.roleCode + '&outboundListCode=' + queryString).then((res) => {
         list = res.data.objectList
         for (var i of list) {
           i.value = i.code

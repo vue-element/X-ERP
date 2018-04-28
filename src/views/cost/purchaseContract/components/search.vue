@@ -231,7 +231,7 @@ export default {
     // 合同名称搜索
     contractNameSearch(queryString, callback) {
       var list = [{}]
-      this.$get('/keywordQuery/contractInfoCode?contractInfoCode=' + queryString + '&role_code=' + this.roleCode).then((res) => {
+      this.$get('/keywordQuery/contractInfoName?contractInfoName=' + queryString + '&role_code=' + this.roleCode).then((res) => {
         list = res.data.objectList
         for (var i of list) {
           i.value = i.name

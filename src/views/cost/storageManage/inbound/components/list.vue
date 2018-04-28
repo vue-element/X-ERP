@@ -6,16 +6,15 @@
           <template slot-scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column prop="paymentContract.orderCode" label="订单编号" min-width="160"></el-table-column>
-        <!-- <el-table-column prop="paymentContract.tableCode" label="入库成本核算表" min-width="160"></el-table-column> -->
         <el-table-column prop="paymentContract.code" label="付款合同编号/入库单编号" min-width="180"></el-table-column>
         <el-table-column prop="paymentContract.department" label="使用部门" min-width="120"></el-table-column>
         <el-table-column prop="paymentContract.supply.name" label="供应商" min-width="160"></el-table-column>
         <el-table-column prop="state" label="状态"></el-table-column>
-        <el-table-column label="操作" min-width="140" fixed="right">
+        <el-table-column label="操作" min-width="100" fixed="right">
           <template slot-scope="scope">
             <el-button v-if="hasPerm('inboundList:findUpdateData')" @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
             <!-- <el-button @click.native.prevent="checkRow(scope.row.id)" type="text">审核</el-button> -->
-            <el-button @click.native.prevent="exportRow(scope.row.id)" type="text">导出</el-button>
+            <!-- <el-button @click.native.prevent="exportRow(scope.row.id)" type="text">导出</el-button> -->
           </template>
         </el-table-column>
       </el-table>
