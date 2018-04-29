@@ -26,7 +26,7 @@
     </div>
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData" :pageObj="pageObj"></ListComponent>
       <SearchComponent v-show="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-show="tab === 'importTab'"></ImportComponent>
     </div>
@@ -59,7 +59,8 @@ export default {
         acAmount1: 0
       },
       isChange: false,
-      exprotList: []
+      exprotList: [],
+      pageObj: {}
     }
   },
   created() {
@@ -98,6 +99,10 @@ export default {
       }
     },
     editRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.toggleTab('addTab')
       this.editData = {
         editData: data,
@@ -105,6 +110,7 @@ export default {
       }
     },
     search(data) {
+      this.pageObj = {}
       this.searchData = data
       this.toggleTab('listTab')
     },

@@ -3,7 +3,7 @@
     <div class="form-head-attached clearfix">
       <div class="form-inner">
         <div class="crud-btn fl">
-          <button @click="toggleTab('listTab')">
+          <button>
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>

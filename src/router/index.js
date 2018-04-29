@@ -77,7 +77,7 @@ export const asyncRouterMap = [
     ]
   },
   // 成本管理
-  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost', role: ['cw'] },
+  { path: '/cost', component: Layout, redirect: 'noredirect', name: 'cost', meta: { title: '成本管理', icon: 'cost' },
     children: [
       { path: 'supplier', component: _import('cost/supplierInfo/index'), name: 'supplier', meta: { title: '供应商管理' }, menu: 'supply' },
       { path: 'price-system', component: _import('cost/priceSystem/index'), name: 'priceSystem', meta: { title: '价格体系管理' }, menu: 'price' },
@@ -85,7 +85,7 @@ export const asyncRouterMap = [
       { path: 'purchase-contract', component: _import('cost/purchaseContract/index'), name: 'purchaseContract', meta: { title: '采购合同管理' }, menu: 'paymentContract' },
       { path: '/cost/storage-manage', component: _import('cost/storageManage/index'), name: 'storageManage', meta: { title: '出入库管理' },
         children: [
-          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }, menu: 'paymentContract' },
+          { path: 'inbound', component: _import('cost/storageManage/inbound/index'), name: 'inbound', meta: { title: '入库管理' }, menu: 'inboundList' },
           { path: 'outbound', component: _import('cost/storageManage/outbound/index'), name: 'outbound', meta: { title: '出库管理' }, menu: 'outboundList' }
         ]
       }

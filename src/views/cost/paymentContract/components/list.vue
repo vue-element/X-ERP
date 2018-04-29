@@ -7,7 +7,7 @@
         </el-table-column>
         <el-table-column prop="contractInfo.name" label="合同名称／所属项目" fixed width="180"></el-table-column>
         <el-table-column prop="contractInfo.code" label="合同编号" width="140"></el-table-column>
-        <el-table-column prop="contractInfo.businessCategory.name" label="业务线"  width="180"></el-table-column>
+        <el-table-column prop="contractInfo.business.businessCategory.name" label="业务线"  width="180"></el-table-column>
         <el-table-column prop="code" label="付款合同编号" fixed width="180"></el-table-column>
         <el-table-column prop="supply.name" label="供应商" width="140"></el-table-column>
         <el-table-column prop="applicationPerson" label="申请人"  width="100"></el-table-column>
@@ -39,19 +39,23 @@ import { mapGetters } from 'vuex'
 import { winHeight, outputmoney } from '@/utils'
 export default {
   name: 'paymentContractList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
       height: 100,
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 16],
-      pageSize: 15,
+      pageSizes: [2, 3, 16],
+      pageSize: 2,
       tableData: []
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -119,6 +123,8 @@ export default {
     seeRow(id) {
       this.$get('/paymentContract/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     }

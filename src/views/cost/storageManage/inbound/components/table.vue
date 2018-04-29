@@ -54,7 +54,7 @@
                 <span v-else>{{scope.row.certificate}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" v-if="hasPerm('inboundDetaile:save')" style="display: none">
+            <el-table-column label="操作" v-if="hasPerm('inboundDetaile:save') && checkPerm === 'firstStep'">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                 <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">修改</el-button>
@@ -63,17 +63,15 @@
           </el-table-column>
         </el-table>
         <!--  办事处填写 -->
-        <div class="commont-btn"  v-show="hasPerm('inboundCheck:save') && actionTab === 'inboundInfo'">
-          <el-button :loading="checkLoading" @click.prevent="submitCheck('提交审核')"
-          :disabled="disableCheck || checkPerm !== 'tjsh'">{{firstStep}}</el-button>
+        <div class="commont-btn"  v-show="actionTab ==='inboundInfo'">
+          <el-button @click.prevent="submitCheck('提交审核')"
+          :disabled="disableCheck || (checkPerm !== 'firstStep' && checkPerm !== 'tjsh')">{{firstStep}}</el-button>
         </div>
         <!--  办事处经理填写 -->
-        <div class="commont-btn"  v-show="actionTab === 'officeCheck' && checkPerm !=='tjsh'">
-          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('审核通过')"
-          :disabled="checkPerm !=='shtg'">通过审核</el-button>
-          <el-button  @click="InBound">导出入库单</el-button>
-          <el-button v-show="hasPerm('inboundCheck:save')" @click.prevent="submitCheck('退回填写')"
-          :disabled="checkPerm !=='shtg'">退回填写</el-button>
+        <div class="commont-btn"  v-show="actionTab ==='officeCheck' && checkPerm !=='firstStep' && checkPerm !=='tjsh'">
+          <el-button @click.prevent="submitCheck('审核通过')" :disabled="checkPerm !=='shtg'">通过审核</el-button>
+          <el-button @click="InBound" v-show="checkPerm ==='lastStep'">导出入库单</el-button>
+          <el-button @click.prevent="submitCheck('退回填写')" :disabled="checkPerm !=='shtg'">退回填写</el-button>
         </div>
       </div>
     <!--审核动态  -->
@@ -89,14 +87,14 @@
               <el-table-column label="序号" width="60" fixed>
                 <template slot-scope="scope">{{scope.$index + 1}}</template>
               </el-table-column>
-              <el-table-column label="物料名称" min-width="120" prop="purchaseList.name"></el-table-column>
-              <el-table-column label="规格型号" min-width="120" prop="model"></el-table-column>
-              <el-table-column label="品牌" min-width="100" prop="purchaseList.brand"></el-table-column>
-              <el-table-column label="采购单价" min-width="100" prop="purchaseList.unitPrice"></el-table-column>
-              <el-table-column label="数量" min-width="100">
+              <el-table-column label="物料名称" min-width="160" prop="purchaseList.name"></el-table-column>
+              <el-table-column label="规格型号" min-width="160" prop="model"></el-table-column>
+              <el-table-column label="品牌" min-width="130" prop="purchaseList.brand"></el-table-column>
+              <el-table-column label="采购单价" min-width="130" prop="purchaseList.unitPrice"></el-table-column>
+              <el-table-column label="数量" min-width="130">
                 <template slot-scope="scope"><span>{{scope.row.number}}</span></template>
               </el-table-column>
-              <el-table-column label="单个成本" min-width="100">
+              <el-table-column label="单个成本" min-width="120">
                 <template slot-scope="scope"><span>{{scope.row.unitCost}}</span></template>
               </el-table-column>
               <el-table-column label="单个抵扣税金" min-width="160">
@@ -108,7 +106,7 @@
                   <span v-show="!scope.row.edit">{{scope.row.totalAmount}}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" min-width="100" fixed="right">
+              <el-table-column label="操作" min-width="100" fixed="right" v-if="checkPerm !=='lastStep'">
                 <template slot-scope="scope">
                   <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                   <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
@@ -118,11 +116,12 @@
             </el-table>
           </el-col>
         </el-row>
-        <div class="commont-btn" v-show="checkPerm ==='cbhs'">
-          <!-- <el-button :loading="false" @click.prevent="submitCheck('成本核算')">通过审核</el-button> -->
-          <el-button @click="InBound">导出入库单</el-button>
-          <el-button @click="InBoundPay" v-show="hasPerm('inboundCheck:save')">导出入库成本核算表</el-button>
-          <el-button @click="outBoundPayTable" v-show="hasPerm('inboundCheck:save')">导出出库成本核算表</el-button>
+        <div class="commont-btn" v-show="checkPerm ==='cbhs' || checkPerm ==='lastStep'">
+          <el-button :disabled="disableCheck" @click="InBound" >导出入库单</el-button>
+          <el-button :disabled="disableCheck" v-show="hasPerm('inboundCheck:costCheck')"
+          @click="InBoundPay">导出入库成本核算表</el-button>
+          <el-button :disabled="disableCheck" v-show="hasPerm('inboundCheck:costCheck')"
+          @click="outBoundPayTable" >导出出库成本核算表</el-button>
         </div>
       </div>
     </div>
@@ -175,12 +174,12 @@ export default {
       listLoading: false,
       downloadLoading: false,
       comfirmUploading: false,
-      checkLoading: false,
       disableCheck: false,
       inboundCheck: []
     }
   },
   created() {
+    console.log('actionTab', this.actionTab)
     this.getPurchaseList()
     this.getInboundCheck()
   },
@@ -248,7 +247,15 @@ export default {
           id: this.inboundId
         }
       }
-      this.$post('/inboundCheck/save', obj).then((res) => {
+      var url = ''
+      if (stepWord === '提交审核') {
+        url = '/inboundCheck/submit'
+      } else if (stepWord === '审核通过' || stepWord === '退回填写') {
+        url = '/inboundCheck/officeCheck'
+      } else if (stepWord === '成本核算') {
+        url = '/inboundCheck/costCheck'
+      }
+      this.$post(url, obj).then((res) => {
         this.getInboundCheck()
       })
     },
@@ -272,10 +279,12 @@ export default {
     }
   },
   watch: {
+    // 入库填写，是否有编辑状态，有无法提交
     InboundList(list) {
       var hasEdit = list.find(item => {
         return item.edit === true
       })
+      console.log('hasEdit', hasEdit)
       if (!hasEdit) {
         this.disableCheck = false
       } else {
@@ -286,18 +295,21 @@ export default {
       var checkPerm = ''
       var len = list.length
       if (len === 0) {
-        checkPerm = 'tjsh'
+        checkPerm = 'firstStep'
       } else {
         var lastStep = list[len - 1].step
+        console.log('step', lastStep)
         if (lastStep === '退回填写') {
           checkPerm = 'tjsh'
         } else if (lastStep === '提交审核') {
           checkPerm = 'shtg'
-        } else if (lastStep === '审核通过' || lastStep === '成本核算') {
+        } else if (lastStep === '审核通过') {
           checkPerm = 'cbhs'
+        } else if (lastStep === '成本核算') {
+          checkPerm = 'lastStep'
         }
       }
-      // console.log('checkPerm', checkPerm)
+      console.log('checkPerm', checkPerm)
       this.checkPerm = checkPerm
     }
   },

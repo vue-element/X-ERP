@@ -33,10 +33,10 @@
         <el-table-column label="单位" min-width="80">
           <template slot-scope="scope"><span>{{scope.row.unit}}</span></template>
         </el-table-column>
-        <el-table-column label="操作" min-width="100" fixed="right">
+        <el-table-column label="操作" min-width="100" fixed="right" v-if="hasPerm('purchaseList:save')">
           <template slot-scope="scope">
-            <el-button v-show="hasPerm('billing:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-show="hasPerm('billing:save') && !scope.row.edit" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-show="hasPerm('purchaseList:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
+            <el-button v-show="hasPerm('purchaseList:save') && !scope.row.edit" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
             <!-- <el-button @click.native.prevent="deleteRow(scope.row.id, scope.$index)" type="text">删除</el-button> -->
           </template>
         </el-table-column>

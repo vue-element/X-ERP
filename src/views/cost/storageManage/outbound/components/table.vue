@@ -4,7 +4,7 @@
       <h4 class="module-title">
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
-          <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save')">
+          <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save') && checkPerm === 'firstStep'">
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -20,7 +20,7 @@
           </el-table-column>
           <el-table-column label="规格型号">
             <template slot-scope="scope"><span>{{scope.row.model}}</span></template>
-          </el-table-column>
+          </el-table-column>s
           <el-table-column label="品牌">
             <template slot-scope="scope"><span>{{scope.row.brand}}</span></template>
           </el-table-column>
@@ -30,7 +30,7 @@
               <span v-else>{{scope.row.number}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" v-if="(hasPerm('outboundDetaile:save') || hasPerm('outboundDetaile:delete')) && checkPerm === 'firstStep'">
             <template slot-scope="scope">
               <el-button v-show="hasPerm('outboundDetaile:save') && scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
               <el-button v-show="hasPerm('outboundDetaile:save') && !scope.row.edit" @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
@@ -39,23 +39,18 @@
           </el-table-column>
         </el-table>
         <!--  办事处填写 -->
-        <!-- <div class="commont-btn" v-show="hasPerm('outboundCheck:submit')"> -->
-        <div class="commont-btn">
+        <div class="commont-btn" v-show="actionTab ==='inboundInfo' && outboundList.length !== 0">
           <el-button @click.prevent="submitCheck('提交审核')"
-          :disabled="disableCheck || checkPerm ==='shtg' || checkPerm === 'cbhs'">提交审核</el-button>
+          :disabled="disableCheck || (checkPerm !== 'firstStep' && checkPerm !== 'tjsh')">提交审核</el-button>
         </div>
-        <br>
         <!--  办事处经理填写 -->
-        <!-- <div class="commont-btn" v-show="hasPerm('outboundCheck:officeCheck') && checkPerm !=='firstStep' && checkPerm !=='tjsh'"> -->
-        <div class="commont-btn" v-show="checkPerm !=='firstStep' && checkPerm !=='tjsh'">
+        <div class="commont-btn" v-show="actionTab ==='officeCheck' && checkPerm !=='firstStep' && checkPerm !=='tjsh'">
           <el-button @click.prevent="submitCheck('审核通过')" :disabled="checkPerm !=='shtg'">通过审核</el-button>
           <el-button @click="outBound" v-show="checkPerm ==='lastStep'">导出出库单</el-button>
           <el-button @click.prevent="submitCheck('退回填写')" :disabled="checkPerm !=='shtg'">退回填写</el-button>
         </div>
-        <br>
         <!--  成本部填写 -->
-        <!-- <div class="commont-btn"  v-show="hasPerm('outboundCheck:costCheck') && checkPerm ==='cbhs'"> -->
-        <div class="commont-btn" v-show="checkPerm ==='cbhs' || checkPerm ==='lastStep'">
+        <div class="commont-btn" v-show="actionTab ==='costCheck' && (checkPerm ==='cbhs' || checkPerm ==='lastStep')">
           <el-button @click="outBound">导出出库单</el-button>
         </div>
       </div>
@@ -143,6 +138,7 @@ export default {
     }
   },
   created() {
+    console.log('actionTab', this.actionTab)
     if (this.paymentContractId) {
       this.getPurchaseList()
     }
