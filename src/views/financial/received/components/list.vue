@@ -30,7 +30,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'receivedPaymentList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -49,6 +49,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -122,6 +126,8 @@ export default {
     editRow(id) {
       this.$get('/contractReceived/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     }

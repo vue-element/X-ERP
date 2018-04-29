@@ -1,6 +1,6 @@
 <template>
   <div class="billing-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractBilling:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractBilling:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="billingData" :rules="rules" ref="billingData">
@@ -113,7 +113,9 @@ export default {
         content: '',
         name: '',
         contractInfo: {
-          id: null
+          id: null,
+          name: '',
+          code: ''
         },
         number: '',
         tax: '',
@@ -139,7 +141,7 @@ export default {
   },
   methods: {
     contractNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -154,7 +156,7 @@ export default {
       })
     },
     contractCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -275,6 +277,11 @@ export default {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.contractInfo.name === '' || obj.contractInfo.code === '') {
+          obj.contractInfo.id = ''
+          obj.contractInfo.name = ''
+          obj.contractInfo.code = ''
         }
       },
       deep: true

@@ -315,7 +315,7 @@ export default {
       this.inboundList = data.inboundList
       this.inboundId = this.inboundList.id
       this.paymentContractId = this.inboundList.paymentContract.id
-      this.inboundList.checkPerson = this.$store.state.account.userName
+      this.inboundList.checkPerson = this.$store.state.account.roleCode
     },
     toggleTab(tab) {
       this.actionTab = tab

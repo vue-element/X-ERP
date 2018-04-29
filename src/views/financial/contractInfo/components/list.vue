@@ -29,7 +29,7 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -42,6 +42,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getContractInfoData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -79,6 +83,8 @@ export default {
     seeRow(id) {
       this.$get('/contractInfo/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         data.id = id
         this.$emit('editRow', data)
       })

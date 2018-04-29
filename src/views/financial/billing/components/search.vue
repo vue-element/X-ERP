@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-autocomplete v-model="searchData.billingName" :fetch-suggestions="billingNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="billing.name" :fetch-suggestions="billingNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-autocomplete v-model="searchData.billingCode" :fetch-suggestions="billingCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
+              <el-autocomplete v-model="billing.code" :fetch-suggestions="billingCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -59,6 +59,10 @@ export default {
         name: '',
         number: '',
         date: ''
+      },
+      billing: {
+        code: '',
+        name: ''
       }
     }
   },
@@ -71,7 +75,7 @@ export default {
   },
   methods: {
     billingNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -86,7 +90,7 @@ export default {
       })
     },
     billingCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -102,8 +106,8 @@ export default {
     },
     ciSelect(item) {
       this.searchData.contractInfo_id = item.id
-      this.searchData.billingName = item.name
-      this.searchData.billingCode = item.code
+      this.billing.name = item.name
+      this.billing.code = item.code
     },
     search() {
       var searchData = {}
@@ -123,6 +127,18 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    }
+  },
+  watch: {
+    billing: {
+      handler(obj) {
+        if (obj.code === '' || obj.name === '') {
+          this.searchData.contractInfo_id = ''
+          // obj.name = ''
+          // obj.code = ''
+        }
+      },
+      deep: true
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="received-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractReceived:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractReceived:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="receivedData" :rules="rules" ref="receivedData">
@@ -64,7 +64,17 @@ export default {
   name: 'receivedPaymentAdd',
   props: ['editData'],
   data() {
-    var validateContractInfo = this.validateMsg('合同信息不能为空')
+    var validateContractInfo = (rule, value, callback) => {
+      var name = value.contractInfo.name
+      var number = value.number
+      if (name === '') {
+        return callback(new Error('合同名称不能为空'))
+      } else if (number === '') {
+        return callback(new Error('发票号码不能为空'))
+      } else {
+        callback()
+      }
+    }
     var validateAmount = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('回款金额不能为空'))
@@ -113,7 +123,7 @@ export default {
   },
   methods: {
     contractNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -128,7 +138,7 @@ export default {
       })
     },
     contractCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -220,10 +230,15 @@ export default {
     amountChange(val) {
       this.receivedData.amount = outputmoney(val)
     },
-    validateMsg(errMsg) {
+    validateMsg() {
       return (rule, value, callback) => {
-        if (!value) {
-          callback(new Error(errMsg))
+        console.log('value', value)
+        var name = value.contractInfo.name
+        var number = value.number
+        if (!name) {
+          callback(new Error('合同名称不能为空'))
+        } else if (!number) {
+          callback(new Error('发票号码不能为空'))
         } else {
           callback()
         }
@@ -237,6 +252,11 @@ export default {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.contractBilling.contractInfo.name === '' || obj.contractBilling.contractInfo.code === '') {
+          obj.contractBilling.contractInfo.id = ''
+          obj.contractBilling.contractInfo.name = ''
+          obj.contractBilling.contractInfo.code = ''
         }
       },
       deep: true

@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称:" class="single-date">
-              <el-autocomplete v-model="analysisData.scheduleName" :fetch-suggestions="scheduleNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="contract.name" :fetch-suggestions="scheduleNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号:" class="single-date">
-              <el-autocomplete v-model="analysisData.scheduleCode" :fetch-suggestions="scheduleCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
+              <el-autocomplete v-model="contract.code" :fetch-suggestions="scheduleCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,6 +107,10 @@ export default {
       comprehensiveStatusList: [], // 综合进度匹配度
       paymentBalanceStatusList: [], // 收支差异状态
       cashBalanceStatusList: [], // 付现差异状态
+      contract: {
+        name: '',
+        code: ''
+      },
       analysisData: {
         contractInfo_id: '',
         stage: '',
@@ -135,7 +139,7 @@ export default {
       this.cashBalanceStatusList = [{ value: '正常' }, { value: '异常' }]
     },
     scheduleNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -150,7 +154,7 @@ export default {
       })
     },
     scheduleCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -166,8 +170,8 @@ export default {
     },
     ciSelect(item) {
       this.analysisData.contractInfo_id = item.id
-      this.analysisData.scheduleName = item.name
-      this.analysisData.scheduleCode = item.code
+      this.contract.name = item.name
+      this.contract.code = item.code
     },
     search() {
       var searchData = {}
@@ -181,6 +185,19 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    }
+  },
+  watch: {
+    contract: {
+      handler(obj) {
+        console.log('val', obj)
+        if (obj.code === '' || obj.name === '') {
+          this.analysisData.contractInfo_id = ''
+          obj.code = ''
+          obj.name = ''
+        }
+      },
+      deep: true
     }
   },
   computed: {

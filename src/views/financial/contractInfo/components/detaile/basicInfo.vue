@@ -1,6 +1,6 @@
 <template>
   <div class="basicInfo-container form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractInfo:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractInfo:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="contractInfo" :rules="rules" ref="contractInfo" class="basic">
@@ -244,7 +244,7 @@ export default {
       })
     },
     businessNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/bussinessName?role_code=' + role_code + '&businessName=' + queryString).then(res => {
         var data = res.data

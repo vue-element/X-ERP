@@ -106,7 +106,7 @@
                 <label>制表：<span>{{outboundInfo.person}}</span></label>
               </div>
               <div class="right">
-                <label>审核：<span>{{this.$store.state.account.userName}}</span></label>
+                <label>审核：<span>{{this.$store.state.account.roleCode}}</span></label>
               </div>
             </form>
           </div>
