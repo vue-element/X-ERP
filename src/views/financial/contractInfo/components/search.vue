@@ -137,7 +137,6 @@ export default {
     },
     search() {
       var searchData = {}
-      console.log(this.searchData)
       for (var key in this.searchData) {
         if (this.searchData[key]) {
           searchData[key] = this.searchData[key]
@@ -150,7 +149,6 @@ export default {
           }
         }
       }
-      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {
@@ -166,7 +164,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   }
 }
