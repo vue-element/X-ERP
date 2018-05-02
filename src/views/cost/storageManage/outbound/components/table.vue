@@ -5,6 +5,7 @@
         <p @click="uploadTableShow = false">出库清单</p>
         <div class="material-table-head fr">
           <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save') && checkPerm === 'firstStep'">
+          <!-- <button @click.prevent="showDialog" v-if="hasPerm('outboundDetaile:save')"> -->
             <i class="iconfont icon-add"></i>
             <span>新增出库</span>
           </button>
@@ -128,9 +129,11 @@ export default {
         purchaseList: { id: '' },
         outboundList: { id: '' },
         number: '',
+        diffNumber: '',
         surplusNumber: ''
       },
       maxNumber: 0,
+      oldNumber: null, // 编辑前出库数量
       formLabelWidth: '120px',
       outboundList: [],
       outboundCheck: [],
@@ -193,6 +196,8 @@ export default {
     },
     addOutbound() { // 新增出库清单
       this.outboundInfo.outboundList.id = this.outboundId
+      this.outboundInfo.diffNumber = 0 - this.outboundInfo.number
+      console.log('this.outboundInfo', this.outboundInfo)
       var objectList = [this.outboundInfo]
       this.saveOutbound(objectList)
       this.dialogFormVisible = false
@@ -200,11 +205,14 @@ export default {
     confirmEdit(row, index) { // 修改出库清单
       row.edit = !row.edit
       Vue.set(this.outboundList, index, row)
+      row.diffNumber = this.oldNumber - row.number // 编辑出库数量：先加回旧的出库数量再减去新的出库数量
+      // console.log('nowNumber', diffNumber)
       var outboundInfo = {
         id: row.id,
         purchaseList: { id: row.purchaseList.id },
         outboundList: { id: this.outboundId },
-        number: row.number
+        number: row.number,
+        diffNumber: row.diffNumber
       }
       var objectList = [outboundInfo]
       this.saveOutbound(objectList)
@@ -225,6 +233,7 @@ export default {
     },
     editRow(row, index) {
       row.edit = !row.edit
+      this.oldNumber = row.number
       Vue.set(this.outboundList, index, row)
     },
     deleteRow(id, index) {
@@ -243,7 +252,6 @@ export default {
       this.$get('/outboundCheck/findByOutboundList/' + this.outboundId).then((res) => {
         if (res.data.success === true) {
           this.outboundCheck = res.data.data
-          console.log('outboundCheck', this.outboundCheck)
         }
       })
     },

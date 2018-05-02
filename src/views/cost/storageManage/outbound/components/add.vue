@@ -259,7 +259,7 @@ export default {
         this.disabled = true
         this.editShow = true
         this.outboundInfo = this.editData.editData.outboundList
-        // this.editInfo()
+        this.editInfo()
       }
       this.temp = _.cloneDeep(this.outboundInfo)
     },
@@ -352,8 +352,6 @@ export default {
     },
     outboundInfo: {
       handler(obj) {
-        console.log('obj', obj)
-        console.log('temp', this.temp)
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {

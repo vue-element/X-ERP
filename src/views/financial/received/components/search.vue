@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-autocomplete v-model="received.name" :fetch-suggestions="receivedNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="searchData.contractInfo_name" :fetch-suggestions="receivedNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-autocomplete v-model="received.code" :fetch-suggestions="receivedCodeSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="searchData.contractInfo_code" :fetch-suggestions="receivedCodeSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -35,12 +35,9 @@ export default {
       loading: false,
       disabled: false,
       contractBillingList: [],
-      received: {
-        name: '',
-        code: ''
-      },
       searchData: {
-        contractInfo_id: ''
+        contractInfo_name: '',
+        contractInfo_code: ''
       }
     }
   },
@@ -48,7 +45,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   },
   methods: {
@@ -83,29 +80,26 @@ export default {
       })
     },
     ciSelect(item) {
-      this.searchData.contractInfo_id = item.id
-      this.received.name = item.name
-      this.received.code = item.code
+      console.log('2323')
+      console.log('item', item)
+      this.searchData.contractInfo_name = item.name
+      this.searchData.contractInfo_code = item.code
     },
     search() {
-      this.$emit('search', this.searchData)
+      var searchData = {}
+      for (var key in this.searchData) {
+        if (this.searchData[key]) {
+          searchData[key] = this.searchData[key]
+        }
+      }
+      this.$emit('search', searchData)
     },
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
     }
   },
-  watch: {
-    received: {
-      handler(obj) {
-        if (obj.code === '' || obj.name === '') {
-          this.received.name = ''
-          this.received.code = ''
-        }
-      },
-      deep: true
-    }
-  }
+  watch: {}
 }
 </script>
 

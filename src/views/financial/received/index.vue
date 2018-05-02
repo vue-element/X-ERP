@@ -39,7 +39,7 @@
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
       <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData" :pageObj="pageObj"></ListComponent>
-      <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
+      <SearchComponent v-show="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"  @toggleTab="toggleTab"></ImportComponent>
     </div>
   </div>
@@ -99,7 +99,7 @@ export default {
     search(data) {
       this.pageObj = {}
       this.searchData = data
-      this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
+      // this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
       this.tab = 'listTab'
     },
     addBtn() {

@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称:" class="single-date">
-              <el-autocomplete v-model="contract.name" :fetch-suggestions="scheduleNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="analysisData.contractInfo_name" :fetch-suggestions="scheduleNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号:" class="single-date">
-              <el-autocomplete v-model="contract.code" :fetch-suggestions="scheduleCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
+              <el-autocomplete v-model="analysisData.contractInfo_code" :fetch-suggestions="scheduleCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,12 +107,9 @@ export default {
       comprehensiveStatusList: [], // 综合进度匹配度
       paymentBalanceStatusList: [], // 收支差异状态
       cashBalanceStatusList: [], // 付现差异状态
-      contract: {
-        name: '',
-        code: ''
-      },
       analysisData: {
-        contractInfo_id: '',
+        contractInfo_name: '',
+        contractInfo_code: '',
         stage: '',
         projectStatus: '',
         receivedStatus: '',
@@ -169,9 +166,10 @@ export default {
       })
     },
     ciSelect(item) {
-      this.analysisData.contractInfo_id = item.id
-      this.contract.name = item.name
-      this.contract.code = item.code
+      this.analysisData.contractInfo_name = item.name
+      this.analysisData.contractInfo_code = item.code
+      // this.contract.name = item.name
+      // this.contract.code = item.code
     },
     search() {
       var searchData = {}
@@ -187,20 +185,10 @@ export default {
       this.$emit('search', searchData)
     }
   },
-  watch: {
-    contract: {
-      handler(val) {
-        if (val.code === '' || val.name === '') {
-          this.contract.name = ''
-          this.contract.code = ''
-        }
-      },
-      deep: true
-    }
-  },
+  watch: {},
   computed: {
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   }
 }

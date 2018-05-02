@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-autocomplete v-model="billing.name" :fetch-suggestions="billingNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="searchData.contractInfo_name" :fetch-suggestions="billingNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-autocomplete v-model="billing.code" :fetch-suggestions="billingCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
+              <el-autocomplete v-model="searchData.contractInfo_code" :fetch-suggestions="billingCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -55,14 +55,11 @@ export default {
       disabled: false,
       contractInfoList: [],
       searchData: {
-        contractInfo_id: null,
+        contractInfo_name: '',
+        contractInfo_code: '',
         name: '',
         number: '',
         date: ''
-      },
-      billing: {
-        code: '',
-        name: ''
       }
     }
   },
@@ -70,7 +67,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   },
   methods: {
@@ -105,9 +102,10 @@ export default {
       })
     },
     ciSelect(item) {
-      this.searchData.contractInfo_id = item.id
-      this.billing.name = item.name
-      this.billing.code = item.code
+      this.searchData.contractInfo_name = item.name
+      this.searchData.contractInfo_code = item.code
+      // this.billing.name = item.name
+      // this.billing.code = item.code
     },
     search() {
       var searchData = {}
@@ -128,18 +126,7 @@ export default {
       this.$emit('search', searchData)
     }
   },
-  watch: {
-    billing: {
-      handler(val) {
-        if (val.code === '' || val.name === '') {
-          this.searchData.contractInfo_id = ''
-          this.billing.name = ''
-          this.billing.code = ''
-        }
-      },
-      deep: true
-    }
-  }
+  watch: {}
 }
 </script>
 

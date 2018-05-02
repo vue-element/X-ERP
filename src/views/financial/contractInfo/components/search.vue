@@ -160,7 +160,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   }
 }

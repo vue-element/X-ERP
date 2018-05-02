@@ -313,7 +313,7 @@ export default {
       }
     },
     ...mapGetters([
-      'userName'
+      'roleCode'
     ])
   }
 }
