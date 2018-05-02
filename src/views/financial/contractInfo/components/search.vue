@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     contractNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -88,7 +88,7 @@ export default {
       })
     },
     contractCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -137,20 +137,14 @@ export default {
     },
     search() {
       var searchData = {}
-      console.log(this.searchData)
       for (var key in this.searchData) {
         if (this.searchData[key]) {
           searchData[key] = this.searchData[key]
           if (key === 'term') {
             searchData['term'] = this.searchData['term'] + '-01'
-          } else if (key === 'ctgName') {
-            delete searchData['ctgName']
-          } else if (key === 'regionName') {
-            delete searchData[key]
           }
         }
       }
-      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

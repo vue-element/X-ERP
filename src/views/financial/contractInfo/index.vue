@@ -21,7 +21,7 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'" v-if="hasPerm('contractInfo:export')">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -30,7 +30,7 @@
     </div>
     <div class="contract-list" >
       <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
-      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData" ></listComponent>
+      <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData" :pageObj="pageObj"></listComponent>
       <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')" @toggleTab="listBtn" @changeObj='changeObj'></addComponent>
     </div>
   </div>
@@ -55,7 +55,8 @@ export default {
       exprotList: [],
       searchData: {},
       editData: {},
-      isChange: false
+      isChange: false,
+      pageObj: {}
     }
   },
   created() {
@@ -112,6 +113,10 @@ export default {
       this.isChange = status
     },
     editRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.tab = 'addTab'
       this.editData = {
         editData: data,
@@ -119,6 +124,7 @@ export default {
       }
     },
     search(data) {
+      this.pageObj = {}
       this.tab = 'listTab'
       this.searchData = data
     },

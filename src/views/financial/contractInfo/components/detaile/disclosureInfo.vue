@@ -1,6 +1,6 @@
 <template>
   <div class="disclosure-info-container form-container">
-    <div class="commont-btn edit-btn" v-show="editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractBasis:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="contractBasis" ref="contractBasis" class="basic" :rules="rules">
@@ -149,7 +149,7 @@
           <el-table-column prop="fileName" label="附件名称" width="300"></el-table-column>
           <el-table-column prop="describtion" label="附件说明" width="350"></el-table-column>
           <el-table-column prop="person" label="上传人"></el-table-column>
-          <el-table-column prop="date" label="上传时间"></el-table-column>
+          <el-table-column prop="date" label="上传时间" width="120"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="downFile(scope.row)" type="text" size="small">文件下载</el-button>

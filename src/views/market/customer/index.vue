@@ -30,7 +30,7 @@
   </div>
   <div class="compotent-tab" >
     <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
-    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData"  :pageObj="pageObj"></ListComponent>
+    <ListComponent v-if="tab === 'listTab'" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" :pageObj="pageObj"></ListComponent>
     <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
 </div>
@@ -62,8 +62,7 @@ export default {
     }
   },
   created() {},
-  mounted() {
-  },
+  mounted() {},
   methods: {
     toggleTab(tab) {
       if (this.tab === 'addTab' && this.isChange === true) {

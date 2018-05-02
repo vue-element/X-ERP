@@ -8,12 +8,12 @@
         <el-row :gutter="40">
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同名称：">
-              <el-autocomplete v-model="searchData.receivedName" :fetch-suggestions="receivedNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="received.name" :fetch-suggestions="receivedNameSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
-              <el-autocomplete v-model="searchData.receivedCode" :fetch-suggestions="receivedCodeSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
+              <el-autocomplete v-model="received.code" :fetch-suggestions="receivedCodeSearchAsync" @select="ciSelect" placeholder="请选择合同名称"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -35,6 +35,10 @@ export default {
       loading: false,
       disabled: false,
       contractBillingList: [],
+      received: {
+        name: '',
+        code: ''
+      },
       searchData: {
         contractInfo_id: ''
       }
@@ -49,7 +53,7 @@ export default {
   },
   methods: {
     receivedNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -64,7 +68,7 @@ export default {
       })
     },
     receivedCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -80,8 +84,8 @@ export default {
     },
     ciSelect(item) {
       this.searchData.contractInfo_id = item.id
-      this.searchData.receivedName = item.name
-      this.searchData.receivedCode = item.code
+      this.received.name = item.name
+      this.received.code = item.code
     },
     search() {
       this.$emit('search', this.searchData)
@@ -89,6 +93,17 @@ export default {
     searchAll() {
       var searchData = {}
       this.$emit('search', searchData)
+    }
+  },
+  watch: {
+    received: {
+      handler(obj) {
+        if (obj.code === '' || obj.name === '') {
+          this.received.name = ''
+          this.received.code = ''
+        }
+      },
+      deep: true
     }
   }
 }

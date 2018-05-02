@@ -2,16 +2,16 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li v-show="actionTab === 'inboundInfo' || roleCode === 'admin'" class="is-active" @click="toggleTab('inboundInfo')">入库填写</li>
-        <li v-show="actionTab === 'officeCheck' || roleCode === 'admin'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
-        <li v-show="actionTab === 'costCheck' || roleCode === 'admin'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
+        <li v-show="hasPerm('inboundCheck:submit')" class="is-active" @click="toggleTab('inboundInfo')">入库填写</li>
+        <li v-show="hasPerm('inboundCheck:officeCheck')" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li v-show="hasPerm('inboundCheck:costCheck')" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
       <el-form :model="inboundList" :rules="rules" ref="inboundList" v-if="container">
         <div class="form-module">
           <h4 class="module-title"><p>入库信息:</p></h4>
-          <el-row :gutter="40">
+            <el-row :gutter="40">
             <el-col :xs="24" :sm="12" :lg="12">
               <el-form-item label="付款合同编号/入库单号:">
                 <p v-if="disabled">{{inboundList.paymentContract.code}}</p>
@@ -300,36 +300,22 @@ export default {
   },
   methods: {
     judgeCode() {
-      var keyCode = ''
-      var ISXHB = this.roleCode.indexOf('xhb') > 0
-      var lastStr = this.roleCode[this.roleCode.length - 1]
-      if (ISXHB) {
-        if (lastStr === '1') {
-          keyCode = 'Manage'
-        } else if (lastStr === '2') {
-          keyCode = 'Assistant'
-        } else if (lastStr === '3') {
-          keyCode = 'Financial'
-        } else if (lastStr === '4') {
-          keyCode = 'Cost'
-        }
+      if (this.permissions.indexOf('outboundCheck:costCheck') > 0) {
+        this.actionTab = 'costCheck'
       }
-      if (this.roleCode === 'marketinga' || this.roleCode === 'admin') {
-        keyCode = 'Manage'
-      } else if (this.roleCode === 'marketing') {
-        keyCode = 'Assistant'
+      if (this.permissions.indexOf('outboundCheck:officeCheck') > 0) {
+        this.actionTab = 'officeCheck'
       }
-      if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
-        keyCode = 'Account'
+      if (this.permissions.indexOf('outboundCheck:submit') > 0) {
+        this.actionTab = 'inboundInfo'
       }
-      this.keyCode = keyCode
     },
     editInfo() {
       var data = _.cloneDeep(this.editData.editData)
       this.inboundList = data.inboundList
       this.inboundId = this.inboundList.id
       this.paymentContractId = this.inboundList.paymentContract.id
-      this.inboundList.checkPerson = this.$store.state.account.userName
+      this.inboundList.checkPerson = this.$store.state.account.roleCode
     },
     toggleTab(tab) {
       this.actionTab = tab
@@ -411,19 +397,20 @@ export default {
   computed: {
     ...mapGetters([
       'userName',
-      'roleCode'
+      'roleCode',
+      'permissions'
     ])
   },
   watch: {
-    keyCode(val) {
-      if (val === 'Assistant') {
-        this.actionTab = 'inboundInfo'
-      } else if (val === 'Manage') {
-        this.actionTab = 'officeCheck'
-      } else if (val === 'Account') {
-        this.actionTab = 'costCheck'
-      }
-    }
+    // keyCode(val) {
+    //   if (val === 'Assistant') {
+    //     this.actionTab = 'inboundInfo'
+    //   } else if (val === 'Manage') {
+    //     this.actionTab = 'officeCheck'
+    //   } else if (val === 'Account') {
+    //     this.actionTab = 'costCheck'
+    //   }
+    // }
   }
 }
 </script>

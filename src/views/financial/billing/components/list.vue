@@ -20,7 +20,7 @@
         <el-table-column prop="content" label="开票内容" width="300"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBilling:findAllByPage')">查看</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBilling:findUpdateData')">查看</el-button>
             <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractBilling:delete')">删除</el-button>
           </template>
         </el-table-column>
@@ -35,7 +35,7 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'invoiceList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -48,6 +48,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -119,6 +123,8 @@ export default {
     editRow(id) {
       this.$get('/contractBilling/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     }

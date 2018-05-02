@@ -18,7 +18,7 @@
         <el-table-column prop="inputDate" label="投入日期" width="180"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractPayment:findAllByPage')">查看</el-button>
+            <el-button @click="editRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractPayment:findUpdateData')">查看</el-button>
             <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractPayment:delete')">删除</el-button>
           </template>
         </el-table-column>
@@ -33,18 +33,22 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'paymentList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       height: 100,
       total: 5,
       currentPage: 1,
       pageSizes: [12, 15, 16],
-      pageSize: 15,
+      pageSize: 2,
       paymentData: []
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -116,6 +120,8 @@ export default {
     editRow(id) {
       this.$get('/contractPayment/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     }

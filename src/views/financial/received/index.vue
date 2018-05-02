@@ -21,7 +21,7 @@
           </button>
         </div>
         <div class="export-btn fr">
-          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''">
+          <button @click="dataImpore" :class="tab === 'importTab' ? 'is-active' : ''" v-if="hasPerm('contractReceived:importData')">
             <i class="iconfont icon-import"></i>
             <span>数据导入</span>
           </button>
@@ -29,7 +29,7 @@
             <i class="iconfont icon-download"></i>
             <span>模版下载</span>
           </button>
-          <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'">
+          <button @click="handleDownload('Arr')" :loading="downloadLoading" v-show="tab === 'listTab'" v-if="hasPerm('contractReceived:export')">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -38,7 +38,7 @@
     </div>
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="listBtn" @changeObj='changeObj'></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData" :pageObj="pageObj"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"  @toggleTab="toggleTab"></ImportComponent>
     </div>
@@ -66,7 +66,8 @@ export default {
       tab: 'listTab',
       editData: {},
       searchData: {},
-      exportList: []
+      exportList: [],
+      pageObj: {}
     }
   },
   created() {
@@ -85,6 +86,10 @@ export default {
       this.toggleTab('listTab')
     },
     editRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
       this.tab = 'addTab'
       this.editData = {
         editData: data,
@@ -92,6 +97,7 @@ export default {
       }
     },
     search(data) {
+      this.pageObj = {}
       this.searchData = data
       this.searchData.date = parseTime(this.searchData.date, '{y}-{m}-{d}')
       this.tab = 'listTab'

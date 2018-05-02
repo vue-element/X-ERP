@@ -361,7 +361,6 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction() // 当前组件是新增状态还是编辑状态
-    this.temp = _.cloneDeep(this.supplyInfo)
   },
   methods: {
     save() {
@@ -466,9 +465,10 @@ export default {
         this.action = 'edit'
         this.disabled = true
         this.editShow = true
-        this.supplyInfo = _.cloneDeep(this.editData.editData.supply)
+        this.supplyInfo = this.editData.editData.supply
         this.handlerDate()
       }
+      this.temp = _.cloneDeep(this.supplyInfo)
     },
     taxChange(val) {
       // this.supplyInfo.taxRate =

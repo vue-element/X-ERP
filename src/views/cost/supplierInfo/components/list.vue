@@ -39,24 +39,28 @@
 import { winHeight } from '@/utils'
 export default {
   name: 'supplierList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
       height: 100,
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 16],
+      pageSizes: [12, 15, 20],
       pageSize: 15,
       tableData: []
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
+    this.getSupplyData()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
     })
-    this.getSupplyData()
   },
   methods: {
     resize() {
@@ -115,6 +119,8 @@ export default {
       this.$get('/supply/findUpdateData/' + id).then((res) => {
         if (res.data.success === true) {
           var data = res.data.data
+          data.currentPage = this.currentPage
+          data.pageSize = this.pageSize
           this.$emit('editRow', data)
         }
       })

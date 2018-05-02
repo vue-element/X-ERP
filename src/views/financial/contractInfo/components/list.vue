@@ -16,7 +16,7 @@
       <el-table-column prop="invoiceNoReceive" label="已开票未回款金额" min-width="180"></el-table-column>
       <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
-          <el-button @click="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:findAllByPage')">查看</el-button>
+          <el-button @click="seeRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:findUpdateData')">查看</el-button>
           <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('contractInfo:delete')">删除</el-button>
         </template>
       </el-table-column>
@@ -29,7 +29,7 @@
 <script>
 import { winHeight } from '@/utils'
 export default {
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -42,6 +42,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.getContractInfoData()
     this.resize()
     window.addEventListener('resize', () => {
@@ -79,6 +83,8 @@ export default {
     seeRow(id) {
       this.$get('/contractInfo/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         data.id = id
         this.$emit('editRow', data)
       })

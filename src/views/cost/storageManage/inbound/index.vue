@@ -7,13 +7,17 @@
             <i class="iconfont icon-search"></i>
             <span>查询</span>
           </button>
-          <button v-if="hasPerm('paymentContract:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
+          <button v-if="hasPerm('inboundList:findAllByPage')" @click="toggleTab('listTab')" :class="tab === 'listTab' ? 'is-active' : ''">
             <i class="iconfont icon-seeAll"></i>
             <span>查看</span>
           </button>
+          <button v-show="tab === 'addTab' && editData.tabState ==='editTab'" :class="(tab === 'addTab' && editData.tabState ==='editTab')? 'is-active' : ''">
+            <i class="iconfont icon-seeAll"></i>
+            <span>查看明细</span>
+          </button>
         </div>
         <div class="export-btn fr">
-          <button v-if="hasPerm('paymentContract:export')" @click="handleDownload()" :loading="downloadLoading">
+          <button v-if="hasPerm('inboundList:export')" @click="handleDownload()" :loading="downloadLoading">
             <i class="iconfont icon-export"></i>
             <span>数据导出</span>
           </button>
@@ -22,7 +26,7 @@
     </div>
     <div class="compotent-tab">
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData"></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @editRow="editRow" :searchData="searchData" @exportData="exportData" :pageObj="pageObj"></ListComponent>
       <SearchComponent v-if="tab === 'searchTab'" @search="search"></SearchComponent>
       <ImportComponent v-if="tab === 'importTab'"></ImportComponent>
     </div>
@@ -54,7 +58,8 @@ export default {
         amount1: 0
       },
       list: [],
-      exprotList: []
+      exprotList: [],
+      pageObj: {}
     }
   },
   created() {
@@ -69,13 +74,18 @@ export default {
       }
     },
     editRow(data) {
+      this.pageObj = {
+        currentPage: data.currentPage,
+        pageSize: data.pageSize
+      }
+      this.tab = 'addTab'
       this.editData = {
         editData: data,
         tabState: 'editTab'
       }
-      this.tab = 'addTab'
     },
     search(data) {
+      this.pageObj = {}
       this.searchData = data
       this.tab = 'listTab'
     },

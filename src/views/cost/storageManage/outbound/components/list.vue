@@ -8,7 +8,7 @@
         <el-table-column prop="inboundList.paymentContract.code" label="付款合同编号" min-width="160"></el-table-column>
         <el-table-column prop="code" label="出库单编号" min-width="160"></el-table-column>
         <el-table-column prop="inboundList.paymentContract.contractInfo.name" label="项目" min-width="160"></el-table-column>
-        <el-table-column prop="inboundList.paymentContract.department" label="办事处" min-width="160"></el-table-column>
+        <el-table-column prop="inboundList.paymentContract.contractInfo.business.region.name" label="办事处" min-width="160"></el-table-column>
         <el-table-column prop="state" label="状态" min-width="160"></el-table-column>
         <el-table-column label="操作" width="120" fixed="right">
           <template slot-scope="scope">
@@ -35,7 +35,7 @@ import { mapGetters } from 'vuex'
 import { winHeight } from '@/utils'
 export default {
   name: 'outboundList',
-  props: ['searchData'],
+  props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
@@ -48,6 +48,10 @@ export default {
     }
   },
   created() {
+    if (this.pageObj.currentPage) {
+      this.currentPage = this.pageObj.currentPage
+      this.pageSize = this.pageObj.pageSize
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -110,6 +114,8 @@ export default {
     seeRow(id) {
       this.$get('/outboundList/findUpdateData/' + id).then((res) => {
         var data = res.data.data
+        data.currentPage = this.currentPage
+        data.pageSize = this.pageSize
         this.$emit('editRow', data)
       })
     }

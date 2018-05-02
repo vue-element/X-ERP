@@ -1,6 +1,6 @@
 <template>
   <div class="payment-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractPayment:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractPayment:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="paymentData" :rules="rules" ref="paymentData">
@@ -18,7 +18,7 @@
           <el-col :xs="12" :sm="12" :lg="12">
             <el-form-item label="合同编号：">
               <p v-if="disabled">{{paymentData.contractInfo.code}}</p>
-              <el-autocomplete v-else v-model="paymentData.contractInfo.code" :fetch-suggestions="contractNameSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
+              <el-autocomplete v-else v-model="paymentData.contractInfo.code" :fetch-suggestions="contractCodeSearchAsync" @select="ciSelect" placeholder="请选择合同编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
@@ -102,7 +102,9 @@ export default {
       preTax: null,
       paymentData: {
         contractInfo: {
-          id: null
+          id: null,
+          name: '',
+          code: ''
         },
         artificialCost: null,
         materialCost: null,
@@ -134,7 +136,7 @@ export default {
   },
   methods: {
     contractNameSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoName?role_code=' + role_code + '&contractInfoName=' + queryString).then(res => {
         var data = res.data
@@ -149,7 +151,7 @@ export default {
       })
     },
     contractCodeSearchAsync(queryString, callback) {
-      var role_code = this.$store.state.account.userName
+      var role_code = this.$store.state.account.roleCode
       var list = [{}]
       this.$get('/keywordQuery/contractInfoCode?role_code=' + role_code + '&contractInfoCode=' + queryString).then(res => {
         var data = res.data
@@ -273,6 +275,11 @@ export default {
           this.$emit('changeObj', false)
         } else {
           this.$emit('changeObj', true)
+        }
+        if (obj.contractInfo.name === '' || obj.contractInfo.code === '') {
+          this.paymentData.contractInfo.id = ''
+          this.paymentData.contractInfo.name = ''
+          this.paymentData.contractInfo.code = ''
         }
       },
       deep: true

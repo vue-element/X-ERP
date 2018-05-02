@@ -2,9 +2,9 @@
   <div class="payment-contract-add">
     <div class="inner-tab-toggle">
       <ul>
-        <li v-show="actionTab === 'inboundInfo'" class="is-active" @click="toggleTab('inboundInfo')">出库填写</li>
-        <li v-show="actionTab === 'officeCheck'" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
-        <li v-show="actionTab === 'costCheck'" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
+        <li v-show="hasPerm('outboundCheck:submit')" class="is-active" @click="toggleTab('inboundInfo')">出库填写</li>
+        <li v-show="hasPerm('outboundCheck:officeCheck')" class="is-active" @click="toggleTab('officeCheck')">办事处审核</li>
+        <li v-show="hasPerm('outboundCheck:costCheck')" class="is-active" @click="toggleTab('costCheck')">成本部审核</li>
       </ul>
     </div>
     <div class="form-container">
@@ -40,8 +40,8 @@
               </el-col>
               <el-col :sm="24" :md="12" :lg="12">
                 <el-form-item label="办事处:">
-                  <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.department}}</p>
-                  <el-input v-else v-model="outboundInfo.inboundList.paymentContract.department" placeholder="自动生成" disabled></el-input>
+                  <p v-if="disabled">{{outboundInfo.inboundList.paymentContract.contractInfo.business.region.name}}</p>
+                  <el-input v-else v-model="outboundInfo.inboundList.paymentContract.contractInfo.business.region.name" placeholder="自动生成" disabled></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -49,7 +49,7 @@
               <el-col :sm="24" :md="12" :lg="12">
                 <el-form-item label="出库日期:" class="single-date" prop="date">
                   <p v-if="disabled">{{outboundInfo.date}}</p>
-                  <el-date-picker  v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="outboundInfo.date" placeholder="选择日期"></el-date-picker>
+                  <el-date-picker v-else type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="outboundInfo.date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
                 </el-form-item>
               </el-col>
@@ -63,6 +63,7 @@
         </el-form>
         <table-component :outboundId="outboundId" :editShow="editShow" :paymentContractId="paymentContractId" :actionTab="actionTab" @outBound="outBound"></table-component>
       </div>
+
       <!-- 出库单 -->
       <div class="printTable" v-if="outBoundTable">
         <div id="form_print">
@@ -105,7 +106,7 @@
                 <label>制表：<span>{{outboundInfo.person}}</span></label>
               </div>
               <div class="right">
-                <label>审核：<span>{{this.$store.state.account.userName}}</span></label>
+                <label>审核：<span>{{this.$store.state.account.roleCode}}</span></label>
               </div>
             </form>
           </div>
@@ -123,6 +124,7 @@
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import tableComponent from './table.vue'
+import { isObjectValueEqual } from '@/utils'
 export default {
   props: ['editData'],
   components: { tableComponent },
@@ -149,9 +151,13 @@ export default {
           code: '',
           paymentContract: {
             contractInfo: {
-              name: ''
-            },
-            department: ''
+              name: '',
+              business: {
+                region: {
+                  name: ''
+                }
+              }
+            }
           }
         },
         date: ''
@@ -163,7 +169,7 @@ export default {
       contractId: '',
       outboundId: '',
       rules: {
-        paymentContract: [{ required: true, validator: validatePC, trigger: 'change' }],
+        inboundList: [{ required: true, validator: validatePC, trigger: 'change' }],
         date: [{ required: true, message: '请输入出库日期', trigger: 'blur' }]
       },
       temp: {},
@@ -175,7 +181,6 @@ export default {
   },
   created() {
     this.judgeCode()
-    this.getInsertData()
     this.toggleAction()
     if (this.outboundId) {
       this.getOutboundList()
@@ -183,29 +188,15 @@ export default {
   },
   methods: {
     judgeCode() {
-      var keyCode = ''
-      var ISXHB = this.roleCode.indexOf('xhb') > 0
-      var lastStr = this.roleCode[this.roleCode.length - 1]
-      if (ISXHB) {
-        if (lastStr === '1') {
-          keyCode = 'Manage'
-        } else if (lastStr === '2') {
-          keyCode = 'Assistant'
-        } else if (lastStr === '3') {
-          keyCode = 'Financial'
-        } else if (lastStr === '4') {
-          keyCode = 'Cost'
-        }
+      if (this.permissions.indexOf('outboundCheck:costCheck') > 0) {
+        this.actionTab = 'costCheck'
       }
-      if (this.roleCode === 'marketinga') {
-        keyCode = 'Manage'
-      } else if (this.roleCode === 'marketing' || this.roleCode === 'admin') {
-        keyCode = 'Assistant'
+      if (this.permissions.indexOf('outboundCheck:officeCheck') > 0) {
+        this.actionTab = 'officeCheck'
       }
-      if (this.roleCode === 'accounting' || this.roleCode === 'accountinga') {
-        keyCode = 'Account'
+      if (this.permissions.indexOf('outboundCheck:submit') > 0) {
+        this.actionTab = 'inboundInfo'
       }
-      this.keyCode = keyCode
     },
     save() {
       this.$refs.outboundInfo.validate((valid) => {
@@ -214,6 +205,7 @@ export default {
             this.loading = false
             if (res.data.success === true) {
               this.outboundInfo = res.data.data
+              this.temp = _.cloneDeep(this.outboundInfo)
               this.outboundId = this.outboundInfo.id
               this.paymentContractId = this.outboundInfo.inboundList.paymentContract.id
               this.successSave()
@@ -234,7 +226,6 @@ export default {
     },
     reset() {
       this.outboundInfo = _.cloneDeep(this.temp)
-      this.editInfo()
     },
     cancel() {
       this.$emit('toggleTab')
@@ -242,10 +233,6 @@ export default {
     editInfo() {
       this.outboundId = this.outboundInfo.id
       this.paymentContractId = this.outboundInfo.inboundList.paymentContract.id
-      if (this.outboundId) {
-        this.projectName = this.outboundInfo.inboundList.paymentContract.contractInfo.name
-        this.departmentName = this.outboundInfo.inboundList.paymentContract.department
-      }
     },
     toggleEditBtn() {
       this.disabled = !this.disabled
@@ -262,12 +249,6 @@ export default {
       // this.container = true
       // this.outBoundTable = false
     },
-    getInsertData() {
-      // this.$get('/outboundList/findInsertData').then((res) => {
-      //   var data = res.data.data
-      //   this.inboundList = data.inboundListArrary || []
-      // })
-    },
     toggleAction() {
       if (this.editData.tabState === 'addTab') {
         this.action = 'add'
@@ -278,7 +259,7 @@ export default {
         this.disabled = true
         this.editShow = true
         this.outboundInfo = this.editData.editData.outboundList
-        this.editInfo()
+        // this.editInfo()
       }
       this.temp = _.cloneDeep(this.outboundInfo)
     },
@@ -315,14 +296,9 @@ export default {
     },
     inboundCodeSelect(item) {
       this.outboundInfo.inboundList.id = item.id
-    },
-    // 根据付款合同编号，自动生成项目，办事处
-    inboundChange(id) {
-      var obj = this.inboundList.find((item) => {
-        return item.id === id
-      })
-      this.projectName = obj.paymentContract.contractInfo.name
-      this.departmentName = obj.paymentContract.department
+      this.outboundInfo.inboundList.code = item.code
+      this.outboundInfo.inboundList.paymentContract.contractInfo.name = item.contractinfoName
+      this.outboundInfo.inboundList.paymentContract.contractInfo.business.region.name = item.regionName
     },
     // 出库单打印
     outBound(status) {
@@ -361,21 +337,11 @@ export default {
   computed: {
     ...mapGetters([
       'userName',
-      'roleCode'
+      'roleCode',
+      'permissions'
     ])
   },
   watch: {
-    keyCode(val) {
-      if (val === 'Assistant') {
-        this.actionTab = 'inboundInfo'
-      } else if (val === 'Manage') {
-        this.actionTab = 'officeCheck'
-        this.disabled = true
-      } else if (val === 'Account') {
-        this.actionTab = 'costCheck'
-        this.disabled = true
-      }
-    },
     disabled(status) {
       if (status === false) {
         this.editWord = '取消编辑'
@@ -386,9 +352,20 @@ export default {
     },
     outboundInfo: {
       handler(obj) {
+        console.log('obj', obj)
+        console.log('temp', this.temp)
+        if (isObjectValueEqual(obj, this.temp)) {
+          this.$emit('changeObj', false)
+        } else {
+          this.$emit('changeObj', true)
+        }
         if (obj.inboundList.code === '') {
           obj.inboundList.id === ''
+          obj.inboundList.code = ''
+          obj.inboundList.paymentContract.contractInfo.name = ''
+          obj.inboundList.paymentContract.contractInfo.business.region.name = ''
         }
+        // console.log('id', this.outboundInfo.inboundList.id)
       },
       deep: true
     }

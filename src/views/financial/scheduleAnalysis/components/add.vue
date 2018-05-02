@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-add form-container">
-    <div class="commont-btn edit-btn" v-show="hasPerm('contractSchedule:findUpdateData') && editShow">
+    <div class="commont-btn edit-btn" v-show="hasPerm('contractSchedule:update') && editShow">
       <el-button @click="toggleEditBtn">{{editWord}}</el-button>
     </div>
     <el-form :model="scheduleAnalysisData" :rules="rules" ref="scheduleAnalysisData">
