@@ -29,9 +29,9 @@
       </div>
     </div>
     <div class="contract-list" >
-      <searchComponent v-if="tab === 'searchTab'" @search="search"></searchComponent>
+      <searchComponent v-show="tab === 'searchTab'" @search="search"></searchComponent>
       <listComponent v-if="tab === 'listTab'" :searchData="searchData" @editRow="editRow" @exportData="exportData" :pageObj="pageObj"></listComponent>
-      <addComponent v-show="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')" @toggleTab="listBtn" @changeObj='changeObj'></addComponent>
+      <addComponent v-if="tab === 'addTab'" :rowDetail="rowDetail" :editData="editData" @cancel="cancel" @back="back('listTab')" @toggleTab="listBtn" @changeObj='changeObj'></addComponent>
     </div>
   </div>
 </template>
