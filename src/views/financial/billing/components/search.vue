@@ -105,6 +105,9 @@ export default {
       this.searchData.billingName = item.name
       this.searchData.billingCode = item.code
     },
+    watch() {
+      console.log(123)
+    },
     search() {
       var searchData = {}
       for (var key in this.searchData) {
@@ -117,7 +120,6 @@ export default {
           }
         }
       }
-      console.log(searchData)
       this.$emit('search', searchData)
     },
     searchAll() {

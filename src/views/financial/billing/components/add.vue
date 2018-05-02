@@ -276,6 +276,10 @@ export default {
         } else {
           this.$emit('changeObj', true)
         }
+        if (obj.contractInfo.name === '' || obj.contractInfo.code === '') {
+          this.billingData.contractInfo.code = ''
+          this.billingData.contractInfo.name = ''
+        }
       },
       deep: true
     },

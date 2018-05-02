@@ -10,15 +10,15 @@
         </h4>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12">
-            <el-form-item label="商机编码：">
-              <p v-if="disabled">{{contractInfo.business.code}}</p>
-              <el-autocomplete v-else v-model="contractInfo.business.code" :fetch-suggestions="businessCodeSearchAsync" @select="businessSelect" placeholder="请选择商机编号"></el-autocomplete>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :lg="12">
             <el-form-item label="商机名称：" prop="business">
               <p v-if="disabled">{{contractInfo.business.name}}</p>
               <el-autocomplete v-else v-model="contractInfo.business.name" :fetch-suggestions="businessNameSearchAsync" @select="businessSelect" placeholder="请选择商机名称"></el-autocomplete>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :lg="12">
+            <el-form-item label="商机编码：">
+              <p v-if="disabled">{{contractInfo.business.code}}</p>
+              <el-autocomplete v-else v-model="contractInfo.business.code" :fetch-suggestions="businessCodeSearchAsync" @select="businessSelect" placeholder="请选择商机编号"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
