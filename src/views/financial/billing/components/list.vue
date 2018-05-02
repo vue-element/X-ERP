@@ -25,7 +25,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" :total="total"
        @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     </div>
   </div>
