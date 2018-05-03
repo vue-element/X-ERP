@@ -35,7 +35,7 @@ export default {
       listLoading: false,
       currentPage: 1,
       total: 5,
-      pageSizes: [12, 15, 16],
+      pageSizes: [15, 20, 25],
       pageSize: 15,
       height: 100
     }

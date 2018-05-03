@@ -65,15 +65,23 @@ export default {
   props: ['editData'],
   data() {
     var validateContractInfo = (rule, value, callback) => {
+      console.log('value', value)
       var name = value.contractInfo.name
       var number = value.number
+      var error = ''
       if (name === '') {
-        return callback(new Error('合同名称不能为空'))
-      } else if (number === '') {
-        return callback(new Error('发票号码不能为空'))
-      } else {
-        callback()
+
       }
+      // if (name === '') {
+      //   return callback(new Error('合同名称不能为空'))
+      // } else {
+      //   callback()
+      // }
+      // if (number === '') {
+      //   return callback(new Error('发票号码不能为空'))
+      // } else {
+      //   callback()
+      // }
     }
     var validateAmount = (rule, value, callback) => {
       if (!value) {

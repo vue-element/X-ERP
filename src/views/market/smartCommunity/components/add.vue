@@ -381,6 +381,7 @@
 </template>
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import { isObjectValueEqual, outputmoney } from '@/utils'
 import { cityList, regionList } from '@/utils/selectList'
 export default {
@@ -665,7 +666,11 @@ export default {
       this.mainMsg.client = item
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
+  },
   watch: {
     disabled (status) {
       if (status === false) {

@@ -36,8 +36,8 @@ export default {
       height: 100,
       total: 5,
       currentPage: 1,
-      pageSizes: [2, 3, 16],
-      pageSize: 2,
+      pageSizes: [15, 20, 25],
+      pageSize: 15,
       tableData: []
     }
   },
