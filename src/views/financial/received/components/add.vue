@@ -26,7 +26,7 @@
           <el-col :xs="24" :sm="12" :lg="12" >
             <el-form-item label="发票号码：" prop="contractBilling">
               <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.number" placeholder="请选择发票号码" filterable clearable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择发票号码" filterable clearable>
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -66,11 +66,8 @@ export default {
   data() {
     var validateContractInfo = (rule, value, callback) => {
       var name = value.contractInfo.name
-      var number = value.number
       if (name === '') {
         return callback(new Error('合同名称不能为空'))
-      } else if (number === '') {
-        return callback(new Error('发票号码不能为空'))
       } else {
         callback()
       }
@@ -110,8 +107,8 @@ export default {
       },
       rules: {
         contractBilling: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
-        number: [{ required: true, message: '发票号码不能为空', trigger: 'change' }],
         date: [{ required: true, message: '请选择回款日期', trigger: 'change' }],
+        number: [{ required: true, message: '请选择发票号码', trigger: 'change' }],
         amount: [{ required: true, validator: validateAmount, trigger: 'blur' }]
       },
       temp: {}
@@ -153,11 +150,15 @@ export default {
       })
     },
     ciSelect(item) {
-      this.receivedData.contractBilling.id = item.id
+      this.receivedData.contractBilling.contractInfo.id = item.id
       this.receivedData.contractBilling.contractInfo.code = item.code
       this.receivedData.contractBilling.contractInfo.name = item.name
-      this.$get('/contractBilling/findAllByContractInfo/' + item.id).then((res) => {
-        this.contractBillingList = res.data.data.contractBillingList.content
+      this.getCi_id(item.id)
+    },
+    getCi_id(id) {
+      this.$get('/contractBilling/findAllByContractInfo/' + id).then((res) => {
+        var data = res.data.data
+        this.contractBillingList = data.contractBillingList.content
       })
     },
     save() {
@@ -204,6 +205,7 @@ export default {
         this.editShow = true
         this.disabled = true
         this.receivedData = _.cloneDeep(this.editData.editData.contractReceived)
+        this.getCi_id(this.receivedData.contractBilling.contractInfo.id)
         this.preAmount = this.receivedData.amount
       }
     },
@@ -229,20 +231,6 @@ export default {
     },
     amountChange(val) {
       this.receivedData.amount = outputmoney(val)
-    },
-    validateMsg() {
-      return (rule, value, callback) => {
-        console.log('value', value)
-        var name = value.contractInfo.name
-        var number = value.number
-        if (!name) {
-          callback(new Error('合同名称不能为空'))
-        } else if (!number) {
-          callback(new Error('发票号码不能为空'))
-        } else {
-          callback()
-        }
-      }
     }
   },
   watch: {
