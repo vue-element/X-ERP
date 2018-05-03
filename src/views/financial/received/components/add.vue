@@ -108,7 +108,7 @@ export default {
       rules: {
         contractBilling: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
         date: [{ required: true, message: '请选择回款日期', trigger: 'change' }],
-        number: [{ required: true, message: '请选择发票号码', trigger: 'change' }],
+        // number: [{ required: true, message: '请选择发票号码', trigger: 'change' }],
         amount: [{ required: true, validator: validateAmount, trigger: 'blur' }]
       },
       temp: {}
