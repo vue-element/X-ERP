@@ -65,8 +65,8 @@ export default {
   props: ['editData'],
   data() {
     var validateContractInfo = (rule, value, callback) => {
-      console.log('name', value)
       var name = value.contractInfo.name
+      var id = value.id
       if (name === '') {
         return callback(new Error('合同名称不能为空'))
       } else {
