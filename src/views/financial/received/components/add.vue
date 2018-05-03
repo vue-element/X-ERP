@@ -24,9 +24,9 @@
         </el-row>
         <el-row :gutter="40">
           <el-col :xs="24" :sm="12" :lg="12" >
-            <el-form-item label="发票号码：" prop="contractBilling">
+            <el-form-item label="发票号码：" prop="billingId">
               <p v-if="disabled">{{receivedData.contractBilling.number}}</p>
-              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择发票号码" filterable clearable>
+              <el-select v-else v-model="receivedData.contractBilling.id" placeholder="请选择发票号码" filterable clearable @change="biliingChange">
                 <el-option v-for="item in contractBillingList" :label="item.number" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -72,8 +72,10 @@ export default {
       } else {
         callback()
       }
-      if (number === '') {
-        return callback(new Error('发票号码不能为空'))
+    }
+    var validatebillingId = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('请选择发票号码'))
       } else {
         callback()
       }
@@ -99,6 +101,7 @@ export default {
       contractInfoList: [],
       preAmount: null,
       receivedData: {
+        billingId: '',
         contractBilling: {
           id: null,
           contractInfo: {
@@ -114,7 +117,7 @@ export default {
       rules: {
         contractBilling: [{ required: true, validator: validateContractInfo, trigger: 'change' }],
         date: [{ required: true, message: '请选择回款日期', trigger: 'change' }],
-        // number: [{ required: true, message: '请选择发票号码', trigger: 'change' }],
+        billingId: [{ required: true, validator: validatebillingId, trigger: 'change' }],
         amount: [{ required: true, validator: validateAmount, trigger: 'blur' }]
       },
       temp: {}
@@ -125,6 +128,10 @@ export default {
     this.temp = _.cloneDeep(this.receivedData)
   },
   methods: {
+    biliingChange(id) {
+      this.receivedData.billingId = id
+      // console.log('billingId', item)
+    },
     contractNameSearchAsync(queryString, callback) {
       var role_code = this.$store.state.account.roleCode
       var list = [{}]
@@ -248,7 +255,7 @@ export default {
           this.$emit('changeObj', true)
         }
         if (obj.contractBilling.contractInfo.name === '' || obj.contractBilling.contractInfo.code === '') {
-          obj.contractBilling.contractInfo.id = ''
+          obj.contractBilling.contractInfo.id = null
           obj.contractBilling.contractInfo.name = ''
           obj.contractBilling.contractInfo.code = ''
         }
