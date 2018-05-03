@@ -105,8 +105,8 @@
           <!-- <el-table-column prop="cumulativeAmount" label="计划回款累计金额"></el-table-column> -->
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="paymentPlanModify(scope.row.id)" type="text" size="small">修改</el-button>
-              <el-button @click="deleteRow(scope.row.id)" type="text" size="small">删除</el-button>
+              <el-button @click="paymentPlanModify(scope.row.id)" type="text" size="small" v-if="hasPerm('paymentPlan:findUpdateData')">修改</el-button>
+              <el-button @click="deleteRow(scope.row.id)" type="text" size="small" v-if="hasPerm('paymentPlan:delete')">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -129,7 +129,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" type="primary" @click="paymentPlanSave">保&nbsp;&nbsp;&nbsp;存</el-button>
+        <el-button size="small" type="primary" @click="paymentPlanSave" v-if="hasPerm('paymentPlan:save')">保&nbsp;&nbsp;&nbsp;存</el-button>
         <el-button size="small" @click="planBox = false">取&nbsp;&nbsp;&nbsp;消</el-button>
       </div>
     </el-dialog>
