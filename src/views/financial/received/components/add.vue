@@ -66,7 +66,6 @@ export default {
   data() {
     var validateContractInfo = (rule, value, callback) => {
       var name = value.contractInfo.name
-      var id = value.id
       if (name === '') {
         return callback(new Error('合同名称不能为空'))
       } else {
@@ -130,7 +129,6 @@ export default {
   methods: {
     biliingChange(id) {
       this.receivedData.billingId = id
-      // console.log('billingId', item)
     },
     contractNameSearchAsync(queryString, callback) {
       var role_code = this.$store.state.account.roleCode
