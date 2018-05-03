@@ -186,8 +186,8 @@ export default {
       totalP: 5,
       currentPageP: 1,
       pageSizeP: 5,
-      pageSizes: [5, 10, 15],
-      totalB: 5,
+      pageSizes: [15, 20, 25],
+      totalB: 15,
       currentPageB: 1,
       pageSizeB: 5
     }

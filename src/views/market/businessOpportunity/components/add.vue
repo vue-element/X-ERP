@@ -2,7 +2,7 @@
 <div class="business-container busniess-add form-container"  ref="ele">
 <!-- 社区建设单项目信息表 -->
 <div class="commont-btn edit-btn" v-show="editShow">
-  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:update') && (businessInfo.businessPerson.name === businessInfo.createPerson)">{{editWord}}</el-button>
+  <el-button @click="toggleEditBtn" v-if="hasPerm('bussiness:update') && (businessInfo.businessPerson.name === this.userName)">{{editWord}}</el-button>
   <el-button v-show="(this.disabled === true) && hasPerm('bussiness:examine')" @click="passCheck">审批通过</el-button>
 </div>
   <el-form :model="businessInfo" :rules="rules" ref="businessInfo">
@@ -383,11 +383,12 @@ export default {
       lastTime: '',
       total: 5,
       currentPage: 1,
-      pageSizes: [5, 10, 15],
-      pageSize: 5
+      pageSizes: [15, 20, 25],
+      pageSize: 15
     }
   },
   created() {
+    console.log('userName', this.userName)
     this.getInsertData()
     this.toggleAction()
     if (this.businessInfo.id !== null) {
@@ -396,7 +397,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'accountName'
+      'accountName',
+      'userName'
     ])
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
 <div class="navbar-container">
   <div class="project-name">X-ERP项目管理系统</div>
-  <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+  <!-- <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger> -->
   <ul class="navbar" mode="horizontal">
     <li>欢迎您～</li>
     <li class="department">{{user.name}}</li>

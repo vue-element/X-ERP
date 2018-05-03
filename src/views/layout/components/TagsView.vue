@@ -116,14 +116,14 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
-  position: fixed;
-  z-index: 101;
-  height: 40px;
+  // position: fixed;
+  // z-index: 101;
+  // height: 40px;
   width: auto;
-  left: 220px;
-  right: 10px;
-  top: 50px;
-  border-top: 10px solid #d2d2d2;
+  // left: 220px;
+  // right: 10px;
+  // top: 50px;
+  // border-top: 10px solid #d2d2d2;
   background: #f8f8f8;
   .tags-view-wrapper {
     height: 40px;
@@ -159,7 +159,7 @@ export default {
   .contextmenu {
     margin: 0;
     background: #fff;
-    z-index: 2;
+    z-index: 103;
     position: absolute;
     list-style-type: none;
     padding: 5px 0;

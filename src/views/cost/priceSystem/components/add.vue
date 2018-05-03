@@ -234,8 +234,8 @@ export default {
       // 产品报价历史
       total: 5,
       currentPage: 1,
-      pageSizes: [5, 10, 15],
-      pageSize: 5
+      pageSizes: [15, 20, 25],
+      pageSize: 15
     }
   },
   created() {

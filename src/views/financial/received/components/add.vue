@@ -65,9 +65,15 @@ export default {
   props: ['editData'],
   data() {
     var validateContractInfo = (rule, value, callback) => {
+      console.log('name', value)
       var name = value.contractInfo.name
       if (name === '') {
         return callback(new Error('合同名称不能为空'))
+      } else {
+        callback()
+      }
+      if (number === '') {
+        return callback(new Error('发票号码不能为空'))
       } else {
         callback()
       }

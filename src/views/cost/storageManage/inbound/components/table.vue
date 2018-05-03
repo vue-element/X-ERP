@@ -106,7 +106,7 @@
                   <span v-show="!scope.row.edit">{{scope.row.totalAmount}}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" min-width="100" fixed="right" v-if="checkPerm !=='lastStep'">
+              <el-table-column label="操作" min-width="100" fixed="right" v-if="checkPerm !=='lastStep' && hasPerm('inboundDetaile:save')">
                 <template slot-scope="scope">
                   <el-button v-if="scope.row.edit" @click.native.prevent="confirmEdit(scope.row, scope.$index)" type="text">完成</el-button>
                   <el-button v-else @click.native.prevent='editRow(scope.row, scope.$index)' type="text">编辑</el-button>
@@ -255,9 +255,11 @@ export default {
       } else if (stepWord === '成本核算') {
         url = '/inboundCheck/costCheck'
       }
-      this.$post(url, obj).then((res) => {
-        this.getInboundCheck()
-      })
+      if (this.checkPerm !== 'lastStep') {
+        this.$post(url, obj).then((res) => {
+          this.getInboundCheck()
+        })
+      }
     },
     // 打印入库单
     InBound() {

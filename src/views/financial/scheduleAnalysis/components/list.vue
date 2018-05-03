@@ -66,7 +66,7 @@ export default {
       height: 100,
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 20],
+      pageSizes: [15, 20, 25],
       pageSize: 15,
       scheduleAnalysisData: []
     }

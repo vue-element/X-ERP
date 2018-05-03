@@ -62,12 +62,12 @@ export default {
       listLoading: false,
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 16],
+      pageSizes: [15, 20, 25],
       pageSize: 15,
       userData: [],
       height: 100,
       orgtree: [],
-      orgId: '',
+      orgId: '1',
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -78,6 +78,7 @@ export default {
   },
   created() {
     this.getOrgTree()
+    this.getUserList()
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -89,11 +90,13 @@ export default {
       this.$get('org/tree').then((res) => {
         this.listLoading = false
         this.orgtree = res.data
+        // console.log('')
       }).catch(() => {
         this.listLoading = false
       })
     },
     handleNodeClick(data) {
+      console.log('data', data)
       if (data.children === null || data.children.length === 0) {
         // console.log('this.last', data.value)
         this.orgId = data.value

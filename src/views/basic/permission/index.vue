@@ -46,7 +46,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination v-show="false" class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
+      <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
        @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
        <!-- 模态框 -->
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
@@ -105,8 +105,8 @@ export default {
       roleList: [],
       total: 5,
       currentPage: 1,
-      pageSizes: [12, 15, 16],
-      pageSize: 15
+      pageSizes: [200, 250, 300],
+      pageSize: 200
     }
   },
   created() {
@@ -142,14 +142,15 @@ export default {
     getList() {
       // 查询列表
       this.listLoading = true
-      var pageSize = this.pageSize || 15
+      var pageSize = this.pageSize || 200
       var page = this.currentPage - 1 || 0
       this.listLoading = true
-      this.$get('/permission/listRolePermission?pageSize=' + pageSize + '&page=' + page).then((res) => {
+      this.$get('/permission/listRolePermission?size=' + pageSize + '&page=' + page).then((res) => {
         this.listLoading = false
-        this.list = res.data.data.List
-        // console.log('listRolePermission', res)
-        // // this.clientList = data.content
+        var data = res.data.data
+        this.list = data.List
+        this.total = data.totalCount
+        // this.clientList = data.content
         // this.total = data.totalElements
         // this.currentPage = data.number + 1
         // this.pageSize = data.size
