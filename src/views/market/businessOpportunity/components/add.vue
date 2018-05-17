@@ -255,7 +255,7 @@
     <h4 class="module-title">
       <p>修改记录</p>
     </h4>
-    <el-table class="basic-form" style="width: 100%" height="240"  :data="historyRecord" ref="multipleTable" border>
+    <el-table class="basic-form" style="width: 100%" :height="recordHeight"  :data="historyRecord" ref="multipleTable" border>
       <el-table-column align="center" prop="0" label="序号" width="60">
         <template slot-scope="scope">{{scope.$index  + 1}}</template>
       </el-table-column>
@@ -275,7 +275,7 @@
 import _ from 'lodash'
 import { isObjectValueEqual, outputmoney } from '@/utils'
 import { mapGetters } from 'vuex'
-import { validatePhone, validateMobile } from '@/utils/validate'
+// import { validatePhone, validateMobile } from '@/utils/validate'
 import { cityList, regionList, businessCtgList } from '@/utils/selectList'
 export default {
   name: 'businessOpportunityAdd',
@@ -294,13 +294,13 @@ export default {
         callback()
       }
     }
-    const validPhone = (rule, value, callback) => {
-      if ((!validateMobile(value)) && (!validatePhone(value))) {
-        callback(new Error('请输入正确的手机或电话号码'))
-      } else {
-        callback()
-      }
-    }
+    // const validPhone = (rule, value, callback) => {
+    //   if ((!validateMobile(value)) && (!validatePhone(value))) {
+    //     callback(new Error('请输入正确的手机或电话号码'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       action: 'add',
       editWord: '编辑',
@@ -372,7 +372,7 @@ export default {
         client: [{ required: true, validator: validateClient, trigger: 'change' }],
         businessCategory: [{ required: true, validator: validateCategory, trigger: 'change' }],
         firstPerson: [{ required: true, message: '请输入甲方决策人', trigger: 'blur' }],
-        firstPersonPhone: [{ required: true, validator: validPhone, trigger: 'blur' }],
+        firstPersonPhone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
         businessPerson: [{ required: true, validator: businessPerson, trigger: 'change' }],
         startDate: [{ required: true, message: '请输入预计启动时间', trigger: 'blur' }],
         amount1: [{ required: true, message: '请输入预计成交金额', trigger: 'blur' }]
@@ -388,7 +388,7 @@ export default {
     }
   },
   created() {
-    console.log('userName', this.userName)
+    // console.log('userName', this.userName)
     this.getInsertData()
     this.toggleAction()
     if (this.businessInfo.id !== null) {
@@ -399,7 +399,11 @@ export default {
     ...mapGetters([
       'accountName',
       'userName'
-    ])
+    ]),
+    recordHeight() {
+      var height = this.historyRecord.length * 34 + 100
+      return height > 200 ? 200 : height
+    }
   },
   methods: {
     add() {

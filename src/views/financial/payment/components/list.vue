@@ -40,7 +40,7 @@ export default {
       total: 5,
       currentPage: 1,
       pageSizes: [15, 20, 25],
-      pageSize: 2,
+      pageSize: 15,
       paymentData: []
     }
   },

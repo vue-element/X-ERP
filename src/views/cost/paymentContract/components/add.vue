@@ -223,14 +223,14 @@ export default {
       loading: false,
       disabled: false,
       editShow: false,
-      adAmount: '',
-      acAmount: '',
+      // adAmount: '',
+      // acAmount: '',
       payableAmount: '',
       paymentContract: {
         adAmount: null,
         acAmount: null,
-        applicationPerson: '廖淑萍',
-        applicationTime: '2018-03-19',
+        applicationPerson: '',
+        applicationTime: '',
         code: '',
         contractInfo: {
           id: '',
@@ -244,16 +244,16 @@ export default {
         },
         supply: { id: null, name: '' },
         deliveryStatus: '未发货',
-        department: '财务管理部',
+        department: '',
         materialCategory: { id: '' },
-        mention: '是',
+        mention: '',
         oddNumber: '',
-        optCost: '优化成本',
+        optCost: '',
         orderCode: '',
-        payTime: '2018-03-19',
+        payTime: '',
         payableAmount: null,
-        paymentObject: '供应商',
-        procurement: '采购总额',
+        paymentObject: '',
+        procurement: '',
         signNumber: '',
         term: ''
       },
@@ -279,7 +279,6 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.paymentContract)
   },
   methods: {
     save() {
@@ -368,8 +367,8 @@ export default {
         this.editShow = true
         this.paymentContract = _.cloneDeep(this.editData.editData.paymentContract)
         this.hanlderFormat()
-        this.temp = _.cloneDeep(this.paymentContract)
       }
+      this.temp = _.cloneDeep(this.paymentContract)
     },
     pAmountChange(val) {
       this.paymentContract.payableAmount = val
@@ -378,6 +377,8 @@ export default {
     amountChange(amountObj) {
       this.paymentContract.adAmount = amountObj.adAmount
       this.paymentContract.acAmount = amountObj.acAmount
+      this.temp = this.paymentContract
+      // console.log('paymentContract', JSON.stringify(this.paymentContract))
       this.$post('/paymentContract/save', this.paymentContract).then((res) => {
       })
     },
@@ -452,6 +453,8 @@ export default {
     },
     paymentContract: {
       handler(obj) {
+        console.log('obj', obj)
+        console.log('temp', this.temp)
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {

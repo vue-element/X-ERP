@@ -13,14 +13,13 @@
         <el-table-column label="操作" width="120" fixed="right">
           <template slot-scope="scope">
             <el-button v-if="hasPerm('outboundList:findUpdateData')" @click.native.prevent="seeRow(scope.row.id)" type="text">查看</el-button>
-            <el-dropdown>
+            <el-button v-if="hasPerm('outboundList:delete')" @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-button>
+            <!-- <el-dropdown>
               <el-button class="el-dropdown-link" type="text">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <!-- <el-dropdown-item command="a" @click.native.prevent="" type="text">审核</el-dropdown-item> -->
-                <!-- <el-dropdown-item command="b" @click.native.prevent="" type="text">导出</el-dropdown-item> -->
                 <el-dropdown-item command="c" @click.native.prevent="deleteRow(scope.row.id)" type="text">删除</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
           </template>
         </el-table-column>
       </el-table>

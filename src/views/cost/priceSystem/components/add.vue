@@ -135,7 +135,7 @@
         <h4 class="module-title">
           <p>产品报价历史</p>
         </h4>
-        <el-table class="basic-form" style="width: 100%" height="240"  :data="historyPriceList" ref="multipleTable">
+        <el-table class="basic-form" style="width: 100%" :height="priceHeight"  :data="historyPriceList" ref="multipleTable">
           <el-table-column align="center" prop="0" label="序号">
             <template slot-scope="scope">{{scope.$index  + 1}}</template>
           </el-table-column>
@@ -207,7 +207,7 @@ export default {
         source: '',
         validDate: []
       },
-      oldproductQuotation: '',
+      // oldproductQuotation: '',
       // supplyType: '',
       // supplyRegion: '',
       // supplyCycle: '',
@@ -241,7 +241,6 @@ export default {
   created() {
     this.getInsertData()
     this.toggleAction()
-    this.temp = _.cloneDeep(this.priceInfo)
     if (this.priceId !== null) {
       this.getPriceHistory()
     }
@@ -289,7 +288,6 @@ export default {
     editInfo() {
       this.priceInfo.productQuotation1 = outputmoney('' + this.priceInfo.productQuotation)
       this.priceId = this.priceInfo.id
-      this.historyPriceList = this.priceInfo.priceHistoryList
       // 有效期限
       if (this.priceInfo.startDate === null || this.priceInfo.endDate === null) {
         this.validDateStr = ''
@@ -338,14 +336,16 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.historyPriceList.forEach((item) => {
+            console.log('item', item)
             item.productQuotation = outputmoney('' + item.productQuotation)
+            console.log('item.productQuotation', item.productQuotation)
           })
         }
       })
     },
     savePriceHistory() {
-      this.oldproductQuotation = sessionStorage.getItem('oldPrice')
-      if (this.oldproductQuotation !== this.priceInfo.productQuotation1) {
+      var oldPriceObj = JSON.parse(sessionStorage.getItem('oldPrice'))
+      if (oldPriceObj.id === this.priceId && oldPriceObj.num !== this.priceInfo.productQuotation1) {
         var obj = {
           person: this.userName,
           price_id: this.priceId,
@@ -353,7 +353,11 @@ export default {
         }
         this.$post('/priceHistory/save', obj).then((res) => {
           this.getPriceHistory()
-          sessionStorage.setItem('oldPrice', this.priceInfo.productQuotation1)
+          var oldPriceObj = {
+            num: this.priceInfo.productQuotation1,
+            id: this.priceInfo.id
+          }
+          sessionStorage.setItem('oldPrice', JSON.stringify(oldPriceObj))
         })
       } else {
         this.getPriceHistory()
@@ -390,8 +394,14 @@ export default {
         this.editShow = true
         this.priceInfo = _.cloneDeep(this.editData.editData.price)
         this.editInfo()
-        sessionStorage.setItem('oldPrice', this.priceInfo.productQuotation1)
+        var oldPriceObj = {
+          num: this.priceInfo.productQuotation1,
+          id: this.priceInfo.id
+        }
+        sessionStorage.setItem('oldPrice', JSON.stringify(oldPriceObj))
+        // sessionStorage.setItem('oldPrice', this.priceInfo.productQuotation1)
       }
+      this.temp = _.cloneDeep(this.priceInfo)
     },
     amountChange(val) {
       this.priceInfo.productQuotation = val
@@ -414,7 +424,6 @@ export default {
       })
     },
     supplySelect(item) {
-      // console.log('item', item)
       this.priceInfo.supply = item
       this.temp.supply = item
     }
@@ -422,7 +431,11 @@ export default {
   computed: {
     ...mapGetters([
       'userName'
-    ])
+    ]),
+    priceHeight() {
+      var height = this.historyPriceList.length * 34 + 100
+      return height > 200 ? 200 : height
+    }
   },
   watch: {
     disabled(status) {

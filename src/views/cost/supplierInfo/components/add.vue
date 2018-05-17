@@ -232,9 +232,10 @@
             </el-form-item>
           </el-col>
           <el-col :sm="24" :md="12" :lg="12">
-            <el-form-item label="处理有效期限:" class="range-date validDate">
+            <el-form-item label="处理有效期限:" class="range-date" prop="validDate">
               <p v-if="disabled">{{validDateStr}}</p>
-              <el-date-picker v-else v-model="validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
+              <el-date-picker v-else v-model="supplyInfo.validDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" @change="validDateChange"
+              type="daterange"  start-placeholder="开始日期" range-separator="至" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -290,6 +291,7 @@ export default {
       validDate: [],
       validDateStr: '',
       supplyInfo: {
+        validDate: [],
         name: '',
         cooperativeType: '',
         address: '',
@@ -353,7 +355,8 @@ export default {
         grade: [{ required: true, message: '请选择供应商等级', trigger: 'change' }],
         reviewState: [{ required: true, message: '请选择评审状态', trigger: 'change' }],
         settlementMethod: [{ required: true, message: '请选择结算方式', trigger: 'change' }],
-        reviewHandle: [{ required: true, message: '请选择等级评审处理', trigger: 'change' }]
+        reviewHandle: [{ required: true, message: '请选择等级评审处理', trigger: 'change' }],
+        validDate: [{ required: true, message: '请选择有效期限', trigger: 'change' }]
       },
       temp: {}
     }
@@ -367,15 +370,14 @@ export default {
       this.$refs.supplyInfo.validate(valid => {
         if (valid) {
           this.loading = true
-          this.supplyInfo.startDate = this.validDate[0]
-          this.supplyInfo.endDate = this.validDate[1]
-          console.log('this.supplyInfo', JSON.stringify(this.supplyInfo))
+          this.supplyInfo.startDate = this.supplyInfo.validDate[0]
+          this.supplyInfo.endDate = this.supplyInfo.validDate[1]
           this.$post('/supply/save', this.supplyInfo).then(res => {
             this.loading = false
             if (res.data.success === true) {
               this.supplyInfo = res.data.data
-              this.temp = _.cloneDeep(res.data.data)
               this.handlerDate()
+              this.temp = _.cloneDeep(res.data.data)
               this.successSave()
             } else {
               this.failSave()
@@ -397,7 +399,7 @@ export default {
         this.validDateStr = ''
       } else {
         this.validDateStr = this.supplyInfo.startDate + '  至  ' + this.supplyInfo.endDate
-        this.validDate = [this.supplyInfo.startDate, this.supplyInfo.endDate]
+        this.supplyInfo.validDate = [this.supplyInfo.startDate, this.supplyInfo.endDate]
       }
     },
     reset() {
@@ -474,6 +476,11 @@ export default {
       // this.supplyInfo.taxRate =
       // this.supplyInfo.taxRate = val + '%'
       // console.log('taxChange', val)
+    },
+    validDateChange(item) {
+      this.disabled = true
+      this.disabled = false
+      // console.log('item', item)
     }
   },
   computed: {},

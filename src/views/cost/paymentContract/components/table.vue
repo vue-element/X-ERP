@@ -20,7 +20,7 @@
         </div>
       </h4>
       <div>
-        <el-table class="el-table-sm" style="width: 100%" height="240" :data="purchaseList" v-loading.body="listLoading" border>
+        <el-table class="el-table-sm" style="width: 100%" :height='purchaseHeight' :data="purchaseList" v-loading.body="listLoading" border>
           <el-table-column label="序号" width="60" fixed>
             <template slot-scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
@@ -90,9 +90,9 @@
           </button>
         </div>
       </h4>
-      <el-table class="el-table-sm" style="width: 100%" :data="billingList" v-loading.body="listLoading" height="240">
-        <el-table-column label="序号">
-          <template slot-scope="scope" width="100">
+      <el-table class="el-table-sm" :data="billingList" v-loading.body="listLoading" :height="billHeight">
+        <el-table-column label="序号" width="100" fixed>
+          <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
@@ -130,19 +130,19 @@
           </button>
         </div>
       </h4>
-      <el-table class="el-table-sm" style="width: 100%" :data="paymentList" v-loading.body="listLoading" height="240">
-        <el-table-column label="序号" width="100">
+      <el-table class="el-table-sm" style="width: 100%" :data="paymentList" v-loading.body="listLoading" :height="paymentHeight">
+        <el-table-column label="序号" width="100" fixed>
           <template slot-scope="scope">
            {{scope.$index + 1}}
           </template>
         </el-table-column>
-        <el-table-column label="付票日期">
+        <el-table-column label="付款日期">
           <template slot-scope="scope">
             <el-date-picker  v-if="scope.row.edit" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="scope.row.date" placeholder="选择日期"></el-date-picker>
             <span v-else>{{scope.row.date}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="付票金额">
+        <el-table-column label="付款金额">
           <template slot-scope="scope">
             <el-input v-if="scope.row.edit" type="text" v-model="scope.row.amount" placeholder="请填写"></el-input>
             <span v-else>{{scope.row.amount}}</span>
@@ -151,7 +151,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button v-show="hasPerm('payment:save') && scope.row.edit" @click.native.prevent="confirmPaymentEdit(scope.row, scope.$index)" type="text">完成</el-button>
-            <el-button v-show="hasPerm('payment:updat') && !scope.row.edit" @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
+            <el-button v-show="hasPerm('payment:update') && !scope.row.edit" @click.native.prevent='editPaymentRow(scope.row, scope.$index)' type="text">编辑</el-button>
             <el-button v-if="hasPerm('payment:delete')" @click.native.prevent="deletePaymentRow(scope.row.id)" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -186,8 +186,8 @@ export default {
       totalP: 5,
       currentPageP: 1,
       pageSizeP: 5,
-      pageSizes: [15, 20, 25],
-      totalB: 15,
+      pageSizes: [5, 10, 20],
+      totalB: 10,
       currentPageB: 1,
       pageSizeB: 5
     }
@@ -429,6 +429,7 @@ export default {
     },
     editPaymentRow(row, index) {
       row.edit = !row.edit
+      console.log('edit', row.edit)
       Vue.set(this.paymentList, index, row)
     },
     confirmPaymentEdit(row, index) {
@@ -458,6 +459,18 @@ export default {
     }
   },
   computed: {
+    purchaseHeight() {
+      var height = this.purchaseList.length * 42 + 100
+      return height > 260 ? 260 : height
+    },
+    billHeight () {
+      var height = this.billingList.length * 42 + 100
+      return height > 260 ? 260 : height
+    },
+    paymentHeight() {
+      var height = this.paymentList.length * 42 + 100
+      return height > 260 ? 260 : height
+    }
   },
   watch: {
     purchaseList: {
@@ -482,7 +495,9 @@ export default {
   .material-table-head {
     margin: 0 10px;
     margin-top: -10px;
-    margin-bottom: 20px;
+    height: 20px;
+    line-height: 20px;
+    // margin-bottom: 20px;
     button{
       margin-left:20px;
       color: #828282;
