@@ -296,7 +296,7 @@ export default {
               }
             }
           }
-          console.log('paymentContract', JSON.stringify(paymentContract))
+          // console.log('paymentContract', JSON.stringify(paymentContract))
           this.$post('/paymentContract/save', paymentContract).then(res => {
             this.loading = false
             if (res.data.success === true) {
@@ -458,7 +458,7 @@ export default {
         if (isObjectValueEqual(obj, this.temp)) {
           this.$emit('changeObj', false)
         } else {
-          if ((obj.adAmount !== this.temp.adAmount) || (obj.acAmount !== this.temp.acAmount)) {
+          if (obj.code !== this.temp.code) {
             return
           }
           this.$emit('changeObj', true)

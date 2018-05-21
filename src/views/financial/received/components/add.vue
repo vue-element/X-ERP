@@ -129,7 +129,6 @@ export default {
   methods: {
     biliingChange(id) {
       this.receivedData.billingId = id
-      // console.log('billingId', item)
     },
     contractNameSearchAsync(queryString, callback) {
       var role_code = this.$store.state.account.roleCode

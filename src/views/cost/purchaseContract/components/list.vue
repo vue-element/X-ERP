@@ -5,10 +5,10 @@
       <el-table-column prop="0" label="序号" fixed width="60">
         <template slot-scope="scope">{{scope.$index + 1}}</template>
        </el-table-column>
-       <el-table-column prop="contractInfo.name" label="合同名称／所属项目" fixed width="180"></el-table-column>
+       <el-table-column prop="contractInfo.name" label="合同名称／所属项目" fixed width="300"></el-table-column>
        <el-table-column prop="contractInfo.code" label="合同编号" width="180"></el-table-column>
        <el-table-column prop="contractInfo.business.businessCategory.name" label="业务线"  width="160"></el-table-column>
-       <el-table-column prop="code" label="付款合同编号" fixed width="160"></el-table-column>
+       <el-table-column prop="code" label="付款合同编号" fixed width="260"></el-table-column>
        <el-table-column prop="supply.name" label="供应商" width="100"></el-table-column>
        <el-table-column prop="applicationPerson" label="申请人"  width="100"></el-table-column>
        <el-table-column prop="applicationTime" label="申请时间" width="100"></el-table-column>
@@ -43,7 +43,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { winHeight } from '@/utils'
+import { winHeight, outputmoney } from '@/utils'
 export default {
   name: 'paymentContractList',
   props: ['searchData', 'pageObj'],
@@ -87,7 +87,12 @@ export default {
           this.currentPage = data.number + 1
           this.pageSize = data.size
           this.tableData = data.content
-          this.$emit('exportData', data.content)
+          this.tableData.forEach((item) => {
+            item.acAmount = outputmoney('' + item.acAmount)
+            item.adAmount = outputmoney('' + item.adAmount)
+            item.payableAmount = outputmoney('' + item.payableAmount)
+          })
+          this.$emit('exportData', this.tableData)
         }
       }).catch(() => {
         this.listLoading = false

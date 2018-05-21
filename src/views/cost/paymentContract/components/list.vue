@@ -81,10 +81,11 @@ export default {
           this.pageSize = data.size
           this.tableData = data.content
           this.tableData.forEach((item) => {
-            item.amount = outputmoney('' + item.amount)
+            item.acAmount = outputmoney('' + item.acAmount)
+            item.adAmount = outputmoney('' + item.adAmount)
             item.payableAmount = outputmoney('' + item.payableAmount)
           })
-          this.$emit('exportData', data.content)
+          this.$emit('exportData', this.tableData)
         }
       }).catch(() => {
         this.listLoading = false
