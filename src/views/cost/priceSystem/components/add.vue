@@ -117,6 +117,14 @@
           </el-col>
         </el-row>
         <el-row :gutter="40">
+          <el-col :ms="24" :md="12" :lg="12">
+            <el-form-item label="文件链接:">
+              <p v-if="disabled">{{priceInfo.url}}</p>
+              <el-input v-else v-model="priceInfo.url" placeholder="请填写文件链接"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
           <el-col :ms="24" :md="24" :lg="24">
             <el-form-item label="参考描述:" class="ref-describe">
               <p class="textarea" v-if="disabled">{{priceInfo.description}}</p>
@@ -204,6 +212,7 @@ export default {
         system: '',
         type: '',
         unit: '',
+        url: '',
         source: '',
         validDate: []
       },

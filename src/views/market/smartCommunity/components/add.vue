@@ -309,7 +309,7 @@
           </table>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="12">
-          <table class="element-fr basic-table" cellspacing="0">
+          <table class="element-fr basic-table part-right" cellspacing="0">
             <tr>
               <td rowspan="5">机房信息</td>
               <td>电梯机房</td>
@@ -746,7 +746,8 @@ export default {
     }
 }
 </style>
-<style  rel="stylesheet/scss" lang="scss">@import "src/styles/mixin.scss";
+<style  rel="stylesheet/scss" lang="scss">
+@import "src/styles/mixin.scss";
 .smartCommunity-add {
   .edit-btn {
     margin: 0;
@@ -778,6 +779,9 @@ export default {
   }
   .element-table {
     margin-top: 20px;
+  }
+ table.part-right tr td{
+    height: 31px!important;
   }
 }
 </style>

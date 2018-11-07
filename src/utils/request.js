@@ -10,9 +10,8 @@ const service = axios.create({
   // baseURL: 'http://10.51.23.71:8080',
   // baseURL: 'http://10.51.39.106:8085',
   // baseURL: 'http://10.51.36.108:8081',
-  // baseURL: 'http://202.105.96.131:8081',
+  // baseURL: 'http://202.105.96.131:8083',
   baseURL: '/api',
-  // withCredentials: true,
   timeout: 5000 // 请求超时时间
 })
 axios.defaults.withCredentials = true
@@ -27,6 +26,7 @@ service.interceptors.request.use(
       var token = getToken()
       config.headers['X-Token'] = token
     }
+    console.log('config', config)
     return config
   }, error => {
   // Do something with request error

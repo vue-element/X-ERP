@@ -12,8 +12,10 @@ module.exports = {
     proxyTable: {
       '/api': {
         // 测试环境
-        // target: 'http://10.51.39.106:8081',
-        target: 'http://202.105.96.131:8081', // 接口域名
+        // target: 'http://202.105.96.131:8097',
+        target: 'http://202.105.96.131:8083', // 接口域名
+        // target: 'https://open.ys7.com', // 接口域名
+        // secure: false,
         changeOrigin: true, //是否跨域
         pathRewrite: {
           '^/api': '' //需要rewrite重写的,

@@ -321,7 +321,7 @@
       width: 100%;
       height: 30px!important;
       line-height: 30px;
-      border:1px solid #828282;
+      border:1px solid #d2d2d2;
       font-size: 14px;
       color: #000;
     }
@@ -332,7 +332,7 @@
       line-height: 30px;
       input {
         width: 100%;
-        border: 1px solid #828282;
+        border: 1px solid #d2d2d2;
         color: #000;
       }
       input:focus {
@@ -346,7 +346,7 @@
       height: 30px;
       color: #828282!important;
       input:focus {
-        border: 1px solid #828282;
+        border: 1px solid #d2d2d2;
       }
     }
     .el-select .el-input.is-disabled input {
@@ -522,7 +522,7 @@
 }
 
 .el-select .el-input.is-disabled .el-input__inner:hover {
-    border-color: #828282;
+    border-color: #d2d2d2;
 }
 
 .textarea.el-form-item .el-form-item__label{
