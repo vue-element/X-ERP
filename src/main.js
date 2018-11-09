@@ -8,6 +8,7 @@ import * as filters from './filters' // global filter
 import { post, get } from '@/utils/request'
 import { hasPermission } from './utils/hasPermission'
 import mixin from './mixin'
+import VueClipboards from 'vue-clipboards'
 
 import axios from 'axios'
 // import utils from '@/utils/index'
@@ -20,6 +21,7 @@ import './mock' // simulation data generator
 
 Vue.use(vueResource)
 Vue.use(Element)
+Vue.use(VueClipboards)
 Vue.mixin(mixin)
 
 Vue.config.productionTip = false

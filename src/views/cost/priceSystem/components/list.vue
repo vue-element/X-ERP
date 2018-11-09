@@ -7,21 +7,22 @@
         </el-table-column>
         <el-table-column prop="code" label="产品编号" width="100" fixed></el-table-column>
         <el-table-column prop="name" label="产品名称" width="200" fixed></el-table-column>
-        <el-table-column prop="url" label="文件链接" width="250">
-          <template slot-scope="scope">
-            <a :href="scope.row.url" target="_blank">{{scope.row.url}}</a>
-          </template>
-        </el-table-column>
         <el-table-column prop="type" label="产品类型" width="120"></el-table-column>
         <el-table-column prop="system" label="系统" width="160"></el-table-column>
         <el-table-column prop="specModel" label="规格型号" width="140"></el-table-column>
         <el-table-column prop="brand" label="品牌" width="120"></el-table-column>
+        <el-table-column prop="productQuotation" label="最新报价(元)" width="140"></el-table-column>
+        <el-table-column prop="unit" label="单位" width="100"></el-table-column>
+        <el-table-column prop="url" label="文件链接" width="250">
+          <template slot-scope="scope" text>
+            <el-button v-if="scope.row.url" @success="copySuccess" @error="copyError" v-clipboard="scope.row.url" type="text">复制</el-button>
+            <a href="">{{scope.row.url}}</a>
+          </template>
+        </el-table-column>
         <el-table-column prop="supply.name" label="供应商" width="160"></el-table-column>
         <el-table-column prop="supply.category" label="供应商类型" width="100"></el-table-column>
         <el-table-column prop="supply.supplyCycle" label="供货周期" width="100"></el-table-column>
-        <el-table-column prop="productQuotation" label="最新报价(元)" width="140"></el-table-column>
-        <el-table-column prop="unit" label="单位" width="100"></el-table-column>
-        <el-table-column label="操作" fixed="right" width="100">
+        <el-table-column label="操作" fixed="right" width="140">
           <template slot-scope="scope">
             <el-button @click.native.prevent="seeRow(scope.row.id)" type="text" v-if="hasPerm('price:findUpdateData')">查看</el-button>
             <el-button @click.native.prevent="deleteRow(scope.row.id)" type="text" v-if="hasPerm('price:delete')">删除</el-button>
@@ -36,6 +37,7 @@
 
 <script>
 import { outputmoney, winHeight } from '@/utils'
+// import { outputmoney, winHeight } from '@/utils'
 export default {
   name: 'supplierList',
   props: ['searchData', 'pageObj'],
@@ -94,6 +96,23 @@ export default {
     handleSizeChange(val) {
       this.pageSize = val
       this.getPriceData()
+    },
+    copyUrl(rul) {
+
+    },
+    copySuccess(e) {
+      this.$message({
+        message: '复制成功',
+        type: 'success'
+      })
+      // console.log('复制成功', e)
+    },
+    copyError(e) {
+      this.$message({
+        message: '复制失败',
+        type: 'error'
+      })
+      // console.log('复制失败', e)
     },
     deleteRow(id) {
       this.$confirm('确认删除此信息?', '提示', {
