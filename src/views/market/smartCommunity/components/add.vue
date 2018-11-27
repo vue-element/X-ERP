@@ -199,7 +199,7 @@
               <el-checkbox :label="'假山'">假山</el-checkbox>
               <el-checkbox :label="'泳池'">泳池</el-checkbox>
               <el-checkbox :label="'人工湖'">人工湖</el-checkbox>
-            </el-checkbox-group                                                     >
+            </el-checkbox-group>
           </el-form-item>
         </el-col>
       </el-row>
@@ -371,6 +371,37 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 项目改造信息 -->
+    <projectReform :projectId="mainMsg.id"></projectReform>
+    <!-- <div class="form-module">
+      <h4 class="module-title">
+        <p>项目改造信息</p>
+        <div class="material-table-head fr">
+          <button @click.prevent="showDialog">
+            <i class="iconfont icon-add"></i>
+            <span>新增项目改造信息</span>
+          </button>
+        </div>
+      </h4>
+      <div>
+        <el-table class="el-table-sm" style="width: 100%" :height='purchaseHeight' border>
+          <el-table-column label="序号" width="60" fixed>
+            <template slot-scope="scope">{{scope.$index + 1}}</template>
+          </el-table-column>
+          <el-table-column label="年份" min-width="160">
+            <template slot-scope="scope">
+            </template>
+          </el-table-column>
+          <el-table-column label="金额" min-width="160">
+            <template slot-scope="scope">
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" min-width="120" fixed="right">
+            <template slot-scope="scope"></template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </div> -->
     <div class="commont-btn" v-show="hasPerm('project:save') && !disabled">
       <el-button @click="add('mainMsg')" :loading="loading">保存</el-button>
       <el-button @click="reset">重置</el-button>
@@ -384,6 +415,7 @@ import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import { isObjectValueEqual, outputmoney } from '@/utils'
 import { cityList, regionList } from '@/utils/selectList'
+import projectReform from './projectReform'
 export default {
   name: 'smartCommunityAdd',
   props: ['editData'],
@@ -510,8 +542,12 @@ export default {
         category: 4
       },
       facilityWord: '',
-      temp: {} // 保存新增，编辑的初始化对象
+      temp: {}, // 保存新增，编辑的初始化对象
+      dialogFormVisible: false
     }
+  },
+  components: {
+    projectReform
   },
   created() {
     this.getInsertData()
@@ -664,12 +700,23 @@ export default {
     },
     clientSelect(item) {
       this.mainMsg.client = item
+    },
+    showDialog() {
+      this.dialogFormVisible = true
+    },
+    addProjectReform() {
+
     }
+    // 项目改造信息
   },
   computed: {
     ...mapGetters([
       'userName'
-    ])
+    ]),
+    purchaseHeight() {
+      var height = 1 * 42 + 100
+      return height > 260 ? 260 : height
+    },
   },
   watch: {
     disabled (status) {
@@ -782,6 +829,59 @@ export default {
   }
  table.part-right tr td{
     height: 31px!important;
+  }
+
+  .material-table-head {
+    margin: 0 10px;
+    margin-top: -10px;
+    height: 20px;
+    line-height: 20px;
+    // margin-bottom: 20px;
+    button{
+      margin-left:20px;
+      color: #828282;
+      cursor: pointer;
+      &:hover {
+        color: #35d5ba;
+      }
+      &:active {
+        color: #35d5ba;
+      }
+    }
+    button.is-active {
+      color: #35d5ba;
+    }
+  }
+  .el-table {
+    .el-input {
+      .el-input__icon{
+        line-height: 26px!important;
+      }
+    }
+  }
+  #projectReformDialog .el-dialog {
+    width: 70%;
+    height: 90vh;
+    margin-top: 5vh!important;
+    margin: 0 auto;
+    @include borderRadius(16px)
+    .el-dialog__header {
+    }
+    .el-dialog__body {
+      max-height: 80%;
+      overflow-y: auto;
+    }
+    .el-dialog__footer {
+      max-height: 8%;
+      margin: 0;
+      padding: 0;
+      margin-top: 10px;
+    }
+    .dialog-footer {
+      margin: 0;
+      padding: 0;
+      margin: auto;
+    }
   }
 }
 </style>
