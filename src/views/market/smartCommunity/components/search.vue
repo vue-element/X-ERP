@@ -7,8 +7,8 @@
       </h4>
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="项目名称:">
-            <el-autocomplete v-model="searchData.name" :fetch-suggestions="projectSearchAsync" placeholder="请选择项目名称"></el-autocomplete>
+          <el-form-item label="管理处名称:">
+            <el-autocomplete v-model="searchData.name" :fetch-suggestions="projectSearchAsync" placeholder="请选择管理处名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
@@ -28,8 +28,8 @@
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="客户信息:">
-            <el-autocomplete v-model="searchData.client_name" :fetch-suggestions="clientSearchAsync" placeholder="请选择客户名称"></el-autocomplete>
+          <el-form-item label="公司名称:">
+            <el-autocomplete v-model="searchData.client_name" :fetch-suggestions="clientSearchAsync" placeholder="请选择公司名称"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,8 +40,8 @@
           </el-form-item>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="12">
-          <el-form-item label="区域:">
-            <el-select v-model="searchData.region_id" placeholder="请选择区域" filterable clearable>
+          <el-form-item label="办事处:">
+            <el-select v-model="searchData.region_id" placeholder="请选择办事处" filterable clearable>
              <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
              </el-option>
            </el-select>

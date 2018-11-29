@@ -449,8 +449,6 @@
 </div>
 </template>
 <script>
-import _ from 'lodash'
-import Vue from 'vue'
 export default {
   name: 'smartCommunityAdd',
   data() {
@@ -611,7 +609,7 @@ export default {
   },
   methods: {
     showDialog() {
-      if (this.projectId == undefined) {
+      if (this.projectId === undefined) {
         this.$message({
           message: '请先保存项目基本信息',
           type: 'info'
@@ -709,29 +707,29 @@ export default {
     resetData() {
       this.year = ''
       this.amount = ''
-      this.jifang = { category: 'jifang', amount: 0 },
-      this.buxian = { category: 'buxian', amount: 0, a: '' },
-      this.tingchechang = { category: 'tingchechang', amount: '', a: '', b: '', c: '', d: '' },
-      this.menjin = { category: 'menjin', amount: 0, a: '', b: '' },
-      this.fangke = { category: 'fangke', amount: 0, a: '', b: '' },
-      this.tikong = { category: 'tikong', amount: 0, a: '', b: '' },
-      this.yuntong = { category: 'yuntong', amount: 0, a: '', b: '', c: '' },
-      this.xungeng = { category: 'xungeng', amount: 0, a: '', b: '' },
-      this.zhoujie = { category: 'zhoujie', amount: 0, a: '', b: '' },
-      this.yunduijiang =  { category: 'yunduijiang', amount: 0, a: '', b: '', c: '' },
-      this.xinxifabu = { category: 'xinxifabu', amount: 0, a: '', b: '' },
-      this.bjyinyue = { category: 'bjyinyue', amount: 0, a: '', b: '' },
-      this.jifangjk = { category: 'jifangjk', amount: 0, a: '', b: '' },
-      this.diantijk = { category: 'diantijk', amount: 0, a: '', b: '' },
-      this.LED = { category: 'LED', amount: 0, a: '' },
-      this.shuibengjn = { category: 'shuibengjn', amount: 0, a: '' },
-      this.kongdiaojn = { category: 'kongdiaojn', amount: 0, a: '' },
-      this.shebeiqw = { category: 'shebeiqw', amount: 0, a: '', startDate: '', endDate: '' },
-      this.diantiqw = { category: 'diantiqw', amount: 0, a: '', startDate: '', endDate: '' },
-      this.diantijg = { category: 'diantijg', amount: 0, a: '', startDate: '', endDate: '' },
-      this.shebijy = { category: 'shebijy', amount: 0, a: '', b: '' },
-      this.shebeiqwTime = [],
-      this.diantiqwTime = [],
+      this.jifang = { category: 'jifang', amount: 0 }
+      this.buxian = { category: 'buxian', amount: 0, a: '' }
+      this.tingchechang = { category: 'tingchechang', amount: '', a: '', b: '', c: '', d: '' }
+      this.menjin = { category: 'menjin', amount: 0, a: '', b: '' }
+      this.fangke = { category: 'fangke', amount: 0, a: '', b: '' }
+      this.tikong = { category: 'tikong', amount: 0, a: '', b: '' }
+      this.yuntong = { category: 'yuntong', amount: 0, a: '', b: '', c: '' }
+      this.xungeng = { category: 'xungeng', amount: 0, a: '', b: '' }
+      this.zhoujie = { category: 'zhoujie', amount: 0, a: '', b: '' }
+      this.yunduijiang = { category: 'yunduijiang', amount: 0, a: '', b: '', c: '' }
+      this.xinxifabu = { category: 'xinxifabu', amount: 0, a: '', b: '' }
+      this.bjyinyue = { category: 'bjyinyue', amount: 0, a: '', b: '' }
+      this.jifangjk = { category: 'jifangjk', amount: 0, a: '', b: '' }
+      this.diantijk = { category: 'diantijk', amount: 0, a: '', b: '' }
+      this.LED = { category: 'LED', amount: 0, a: '' }
+      this.shuibengjn = { category: 'shuibengjn', amount: 0, a: '' }
+      this.kongdiaojn = { category: 'kongdiaojn', amount: 0, a: '' }
+      this.shebeiqw = { category: 'shebeiqw', amount: 0, a: '', startDte: '', endDate: '' }
+      this.diantiqw = { category: 'diantiqw', amount: 0, a: '', startDate: '', endDate: '' }
+      this.diantijg = { category: 'diantijg', amount: 0, a: '', startDate: '', endDate: '' }
+      this.shebijy = { category: 'shebijy', amount: 0, a: '', b: '' }
+      this.shebeiqwTime = []
+      this.diantiqwTime = []
       this.diantijgTime = []
     },
     handleData(data) {

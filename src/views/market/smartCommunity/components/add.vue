@@ -209,46 +209,46 @@
         <p>项目设计要素信息</p>
       </h4>
       <el-row class="element-table clearfix" :gutter="40">
-        <el-col :xs="24" :sm="24" :lg="12">
+        <el-col :xs="24" :sm="24" :lg="14">
           <table class="element-fl basic-table" cellspacing="0">
             <tr>
               <td rowspan="3">车行出入</td>
               <td>外围车行口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.a}}</p>
-                <input v-else type="text" v-model="carObj.a" placeholder="请输入">
+                <p v-if="disabled">{{chexing.a}}</p>
+                <input v-else type="text" v-model="chexing.a" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.a1}}</p>
-                <input v-else type="text" v-model="carObj.a1" placeholder="请输入">
+                <p v-if="disabled">{{chexing.a1}}</p>
+                <input v-else type="text" v-model="chexing.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>地库车行口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.b}}</p>
-                <input v-else type="text" v-model="carObj.b" placeholder="请输入">
+                <p v-if="disabled">{{chexing.b}}</p>
+                <input v-else type="text" v-model="chexing.b" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.b1}}</p>
-                <input v-else type="text" v-model="carObj.b1" placeholder="请输入">
+                <p v-if="disabled">{{chexing.b1}}</p>
+                <input v-else type="text" v-model="chexing.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>园区车行口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.c}}</p>
-                <input v-else type="text" v-model="carObj.c" placeholder="请输入">
+                <p v-if="disabled">{{chexing.c}}</p>
+                <input v-else type="text" v-model="chexing.c" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{carObj.c1}}</p>
-                <input v-else type="text" v-model="carObj.c1" placeholder="请输入">
+                <p v-if="disabled">{{chexing.c1}}</p>
+                <input v-else type="text" v-model="chexing.c1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -256,39 +256,39 @@
               <td>业务出入口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.a}}</p>
-                <input v-else type="text" v-model="personObj.a" placeholder="请输入">
+                <p v-if="disabled">{{renxing.a}}</p>
+                <input v-else type="text" v-model="renxing.a" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.a1}}</p>
-                <input v-else type="text" v-model="personObj.a1" placeholder="请输入">
+                <p v-if="disabled">{{renxing.a1}}</p>
+                <input v-else type="text" v-model="renxing.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>访客出入口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.b}}</p>
-                <input v-else type="text" v-model="personObj.b" placeholder="请输入">
+                <p v-if="disabled">{{renxing.b}}</p>
+                <input v-else type="text" v-model="renxing.b" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.b1}}</p>
-                <input v-else type="text" v-model="personObj.b1" placeholder="请输入">
+                <p v-if="disabled">{{renxing.b1}}</p>
+                <input v-else type="text" v-model="renxing.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>消防出入口</td>
               <td>入口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.c}}</p>
-                <input v-else type="text" v-model="personObj.c" placeholder="请输入">
+                <p v-if="disabled">{{renxing.c}}</p>
+                <input v-else type="text" v-model="renxing.c" placeholder="请输入">
               </td>
               <td>出口数量(个)</td>
               <td>
-                <p v-if="disabled">{{personObj.c1}}</p>
-                <input v-else type="text" v-model="personObj.c1" placeholder="请输入">
+                <p v-if="disabled">{{renxing.c1}}</p>
+                <input v-else type="text" v-model="renxing.c1" placeholder="请输入">
               </td>
             </tr>
             <tr>
@@ -296,27 +296,27 @@
               <td>视频监控</td>
               <td>重点岗位(个)</td>
               <td>
-                <p v-if="disabled">{{elevatorObj.a}}</p>
-                <input v-else type="text" v-model="elevatorObj.a" placeholder="请输入">
+                <p v-if="disabled">{{anquan.a}}</p>
+                <input v-else type="text" v-model="anquan.a" placeholder="请输入">
               </td>
               <td>重点点位(个)</td>
               <td>
-                <p v-if="disabled">{{elevatorObj.a}}</p>
-                <input v-else type="text" v-model="elevatorObj.a" placeholder="请输入">
+                <p v-if="disabled">{{anquan.a1}}</p>
+                <input v-else type="text" v-model="anquan.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>电子巡更</td>
               <td colspan="4">
-                <p v-if="disabled">{{elevatorObj.b}}</p>
-                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()套">
+                <p v-if="disabled">{{anquan.b}}</p>
+                <input v-else type="text" v-model="anquan.b" placeholder="数量：()套">
               </td>
             </tr>
             <tr>
               <td>围墙周长</td>
               <td colspan="4">
-                <p v-if="disabled">{{elevatorObj.b}}</p>
-                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()米">
+                <p v-if="disabled">{{anquan.b1}}</p>
+                <input v-else type="text" v-model="anquan.b1" placeholder="数量：()米">
               </td>
             </tr>
             <tr>
@@ -324,105 +324,105 @@
               <td>LED灯</td>
               <td>地库LED灯数量（支）</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+                <p v-if="disabled">{{jieneng.a}}</p>
+                <input v-else type="text" v-model="jieneng.a" placeholder="请输入">
               </td>
               <td>楼道LED灯数量</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+                <p v-if="disabled">{{jieneng.a1}}</p>
+                <input v-else type="text" v-model="jieneng.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>水泵</td>
               <td>水泵房水泵数量()台</td>
               <td colspan="3">
-                <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+                <p v-if="disabled">{{jieneng.b}}</p>
+                <input v-else type="text" v-model="jieneng.b" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>空调</td>
               <td>空调机房空调数量()台</td>
               <td colspan="3">
-                <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+                <p v-if="disabled">{{jieneng.b1}}</p>
+                <input v-else type="text" v-model="jieneng.b1" placeholder="请输入">
               </td>
             </tr>
           </table>
         </el-col>
-        <el-col :xs="24" :sm="24" :lg="12">
+        <el-col :xs="24" :sm="24" :lg="10">
           <table class="element-fr basic-table part-right" cellspacing="0">
             <tr>
               <td rowspan="2">电梯出入</td>
               <td>客梯</td>
               <td colspan="4">
-                <p v-if="disabled">{{elevatorObj.a}}</p>
-                <input v-else type="text" v-model="elevatorObj.a" placeholder="数量：()台">
+                <p v-if="disabled">{{dianti.a}}</p>
+                <input v-else type="text" v-model="dianti.a" placeholder="数量：()台">
               </td>
             </tr>
             <tr>
               <td>货梯</td>
               <td colspan="4">
-                <p v-if="disabled">{{elevatorObj.b}}</p>
-                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()台">
+                <p v-if="disabled">{{dianti.a1}}</p>
+                <input v-else type="text" v-model="dianti.a1" placeholder="数量：()台">
               </td>
             </tr>
             <tr>
               <td rowspan="5">机房信息</td>
               <td>电梯机房</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.a}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+                <p v-if="disabled">{{jifang.a}}</p>
+                <input v-else type="text" v-model="jifang.a" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>配电房</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.a1}}</p>
-                <input v-else type="text" v-model="machineRoomObj.a1" placeholder="请输入">
+                <p v-if="disabled">{{jifang.a1}}</p>
+                <input v-else type="text" v-model="jifang.a1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>水泵房</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.b}}</p>
-                <input v-else type="text" v-model="machineRoomObj.b" placeholder="请输入">
+                <p v-if="disabled">{{jifang.b}}</p>
+                <input v-else type="text" v-model="jifang.b" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>空调机房</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.b1}}</p>
-                <input v-else type="text" v-model="machineRoomObj.b1" placeholder="请输入">
+                <p v-if="disabled">{{jifang.b1}}</p>
+                <input v-else type="text" v-model="jifang.b1" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td>暖通机房</td>
               <td>
-                <p v-if="disabled">{{machineRoomObj.c}}</p>
-                <input v-else type="text" v-model="machineRoomObj.c" placeholder="请输入">
+                <p v-if="disabled">{{jifang.c}}</p>
+                <input v-else type="text" v-model="jifang.c" placeholder="请输入">
               </td>
             </tr>
             <tr>
               <td colspan="2">监控中心</td>
               <td>
-                <p v-if="disabled">{{otherObj.a}}</p>
-                <input v-else type="text" v-model="otherObj.a" placeholder="面积：()平方米">
+                <p v-if="disabled">{{other.a}}</p>
+                <input v-else type="text" v-model="other.a" placeholder="面积：()平方米">
               </td>
             </tr>
             <tr>
               <td colspan="2">客户中心</td>
               <td>
-                <p v-if="disabled">{{otherObj.b}}</p>
-                <input v-else type="text" v-model="otherObj.b" placeholder="面积：()平方米">
+                <p v-if="disabled">{{other.b}}</p>
+                <input v-else type="text" v-model="other.b" placeholder="面积：()平方米">
               </td>
             </tr>
             <tr>
               <td colspan="2">会所</td>
               <td>
-                <p v-if="disabled">{{otherObj.c}}</p>
-                <input v-else type="text" v-model="otherObj.c" placeholder="面积：()平方米">
+                <p v-if="disabled">{{other.c}}</p>
+                <input v-else type="text" v-model="other.c" placeholder="面积：()平方米">
               </td>
             </tr>
           </table>
@@ -533,43 +533,13 @@ export default {
         projectDesigns: [],
         oldCity: ''
       },
-      carObj: {
-        a: '',
-        a1: '',
-        b: '',
-        b1: '',
-        c: '',
-        c1: '',
-        category: 0
-      },
-      personObj: {
-        a: '',
-        a1: '',
-        b: '',
-        b1: '',
-        c: '',
-        c1: '',
-        category: 1
-      },
-      elevatorObj: {
-        a: '',
-        b: '',
-        category: 2
-      },
-      machineRoomObj: {
-        a: '',
-        a1: '',
-        b: '',
-        b1: '',
-        c: '',
-        category: 3
-      },
-      otherObj: {
-        a: '',
-        b: '',
-        c: '',
-        category: 4
-      },
+      chexing: { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 'chexing' },
+      renxing: { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 'renxing' },
+      anquan: { a: '', a1: '', b: '', b1: '', category: 'anquan' },
+      jieneng: { a: '', a1: '', b: '', b1: '', category: 'jieneng' },
+      dianti: { a: '', a1: '', category: 'dianti' },
+      jifang: { a: '', a1: '', b: '', b1: '', c: '', category: 'jifang' },
+      other: { a: '', b: '', c: '', category: 'other' },
       facilityWord: '',
       temp: {}, // 保存新增，编辑的初始化对象
       dialogFormVisible: false
@@ -588,7 +558,7 @@ export default {
       this.$refs[mainMsg].validate((valid) => {
         if (valid) {
           this.loading = true
-          this.mainMsg.projectDesigns = [this.carObj, this.personObj, this.elevatorObj, this.machineRoomObj, this.otherObj]
+          this.mainMsg.projectDesigns = [this.chexing, this.renxing, this.anquan, this.jieneng, this.dianti, this.jifang, this.other]
           this.mainMsg.oldCity = this.cityOption.join('-')
           this.mainMsg.facility = this.mainMsg.facilityList.join('、')
           console.log(this.mainMsg)
@@ -616,6 +586,8 @@ export default {
       if (this.action === 'add') {
         this.carObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 0 }
         this.personObj = { a: '', a1: '', b: '', b1: '', c: '', c1: '', category: 1 }
+        this.safeObj = {}
+        this.energyObj = {}
         this.elevatorObj = { a: '', b: '', category: 2 }
         this.machineRoomObj = { a: '', a1: '', b: '', b1: '', c: '', category: 3 }
         this.otherObj = { a: '', b: '', c: '', category: 4 }
@@ -632,16 +604,29 @@ export default {
       this.facilityWord = _.cloneDeep(this.mainMsg.facility)
       this.mainMsg.facilityList = this.mainMsg.facility.split('、')
       this.mainMsg.projectDesigns.forEach((item) => {
-        if (item.category === '0') {
-          this.carObj = item
-        } else if (item.category === '1') {
-          this.personObj = item
-        } else if (item.category === '2') {
-          this.elevatorObj = item
-        } else if (item.category === '3') {
-          this.machineRoomObj = item
-        } else if (item.category === '4') {
-          this.otherObj = item
+        switch (item.category) {
+          case 'chexing':
+            this.chexing = item
+            break
+          case 'renxing':
+            this.renxing = item
+            break
+          case 'anquan':
+            this.anquan = item
+            break
+          case 'jieneng':
+            this.jieneng = item
+            break
+          case 'dianti':
+            this.dianti = item
+            break
+          case 'jifang':
+            this.jifang = item
+            break
+          case 'other':
+            this.other = item
+            break
+          default:
         }
       })
       var cityOption = this.mainMsg.oldCity.split('-')
