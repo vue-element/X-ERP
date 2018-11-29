@@ -11,15 +11,15 @@
       </h4>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="客户信息：" prop="client">
+          <el-form-item label="公司名称：" prop="client">
             <p v-if="disabled">{{mainMsg.client.name}}</p>
             <el-autocomplete v-else v-model="mainMsg.client.name" :fetch-suggestions="clientSearchAsync" @select="clientSelect" placeholder="请选择客户名称"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="区域：" prop="region">
+          <el-form-item label="办事处：" prop="region">
             <p v-if="disabled">{{mainMsg.region.name}}</p>
-            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择区域" filterable clearable>
+            <el-select v-else v-model="mainMsg.region.id" placeholder="请选择办事处" filterable clearable>
               <el-option v-for="item in regionList" :label="item.name" :value="item.id" :key="item.id">
               </el-option>
             </el-select>
@@ -34,9 +34,9 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="项目名称："  prop="name">
+          <el-form-item label="管理处名称："  prop="name">
             <p v-if="disabled">{{mainMsg.name}}</p>
-            <el-input v-else v-model="mainMsg.name" placeholder="请输入项目名称"></el-input>
+            <el-input v-else v-model="mainMsg.name" placeholder="请输入管理处名称"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -48,9 +48,9 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="项目地址：" prop="address">
+          <el-form-item label="管理处地址：" prop="address">
             <p v-if="disabled">{{mainMsg.address}}</p>
-            <el-input v-else v-model="mainMsg.address" placeholder="请输入项目地址"></el-input>
+            <el-input v-else v-model="mainMsg.address" placeholder="请输入管理处地址"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -106,17 +106,17 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="总收费面积(平米)：">
+          <el-form-item label="总收费(用地)面积(平米)：">
             <p v-if="disabled">{{mainMsg.chargeArea}}㎡</p>
-            <el-input v-else v-model="mainMsg.chargeArea" type="number" min="0" placeholder="请输入总收费面积"></el-input>
+            <el-input v-else v-model="mainMsg.chargeArea" type="number" min="0" placeholder="请输入总收费(用地)面积"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="40">
         <el-col :xs="24" :sm="12" :lg="12">
-          <el-form-item label="土地面积(平米)：">
+          <el-form-item label="总占地面积(平米)：">
             <p v-if="disabled">{{mainMsg.landArea}}㎡</p>
-            <el-input v-else v-model="mainMsg.landArea" type="number" min="0" placeholder="请输入土地面积"></el-input>
+            <el-input v-else v-model="mainMsg.landArea" type="number" min="0" placeholder="请输入总占地面积"></el-input>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :lg="12">
@@ -292,24 +292,82 @@
               </td>
             </tr>
             <tr>
-              <td rowspan="2">电梯出入</td>
-              <td>客梯</td>
-              <td colspan="4">
+              <td rowspan="3">安全管理</td>
+              <td>视频监控</td>
+              <td>重点岗位(个)</td>
+              <td>
+                <p v-if="disabled">{{elevatorObj.a}}</p>
+                <input v-else type="text" v-model="elevatorObj.a" placeholder="请输入">
+              </td>
+              <td>重点点位(个)</td>
+              <td>
                 <p v-if="disabled">{{elevatorObj.a}}</p>
                 <input v-else type="text" v-model="elevatorObj.a" placeholder="请输入">
               </td>
             </tr>
             <tr>
-              <td>货梯</td>
+              <td>电子巡更</td>
               <td colspan="4">
                 <p v-if="disabled">{{elevatorObj.b}}</p>
-                <input v-else type="text" v-model="elevatorObj.b" placeholder="请输入">
+                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()套">
+              </td>
+            </tr>
+            <tr>
+              <td>围墙周长</td>
+              <td colspan="4">
+                <p v-if="disabled">{{elevatorObj.b}}</p>
+                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()米">
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="3">节能信息</td>
+              <td>LED灯</td>
+              <td>地库LED灯数量（支）</td>
+              <td>
+                <p v-if="disabled">{{machineRoomObj.a}}</p>
+                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+              </td>
+              <td>楼道LED灯数量</td>
+              <td>
+                <p v-if="disabled">{{machineRoomObj.a}}</p>
+                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+              </td>
+            </tr>
+            <tr>
+              <td>水泵</td>
+              <td>水泵房水泵数量()台</td>
+              <td colspan="3">
+                <p v-if="disabled">{{machineRoomObj.a}}</p>
+                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
+              </td>
+            </tr>
+            <tr>
+              <td>空调</td>
+              <td>空调机房空调数量()台</td>
+              <td colspan="3">
+                <p v-if="disabled">{{machineRoomObj.a}}</p>
+                <input v-else type="text" v-model="machineRoomObj.a" placeholder="请输入">
               </td>
             </tr>
           </table>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="12">
           <table class="element-fr basic-table part-right" cellspacing="0">
+            <tr>
+              <td rowspan="2">电梯出入</td>
+              <td>客梯</td>
+              <td colspan="4">
+                <p v-if="disabled">{{elevatorObj.a}}</p>
+                <input v-else type="text" v-model="elevatorObj.a" placeholder="数量：()台">
+              </td>
+            </tr>
+            <tr>
+              <td>货梯</td>
+              <td colspan="4">
+                <p v-if="disabled">{{elevatorObj.b}}</p>
+                <input v-else type="text" v-model="elevatorObj.b" placeholder="数量：()台">
+              </td>
+            </tr>
             <tr>
               <td rowspan="5">机房信息</td>
               <td>电梯机房</td>
@@ -350,63 +408,34 @@
               <td colspan="2">监控中心</td>
               <td>
                 <p v-if="disabled">{{otherObj.a}}</p>
-                <input v-else type="text" v-model="otherObj.a" placeholder="请输入">
+                <input v-else type="text" v-model="otherObj.a" placeholder="面积：()平方米">
               </td>
             </tr>
             <tr>
               <td colspan="2">客户中心</td>
               <td>
                 <p v-if="disabled">{{otherObj.b}}</p>
-                <input v-else type="text" v-model="otherObj.b" placeholder="请输入">
+                <input v-else type="text" v-model="otherObj.b" placeholder="面积：()平方米">
               </td>
             </tr>
             <tr>
               <td colspan="2">会所</td>
               <td>
                 <p v-if="disabled">{{otherObj.c}}</p>
-                <input v-else type="text" v-model="otherObj.c" placeholder="请输入">
+                <input v-else type="text" v-model="otherObj.c" placeholder="面积：()平方米">
               </td>
             </tr>
           </table>
         </el-col>
       </el-row>
     </div>
-    <!-- 项目改造信息 -->
-    <projectReform :projectId="mainMsg.id"></projectReform>
-    <!-- <div class="form-module">
-      <h4 class="module-title">
-        <p>项目改造信息</p>
-        <div class="material-table-head fr">
-          <button @click.prevent="showDialog">
-            <i class="iconfont icon-add"></i>
-            <span>新增项目改造信息</span>
-          </button>
-        </div>
-      </h4>
-      <div>
-        <el-table class="el-table-sm" style="width: 100%" :height='purchaseHeight' border>
-          <el-table-column label="序号" width="60" fixed>
-            <template slot-scope="scope">{{scope.$index + 1}}</template>
-          </el-table-column>
-          <el-table-column label="年份" min-width="160">
-            <template slot-scope="scope">
-            </template>
-          </el-table-column>
-          <el-table-column label="金额" min-width="160">
-            <template slot-scope="scope">
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" min-width="120" fixed="right">
-            <template slot-scope="scope"></template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </div> -->
     <div class="commont-btn" v-show="hasPerm('project:save') && !disabled">
       <el-button @click="add('mainMsg')" :loading="loading">保存</el-button>
       <el-button @click="reset">重置</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>
+    <!-- 项目改造信息 -->
+    <projectReform :projectId="mainMsg.id"></projectReform>
   </el-form>
 </div>
 </template>
@@ -658,12 +687,14 @@ export default {
         message: '保存成功',
         type: 'success'
       })
-      if (this.action === 'add') {
-        this.$emit('toggleTab')
-      } else {
-        this.editShow = true
-        this.disabled = true
-      }
+      this.editShow = true
+      this.disabled = true
+      // if (this.action === 'add') {
+      //   this.$emit('toggleTab')
+      // } else {
+      //   this.editShow = true
+      //   this.disabled = true
+      // }
     },
     failSave() {
       this.$message({
@@ -716,7 +747,7 @@ export default {
     purchaseHeight() {
       var height = 1 * 42 + 100
       return height > 260 ? 260 : height
-    },
+    }
   },
   watch: {
     disabled (status) {
@@ -859,29 +890,29 @@ export default {
       }
     }
   }
-  #projectReformDialog .el-dialog {
-    width: 70%;
-    height: 90vh;
-    margin-top: 5vh!important;
-    margin: 0 auto;
-    @include borderRadius(16px)
-    .el-dialog__header {
-    }
-    .el-dialog__body {
-      max-height: 80%;
-      overflow-y: auto;
-    }
-    .el-dialog__footer {
-      max-height: 8%;
-      margin: 0;
-      padding: 0;
-      margin-top: 10px;
-    }
-    .dialog-footer {
-      margin: 0;
-      padding: 0;
-      margin: auto;
-    }
-  }
+  // #projectReformDialog .el-dialog {
+  //   width: 70%;
+  //   height: 90vh;
+  //   margin-top: 5vh!important;
+  //   margin: 0 auto;
+  //   @include borderRadius(16px)
+  //   .el-dialog__header {
+  //   }
+  //   .el-dialog__body {
+  //     max-height: 80%;
+  //     overflow-y: auto;
+  //   }
+  //   .el-dialog__footer {
+  //     max-height: 8%;
+  //     margin: 0;
+  //     padding: 0;
+  //     margin-top: 10px;
+  //   }
+  //   .dialog-footer {
+  //     margin: 0;
+  //     padding: 0;
+  //     margin: auto;
+  //   }
+  // }
 }
 </style>

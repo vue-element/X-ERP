@@ -443,14 +443,13 @@
     </table>
     <div slot="footer" class="dialog-footer">
       <el-button @click="hideDialog">取 消</el-button>
-      <el-button type="primary" @click.native.prevent="addProjectReform">保 存</el-button>
+      <el-button type="primary" @click.native.prevent="addProjectReform">确 定</el-button>
     </div>
   </el-dialog>
 </div>
 </template>
 <script>
 import _ from 'lodash'
-import Vue from 'vue'
 export default {
   name: 'smartCommunityAdd',
   data() {
@@ -460,7 +459,7 @@ export default {
       // carObj: {
       //   a1: ''
       // },
-      year: '2034',
+      year: '',
       amount: '',
       projectReformList: [],
       jifang: {
@@ -607,6 +606,10 @@ export default {
     console.log('this.projectId', this.projectId)
   },
   mounted() {
+    this.projectReformList = [this.jifang, this.buxian, this.tingchechang, this.menjin, this.fangke, this.tikong,
+      this.yuntong, this.xungeng, this.zhoujie, this.yunduijiang, this.xinxifabu, this.bjyinyue, this.jifangjk,
+      this.diantijk, this.LED, this.shuibengjn, this.kongdiaojn, this.shebeiqw, this.diantiqw, this.diantijg, this.shebijy]
+    this.tempArr =  _.cloneDeep(this.projectReformList)
     this.getData()
   },
   methods: {
@@ -619,10 +622,10 @@ export default {
       } else {
         this.action = 'add'
         this.dialogFormVisible = true
-        this.resetData()
+        this.projectReformList = this.tempArr
       }
     },
-    hideDialog() {
+    hideDialog(done) {
       this.$confirm('确认关闭？', '提示').then(() => {
         this.dialogFormVisible = false
       }).catch(() => {
@@ -638,9 +641,10 @@ export default {
       })
     },
     addProjectReform() {
-      this.projectReformList = [this.jifang, this.buxian, this.tingchechang, this.menjin, this.fangke, this.tikong,
-        this.yuntong, this.xungeng, this.zhoujie, this.yunduijiang, this.xinxifabu, this.bjyinyue, this.jifangjk,
-        this.diantijk, this.LED, this.shuibengjn, this.kongdiaojn, this.shebeiqw, this.diantiqw, this.diantijg, this.shebijy]
+      // this.projectReformList = [this.jifang, this.buxian, this.tingchechang, this.menjin, this.fangke, this.tikong,
+      //   this.yuntong, this.xungeng, this.zhoujie, this.yunduijiang, this.xinxifabu, this.bjyinyue, this.jifangjk,
+      //   this.diantijk, this.LED, this.shuibengjn, this.kongdiaojn, this.shebeiqw, this.diantiqw, this.diantijg, this.shebijy]
+      // console.log('this.projectReformList', JSON.stringify(this.projectReformList))
       var data = {
         projectReformDetailes: this.projectReformList,
         year: this.year
@@ -664,11 +668,13 @@ export default {
     },
     editRow(rowId) {
       this.action = 'edit'
-      this.editId = rowId
       this.dialogFormVisible = true
+      this.editId = rowId
       this.$get('/projectReform/findUpdateData/' + rowId).then((res) => {
+        console.log('findUpdateData', res)
         if (res.data.success === true) {
           var data = res.data.data.projectReform
+          console.log('data', data)
           this.handleData(data)
         }
       }).catch((err) => {
@@ -689,6 +695,7 @@ export default {
     },
     confirmDel(rowId) {
       this.$post('/projectReform/delete', { id: [rowId] }).then((res) => {
+        console.log('res11', res)
         if (res.data.success) {
           this.$message({
             message: '删除成功',
@@ -706,38 +713,12 @@ export default {
         return
       })
     },
-    resetData() {
-      this.year = ''
-      this.amount = ''
-      this.jifang = { category: 'jifang', amount: 0 },
-      this.buxian = { category: 'buxian', amount: 0, a: '' },
-      this.tingchechang = { category: 'tingchechang', amount: '', a: '', b: '', c: '', d: '' },
-      this.menjin = { category: 'menjin', amount: 0, a: '', b: '' },
-      this.fangke = { category: 'fangke', amount: 0, a: '', b: '' },
-      this.tikong = { category: 'tikong', amount: 0, a: '', b: '' },
-      this.yuntong = { category: 'yuntong', amount: 0, a: '', b: '', c: '' },
-      this.xungeng = { category: 'xungeng', amount: 0, a: '', b: '' },
-      this.zhoujie = { category: 'zhoujie', amount: 0, a: '', b: '' },
-      this.yunduijiang =  { category: 'yunduijiang', amount: 0, a: '', b: '', c: '' },
-      this.xinxifabu = { category: 'xinxifabu', amount: 0, a: '', b: '' },
-      this.bjyinyue = { category: 'bjyinyue', amount: 0, a: '', b: '' },
-      this.jifangjk = { category: 'jifangjk', amount: 0, a: '', b: '' },
-      this.diantijk = { category: 'diantijk', amount: 0, a: '', b: '' },
-      this.LED = { category: 'LED', amount: 0, a: '' },
-      this.shuibengjn = { category: 'shuibengjn', amount: 0, a: '' },
-      this.kongdiaojn = { category: 'kongdiaojn', amount: 0, a: '' },
-      this.shebeiqw = { category: 'shebeiqw', amount: 0, a: '', startDate: '', endDate: '' },
-      this.diantiqw = { category: 'diantiqw', amount: 0, a: '', startDate: '', endDate: '' },
-      this.diantijg = { category: 'diantijg', amount: 0, a: '', startDate: '', endDate: '' },
-      this.shebijy = { category: 'shebijy', amount: 0, a: '', b: '' },
-      this.shebeiqwTime = [],
-      this.diantiqwTime = [],
-      this.diantijgTime = []
-    },
     handleData(data) {
+      console.log('data', data)
       this.year = data.year
       this.amount = data.amount
       data.projectReformDetailes.forEach((item) => {
+        console.log('item', item)
         switch (item.category) {
           case 'jifang':
             this.jifang = item
@@ -806,6 +787,7 @@ export default {
         }
       })
     }
+    // 项目改造信息
   },
   computed: {
     Height() {
@@ -817,6 +799,7 @@ export default {
     shebeiqwTime() {
       this.shebeiqw.startDate = this.shebeiqwTime ? this.shebeiqwTime[0] : ''
       this.shebeiqw.endDate = this.shebeiqwTime ? this.shebeiqwTime[1] : ''
+      console.log(this.shebeiqw.startDate, this.shebeiqw.endDate, )
     },
     diantiqwTime() {
       this.diantiqw.startDate = this.diantiqwTime ? this.diantiqwTime[0] : ''
@@ -829,6 +812,30 @@ export default {
     projectId(id) {
       this.projectId = id
     }
+    // projectId() {
+    //   this.projectId =
+    // }
+    // disabled (status) {
+    //   if (status === false) {
+    //     this.editWord = '取消编辑'
+    //     this.$emit('changeObj', true)
+    //   } else {
+    //     this.editWord = '编辑'
+    //   }
+    // },
+    // mainMsg: {
+    //   handler(obj) {
+    //     if (isObjectValueEqual(obj, this.temp)) {
+    //       this.$emit('changeObj', false)
+    //     } else {
+    //       this.$emit('changeObj', true)
+    //     }
+    //     if (obj.client.name === '') {
+    //       obj.client.id = ''
+    //     }
+    //   },
+    //   deep: true
+    // }
   }
 }
 </script>
