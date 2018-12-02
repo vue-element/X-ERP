@@ -123,7 +123,6 @@ export default {
       }
     },
     searchWord(data) {
-      console.log('data', data)
       this.pageObj = {}
       this.toggleTab('listTab')
       this.searchData = data

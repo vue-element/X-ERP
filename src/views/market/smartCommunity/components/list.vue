@@ -58,20 +58,24 @@ export default {
       this.currentPage = this.pageObj.currentPage
       this.pageSize = this.pageObj.pageSize
     }
+    // console.log(this.searchData)
     // 如果插叙对象有年份，则为按年查询，否则是项目查询
-    if (!this.searchData.year) {
-      this.searchWay = 'project'
-      this.getDataByProject()
-    } else {
+    if (this.searchData.year) {
       this.searchWay = 'year'
       this.getDataByYear()
+    } else {
+      this.searchWay = 'project'
+      this.getDataByProject()
     }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
     })
   },
-  watch: {},
+  watch: {
+    searchData() {
+    }
+  },
   methods: {
     resize() {
       this.height = winHeight() - 210
@@ -152,15 +156,14 @@ export default {
     // 通过年份查询
     getDataByYear() {
       this.listLoading = true
-      var pageSize = this.pageSize || 100
-      var page = this.currentPage - 1 || 0
       this.$get('/projectReform/findDataByYear/' + this.searchData.year).then((res) => {
         this.listLoading = false
         if (res.data.success === true) {
-          this.projectData = res.data.data.content
-          this.total = data.totalElements
-          this.currentPage = data.number + 1
-          this.pageSize = data.size
+          var data = res.data.data
+          this.projectData = data.content
+          // this.total = data.totalElements
+          // this.currentPage = data.number + 1
+          // this.pageSize = data.size
         }
       }).catch((err) => {
         this.listLoading = false
@@ -176,7 +179,6 @@ export default {
       } else {
         this.getDataByYear()
       }
-
     },
     handleCurrentChange(val) {
       this.currentPage = val

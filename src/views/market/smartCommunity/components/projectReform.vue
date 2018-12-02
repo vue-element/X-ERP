@@ -602,7 +602,6 @@ export default {
   },
   props: ['projectId'],
   created() {
-    console.log('this.projectId', this.projectId)
   },
   mounted() {
     this.getData()

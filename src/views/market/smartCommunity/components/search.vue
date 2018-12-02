@@ -223,13 +223,6 @@ export default {
       line-height: 20px;
       margin-top: -4px;
     }
-    // .el-input__suffix  {
-    // }
-    // input {
-    //   width: 90%;
-    //   height: 100%;
-    //   border: none;
-    // }
   }
   .yearSearch {
     .el-button {

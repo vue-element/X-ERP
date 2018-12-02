@@ -26,7 +26,7 @@ service.interceptors.request.use(
       var token = getToken()
       config.headers['X-Token'] = token
     }
-    console.log('config', config)
+    // console.log('config', config)
     return config
   }, error => {
   // Do something with request error
