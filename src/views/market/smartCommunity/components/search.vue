@@ -1,9 +1,27 @@
 <template>
 <div class="form-container smartCommunity-search">
+  <el-form>
+    <div class="form-module">
+      <h4 class="module-title">
+        <p>查询条件一：(按年份查询)</p>
+      </h4>
+      <el-row :gutter="40" class="yearSearch">
+        <el-col :xs="12" :sm="12" :lg="12">
+          <el-form-item label="年份:">
+            <el-date-picker v-model="year" type="year" placeholder="选择年" value-format="yyyy" format="yyyy">
+           </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="12" :sm="12" :lg="12">
+           <el-button @click="searchByYear">查  询</el-button>
+        </el-col>
+      </el-row>
+    </div>
+  </el-form>
   <el-form :model="searchData" ref="searchData">
     <div class="form-module">
       <h4 class="module-title">
-        <p>查询条件</p>
+        <p>查询条件二：(按项目信息查询)</p>
       </h4>
       <el-row :gutter="40">
         <el-col :xs="12" :sm="12" :lg="12">
@@ -98,7 +116,8 @@ export default {
         region_id: '',
         city_id: '',
         client_name: ''
-      }
+      },
+      year: ''
       // firstEntry: ''
     }
   },
@@ -122,6 +141,13 @@ export default {
       var len = val.length
       this.searchData.city_id = val[len - 1]
     },
+    searchByYear() {
+      if (this.year) {
+        this.$emit('searchWord', { year: this.year })
+      } else {
+        this.searchAll()
+      }
+    },
     search() {
       var searchData = {}
       for (var key in this.searchData) {
@@ -134,7 +160,6 @@ export default {
           }
         }
       }
-      // console.log('searchWord', searchData)
       this.$emit('searchWord', searchData)
     },
     searchAll() {
@@ -189,4 +214,40 @@ export default {
 @import "src/styles/mixin.scss";
 </style>
 <style lang="scss">
+@import 'src/styles/mixin.scss';
+.smartCommunity-search {
+  .el-input {
+    .el-input__prefix,
+    .el-input__suffix{
+      font-size: 16px;
+      line-height: 20px;
+      margin-top: -4px;
+    }
+    // .el-input__suffix  {
+    // }
+    // input {
+    //   width: 90%;
+    //   height: 100%;
+    //   border: none;
+    // }
+  }
+  .yearSearch {
+    .el-button {
+      border-radius: 4px;
+      @include boxSizing;
+      padding: 0 10px;
+      margin-top: 20px;
+      margin-right: 20px;
+      width: auto;
+      min-width: 80px;
+      height: 30px;
+      line-height: 30px;
+      background-color: #35d5ba;
+      border: 1px solid #35d5ba;
+      text-align: center;
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+}
 </style>

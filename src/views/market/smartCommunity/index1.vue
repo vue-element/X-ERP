@@ -34,10 +34,9 @@
   </div>
   <div class="compotent-tab" >
       <AddComponent v-if="tab === 'addTab'" :editData="editData" @toggleTab="toggleTab('listTab')" @changeObj="changeObj"></AddComponent>
-      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="list" :pageObj="pageObj" ></ListComponent>
+      <ListComponent v-if="tab === 'listTab'" @selData="selData" @seeRow="seeRow" :searchData="searchData" @exportData="exportData" ref="del" :pageObj="pageObj" ></ListComponent>
       <SearchComponent v-show="tab === 'searchTab'" @searchWord="searchWord"></SearchComponent>
   </div>
-  <Function ref="downLoad"></Function>
 </div>
 </template>
 
@@ -45,14 +44,12 @@
 import AddComponent from './components/add'
 import ListComponent from './components/list'
 import SearchComponent from './components/search'
-import Function from './Function'
 export default {
   name: 'smartCommunity',
   components: {
     AddComponent,
     ListComponent,
-    SearchComponent,
-    Function
+    SearchComponent
   },
   data() {
     return {
@@ -62,7 +59,7 @@ export default {
       tab: 'listTab',
       selArr: [],
       deleteShow: false,
-      exportList: [],
+      exprotList: [],
       isChange: false,
       pageObj: {}
     }
@@ -123,22 +120,16 @@ export default {
       }
     },
     searchWord(data) {
-      console.log('data', data)
       this.pageObj = {}
       this.toggleTab('listTab')
       this.searchData = data
     },
-    // searchYear(year) {
-    //   this.pageObj = {}
-    //   this.toggleTab('listTab')
-    //   // this.searchData = year
-    // },
     confirmDel() {
       var id = { id: this.selArr }
       this.$post('/project/delete', id).then((res) => {
         console.log('res', res)
         if (res.data.success === true) {
-          this.$refs.list.getProjectData()
+          this.$refs.del.getProjectData()
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -171,18 +162,26 @@ export default {
       this.isChange = res
     },
     exportData(data) {
-      this.exportList = data
+      this.exprotList = data
     },
     handleDownload() {
-      if (this.exportList.length > 0) {
-        this.$refs.downLoad.drawList(this.exportList)
-        this.$refs.list.clearSelection()
-      } else {
-        this.$message({
-          message: '请选择至少一项目',
-          type: 'warning'
+      this.downloadLoading = true
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['序号', '客户信息', '区域', '城市', '项目名称', '楼栋及单元数量', '项目地址', '首期入伙时间', '建筑业态', '物业管理费', ' 车位总数', '车位比',
+          '户数', '容积率', '总收费面积(平米)', '地面车位数量', '地面车位收费标准', '地库车位数量', '地库车位收费标准', '人防车位数量', '人防车位收费标准']
+        const filterVal = ['index', 'client', 'region', 'city', 'name', 'buildNum', 'address', 'firstEntry', 'archFormat', 'manageFee', 'parkingNum', 'carRatio',
+          'roomNum', 'volumetricRate', 'chargeArea', 'groundParkingNum', 'groundParkingFee', 'basementParkingNum', 'basementParkingFee', 'defenseParkingNum', 'defenseParkingFee']
+        const list = this.exprotList
+        var i = 1
+        list.forEach((item) => {
+          item.index = i
+          i++
         })
-      }
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '智慧社区数据库')
+        this.downloadLoading = false
+      })
     },
     formatJson(filterVal, jsonData) {
       var list = ['client', 'region', 'city']

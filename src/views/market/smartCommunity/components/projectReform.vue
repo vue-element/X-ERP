@@ -724,7 +724,7 @@ export default {
       this.LED = { category: 'LED', amount: 0, a: '' }
       this.shuibengjn = { category: 'shuibengjn', amount: 0, a: '' }
       this.kongdiaojn = { category: 'kongdiaojn', amount: 0, a: '' }
-      this.shebeiqw = { category: 'shebeiqw', amount: 0, a: '', startDte: '', endDate: '' }
+      this.shebeiqw = { category: 'shebeiqw', amount: 0, a: '', startDate: '', endDate: '' }
       this.diantiqw = { category: 'diantiqw', amount: 0, a: '', startDate: '', endDate: '' }
       this.diantijg = { category: 'diantijg', amount: 0, a: '', startDate: '', endDate: '' }
       this.shebijy = { category: 'shebijy', amount: 0, a: '', b: '' }

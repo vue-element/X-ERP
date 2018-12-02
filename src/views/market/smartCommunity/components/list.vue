@@ -1,6 +1,6 @@
 <template>
 <div class="smartCommunity-list">
-  <el-table class="basic-form" style="width: 100%" :data="projectData" :height="height" @selection-change="handleSelectionChange" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
+  <el-table ref="multipleTable" class="basic-form" style="width: 100%" :data="projectData" :height="height" @selection-change="handleSelectionChange" v-loading.body="listLoading" element-loading-text="拼命加载中" border>
     <el-table-column type="selection" width="40" fixed></el-table-column>
     <el-table-column align="center" prop="0" fixed label="序号" width="60" fixed>
       <template slot-scope="scope">{{scope.$index  + 1}}</template>
@@ -26,24 +26,31 @@
   </el-table>
   <el-pagination class="page" background :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"  :total="total"
    @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+   <!-- <Function :exportList="exportList"></Function> -->
 </div>
 </template>
 
 <script>
 import { winHeight } from '@/utils'
 import { mapGetters } from 'vuex'
+import Function from '../Function'
 export default {
   name: 'smartCommunityList',
+  components: {
+    Function
+  },
   props: ['searchData', 'pageObj'],
   data() {
     return {
       listLoading: false,
       total: 5,
       currentPage: 1,
-      pageSizes: [15, 20, 25],
-      pageSize: 15,
+      pageSizes: [100, 200, 300],
+      pageSize: 100,
       projectData: [],
-      height: 100
+      exportList: [],
+      height: 100,
+      searchWay: ''
     }
   },
   created() {
@@ -51,7 +58,14 @@ export default {
       this.currentPage = this.pageObj.currentPage
       this.pageSize = this.pageObj.pageSize
     }
-    this.getProjectData()
+    // 如果插叙对象有年份，则为按年查询，否则是项目查询
+    if (!this.searchData.year) {
+      this.searchWay = 'project'
+      this.getDataByProject()
+    } else {
+      this.searchWay = 'year'
+      this.getDataByYear()
+    }
     this.resize()
     window.addEventListener('resize', () => {
       this.resize()
@@ -63,11 +77,15 @@ export default {
       this.height = winHeight() - 210
     },
     handleSelectionChange(arr) {
+      this.$emit('exportData', arr)
       var selArr = []
       arr.forEach((item) => {
         selArr.push(item.id)
       })
       this.$emit('selData', selArr)
+    },
+    clearSelection() {
+      this.$refs.multipleTable.clearSelection()
     },
     seeRow(id) {
       this.$get('/project/findUpdateData/' + id).then((res) => {
@@ -83,7 +101,7 @@ export default {
       }
       this.$post('/project/delete', projectID).then((res) => {
         if (res.status === 200) {
-          this.getProjectData()
+          this.getDataByProject()
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -109,10 +127,11 @@ export default {
         this.$emit('editRow', data)
       })
     },
-    getProjectData() {
+    // 通过项目查询
+    getDataByProject() {
       this.listLoading = true
       this.searchData.role_code = this.roleCode
-      var pageSize = this.pageSize || 15
+      var pageSize = this.pageSize || 100
       var page = this.currentPage - 1 || 0
       var url = '/project/search?size=' + pageSize + '&page=' + page
       this.$post(url, this.searchData, false).then((res) => {
@@ -123,20 +142,49 @@ export default {
           this.total = data.totalElements
           this.currentPage = data.number + 1
           this.pageSize = data.size
-          this.$emit('exportData', this.projectData)
+          // this.exportList = this.projectData
+          // this.$emit('exportData', this.projectData)
         }
       }).catch(() => {
         this.listLoading = false
       })
     },
+    // 通过年份查询
+    getDataByYear() {
+      this.listLoading = true
+      var pageSize = this.pageSize || 100
+      var page = this.currentPage - 1 || 0
+      this.$get('/projectReform/findDataByYear/' + this.searchData.year).then((res) => {
+        this.listLoading = false
+        if (res.data.success === true) {
+          this.projectData = res.data.data.content
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
+        }
+      }).catch((err) => {
+        this.listLoading = false
+        console.log(err)
+        return
+      })
+    },
     //  页码处理
     handleSizeChange(val) {
       this.pageSize = val
-      this.getProjectData()
+      if (this.searchWay === 'project') {
+        this.getDataByProject()
+      } else {
+        this.getDataByYear()
+      }
+
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getProjectData()
+      if (this.searchWay === 'project') {
+        this.getDataByProject()
+      } else {
+        this.getDataByYear()
+      }
     }
   },
   computed: {
