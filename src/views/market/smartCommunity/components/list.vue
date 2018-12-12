@@ -156,14 +156,16 @@ export default {
     // 通过年份查询
     getDataByYear() {
       this.listLoading = true
-      this.$get('/projectReform/findDataByYear/' + this.searchData.year).then((res) => {
+      var pageSize = this.pageSize || 100
+      var page = this.currentPage - 1 || 0
+      this.$get('/projectReform/findDataByYear/' + this.searchData.year + '?size=' + pageSize + '&page=' + page).then((res) => {
         this.listLoading = false
         if (res.data.success === true) {
           var data = res.data.data
           this.projectData = data.content
-          // this.total = data.totalElements
-          // this.currentPage = data.number + 1
-          // this.pageSize = data.size
+          this.total = data.totalElements
+          this.currentPage = data.number + 1
+          this.pageSize = data.size
         }
       }).catch((err) => {
         this.listLoading = false
